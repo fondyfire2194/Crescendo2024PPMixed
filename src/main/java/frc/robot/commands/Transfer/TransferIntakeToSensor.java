@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Transfer;
 
-import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -22,7 +21,6 @@ public class TransferIntakeToSensor extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transfer = transfer;
     m_intake = intake;
-
   }
 
   // Called when the command is initially scheduled.
@@ -30,12 +28,18 @@ public class TransferIntakeToSensor extends Command {
   public void initialize() {
     endTimer.reset();
     endTimer.start();
+    m_intake.noteMissed = false;
+    m_transfer.simnoteatintake = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     m_transfer.runToSensor();
+
+    m_intake.noteMissed = endTimer.hasElapsed(3);
+
+    m_transfer.simnoteatintake = RobotBase.isSimulation() && endTimer.hasElapsed(1);
 
   }
 
@@ -45,15 +49,13 @@ public class TransferIntakeToSensor extends Command {
     m_transfer.stopMotor();
     if (DriverStation.isTeleopEnabled())
       m_intake.stopMotor();
-    m_intake.noNote = endTimer.hasElapsed(3);
-    if (!m_intake.noNote)
-      m_intake.notesIntaken += 1;
+
     m_transfer.enableLimitSwitch(false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transfer.noteAtIntake() || endTimer.hasElapsed(3) || RobotBase.isSimulation() && endTimer.hasElapsed(1);
+    return m_transfer.noteAtIntake() || m_intake.noteMissed || m_transfer.simnoteatintake;
   }
 }

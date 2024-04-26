@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -55,33 +56,30 @@ public class SourceShootThenCenter4 extends SequentialCommandGroup {
                         TransferSubsystem transfer) {
 
                 addCommands(
-
+                                // shoot first note
                                 cf.setStartPosebyAlliance(path),
-
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed).asProxy(),
-
-                                transfer.transferToShooterCommand(),
-
+                                                Constants.subwfrShooterSpeed),
+                                cf.transferNoteToShooter(),
+                                // move to center note 4, pick up if there and move to shoot position then shoot
+                                // if note at 4 not picked up, try note at 5 and shoot it
                                 new ParallelCommandGroup(
-
                                                 new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
+                                                                path,
                                                                 false),
                                                 cf.doIntake()),
 
-                                new ConditionalCommand(
-                                                new CenterToSourceShoot(
-                                                                cf,
-                                                                pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
-                                                                                .name()),
-                                                                swerve, transfer),
+                                cf.decideOn(
+                                                pf.pathMaps.get(sourcepaths.Center4ToSourceShoot.name()),
+                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5.name()),
+                                                pf.pathMaps.get(sourcepaths.Center5ToSourceShoot.name())),
 
-                                                new CenterToCenterPickup(
-                                                                cf,
-                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5.name()),
-                                                                swerve),
+                                // go back for note at center 5 if it wasn't tried before
 
-                                                () -> transfer.noteAtIntake()));
+                                cf.getSecondCenterNote(
+                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
+                                                pf.pathMaps.get(sourcepaths.Center5ToSourceShoot.name())));
+
         }
+
 }

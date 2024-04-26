@@ -152,13 +152,12 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.cameraSelection = m_robotContainer.m_cameraChooser.getSelected();
 
     boolean checkAutos = firstScan || m_robotContainer.m_af.checkChoiceChange();
-
+    SmartDashboard.putBoolean("CHECKAUTOS", checkAutos);
     firstScan = false;
 
     if (checkAutos) {
       m_robotContainer.m_af.validStartChoice = m_robotContainer.m_af.selectAndLoadPathFiles();
 
-      SmartDashboard.putBoolean("CHECKAUTOS", checkAutos);
       SmartDashboard.putNumber("ValidStartChoice", m_robotContainer.m_af.validStartChoice);
 
     }
@@ -195,10 +194,11 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.resetModuleEncoders();
 
     startTime = Timer.getFPGATimestamp();
-
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
-    m_autonomousCommand = m_robotContainer.m_cf.getAutonomousCommand();
+    SmartDashboard.putNumber("Finalchoice", m_robotContainer.m_af.finalChoice);
+    if (m_robotContainer.m_af.finalChoice == 0)
+      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    else
+      m_autonomousCommand = m_robotContainer.m_cf.getAutonomousCommand();
 
     SmartDashboard.putString("AUTOCMS", m_autonomousCommand.toString());
 

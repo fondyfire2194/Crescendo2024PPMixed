@@ -407,7 +407,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     @Log.NT(key = "armdegs")
     public double getAngleDegrees() {
-        return getCanCoderDeg();
+        return Units.radiansToDegrees(getAngleRadians());
     }
 
     public boolean atSetpoint() {

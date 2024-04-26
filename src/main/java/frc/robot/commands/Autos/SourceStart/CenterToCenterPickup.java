@@ -46,13 +46,7 @@ public class CenterToCenterPickup extends SequentialCommandGroup {
         public CenterToCenterPickup(
                         CommandFactory cf,
                         PathPlannerPath path,
-                        // AutoFactory af,
-                        // PathFactory pf,
                         SwerveSubsystem swerve) {
-                // IntakeSubsystem intake,
-                // ShooterSubsystem shooter,
-                // ArmSubsystem arm,
-                // TransferSubsystem transfer) {
 
                 addCommands(
                                 new ParallelCommandGroup(

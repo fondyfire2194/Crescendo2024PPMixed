@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import org.opencv.features2d.FlannBasedMatcher;
 import org.opencv.features2d.MSER;
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -24,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.AutoFactory;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
@@ -33,10 +35,13 @@ import frc.robot.PathFactory.sourcepaths;
 import frc.robot.LimelightHelpers;
 import frc.robot.PathFactory;
 import frc.robot.commands.Arm.CheckArmAtTarget;
+import frc.robot.commands.Autos.SourceStart.CenterToCenterPickup;
+import frc.robot.commands.Autos.SourceStart.CenterToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootThenCenter4;
 import frc.robot.commands.Autos.SourceStart.SourceShootThenCenter5;
 import frc.robot.commands.Drive.AutoPickupNote;
 import frc.robot.commands.Pathplanner.NextMoveDecision;
+import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
@@ -108,9 +113,8 @@ public class CommandFactory implements Logged {
                                 m_arm.setGoalCommand(Units.degreesToRadians(armAngleDeg)),
                                 new CheckArmAtTarget(m_arm),
                                 m_shooter.startShooterCommand(shooterSpeed),
-                                new CheckShooterAtSpeed(m_shooter, .2)
-                                                .andThen(Commands.runOnce(
-                                                                () -> SmartDashboard.putNumber("POEnded", 912))));
+                                new CheckShooterAtSpeed(m_shooter, .2));
+
         }
 
         public Command positionArmRunShooterAmp(double armAngleDeg, double shooterSpeed) {
@@ -145,6 +149,10 @@ public class CommandFactory implements Logged {
 
         public Command runToSensorCommand() {
                 return new TransferIntakeToSensor(m_transfer, m_intake);
+        }
+
+        public Command transferNoteToShooter() {
+                return m_transfer.transferToShooterCommand();
         }
 
         public Command alignShootCommand() {
@@ -233,13 +241,67 @@ public class CommandFactory implements Logged {
 
                         default:
                                 return Commands.none();
-                             
+
                 }
 
         }
 
         public Command getAutonomousCommand() {
                 return finalCommand(m_af.finalChoice);
+        }
+
+        public Command decideOn(PathPlannerPath path, PathPlannerPath path1, PathPlannerPath path2) {
+                return new ConditionalCommand(
+                                new CenterToSourceShoot(this,
+                                                path,
+                                                m_swerve),
+                                new SequentialCommandGroup(
+                                                new CenterToCenterPickup(this,
+                                                                path1,
+                                                                m_swerve),
+                                                new CenterToSourceShoot(
+                                                                this,
+                                                                path2,
+                                                                m_swerve)),
+
+                                () -> m_transfer.noteAtIntake());
+        }
+
+        public Command getSecondCenterNote(PathPlannerPath path, PathPlannerPath path1) {
+
+                return new SequentialCommandGroup(
+                                new ConditionalCommand(
+                                                new SequentialCommandGroup(
+                                                                new ParallelCommandGroup(
+                                                                                new RunPPath(m_swerve, path,
+                                                                                                false),
+                                                                                doIntake()),
+                                                                new CenterToSourceShoot(
+                                                                                this,
+                                                                                path1,
+                                                                                m_swerve)),
+                                                Commands.none(),
+                                                () -> !m_intake.noteMissed));
+
+        }
+
+        public Command CenterToCenterPickup(PathPlannerPath path) {
+                return new SequentialCommandGroup(
+                                new ParallelCommandGroup(
+                                                new RunPPath(m_swerve, path,
+                                                                false),
+                                                doIntake()));
+
+        }
+
+        public Command resetAll() {
+                return new ParallelCommandGroup(
+                                m_shooter.stopShooterCommand(),
+                                m_intake.stopIntakeCommand(),
+                                m_transfer.stopTransferCommand(),
+                                m_arm.setGoalCommand(ArmConstants.pickupAngle)
+                                                .withName("Reset All"))
+                                .asProxy();
         }
 
 }

@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants.CANIDConstants;
@@ -42,6 +43,9 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   private double commandrpm;
 
   public SparkLimitSwitch m_limitSwitch;
+  @Log.NT(key="simmoteatintake")
+  public boolean simnoteatintake;
+  public Trigger nai;
 
   /** Creates a new transfer. */
   public TransferSubsystem(boolean showScreens) {
@@ -54,6 +58,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
     m_limitSwitch = transferMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     m_limitSwitch.enableLimitSwitch(true);
+    nai = new Trigger(() -> noteAtIntake());
 
     if (m_showScreens) {
 
@@ -122,6 +127,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
     commandrpm = 0;
     return Commands.runOnce(() -> stopMotor(), this);
   }
+
   @Log.NT(key = "transfertoshootercommand")
   public Command transferToShooterCommand() {
     return Commands
@@ -150,7 +156,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   @Log.NT(key = "transfernoteatintake")
   public boolean noteAtIntake() { // we can get rid of the TimeOfFlight
-    return m_limitSwitch.isPressed();
+    return m_limitSwitch.isPressed() || RobotBase.isSimulation() && simnoteatintake;
   }
 
   @Override

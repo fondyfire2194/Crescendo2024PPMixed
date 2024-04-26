@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.7068739077892997,
-        "y": 4.383920537641646
+        "x": 0.7122858026918139,
+        "y": 4.420375662855982
       },
       "isLocked": false,
       "linkedName": "Bottom Starting Point"
@@ -65,7 +65,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Source",
   "previewStartingState": {
     "rotation": 120.0,
     "velocity": 0

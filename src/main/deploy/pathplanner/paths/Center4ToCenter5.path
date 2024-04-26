@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.421699458783534,
-        "y": 2.4568687598913663
+        "x": 7.005486193568678,
+        "y": 2.48269734770568
       },
       "isLocked": false,
       "linkedName": "Center 4"
     },
     {
       "anchor": {
-        "x": 8.21105488364823,
-        "y": 0.7104198823782273
+        "x": 8.164859011601047,
+        "y": 0.7612043754757987
       },
       "prevControl": {
-        "x": 7.086223403216037,
-        "y": 0.7400207108106523
+        "x": 7.040027531168853,
+        "y": 0.7908052039082238
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "ShootingPoint"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Source",
   "previewStartingState": {
     "rotation": -173.29016319224309,
     "velocity": 0

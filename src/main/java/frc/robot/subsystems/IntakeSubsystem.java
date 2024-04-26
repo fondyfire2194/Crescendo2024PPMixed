@@ -39,8 +39,8 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   private SlewRateLimiter intakeLimiter = new SlewRateLimiter(1500);
   @Log.NT(key = "intakecommandrpm")
   private double commandrpm;
-  public boolean noNote;
-  public int notesIntaken;
+  @Log.NT(key = "notemissed")
+  public boolean noteMissed;
 
   /** Creates a new Intake. */
   public IntakeSubsystem(boolean showScreens) {
@@ -96,8 +96,7 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     // intakeMotor.setOpenLoopRampRate(1);
     motor.burnFlash();
     encoder.setPosition(0.0);
-    noNote=false;
-    notesIntaken=0;
+
   }
 
   public void stopMotor() {

@@ -12,6 +12,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
@@ -83,7 +84,7 @@ public class RobotContainer implements Logged {
         public final PathFactory m_pf = new PathFactory(m_swerve);
 
         public final AutoFactory m_af = new AutoFactory(m_pf, m_swerve);
-        
+
         public final CommandFactory m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
                         m_climber, m_llv, m_af, m_pf);
 
@@ -99,9 +100,10 @@ public class RobotContainer implements Logged {
 
                 registerNamedCommands();
 
-                Pref.deleteUnused();
-
-                Pref.addMissing();
+                if (RobotBase.isReal()) {
+                        Pref.deleteUnused();
+                        Pref.addMissing();
+                }
 
                 m_arm.setKPKIKD();
 
@@ -328,13 +330,8 @@ public class RobotContainer implements Logged {
 
         private void registerNamedCommands() {
 
-                NamedCommands.registerCommand("ResetAll", new ParallelCommandGroup(
-                                m_shooter.stopShooterCommand(),
-                                m_intake.stopIntakeCommand(),
-                                m_transfer.stopTransferCommand(),
-                                m_arm.setGoalCommand(ArmConstants.pickupAngle)
-                                                .withName("Reset All"))
-                                .asProxy());
+                NamedCommands.registerCommand("ResetAll", m_cf.resetAll());
+
 
                 NamedCommands.registerCommand("Arm Shooter Pre Wing 2", m_cf.positionArmRunShooterSpecialCase(44,
                                 3000).asProxy()

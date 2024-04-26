@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.520779123909923,
-        "y": 0.9645365509536966
+        "x": 6.818112808836172,
+        "y": 0.772915212021579
       },
       "isLocked": false,
       "linkedName": "Center 5"
@@ -43,7 +43,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Source",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

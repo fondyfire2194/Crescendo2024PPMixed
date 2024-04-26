@@ -45,13 +45,7 @@ public class CenterToSourceShoot extends SequentialCommandGroup {
         public CenterToSourceShoot(
                         CommandFactory cf,
                         PathPlannerPath path,
-                        // AutoFactory af,
-                        // PathFactory pf,
-                        SwerveSubsystem swerve,
-                        // IntakeSubsystem intake,
-                        // ShooterSubsystem shooter,
-                        // ArmSubsystem arm,
-                        TransferSubsystem transfer) {
+                        SwerveSubsystem swerve) {
 
                 addCommands(
 
@@ -60,7 +54,7 @@ public class CenterToSourceShoot extends SequentialCommandGroup {
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed).asProxy(),
 
-                                transfer.transferToShooterCommand(),
+                                cf.transferNoteToShooter(),
 
                                 new ParallelCommandGroup(
                                                 new RunPPath(swerve,
@@ -68,7 +62,7 @@ public class CenterToSourceShoot extends SequentialCommandGroup {
                                                                 false),
                                                 cf.positionArmRunShooterSpecialCase(
                                                                 Constants.shotSourceAngle, Constants.shotSourceSpeed)),
-                                transfer.transferToShooterCommand());
+                                cf.transferNoteToShooter());
 
         }
 }

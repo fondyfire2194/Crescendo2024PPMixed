@@ -128,6 +128,11 @@
           "visible": true
         }
       },
+      "/Shuffleboard/Autonomous/SourceStart": {
+        "window": {
+          "visible": true
+        }
+      },
       "/Shuffleboard/ShooterSubsystem/Arm to 15 Deg": {
         "window": {
           "visible": true

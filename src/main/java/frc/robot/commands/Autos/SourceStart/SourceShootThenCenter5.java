@@ -10,6 +10,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -55,33 +56,65 @@ public class SourceShootThenCenter5 extends SequentialCommandGroup {
                         TransferSubsystem transfer) {
 
                 addCommands(
-
+                                // shoot first note
                                 cf.setStartPosebyAlliance(path),
 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed).asProxy(),
 
-                                transfer.transferToShooterCommand(),
+                                Commands.runOnce(() -> SmartDashboard.putNumber("TTTT", 999)),
 
+                                cf.transferNoteToShooter(),
+                                // move to center note 5, pick up if there and move to shoot position then shoot
+                                // if note at 5 not picked up, try note at 4 and shoot it
                                 new ParallelCommandGroup(
-
                                                 new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
+                                                                path,
                                                                 false),
                                                 cf.doIntake()),
 
                                 new ConditionalCommand(
-                                                new CenterToSourceShoot(
-                                                                cf,
+                                                new CenterToSourceShoot(cf,
                                                                 pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
                                                                                 .name()),
-                                                                swerve, transfer),
-
-                                                new CenterToCenterPickup(
-                                                                cf,
-                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4.name()),
                                                                 swerve),
+                                                new SequentialCommandGroup(
+                                                                new CenterToCenterPickup(cf,
+                                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4
+                                                                                                .name()),
+                                                                                swerve),
+                                                                new CenterToSourceShoot(
+                                                                                cf,
+                                                                                pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
+                                                                                                .name()),
+                                                                                swerve)),
 
-                                                () -> transfer.noteAtIntake()));
+                                                () -> transfer.noteAtIntake()),
+
+                                // go back for note at center 4 if it wasn't tried before
+                                new ConditionalCommand(
+
+                                                new ParallelCommandGroup(
+                                                                new RunPPath(swerve, pf.pathMaps.get(
+                                                                                sourcepaths.SourceShootToCenter4
+                                                                                                .name()),
+                                                                                false),
+                                                                cf.doIntake()),
+                                                Commands.none(),
+
+                                                () -> !intake.noteMissed),
+
+                                new ConditionalCommand(
+                                                new CenterToSourceShoot(
+                                                                cf,
+                                                                pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
+                                                                                .name()),
+                                                                swerve),
+                                                Commands.none(),
+                                                () -> transfer.noteAtIntake()),
+
+                                cf.resetAll());
+
         }
+
 }
