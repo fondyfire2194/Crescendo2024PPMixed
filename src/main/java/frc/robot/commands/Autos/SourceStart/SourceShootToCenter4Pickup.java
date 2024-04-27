@@ -28,7 +28,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 
 /** Add your docs here. */
-public class CenterToCenterPickup extends SequentialCommandGroup {
+public class SourceShootToCenter4Pickup extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -43,15 +43,16 @@ public class CenterToCenterPickup extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public CenterToCenterPickup(
+        public SourceShootToCenter4Pickup(
                         CommandFactory cf,
-                        PathPlannerPath path,
+                        PathFactory pf,
                         SwerveSubsystem swerve) {
 
                 addCommands(
                                 new ParallelCommandGroup(
                                                 new RunPPath(swerve,
-                                                                path,
+                                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4
+                                                                                .name()),
                                                                 false),
                                                 cf.doIntake()));
 

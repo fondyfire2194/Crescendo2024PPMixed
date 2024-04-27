@@ -15,8 +15,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.PathFactory.sourcepaths;
 import frc.robot.commands.CommandFactory;
-import frc.robot.commands.Autos.SourceStart.SourceShootThenCenter4;
-import frc.robot.commands.Autos.SourceStart.SourceShootThenCenter5;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter5;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */
@@ -54,6 +54,8 @@ public class AutoFactory {
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5", 11);
                 m_sourceStartChooser.addOption("C5 Then C4", 12);
+                m_sourceStartChooser.addOption("C4 Then C5 Triggers", 13);
+                
 
                 Shuffleboard.getTab("Autonomous").add("AmpStart", m_ampStartChooser)
                                 .withSize(3, 1).withPosition(0, 0);

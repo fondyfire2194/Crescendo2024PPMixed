@@ -157,7 +157,8 @@ public class Robot extends TimedRobot implements Logged {
 
     if (checkAutos) {
       m_robotContainer.m_af.validStartChoice = m_robotContainer.m_af.selectAndLoadPathFiles();
-
+      if (m_robotContainer.m_af.validStartChoice > 10)
+        m_robotContainer.m_tcf.createSourceTriggers();
       SmartDashboard.putNumber("ValidStartChoice", m_robotContainer.m_af.validStartChoice);
 
     }

@@ -43,7 +43,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   private double commandrpm;
 
   public SparkLimitSwitch m_limitSwitch;
-  @Log.NT(key="simmoteatintake")
+  @Log.NT(key = "simmoteatintake")
   public boolean simnoteatintake;
   public Trigger nai;
 
@@ -139,6 +139,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public void transferToShooter() {
     enableLimitSwitch(false);
     commandrpm = Pref.getPref("TransferToShootSpeed");
+    simnoteatintake = false;
     runAtVelocity(commandrpm);
   }
 

@@ -30,6 +30,7 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.CommandFactory;
 import frc.robot.commands.JogClimber;
+import frc.robot.commands.TriggerCommandFactory;
 import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignTargetOdometryLob;
@@ -87,6 +88,9 @@ public class RobotContainer implements Logged {
 
         public final CommandFactory m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
                         m_climber, m_llv, m_af, m_pf);
+
+        public final TriggerCommandFactory m_tcf = new TriggerCommandFactory(m_swerve, m_shooter, m_arm, m_intake,
+                        m_transfer, m_climber, m_llv, m_af, m_pf, m_cf);
 
         BooleanSupplier fieldCentric;
 
@@ -147,7 +151,7 @@ public class RobotContainer implements Logged {
 
                 driver.rightBumper().onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),
-                                new TransferIntakeToSensor(m_transfer, m_intake),
+                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
                                 m_cf.rumbleCommand(driver),
                                 m_arm.setGoalCommand(ArmConstants.pickupAngle))
                                 .withTimeout(10));
@@ -332,7 +336,6 @@ public class RobotContainer implements Logged {
 
                 NamedCommands.registerCommand("ResetAll", m_cf.resetAll());
 
-
                 NamedCommands.registerCommand("Arm Shooter Pre Wing 2", m_cf.positionArmRunShooterSpecialCase(44,
                                 3000).asProxy()
                                 .withName("Arm Shooter Pre Wing 2"));
@@ -355,14 +358,6 @@ public class RobotContainer implements Logged {
                 NamedCommands.registerCommand(
                                 "DoIntake", m_cf.doIntake().asProxy()
                                                 .withName("Do Intake"));
-
-                NamedCommands.registerCommand(
-                                "ConditionalIntake", m_cf.conditionalIntake().asProxy()
-                                                .withName("Conditional Intake"));
-
-                NamedCommands.registerCommand(
-                                "Transfer To Sensor", m_cf.runToSensorCommand().asProxy()
-                                                .withName("TransferToSensor"));
 
                 NamedCommands.registerCommand(
                                 "Transfer Stop", m_transfer.stopTransferCommand().asProxy()

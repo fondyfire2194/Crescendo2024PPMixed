@@ -14,13 +14,15 @@ import frc.robot.subsystems.TransferSubsystem;
 public class TransferIntakeToSensor extends Command {
   private final TransferSubsystem m_transfer;
   private final IntakeSubsystem m_intake;
+  private final double m_noNoteTime;
   private Timer endTimer = new Timer();
 
   /** Creates a new TransferIntakeToSensor. */
-  public TransferIntakeToSensor(TransferSubsystem transfer, IntakeSubsystem intake) {
+  public TransferIntakeToSensor(TransferSubsystem transfer, IntakeSubsystem intake, double noNotetime) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transfer = transfer;
     m_intake = intake;
+    m_noNoteTime=noNotetime;
   }
 
   // Called when the command is initially scheduled.
@@ -37,7 +39,7 @@ public class TransferIntakeToSensor extends Command {
   public void execute() {
     m_transfer.runToSensor();
 
-    m_intake.noteMissed = endTimer.hasElapsed(3);
+    m_intake.noteMissed = endTimer.hasElapsed(m_noNoteTime);
 
     m_transfer.simnoteatintake = RobotBase.isSimulation() && endTimer.hasElapsed(1);
 

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.SourceStart;
+package frc.robot.commands.Autos.AutoStarts;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -29,7 +29,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 
 /** Add your docs here. */
-public class SourceShootThenCenter4 extends SequentialCommandGroup {
+public class AutoSourceShootThenCenter4 extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -44,7 +44,7 @@ public class SourceShootThenCenter4 extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public SourceShootThenCenter4(
+        public AutoSourceShootThenCenter4(
                         CommandFactory cf,
                         PathPlannerPath path,
                         AutoFactory af,

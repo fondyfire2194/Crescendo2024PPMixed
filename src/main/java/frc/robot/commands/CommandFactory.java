@@ -4,16 +4,13 @@
 
 package frc.robot.commands;
 
-import org.opencv.features2d.FlannBasedMatcher;
-import org.opencv.features2d.MSER;
-
+import com.fasterxml.jackson.databind.ser.impl.FilteredBeanPropertyWriter;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -30,17 +27,14 @@ import frc.robot.AutoFactory;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.Constants.FieldConstants;
-import frc.robot.PathFactory.sourcepaths;
 import frc.robot.LimelightHelpers;
 import frc.robot.PathFactory;
+import frc.robot.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
-import frc.robot.commands.Autos.SourceStart.CenterToCenterPickup;
-import frc.robot.commands.Autos.SourceStart.CenterToSourceShoot;
-import frc.robot.commands.Autos.SourceStart.SourceShootThenCenter4;
-import frc.robot.commands.Autos.SourceStart.SourceShootThenCenter5;
-import frc.robot.commands.Drive.AutoPickupNote;
-import frc.robot.commands.Pathplanner.NextMoveDecision;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4Triggers;
+import frc.robot.commands.Autos.SourceStart.Center4ToCenter5Pickup;
+import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
@@ -52,7 +46,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import monologue.Logged;
-import monologue.Annotations.Log;
 
 /** Add your docs here. */
 public class CommandFactory implements Logged {
@@ -87,6 +80,7 @@ public class CommandFactory implements Logged {
                 m_llv = llv;
                 m_af = af;
                 m_pf = pf;
+
         }
 
         public Command autopickup(Pose2d targetPose) {
@@ -130,25 +124,7 @@ public class CommandFactory implements Logged {
                 return new ParallelCommandGroup(
                                 m_intake.startIntakeCommand(),
                                 m_arm.setGoalCommand(ArmConstants.pickupAngle),
-                                new TransferIntakeToSensor(m_transfer, m_intake));
-        }
-
-        // @Log.NT(key = "dointakecommand")
-        public Command conditionalIntake() {
-                return new SequentialCommandGroup(
-
-                                new ParallelCommandGroup(
-                                                m_intake.startIntakeCommand(),
-                                                m_arm.setGoalCommand(ArmConstants.pickupAngle),
-                                                new TransferIntakeToSensor(m_transfer, m_intake)),
-
-                                new ConditionalCommand(new NextMoveDecision(), Commands.none(),
-                                                () -> m_transfer.noteAtIntake()));
-
-        }
-
-        public Command runToSensorCommand() {
-                return new TransferIntakeToSensor(m_transfer, m_intake);
+                                new TransferIntakeToSensor(m_transfer, m_intake, 3));
         }
 
         public Command transferNoteToShooter() {
@@ -229,15 +205,19 @@ public class CommandFactory implements Logged {
 
                 switch ((choice)) {
 
-                        case 10:
-                                return new SourceShootThenCenter4(this,
+                        case 11:
+                                return new AutoSourceShootThenCenter4(this,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                 m_af, m_pf, m_swerve, m_intake, m_shooter, m_arm, m_transfer);
 
-                        case 11:
-                                return new SourceShootThenCenter4(this,
+                        case 12:
+                                return new AutoSourceShootThenCenter4(this,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                 m_af, m_pf, m_swerve, m_intake, m_shooter, m_arm, m_transfer);
+                        case 13:
+                                return new AutoSourceShootThenCenter4Triggers(this,
+                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()), m_af, m_pf, null,
+                                                m_swerve, m_intake, m_shooter, m_arm, m_transfer);
 
                         default:
                                 return Commands.none();
@@ -252,16 +232,16 @@ public class CommandFactory implements Logged {
 
         public Command decideOn(PathPlannerPath path, PathPlannerPath path1, PathPlannerPath path2) {
                 return new ConditionalCommand(
-                                new CenterToSourceShoot(this,
-                                                path,
+                                new Center4ToSourceShoot(this,
+                                                m_pf,
                                                 m_swerve),
                                 new SequentialCommandGroup(
-                                                new CenterToCenterPickup(this,
+                                                new Center4ToCenter5Pickup(this,
                                                                 path1,
                                                                 m_swerve),
-                                                new CenterToSourceShoot(
+                                                new Center4ToSourceShoot(
                                                                 this,
-                                                                path2,
+                                                                m_pf,
                                                                 m_swerve)),
 
                                 () -> m_transfer.noteAtIntake());
@@ -276,9 +256,9 @@ public class CommandFactory implements Logged {
                                                                                 new RunPPath(m_swerve, path,
                                                                                                 false),
                                                                                 doIntake()),
-                                                                new CenterToSourceShoot(
+                                                                new Center4ToSourceShoot(
                                                                                 this,
-                                                                                path1,
+                                                                                m_pf,
                                                                                 m_swerve)),
                                                 Commands.none(),
                                                 () -> !m_intake.noteMissed));
