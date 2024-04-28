@@ -768,6 +768,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return temp1 / temp;
   }
 
+  @Log.NT(key = "isstopped")
   public boolean isStopped() {
     return mSwerveMods[0].isStopped()
         && mSwerveMods[1].isStopped()

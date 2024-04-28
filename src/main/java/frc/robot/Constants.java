@@ -238,17 +238,21 @@ public final class Constants {
                 public static final Pose2d blueNote2 = new Pose2d(2.89, 5.54, new Rotation2d());
                 public static final Pose2d blueNote3 = new Pose2d(2.89, 4.09, new Rotation2d());
 
-                public static final Pose2d centerNote1 = new Pose2d(8.28, 7.45, new Rotation2d());
-                public static final Pose2d centerNote2 = new Pose2d(8.28, 5.77, new Rotation2d());
-                public static final Pose2d centerNote3 = new Pose2d(8.28, 4.10, new Rotation2d());
-                public static final Pose2d centerNote4 = new Pose2d(8.28, 2.44, new Rotation2d());
-                public static final Pose2d centerNote5 = new Pose2d(8.28, 0.75, new Rotation2d());
+                public static final Pose2d centerNote1Blue = new Pose2d(8.28, 7.45, new Rotation2d());
+                public static final Pose2d centerNote2Blue = new Pose2d(8.28, 5.77, new Rotation2d());
+                public static final Pose2d centerNote3Blue = new Pose2d(8.28, 4.10, new Rotation2d());
+                public static final Pose2d centerNote4Blue = new Pose2d(8.28, 2.44, new Rotation2d());
+                public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new Rotation2d());
 
-                public static final Pose2d centerNote4Pickup = new Pose2d(8.49, 2.32,
-                                new Rotation2d(Units.degreesToRadians(23.2)));
-                               
-                public static final Pose2d centerNote5Pickup = new Pose2d(8.5, 0.78,
-                                new Rotation2d(Units.degreesToRadians(-3.91)));
+                public static final Pose2d centerNote4PickupBlue = new Pose2d(8.49, 2.32,
+                                new Rotation2d(Units.degreesToRadians(-157.8)));// 23.2
+                public static final Pose2d centerNote4PickupRed = new Pose2d(FIELD_LENGTH - 8.49, 2.32,
+                                new Rotation2d(Units.degreesToRadians(-23.2)));
+
+                public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
+                                new Rotation2d(Units.degreesToRadians(-176.09)));
+                public static final Pose2d centerNote5PickupRed = new Pose2d(FIELD_LENGTH - 8.5, 0.78,
+                                new Rotation2d(Units.degreesToRadians(3.91)));
 
         }
 
@@ -561,7 +565,7 @@ public final class Constants {
 
                 public static double kArmOffsetRads;
 
-                public static double armLength=Units.inchesToMeters(21.75);
+                public static double armLength = Units.inchesToMeters(21.75);
 
                 public static double armMass = Units.lbsToKilograms(30.0);
 

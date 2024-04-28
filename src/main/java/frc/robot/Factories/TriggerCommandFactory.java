@@ -5,13 +5,11 @@
 package frc.robot.Factories;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.Autos.SourceStart.Center4ToCenter5Pickup;
 import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.Center5ToSourceShoot;
-import frc.robot.commands.Autos.SourceStart.SourceShootToCenter4Pickup;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenter5Pickup;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;

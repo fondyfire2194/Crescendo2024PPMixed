@@ -418,10 +418,10 @@ public class RobotContainer implements Logged {
                 NamedCommands.registerCommand("Stop Shooter", m_shooter.stopShooterCommand().asProxy()
                                 .withName("Stop Shooter"));
 
-                NamedCommands.registerCommand("Pathfind to Pickup C4", m_cf.autopickup(FieldConstants.centerNote4Pickup)
+                NamedCommands.registerCommand("Pathfind to Pickup C4", m_cf.autopickup(FieldConstants.centerNote4PickupBlue)
                                 .withName("Pathfind to Pickup C4"));
 
-                NamedCommands.registerCommand("Pathfind to Pickup C5", m_cf.autopickup(FieldConstants.centerNote5Pickup)
+                NamedCommands.registerCommand("Pathfind to Pickup C5", m_cf.autopickup(FieldConstants.centerNote5PickupBlue)
                                 .withName("Pathfind to Pickup C5"));
 
         }

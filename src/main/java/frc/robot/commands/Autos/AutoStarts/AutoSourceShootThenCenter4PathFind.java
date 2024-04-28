@@ -4,12 +4,15 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -47,6 +50,11 @@ public class AutoSourceShootThenCenter4PathFind extends SequentialCommandGroup {
                         PathPlannerPath path,
                         SwerveSubsystem swerve) {
 
+                Pose2d temp = FieldConstants.centerNote4PickupBlue;
+                var alliance = DriverStation.getAlliance();
+                if (alliance.isPresent() && alliance.get() == Alliance.Red)
+                        temp = FieldConstants.centerNote4PickupRed;
+
                 addCommands(
                                 // shoot first note
                                 cf.setStartPosebyAlliance(path),
@@ -60,7 +68,7 @@ public class AutoSourceShootThenCenter4PathFind extends SequentialCommandGroup {
                                                 path,
                                                 false),
                                 new ParallelCommandGroup(
-                                                cf.autopickup(FieldConstants.centerNote4Pickup),
+                                                cf.autopickup(temp),
                                                 cf.doIntake()));
 
         }
