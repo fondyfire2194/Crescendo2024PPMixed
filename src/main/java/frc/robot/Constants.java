@@ -246,6 +246,7 @@ public final class Constants {
 
                 public static final Pose2d centerNote4Pickup = new Pose2d(8.49, 2.32,
                                 new Rotation2d(Units.degreesToRadians(23.2)));
+                               
                 public static final Pose2d centerNote5Pickup = new Pose2d(8.5, 0.78,
                                 new Rotation2d(Units.degreesToRadians(-3.91)));
 

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -26,7 +27,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 
 /** Add your docs here. */
-public class AutoSourceShootThenCenter4 extends SequentialCommandGroup {
+public class AutoSourceShootThenCenter4PathFind extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -41,16 +42,10 @@ public class AutoSourceShootThenCenter4 extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public AutoSourceShootThenCenter4(
+        public AutoSourceShootThenCenter4PathFind(
                         CommandFactory cf,
                         PathPlannerPath path,
-                        AutoFactory af,
-                        PathFactory pf,
-                        SwerveSubsystem swerve,
-                        IntakeSubsystem intake,
-                        ShooterSubsystem shooter,
-                        ArmSubsystem arm,
-                        TransferSubsystem transfer) {
+                        SwerveSubsystem swerve) {
 
                 addCommands(
                                 // shoot first note
@@ -60,22 +55,13 @@ public class AutoSourceShootThenCenter4 extends SequentialCommandGroup {
                                 cf.transferNoteToShooter(),
                                 // move to center note 4, pick up if there and move to shoot position then shoot
                                 // if note at 4 not picked up, try note at 5 and shoot it
+
+                                new RunPPath(swerve,
+                                                path,
+                                                false),
                                 new ParallelCommandGroup(
-                                                new RunPPath(swerve,
-                                                                path,
-                                                                false),
-                                                cf.doIntake()),
-
-                                // cf.decideOn(
-                                //                 pf.pathMaps.get(sourcepaths.Center4ToSourceShoot.name()),
-                                //                 pf.pathMaps.get(sourcepaths.Center4ToCenter5.name()),
-                                //                 pf.pathMaps.get(sourcepaths.Center5ToSourceShoot.name())),
-
-                                // go back for note at center 5 if it wasn't tried before
-
-                                cf.getSecondCenterNote(
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
-                                                pf.pathMaps.get(sourcepaths.Center5ToSourceShoot.name())));
+                                                cf.autopickup(FieldConstants.centerNote4Pickup),
+                                                cf.doIntake()));
 
         }
 

@@ -41,6 +41,7 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
+import frc.robot.Robot;
 import frc.robot.utils.LimelightTagsUpdate;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -385,7 +386,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   @Log.NT(key = "Poseestimate")
   public Pose2d getPose() {
-    return swervePoseEstimator.getEstimatedPosition();
+    if (RobotBase.isReal())
+      return swervePoseEstimator.getEstimatedPosition();
+    else
+      return simOdometryPose;
   }
 
   public double getX() {

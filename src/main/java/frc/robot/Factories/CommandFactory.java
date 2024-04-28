@@ -27,7 +27,7 @@ import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.LimelightHelpers;
 import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootOnFlyThenCenterTriggers;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4PathFind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenterTriggers;
 import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Pathplanner.RunPPath;
@@ -40,6 +40,7 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import monologue.Annotations.Log;
 import monologue.Logged;
 
 /** Add your docs here. */
@@ -62,6 +63,10 @@ public class CommandFactory implements Logged {
         private final AutoFactory m_af;
 
         private final PathFactory m_pf;
+        @Log.NT(key = "startpose")
+        Pose2d temp = new Pose2d();
+        @Log.NT(key = "startposeflipped")
+        private Pose2d tempFlipped = new Pose2d();
 
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer, ClimberSubsystem climber,
@@ -179,14 +184,15 @@ public class CommandFactory implements Logged {
 
         public Command setStartPosebyAlliance(PathPlannerPath path) {
 
-                Pose2d temp = path.getPreviewStartingHolonomicPose();
+                temp = path.getPreviewStartingHolonomicPose();
 
                 var alliance = DriverStation.getAlliance();
 
                 if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red)
 
                 {
-                        return Commands.runOnce(() -> m_swerve.resetPoseEstimator(flipPose(temp)));
+                        tempFlipped = flipPose(temp);
+                        return Commands.runOnce(() -> m_swerve.resetPoseEstimator(tempFlipped));
                 } else
                         return Commands.runOnce(() -> m_swerve.resetPoseEstimator(temp));
 
@@ -201,20 +207,25 @@ public class CommandFactory implements Logged {
                 switch ((choice)) {
 
                         case 11:
-                                return new AutoSourceShootThenCenter4(this,
+                                return new AutoSourceShootThenCenter4PathFind(this,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
-                                                m_af, m_pf, m_swerve, m_intake, m_shooter, m_arm, m_transfer);
+                                                m_swerve);
 
                         case 12:
-                                return new AutoSourceShootThenCenter4(this,
+                                return new AutoSourceShootThenCenter4PathFind(this,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
-                                                m_af, m_pf, m_swerve, m_intake, m_shooter, m_arm, m_transfer);
+                                                m_swerve);
                         case 13:
                                 return new AutoSourceShootThenCenterTriggers(this,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()), m_swerve);
                         case 14:
                                 return new AutoSourceShootOnFlyThenCenterTriggers(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4ShootMoving.name()), m_swerve);
+                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4ShootMoving.name()),
+                                                m_swerve);
+                        case 15:
+                                return new AutoSourceShootThenCenter4PathFind(this,
+                                                m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
+                                                m_swerve);
 
                         default:
                                 return Commands.none();

@@ -53,6 +53,7 @@ public class AutoFactory implements Logged{
                 m_sourceStartChooser.addOption("C5 Then C4", 12);
                 m_sourceStartChooser.addOption("C4 Then C5 Triggers", 13);
                 m_sourceStartChooser.addOption("C4 Then C5 Shoot Moving", 14);
+                m_sourceStartChooser.addOption("C4 Pathfind Then C5 Shoot", 15);
 
                 Shuffleboard.getTab("Autonomous").add("AmpStart", m_ampStartChooser)
                                 .withSize(3, 1).withPosition(0, 0);
