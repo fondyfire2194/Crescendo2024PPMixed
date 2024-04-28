@@ -26,8 +26,9 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.LimelightHelpers;
 import frc.robot.commands.Arm.CheckArmAtTarget;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootOnFlyThenCenterTriggers;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4Triggers;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenterTriggers;
 import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
@@ -209,8 +210,11 @@ public class CommandFactory implements Logged {
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                 m_af, m_pf, m_swerve, m_intake, m_shooter, m_arm, m_transfer);
                         case 13:
-                                return new AutoSourceShootThenCenter4Triggers(this,
+                                return new AutoSourceShootThenCenterTriggers(this,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()), m_swerve);
+                        case 14:
+                                return new AutoSourceShootOnFlyThenCenterTriggers(this,
+                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4ShootMoving.name()), m_swerve);
 
                         default:
                                 return Commands.none();

@@ -13,9 +13,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.SwerveSubsystem;
+import monologue.Logged;
+import monologue.Annotations.Log;
 
 /** Add your docs here. */
-public class AutoFactory {
+public class AutoFactory implements Logged{
 
         private final PathFactory m_pf;
 
@@ -32,7 +34,7 @@ public class AutoFactory {
 
         int sourceChoice;
         int sourceChoiceLast;
-
+        @Log.NT(key = "validstartchoice")
         public int validStartChoice = 0;
 
         public AutoFactory(PathFactory pf, SwerveSubsystem swerve) {
@@ -42,15 +44,15 @@ public class AutoFactory {
                 m_swerve = swerve;
 
                 m_ampStartChooser.setDefaultOption("Not Used", 0);
-                m_ampStartChooser.addOption("Leave Zone", 1);
-                m_ampStartChooser.addOption("C2 then C1", 2);
-                m_ampStartChooser.addOption("C1 then C2", 3);
+
+                m_ampStartChooser.addOption("C2 then C1", 1);
+                m_ampStartChooser.addOption("C1 then C2", 2);
 
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5", 11);
                 m_sourceStartChooser.addOption("C5 Then C4", 12);
                 m_sourceStartChooser.addOption("C4 Then C5 Triggers", 13);
-                
+                m_sourceStartChooser.addOption("C4 Then C5 Shoot Moving", 14);
 
                 Shuffleboard.getTab("Autonomous").add("AmpStart", m_ampStartChooser)
                                 .withSize(3, 1).withPosition(0, 0);

@@ -4,6 +4,8 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
+import org.ejml.dense.fixed.MatrixFeatures_DDF2;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -20,6 +22,7 @@ import frc.robot.Constants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
+import frc.robot.Factories.TriggerCommandFactory;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.ArmSubsystem;
@@ -29,7 +32,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 
 /** Add your docs here. */
-public class AutoSourceShootThenCenter5 extends SequentialCommandGroup {
+public class AutoSourceShootOnFlyThenCenterTriggers extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -44,41 +47,27 @@ public class AutoSourceShootThenCenter5 extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public AutoSourceShootThenCenter5(
+        public AutoSourceShootOnFlyThenCenterTriggers(
                         CommandFactory cf,
                         PathPlannerPath path,
-                        AutoFactory af,
-                        PathFactory pf,
-                        SwerveSubsystem swerve,
-                        IntakeSubsystem intake,
-                        ShooterSubsystem shooter,
-                        ArmSubsystem arm,
-                        TransferSubsystem transfer) {
+                        SwerveSubsystem swerve) {
 
                 addCommands(
+
                                 // shoot first note
                                 cf.setStartPosebyAlliance(path),
-                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed),
-                                cf.transferNoteToShooter(),
-                                // move to center note 4, pick up if there and move to shoot position then shoot
-                                // if note at 4 not picked up, try note at 5 and shoot it
+                                cf.positionArmRunShooterSpecialCase(Constants.autoShootArmAngle,
+                                                Constants.autoShootRPM),
+                                // path auto shoots on the fly
+                                // move to center note , pick up if there and move to shoot position then shoot
+
                                 new ParallelCommandGroup(
                                                 new RunPPath(swerve,
                                                                 path,
                                                                 false),
-                                                cf.doIntake()),
-
-                                // cf.decideOn(
-                                //                 pf.pathMaps.get(sourcepaths.Center4ToSourceShoot.name()),
-                                //                 pf.pathMaps.get(sourcepaths.Center4ToCenter5.name()),
-                                //                 pf.pathMaps.get(sourcepaths.Center5ToSourceShoot.name())),
-
-                                // go back for note at center 5 if it wasn't tried before
-
-                                cf.getSecondCenterNote(
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
-                                                pf.pathMaps.get(sourcepaths.Center5ToSourceShoot.name())));
+                                                new SequentialCommandGroup(
+                                                                Commands.waitSeconds(1),
+                                                                cf.doIntake())));
 
         }
 

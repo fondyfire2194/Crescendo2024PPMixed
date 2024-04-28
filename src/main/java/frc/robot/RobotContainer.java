@@ -411,8 +411,8 @@ public class RobotContainer implements Logged {
                                                 .withName("Arm Shooter Amp Shoot"));
 
                 NamedCommands.registerCommand("Arm Shooter Source",
-                                m_cf.positionArmRunShooterSpecialCase(Constants.shotSourceAngle,
-                                                Constants.shotSourceSpeed).asProxy()
+                                m_cf.positionArmRunShooterSpecialCase(Constants.sourceShootAngle,
+                                                Constants.sourceShootSpeed).asProxy()
                                                 .withName("Arm Shooter Source"));
 
                 NamedCommands.registerCommand("Stop Shooter", m_shooter.stopShooterCommand().asProxy()

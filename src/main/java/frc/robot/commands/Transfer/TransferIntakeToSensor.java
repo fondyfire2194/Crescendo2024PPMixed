@@ -32,6 +32,7 @@ public class TransferIntakeToSensor extends Command {
     endTimer.start();
     m_intake.noteMissed = false;
     m_transfer.simnoteatintake = false;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -53,6 +54,7 @@ public class TransferIntakeToSensor extends Command {
       m_intake.stopMotor();
     m_transfer.intaketries++;
     m_transfer.enableLimitSwitch(false);
+
   }
 
   // Returns true when the command should end.

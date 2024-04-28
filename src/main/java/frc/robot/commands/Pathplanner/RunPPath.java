@@ -31,7 +31,7 @@ public class RunPPath extends SequentialCommandGroup {
     m_path = path;
     m_setStartPose = setStartPose;
     addRequirements(m_swerve);
-    m_swerve.pathRunning = true;
+    m_swerve.setPathStarted();
     startPosebyAlliance = GeometryUtil.flipFieldPose(m_path.getPreviewStartingHolonomicPose());
     addCommands(
         new ConditionalCommand(m_swerve.setPose(startPosebyAlliance),

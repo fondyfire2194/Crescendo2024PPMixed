@@ -136,6 +136,13 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "noteseentime")
   private double noteSeenTime;
 
+  public Integer cameraSelection = 0;
+  @Log.NT(key = "fromlocation")
+  public int fromLocation;
+
+  private boolean pathRunning;
+  private boolean pathStarted;
+
   LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this, true);
   LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this, true);
 
@@ -562,6 +569,13 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
     frUpdate.execute();
 
+    if (getPathRunning() && isStopped())
+      resetPathRunning();
+
+    if (getPathStarted() && !isStopped()) {
+      setPathRunning();
+      resetPathStarted();
+    }
   }
 
   @Log.NT(key = "SpeakerDistance")
@@ -798,11 +812,29 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
           },
           this));
 
-  public Integer cameraSelection = 0;
+  public void setPathRunning() {
+    pathRunning = true;
+  }
 
-public int fromLocation;
+  public void resetPathRunning() {
+    pathRunning = false;
+  }
 
-public boolean pathRunning;
+  public boolean getPathRunning() {
+    return pathRunning;
+  }
+
+  public void setPathStarted() {
+    pathStarted = true;
+  }
+
+  public void resetPathStarted() {
+    pathStarted = false;
+  }
+
+  public boolean getPathStarted() {
+    return pathStarted;
+  }
 
   public Command quasistaticForward() {
     return Commands.sequence(

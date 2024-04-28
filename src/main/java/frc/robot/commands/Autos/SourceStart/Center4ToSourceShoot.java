@@ -48,7 +48,7 @@ public class Center4ToSourceShoot extends SequentialCommandGroup {
                                                 pf.pathMaps.get(sourcepaths.Center4ToSourceShoot.name()) ,
                                                                 false),
                                                 cf.positionArmRunShooterSpecialCase(
-                                                                Constants.shotSourceAngle, Constants.shotSourceSpeed)),
+                                                                Constants.sourceShootAngle, Constants.sourceShootSpeed)),
                                 cf.transferNoteToShooter());
 
         }

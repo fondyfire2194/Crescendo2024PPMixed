@@ -32,7 +32,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 
 /** Add your docs here. */
-public class AutoSourceShootThenCenter4Triggers extends SequentialCommandGroup {
+public class AutoSourceShootThenCenterTriggers extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -47,7 +47,7 @@ public class AutoSourceShootThenCenter4Triggers extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public AutoSourceShootThenCenter4Triggers(
+        public AutoSourceShootThenCenterTriggers(
                         CommandFactory cf,
                         PathPlannerPath path,
                         SwerveSubsystem swerve) {
@@ -59,7 +59,7 @@ public class AutoSourceShootThenCenter4Triggers extends SequentialCommandGroup {
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
                                 cf.transferNoteToShooter(),
-                                // move to center note 4, pick up if there and move to shoot position then shoot
+                                // move to center note , pick up if there and move to shoot position then shoot
 
                                 new ParallelCommandGroup(
                                                 new RunPPath(swerve,
