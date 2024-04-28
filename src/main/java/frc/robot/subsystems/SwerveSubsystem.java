@@ -803,6 +803,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public Integer cameraSelection = 0;
 
+public int fromCenter;
+
   public Command quasistaticForward() {
     return Commands.sequence(
         runOnce(

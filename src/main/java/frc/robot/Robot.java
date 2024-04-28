@@ -196,6 +196,8 @@ public class Robot extends TimedRobot implements Logged {
 
     startTime = Timer.getFPGATimestamp();
     SmartDashboard.putNumber("Finalchoice", m_robotContainer.m_af.finalChoice);
+    m_robotContainer.m_intake.tries = 0;
+    m_robotContainer.m_transfer.notesShot = 0;
     if (m_robotContainer.m_af.finalChoice == 0)
       m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     else

@@ -47,21 +47,11 @@ public class AutoSourceShootThenCenter4Triggers extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        private final TriggerCommandFactory m_tcf;
-
         public AutoSourceShootThenCenter4Triggers(
                         CommandFactory cf,
                         PathPlannerPath path,
-                        AutoFactory af,
-                        PathFactory pf,
-                        TriggerCommandFactory tcf,
-                        SwerveSubsystem swerve,
-                        IntakeSubsystem intake,
-                        ShooterSubsystem shooter,
-                        ArmSubsystem arm,
-                        TransferSubsystem transfer) {
-                m_tcf = tcf;
-                // m_tcf.createSourceTriggers();
+                        SwerveSubsystem swerve) {
+
                 addCommands(
 
                                 // shoot first note
@@ -76,7 +66,6 @@ public class AutoSourceShootThenCenter4Triggers extends SequentialCommandGroup {
                                                                 path,
                                                                 false),
                                                 cf.doIntake()));
-              
 
         }
 

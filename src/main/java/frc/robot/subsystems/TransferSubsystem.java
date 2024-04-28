@@ -45,7 +45,8 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public SparkLimitSwitch m_limitSwitch;
   @Log.NT(key = "simmoteatintake")
   public boolean simnoteatintake;
-  public Trigger nai;
+  @Log.NT(key = "notesshot")
+  public int notesShot;
 
   /** Creates a new transfer. */
   public TransferSubsystem(boolean showScreens) {
@@ -58,7 +59,6 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
     m_limitSwitch = transferMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     m_limitSwitch.enableLimitSwitch(true);
-    nai = new Trigger(() -> noteAtIntake());
 
     if (m_showScreens) {
 
@@ -140,6 +140,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
     enableLimitSwitch(false);
     commandrpm = Pref.getPref("TransferToShootSpeed");
     simnoteatintake = false;
+    notesShot++;
     runAtVelocity(commandrpm);
   }
 

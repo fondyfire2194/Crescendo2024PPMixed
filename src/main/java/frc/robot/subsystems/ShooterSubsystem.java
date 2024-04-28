@@ -58,6 +58,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(2500);
   private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(2500);
+  
 
   /** Creates a new Shooter. */
   public ShooterSubsystem(boolean showScreens) {

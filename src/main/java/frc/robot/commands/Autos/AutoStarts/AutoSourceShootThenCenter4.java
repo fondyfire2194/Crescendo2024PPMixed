@@ -69,10 +69,10 @@ public class AutoSourceShootThenCenter4 extends SequentialCommandGroup {
                                                                 false),
                                                 cf.doIntake()),
 
-                                cf.decideOn(
-                                                pf.pathMaps.get(sourcepaths.Center4ToSourceShoot.name()),
-                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5.name()),
-                                                pf.pathMaps.get(sourcepaths.Center5ToSourceShoot.name())),
+                                // cf.decideOn(
+                                //                 pf.pathMaps.get(sourcepaths.Center4ToSourceShoot.name()),
+                                //                 pf.pathMaps.get(sourcepaths.Center4ToCenter5.name()),
+                                //                 pf.pathMaps.get(sourcepaths.Center5ToSourceShoot.name())),
 
                                 // go back for note at center 5 if it wasn't tried before
 

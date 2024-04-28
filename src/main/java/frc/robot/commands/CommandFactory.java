@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import com.fasterxml.jackson.databind.ser.impl.FilteredBeanPropertyWriter;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
@@ -14,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -22,7 +20,6 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.AutoFactory;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
@@ -33,7 +30,6 @@ import frc.robot.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4Triggers;
-import frc.robot.commands.Autos.SourceStart.Center4ToCenter5Pickup;
 import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
@@ -216,8 +212,7 @@ public class CommandFactory implements Logged {
                                                 m_af, m_pf, m_swerve, m_intake, m_shooter, m_arm, m_transfer);
                         case 13:
                                 return new AutoSourceShootThenCenter4Triggers(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()), m_af, m_pf, null,
-                                                m_swerve, m_intake, m_shooter, m_arm, m_transfer);
+                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()), m_swerve);
 
                         default:
                                 return Commands.none();
@@ -228,23 +223,6 @@ public class CommandFactory implements Logged {
 
         public Command getAutonomousCommand() {
                 return finalCommand(m_af.finalChoice);
-        }
-
-        public Command decideOn(PathPlannerPath path, PathPlannerPath path1, PathPlannerPath path2) {
-                return new ConditionalCommand(
-                                new Center4ToSourceShoot(this,
-                                                m_pf,
-                                                m_swerve),
-                                new SequentialCommandGroup(
-                                                new Center4ToCenter5Pickup(this,
-                                                                path1,
-                                                                m_swerve),
-                                                new Center4ToSourceShoot(
-                                                                this,
-                                                                m_pf,
-                                                                m_swerve)),
-
-                                () -> m_transfer.noteAtIntake());
         }
 
         public Command getSecondCenterNote(PathPlannerPath path, PathPlannerPath path1) {

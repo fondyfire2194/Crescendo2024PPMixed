@@ -32,6 +32,7 @@ public class TransferIntakeToSensor extends Command {
     endTimer.start();
     m_intake.noteMissed = false;
     m_transfer.simnoteatintake = false;
+    m_intake.tries++;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

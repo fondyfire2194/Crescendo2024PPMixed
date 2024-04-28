@@ -39,8 +39,9 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   private SlewRateLimiter intakeLimiter = new SlewRateLimiter(1500);
   @Log.NT(key = "intakecommandrpm")
   private double commandrpm;
-  @Log.NT(key = "notemissed")
   public boolean noteMissed;
+  @Log.NT(key = "intaketries")
+  public int tries;
 
   /** Creates a new Intake. */
   public IntakeSubsystem(boolean showScreens) {
