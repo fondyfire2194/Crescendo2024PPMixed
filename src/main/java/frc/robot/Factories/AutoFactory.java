@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot;
+package frc.robot.Factories;
 
 import java.util.Map;
 
@@ -11,12 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.PathFactory.sourcepaths;
-import frc.robot.commands.CommandFactory;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter5;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */

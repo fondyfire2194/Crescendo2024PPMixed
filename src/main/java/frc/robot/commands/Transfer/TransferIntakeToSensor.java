@@ -22,7 +22,7 @@ public class TransferIntakeToSensor extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transfer = transfer;
     m_intake = intake;
-    m_noNoteTime=noNotetime;
+    m_noNoteTime = noNotetime;
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +32,6 @@ public class TransferIntakeToSensor extends Command {
     endTimer.start();
     m_intake.noteMissed = false;
     m_transfer.simnoteatintake = false;
-    m_intake.tries++;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -52,7 +51,7 @@ public class TransferIntakeToSensor extends Command {
     m_transfer.stopMotor();
     if (DriverStation.isTeleopEnabled())
       m_intake.stopMotor();
-
+    m_transfer.intaketries++;
     m_transfer.enableLimitSwitch(false);
   }
 

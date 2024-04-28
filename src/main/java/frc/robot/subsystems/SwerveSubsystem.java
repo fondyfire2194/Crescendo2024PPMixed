@@ -15,7 +15,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -39,11 +38,9 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
-import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -803,7 +800,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public Integer cameraSelection = 0;
 
-public int fromCenter;
+public int fromLocation;
+
+public boolean pathRunning;
 
   public Command quasistaticForward() {
     return Commands.sequence(

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.Factories;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
@@ -20,13 +20,11 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.AutoFactory;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.LimelightHelpers;
-import frc.robot.PathFactory;
-import frc.robot.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4Triggers;

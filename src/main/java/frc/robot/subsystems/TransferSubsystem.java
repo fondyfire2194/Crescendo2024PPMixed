@@ -47,6 +47,8 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean simnoteatintake;
   @Log.NT(key = "notesshot")
   public int notesShot;
+  @Log.NT(key = "intaketries")
+  public int intaketries;
 
   /** Creates a new transfer. */
   public TransferSubsystem(boolean showScreens) {

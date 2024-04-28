@@ -40,9 +40,7 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "intakecommandrpm")
   private double commandrpm;
   public boolean noteMissed;
-  @Log.NT(key = "intaketries")
-  public int tries;
-
+  
   /** Creates a new Intake. */
   public IntakeSubsystem(boolean showScreens) {
     m_showScreens = showScreens;
