@@ -91,8 +91,8 @@ public class RobotContainer implements Logged {
         public final CommandFactory m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
                         m_climber, m_llv, m_af, m_pf);
 
-        public final TriggerCommandFactory m_tcf = new TriggerCommandFactory(m_swerve, m_shooter, m_arm, m_intake,
-                        m_transfer, m_climber, m_llv, m_af, m_pf, m_cf);
+        public final TriggerCommandFactory m_tcf = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
+                        m_llv, m_pf, m_cf);
 
         BooleanSupplier fieldCentric;
 
@@ -418,11 +418,13 @@ public class RobotContainer implements Logged {
                 NamedCommands.registerCommand("Stop Shooter", m_shooter.stopShooterCommand().asProxy()
                                 .withName("Stop Shooter"));
 
-                NamedCommands.registerCommand("Pathfind to Pickup C4", m_cf.autopickup(FieldConstants.centerNote4PickupBlue)
-                                .withName("Pathfind to Pickup C4"));
+                NamedCommands.registerCommand("Pathfind to Pickup C4",
+                                m_cf.autopickup(FieldConstants.centerNote4PickupBlue)
+                                                .withName("Pathfind to Pickup C4"));
 
-                NamedCommands.registerCommand("Pathfind to Pickup C5", m_cf.autopickup(FieldConstants.centerNote5PickupBlue)
-                                .withName("Pathfind to Pickup C5"));
+                NamedCommands.registerCommand("Pathfind to Pickup C5",
+                                m_cf.autopickup(FieldConstants.centerNote5PickupBlue)
+                                                .withName("Pathfind to Pickup C5"));
 
         }
 

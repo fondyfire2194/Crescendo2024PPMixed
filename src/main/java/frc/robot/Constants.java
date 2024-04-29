@@ -3,6 +3,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
+import com.pathplanner.lib.util.GeometryUtil;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -194,7 +195,7 @@ public final class Constants {
                                 flModuleOffset.getNorm(), // Drive base radius (distance from center to furthest module)
                                 // new ReplanningConfig(true,true,.1,5));replan if error > .1 meter or error
                                 // spike >5 meters
-                                new ReplanningConfig());//initial replanning only
+                                new ReplanningConfig());// initial replanning only
 
                 public static double alignKp = .02;
                 public static double alighKd = 0;
@@ -211,7 +212,7 @@ public final class Constants {
 
                 public static double odometryUpdateFrequency = 100;
 
-                public static double notePickupSpeed = .1;
+                public static double notePickupSpeed = 1;
 
                 public static double wheelRadius = Units.inchesToMeters(4) / 2;
 
@@ -248,14 +249,13 @@ public final class Constants {
 
                 public static final Pose2d centerNote4PickupBlue = new Pose2d(8.49, 2.32,
                                 new Rotation2d(Units.degreesToRadians(-157.8)));// 23.2
-                public static final Pose2d centerNote4PickupRed = new Pose2d(FIELD_LENGTH - 8.49, 2.32,
-                                new Rotation2d(Units.degreesToRadians(-23.2)));
 
                 public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
                                 new Rotation2d(Units.degreesToRadians(-176.09)));
-                public static final Pose2d centerNote5PickupRed = new Pose2d(FIELD_LENGTH - 8.5, 0.78,
-                                new Rotation2d(Units.degreesToRadians(3.91)));
-
+               
+                public static final Pose2d sourceShootBlue = new Pose2d(4.12, 2.18,
+                                new Rotation2d(Units.degreesToRadians(150)));
+            
         }
 
         public static Pose2d getActiveSpeakerPose() {

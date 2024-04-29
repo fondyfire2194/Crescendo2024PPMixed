@@ -15,7 +15,7 @@ public class RotateToAngle extends PIDCommand {
   /** Creates a new RotateToAngle. */
   private SwerveSubsystem m_drive;
 
-  private static PIDController rotatePID = new PIDController(0, 0, 0);
+  private static PIDController rotatePID = new PIDController(0.1, 0, 0);
 
   public RotateToAngle(SwerveSubsystem drive, double angle) {
 
@@ -23,7 +23,7 @@ public class RotateToAngle extends PIDCommand {
         // The controller that the command will use
         rotatePID,
         // This should return the measurement
-        () -> drive.getHeadingDegrees(),
+        () -> drive.getPose().getRotation().getDegrees(),
         // This should return the setpoint (can also be a constant)
         () -> angle,
         // This uses the output

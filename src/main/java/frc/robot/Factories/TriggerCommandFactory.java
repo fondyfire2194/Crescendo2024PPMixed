@@ -5,19 +5,23 @@
 package frc.robot.Factories;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import frc.robot.commands.Autos.SourceStart.Center4ToCenter5Pickup;
+import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.Center5ToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenter5Pickup;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.commands.Drive.DriveToPickupNote;
+import frc.robot.commands.Drive.RotateToAngle;
+import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.GeometryUtil;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -25,24 +29,12 @@ import monologue.Logged;
 public class TriggerCommandFactory implements Logged {
 
         private final SwerveSubsystem m_swerve;
-
         private final IntakeSubsystem m_intake;
-
         private final TransferSubsystem m_transfer;
-
-        private final ShooterSubsystem m_shooter;
-
-        private final ArmSubsystem m_arm;
-
         private final LimelightVision m_llv;
-
-        private final ClimberSubsystem m_climber;
-
-        private final AutoFactory m_af;
-
         private final PathFactory m_pf;
-
         private final CommandFactory m_cf;
+
         @Log.NT(key = "trig1")
         private boolean trig1;
         @Log.NT(key = "trig2")
@@ -56,17 +48,12 @@ public class TriggerCommandFactory implements Logged {
         @Log.NT(key = "trig6")
         private boolean trig6;
 
-        public TriggerCommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
-                        IntakeSubsystem intake, TransferSubsystem transfer, ClimberSubsystem climber,
-                        LimelightVision llv, AutoFactory af, PathFactory pf, CommandFactory cf) {
+        public TriggerCommandFactory(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,
+                        LimelightVision llv, PathFactory pf, CommandFactory cf) {
                 m_swerve = swerve;
-                m_shooter = shooter;
-                m_arm = arm;
                 m_intake = intake;
                 m_transfer = transfer;
-                m_climber = climber;
                 m_llv = llv;
-                m_af = af;
                 m_pf = pf;
                 m_cf = cf;
         }
@@ -84,23 +71,25 @@ public class TriggerCommandFactory implements Logged {
 
                 resettrigs();
 
-                // move to shoot if a note C4 is picked up
+                // move to shoot if a note C4 is picked up. Set source of move
 
                 Trigger triggerC4ToSS = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
-                                && m_transfer.noteAtIntake() && m_transfer.intaketries == 1);
+                                && m_swerve.fromLocation == 0 && m_transfer.noteAtIntake()
+                                && m_transfer.intaketries == 1);
 
-                triggerC4ToSS.onTrue(new Center4ToSourceShoot(m_cf, m_pf, m_swerve))
-                                .onTrue(Commands.runOnce(() -> m_swerve.fromLocation = 4))
-                                .onTrue(Commands.runOnce(() -> trig1 = true));
-                              
+                triggerC4ToSS.onTrue(Commands.parallel(
+                                new Center4ToSourceShoot(m_cf, m_pf, m_swerve),
+                                Commands.runOnce(() -> m_swerve.fromLocation = 4),
+                                Commands.runOnce(() -> trig1 = true)));
+
                 // when shot from note C4 ends go try for note C5
                 Trigger triggerSSToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
                                 && m_transfer.isStopped() && !m_transfer.noteAtIntake() && m_swerve.fromLocation == 4);
 
-                triggerSSToC5.onTrue(new SourceShootToCenter5Pickup(m_cf, m_pf, m_swerve))
-                                .onTrue(Commands.runOnce(() -> m_swerve.fromLocation = 10))
-                                .onTrue(Commands.runOnce(() -> trig2 = true));
-                                
+                triggerSSToC5.onTrue(Commands.parallel(
+                                new SourceShootToCenter5Pickup(m_cf, m_pf, m_swerve),
+                                Commands.runOnce(() -> m_swerve.fromLocation = 10),
+                                Commands.runOnce(() -> trig2 = true)));
 
                 // // if note C5 is picked up, go shoot it
                 Trigger triggerC5ToSS = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
@@ -108,21 +97,30 @@ public class TriggerCommandFactory implements Logged {
                                 && (m_swerve.fromLocation == 10 || m_swerve.fromLocation == 4)
                                 && m_transfer.intaketries > 1);
 
-                triggerC5ToSS.onTrue(new Center5ToSourceShoot(m_cf, m_pf, m_swerve))
-                                .onTrue(Commands.runOnce(() -> m_swerve.fromLocation = 5))
-                                .onTrue(Commands.runOnce(() -> trig3 = true));
-                              
+                triggerC5ToSS.onTrue(Commands.parallel(
+                                new Center5ToSourceShoot(m_cf, m_pf, m_swerve),
+                                Commands.runOnce(() -> m_swerve.fromLocation = 5),
+                                Commands.runOnce(() -> trig3 = true)));
 
                 // // if note C4 isn't collected, go try C5
                 Trigger triggerC4ToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled()
-                                && m_swerve.isStopped()
-                                && !m_transfer.noteAtIntake() && m_swerve.fromLocation == 0
-                                && m_transfer.intaketries == 1);
+                                && m_swerve.isStopped() && !m_transfer.noteAtIntake()
+                                && m_swerve.fromLocation == 0 && m_transfer.intaketries == 1);
 
-                triggerC4ToC5.onTrue(new Center4ToCenter5Pickup(m_cf, m_pf, m_swerve))
-                                .onTrue(Commands.runOnce(() -> m_swerve.fromLocation = 4))
-                                .onTrue(Commands.runOnce(() -> trig4 = true));
-                       
+                triggerC4ToC5.onTrue(Commands.sequence(
+                                new RotateToAngle(m_swerve, 90),
+                                m_intake.startIntakeCommand(),
+                                new TransferIntakeToSensor(m_transfer, m_intake, .6),
+                                new DriveToPickupNote(m_swerve, m_transfer, m_intake,
+                                                CameraConstants.rearCamera.camname, m_llv,
+                                                FieldConstants.centerNote5Blue),
+                                new ConditionalCommand(
+                                                m_cf.autopickup(FieldConstants.sourceShootBlue),
+                                                m_cf.autopickup(GeometryUtil
+                                                                .flipFieldPose(FieldConstants.sourceShootBlue)),
+                                                () -> DriverStation.getAlliance().isPresent()
+                                                                && DriverStation.getAlliance()
+                                                                                .get() == Alliance.Blue)));
 
         }
 

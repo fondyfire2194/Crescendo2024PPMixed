@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.ArmShooterByDistance;
 import frc.robot.utils.LLPipelines;
@@ -132,6 +133,9 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_arm.enableArm = false;
     if (m_robotContainer.m_arm.getCanCoderDeg() < 26)
       m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kCoast);
+
+     
+
   }
 
   @Override
@@ -202,6 +206,7 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
     m_robotContainer.m_transfer.notesShot = 0;
     m_robotContainer.m_swerve.fromLocation = 0;
+    m_robotContainer.m_transfer.skipFirstNoteInSim = true;
     if (m_robotContainer.m_af.finalChoice == 0)
       m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     else
@@ -261,7 +266,7 @@ public class Robot extends TimedRobot implements Logged {
 
   @Override
   public void teleopPeriodic() {
-
+   
   }
 
   @Override

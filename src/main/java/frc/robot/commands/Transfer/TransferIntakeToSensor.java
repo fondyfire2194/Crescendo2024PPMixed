@@ -16,6 +16,7 @@ public class TransferIntakeToSensor extends Command {
   private final IntakeSubsystem m_intake;
   private final double m_noNoteTime;
   private Timer endTimer = new Timer();
+  private double simmotetime = 1;
 
   /** Creates a new TransferIntakeToSensor. */
   public TransferIntakeToSensor(TransferSubsystem transfer, IntakeSubsystem intake, double noNotetime) {
@@ -32,7 +33,6 @@ public class TransferIntakeToSensor extends Command {
     endTimer.start();
     m_intake.noteMissed = false;
     m_transfer.simnoteatintake = false;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -42,7 +42,8 @@ public class TransferIntakeToSensor extends Command {
 
     m_intake.noteMissed = endTimer.hasElapsed(m_noNoteTime);
 
-    m_transfer.simnoteatintake = RobotBase.isSimulation() && endTimer.hasElapsed(1);
+    m_transfer.simnoteatintake = RobotBase.isSimulation() && endTimer.hasElapsed(simmotetime)
+        && !m_transfer.skipFirstNoteInSim;
 
   }
 
@@ -54,7 +55,7 @@ public class TransferIntakeToSensor extends Command {
       m_intake.stopMotor();
     m_transfer.intaketries++;
     m_transfer.enableLimitSwitch(false);
-
+    m_transfer.skipFirstNoteInSim = false;
   }
 
   // Returns true when the command should end.

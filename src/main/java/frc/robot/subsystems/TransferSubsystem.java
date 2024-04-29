@@ -20,7 +20,6 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants.CANIDConstants;
@@ -49,6 +48,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public int notesShot;
   @Log.NT(key = "intaketries")
   public int intaketries;
+public boolean skipFirstNoteInSim;
 
   /** Creates a new transfer. */
   public TransferSubsystem(boolean showScreens) {
