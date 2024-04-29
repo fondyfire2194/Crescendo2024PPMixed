@@ -183,7 +183,10 @@ public class RobotContainer implements Logged {
 
                 // driver.b().onTrue(m_shooter.stopShooterCommand());
 
-                driver.b().onTrue(new ShootWhileMoving(m_arm, m_transfer, m_shooter, m_swerve, m_llv)
+                driver.b().onTrue(new ShootWhileMoving(m_arm, m_transfer, m_shooter, m_swerve,
+                                () -> -driver.getLeftY(),
+                                () -> driver.getLeftX(),
+                                () -> driver.getRightX(), m_llv)
                                 .withName("ShootMoving"));
 
                 driver.x().onTrue(m_shooter.startShooterCommand(3500));

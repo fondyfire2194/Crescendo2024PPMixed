@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -73,7 +72,7 @@ public class AlignTargetOdometry extends Command {
     double angleRad = Math.atan2(YDiff, XDiff);
     double angle = Units.radiansToDegrees(angleRad);
 
-    double angleError = Math.IEEEremainder(Math.abs(angle-180), 180);
+    double angleError = Math.IEEEremainder(Math.abs(angle - 180), 180);
     // SmartDashboard.putNumber("AngleError", angleError);
     double angleErrorRobot = angleError + robotPose.getRotation().getDegrees();
     // SmartDashboard.putNumber("AngleErrorSign", angleErrorRobot);

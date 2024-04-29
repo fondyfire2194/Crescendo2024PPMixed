@@ -80,7 +80,7 @@ public class Robot extends TimedRobot implements Logged {
       motorNameMap.put(CANIDConstants.intakeID, "Intake");
 
       motorNameMap.put(CANIDConstants.climberIDLeft, "Climber Left");
-      motorNameMap.put(CANIDConstants.climbreIDRight, "Climber Right");
+      motorNameMap.put(CANIDConstants.climberIDRight, "Climber Right");
 
       URCL.start(motorNameMap);
     } else {

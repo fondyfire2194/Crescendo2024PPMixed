@@ -35,7 +35,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
 
   public ClimberSubsystem() {
     climberMotorLeft = new CANSparkMax(CANIDConstants.climberIDLeft, MotorType.kBrushless);
-    climberMotorRight = new CANSparkMax(CANIDConstants.climbreIDRight, MotorType.kBrushless);
+    climberMotorRight = new CANSparkMax(CANIDConstants.climberIDRight, MotorType.kBrushless);
     climberEncoderLeft = climberMotorLeft.getEncoder();
     climberEncoderRight = climberMotorRight.getEncoder();
 

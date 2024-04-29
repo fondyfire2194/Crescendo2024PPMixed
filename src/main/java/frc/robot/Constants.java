@@ -36,7 +36,7 @@ public final class Constants {
                 public static final int armID = 20;
                 public static final int armCancoderID = 21;
                 public static final int climberIDLeft = 22;
-                public static final int climbreIDRight = 23;
+                public static final int climberIDRight = 23;
                 public static final int rearLeftSensor = 24;
                 public static final int rearRightSensor = 25;
                 public static final int transferDistanceSensorID = 26;

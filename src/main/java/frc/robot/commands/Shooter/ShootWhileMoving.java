@@ -8,27 +8,29 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.Debouncer;
 import edu.wpi.first.math.filter.LinearFilter;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
-import monologue.Logged;
-import monologue.Annotations.Log;
 
-public class ShootWhileMoving extends Command implements Logged {
+import java.util.function.DoubleSupplier;
+
+public class ShootWhileMoving extends Command {
   private static InterpolatingDoubleTreeMap angleToleranceMap = new InterpolatingDoubleTreeMap();
 
   static {
@@ -44,9 +46,17 @@ public class ShootWhileMoving extends Command implements Logged {
   private final SwerveSubsystem m_swerve;
   private LimelightVision m_llv;
 
-  private PIDController turnToAngleController = new PIDController(1.0, 0, 0.001);
-  @Log.NT(key = "speakerpose")
+  public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
   private Pose2d speakerPose;
+  private DoubleSupplier m_translationSup;
+  private DoubleSupplier m_strafeSup;
+  private DoubleSupplier m_rotationSup;
+  private double rotationVal;
+
+  // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
+  private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
+  private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
+  private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3.0);
 
   private ChassisSpeeds previousSpeeds = new ChassisSpeeds();
 
@@ -65,22 +75,30 @@ public class ShootWhileMoving extends Command implements Logged {
       TransferSubsystem transfer,
       ShooterSubsystem shooter,
       SwerveSubsystem swerve,
+      DoubleSupplier translationSup,
+      DoubleSupplier strafeSup,
+      DoubleSupplier rotSup,
       LimelightVision llv) {
     m_arm = arm;
     m_transfer = transfer;
     m_shooter = shooter;
     m_swerve = swerve;
+    m_translationSup = translationSup;
+    m_strafeSup = strafeSup;
+    m_rotationSup = rotSup;
+
     m_llv = llv;
 
-    turnToAngleController.enableContinuousInput(-Math.PI, Math.PI);
-
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements();
+    addRequirements(m_swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_alignTargetPID.enableContinuousInput(-180, 180);
+    m_alignTargetPID.setTolerance(0.2);
+
     speakerPose = AllianceUtil.getSpeakerPose();
     SmartDashboard.putNumberArray("OdometrySpeaker",
         new double[] { speakerPose.getX(), speakerPose.getY(), speakerPose.getRotation().getDegrees() });
@@ -93,9 +111,44 @@ public class ShootWhileMoving extends Command implements Logged {
     accelYFilter.reset();
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
+  /*
+   * Step 1 Calculate the distance to the real speaker and get the shot time from
+   * the table;
+   * Then do the following in a loop up to 5 times
+   * Step 2 Create a virtual speaker from the real speaker pose and the robot
+   * velocity and acceleration.
+   * Step 3 Calculate the distance to the virtual speaker and lookup the shot time
+   * for it
+   * * align the robot to the virtual target, get the shooter speed and arm angle
+   * to the virtual
+   * distance and angle lookup tables
+   * Step 4 Calculate the difference between real and virtual shot times,
+   * Step 5 If the absolute value of the time difference is less than a constant
+   * (.01 secs?)
+   * then
+   * 
+   * Make the shot if the robot, shooter and angle are in range
+   * 
+   * else start over at step 1
+   * 
+   * 
+   * 
+   * 
+   * 
+   * 
+   */
+
   @Override
   public void execute() {
+
+    /* Get Values, Deadband */
+    double translationVal = translationLimiter.calculate(
+        MathUtil.applyDeadband(m_translationSup.getAsDouble(), Constants.SwerveConstants.stickDeadband));
+    double strafeVal = strafeLimiter.calculate(
+        MathUtil.applyDeadband(m_strafeSup.getAsDouble(), Constants.SwerveConstants.stickDeadband));
+    rotationVal = rotationLimiter.calculate(
+        MathUtil.applyDeadband(m_rotationSup.getAsDouble(), Constants.SwerveConstants.stickDeadband));
+
     Translation2d robotPose = m_swerve.getPose().getTranslation();
     ChassisSpeeds fieldSpeeds = m_swerve.getSpeeds();
 
@@ -120,10 +173,7 @@ public class ShootWhileMoving extends Command implements Logged {
 
     Translation2d virtualGoalLocation = new Translation2d();
 
-    int iterations = 0;
-
     for (int i = 0; i < 5; i++) {
-      iterations = i + 1;
 
       double virtualGoalX = speakerPose.getX()
           - shotTime * (fieldSpeeds.vxMetersPerSecond + fieldAccelX * feedTime * 0.5);
@@ -132,29 +182,25 @@ public class ShootWhileMoving extends Command implements Logged {
 
       virtualGoalLocation = new Translation2d(virtualGoalX, virtualGoalY);
 
-      double newDistance = robotPose.minus(virtualGoalLocation).getNorm();
+      double virtualDistance = robotPose.minus(virtualGoalLocation).getNorm();
 
-      double newShotTime = Constants.shotTimeMap.get(newDistance);
+      double virtualShotTime = Constants.shotTimeMap.get(virtualDistance);
 
-      double newArmAngle = Constants.armAngleMap.get(newDistance);
+      double virtualArmAngle = Constants.armAngleMap.get(virtualDistance);
 
-      SmartDashboard.putNumber("AutoShoot/newdistancetospeaker", newDistance);
-      SmartDashboard.putNumber("AutoShoot/neshottimefrommap", newShotTime);
-     SmartDashboard.putNumber("AutoShoot/newanglefrommap", newArmAngle);
- 
-      if (Math.abs(newArmAngle - armAngle) <= 0.05) {
-        shotTime = newShotTime;
-        armAngle = newArmAngle;
-        distance = newDistance;
+      SmartDashboard.putNumber("AutoShoot/VirtualDistance", virtualDistance);
+      SmartDashboard.putNumber("AutoShoot/VirtualShotTimefromMap", virtualShotTime);
+      SmartDashboard.putNumber("AutoShoot/VirtualAnglefromMap", virtualArmAngle);
+      SmartDashboard.putNumber("AutoShoot/ShotTimeDifference", virtualShotTime - shotTime);
+
+      if (Math.abs(virtualShotTime - shotTime) <= 0.01) {
+        shotTime = virtualShotTime;
+        armAngle = virtualArmAngle;
+        distance = virtualDistance;
         break;
       }
-
-      shotTime = newShotTime;
-      distance = newDistance;
-      armAngle = newArmAngle;
+      SmartDashboard.putNumber("AutoShoot/Iterations", i);
     }
-
-    SmartDashboard.putNumber("AutoShoot/Iterations", iterations);
 
     Pose2d virtGoal = new Pose2d(virtualGoalLocation, new Rotation2d());
 
@@ -176,10 +222,6 @@ public class ShootWhileMoving extends Command implements Logged {
 
     Rotation2d robotAngle = m_swerve.getHeading();
 
-    double angularSpeed = turnToAngleController.calculate(robotAngle.getRadians(), desiredAngle.getRadians());
-
-    angularSpeed = MathUtil.clamp(angularSpeed, -1.0, 1.0);
-
     double armAngleError = armAngle - m_arm.getAngleDegrees();
 
     SmartDashboard.putNumber("AutoShoot/Arm Angle Error", armAngleError);
@@ -196,6 +238,20 @@ public class ShootWhileMoving extends Command implements Logged {
 
     }
     previousSpeeds = fieldSpeeds;
+    if (DriverStation.getAlliance().isPresent()
+        && DriverStation.getAlliance().get() == Alliance.Red) {
+      rotationVal = m_alignTargetPID.calculate(driveAngleError.getDegrees(), 0);
+    } else {
+      rotationVal = m_alignTargetPID.calculate(driveAngleError.getDegrees(), 180);
+    }
+
+    m_swerve.drive(
+        translationVal *= Constants.SwerveConstants.kmaxSpeed,
+        -(strafeVal *= Constants.SwerveConstants.kmaxSpeed),
+        rotationVal *= Constants.SwerveConstants.kmaxAngularVelocity,
+        true,
+        true,
+        false);
   }
 
   // Called once the command ends or is interrupted.
@@ -203,7 +259,6 @@ public class ShootWhileMoving extends Command implements Logged {
   public void end(boolean interrupted) {
     m_transfer.stopMotor();
     m_shooter.stopMotors();
-    turnToAngleController.reset();
 
   }
 
