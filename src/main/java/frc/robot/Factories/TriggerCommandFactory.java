@@ -65,6 +65,16 @@ public class TriggerCommandFactory implements Logged {
                 trig4 = false;
                 trig5 = false;
                 trig6 = false;
+                resetLocations();
+        }
+        // location conditions from, to and at are used to sequnce the triggers
+        // 0 = start, 10 = source shoot, 4, 5 are center notes
+
+        private void resetLocations() {
+                m_swerve.toLocation = 0;
+                m_swerve.fromLocation = 0;
+                m_swerve.atLocation = 0;
+
         }
 
         public void createSourceTriggersC4C5() {
@@ -80,8 +90,9 @@ public class TriggerCommandFactory implements Logged {
                                 Commands.runOnce(() -> m_swerve.fromLocation = 4),
                                 Commands.runOnce(() -> m_swerve.toLocation = 10),
                                 new Center4ToSourceShoot(m_cf, m_pf, m_swerve),
-                                Commands.runOnce(() -> m_swerve.atLocation = 10),
-                                Commands.runOnce(() -> trig1 = true)));
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.atLocation = 10),
+                                                Commands.runOnce(() -> trig1 = true))));
 
                 // when shot from note C4 ends go try for note C5
                 Trigger triggerSSToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
@@ -93,8 +104,9 @@ public class TriggerCommandFactory implements Logged {
                                 Commands.runOnce(() -> m_swerve.toLocation = 5),
                                 Commands.runOnce(() -> m_swerve.fromLocation = 10),
                                 new SourceShootToCenter5Pickup(m_cf, m_pf, m_swerve),
-                                Commands.runOnce(() -> m_swerve.atLocation = 5),
-                                Commands.runOnce(() -> trig2 = true)));
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.atLocation = 5),
+                                                Commands.runOnce(() -> trig2 = true))));
 
                 // // if note C5 is picked up, go shoot it
                 Trigger triggerC5ToSS = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
@@ -106,8 +118,9 @@ public class TriggerCommandFactory implements Logged {
                                 Commands.runOnce(() -> m_swerve.fromLocation = 5),
                                 Commands.runOnce(() -> m_swerve.toLocation = 10),
                                 new Center5ToSourceShoot(m_cf, m_pf, m_swerve),
-                                Commands.runOnce(() -> m_swerve.atLocation = 10),
-                                Commands.runOnce(() -> trig3 = true)));
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.atLocation = 10),
+                                                Commands.runOnce(() -> trig3 = true))));
 
                 // // if note C4 isn't collected, go try C5
                 Trigger triggerC4ToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled()
@@ -130,8 +143,28 @@ public class TriggerCommandFactory implements Logged {
                                                 () -> DriverStation.getAlliance().isPresent()
                                                                 && DriverStation.getAlliance()
                                                                                 .get() == Alliance.Blue),
-                                Commands.runOnce(() -> m_swerve.atLocation = 5),
-                                Commands.runOnce(() -> trig4 = true)));
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.atLocation = 5),
+                                                Commands.runOnce(() -> trig4 = true))));
+
+                // stop shooter and intake, move intake to pickup position, stop transfer
+                // 2 conditions at shoot position from 5 and no note or at 5 from 4 or 10 and no
+                // note
+
+                Trigger resetAll = new Trigger(() -> (m_swerve.toLocation == 10 && m_swerve.atLocation == 10
+                                && !m_transfer.noteAtIntake() && m_transfer.isStopped())
+                                || m_swerve.atLocation == 5
+                                                && (m_swerve.fromLocation == 4 || m_swerve.fromLocation == 10)
+                                                && !m_transfer.noteAtIntake() && m_transfer.isStopped());
+
+                resetAll.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> trig5 = true),
+                                m_cf.resetAll(),
+                                Commands.runOnce(() -> resetLocations())));
+
+        }
+
+        public void createAmpTriggers() {
 
         }
 

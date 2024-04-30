@@ -430,7 +430,10 @@ public class RobotContainer implements Logged {
                                                 .withName("Pathfind to Pickup C5"));
 
                 NamedCommands.registerCommand("ShootSet",
-                                Commands.runOnce(() -> m_cf.startShoot=true));
+                                Commands.runOnce(() -> m_cf.startShoot = true));
+
+                NamedCommands.registerCommand("CheckForNote",
+                                Commands.runOnce(() -> m_swerve.checkNote = true));
 
         }
 

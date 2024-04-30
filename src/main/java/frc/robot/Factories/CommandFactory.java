@@ -278,6 +278,7 @@ public class CommandFactory implements Logged {
         public Command resetAll() {
                 return new ParallelCommandGroup(
                                 m_shooter.stopShooterCommand(),
+                                Commands.runOnce(() -> m_shooter.setCommandRPM(500)),
                                 m_intake.stopIntakeCommand(),
                                 m_transfer.stopTransferCommand(),
                                 m_arm.setGoalCommand(ArmConstants.pickupAngle)

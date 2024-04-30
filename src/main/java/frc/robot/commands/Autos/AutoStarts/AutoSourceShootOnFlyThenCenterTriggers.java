@@ -44,12 +44,14 @@ public class AutoSourceShootOnFlyThenCenterTriggers extends SequentialCommandGro
 
                                 // path auto shoots on the fly
                                 // move to center note , pick up if there and move to shoot position then shoot
-
+                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
+                                cf.setStartPosebyAlliance(path),
                                 new ParallelCommandGroup(
                                                 Commands.runOnce(() -> swerve.toLocation = 4),
+
                                                 new RunPPath(swerve,
                                                                 path,
-                                                                true),
+                                                                false),
                                                 new SequentialCommandGroup(
                                                                 cf.positionArmRunShooterSpecialCase(
                                                                                 Constants.autoShootArmAngle,

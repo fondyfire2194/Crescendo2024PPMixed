@@ -13,6 +13,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -46,13 +47,14 @@ public class AutoSourceShootThenCenter4PathFind extends SequentialCommandGroup {
 
                 addCommands(
                                 // shoot first note
+
                                 cf.setStartPosebyAlliance(path),
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
                                 cf.transferNoteToShooterCommand(),
                                 // move to center note 4, pick up if there and move to shoot position then shoot
                                 // if note at 4 not picked up, try note at 5 and shoot it
-
+                                Commands.runOnce(() -> swerve.toLocation = 4),
                                 new RunPPath(swerve,
                                                 path,
                                                 false),
@@ -65,7 +67,8 @@ public class AutoSourceShootThenCenter4PathFind extends SequentialCommandGroup {
                                                                                 && DriverStation.getAlliance()
                                                                                                 .get() == Alliance.Blue),
 
-                                                cf.doIntake()));
+                                                cf.doIntake()),
+                                Commands.runOnce(() -> swerve.atLocation = 4));
 
         }
 

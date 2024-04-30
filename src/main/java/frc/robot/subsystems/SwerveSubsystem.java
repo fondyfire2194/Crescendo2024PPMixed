@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
 import edu.wpi.first.math.Matrix;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants;
@@ -147,13 +149,21 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   private boolean pathRunning;
   private boolean pathStarted;
+  public PathPlannerPath currentPlannerPath;
+
+  @Log.NT(key = "currentpathstarttime")
+  public double curretnpathstartTime;
 
   LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this, true);
   LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this, true);
 
+  private Trigger checkNoteTrigger = new Trigger(() -> checkNote = true);
+
   public SwerveSubsystem(boolean showScreens) {
     m_showScreens = showScreens;
     SmartDashboard.putNumber("DCF", Constants.SwerveConstants.driveConversionPositionFactor);
+
+    checkNoteTrigger.onTrue(doNoteVisionCommand());
 
     xLockStates[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
     xLockStates[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
@@ -396,10 +406,12 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
       return simOdometryPose;
   }
 
+  @Log.NT(key = "xdistance")
   public double getX() {
     return getPose().getX();
   }
 
+  @Log.NT(key = "ydistance")
   public double getY() {
     return getPose().getY();
   }
@@ -471,6 +483,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     mSwerveMods[3].setIdleMode(brake);
   }
 
+  @Log.NT(key = "heading")
   public Rotation2d getHeading() {
     Rotation2d heading = new Rotation2d();
     if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red)
@@ -523,6 +536,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     updateKeepAngle();
   }
 
+  @Log.NT(key = "yaw")
   public Rotation2d getYaw() {
     if (RobotBase.isReal())
       return gyro.getRotation2d();
@@ -546,6 +560,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return field;
   }
 
+  @Log.NT(key = "chassisspeeds")
   public ChassisSpeeds getSpeeds() {
     return Constants.SwerveConstants.swerveKinematics.toChassisSpeeds(getStates());
   }
@@ -592,6 +607,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         .getDistance(getPose().getTranslation());
   }
 
+  public Command doNoteVisionCommand() {
+    return Commands.runOnce(() -> doNoteVisionCorrection());
+  }
+
   public void doNoteVisionCorrection() {
     String rname = CameraConstants.rearCamera.camname;
     double corrGain = .001;
@@ -620,6 +639,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         firstTime = false;
       }
     }
+
+    checkNote = false;
   }
 
   /**
@@ -820,6 +841,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
                 .voltage(Volts.of(mSwerveMods[3].getVoltage()));
           },
           this));
+
+  public boolean checkNote;
 
   public void setPathRunning() {
     pathRunning = true;
