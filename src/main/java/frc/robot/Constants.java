@@ -193,7 +193,7 @@ public final class Constants {
                                 new PIDConstants(1.5, 0, 0), // 1.3 Rotation constants 3
                                 kmaxSpeed,
                                 flModuleOffset.getNorm(), // Drive base radius (distance from center to furthest module)
-                                // new ReplanningConfig(true,true,.1,5));replan if error > .1 meter or error
+                            //     new ReplanningConfig(true,true,.1,5));//replan if error > .1 meter or error
                                 // spike >5 meters
                                 new ReplanningConfig());// initial replanning only
 

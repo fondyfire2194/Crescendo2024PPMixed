@@ -134,8 +134,6 @@ public class Robot extends TimedRobot implements Logged {
     if (m_robotContainer.m_arm.getCanCoderDeg() < 26)
       m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kCoast);
 
-     
-
   }
 
   @Override
@@ -162,7 +160,7 @@ public class Robot extends TimedRobot implements Logged {
     if (checkAutos) {
       m_robotContainer.m_af.validStartChoice = m_robotContainer.m_af.selectAndLoadPathFiles();
       if (m_robotContainer.m_af.validStartChoice == 13 || m_robotContainer.m_af.validStartChoice == 14
-          || m_robotContainer.m_af.validStartChoice == 15)
+          || m_robotContainer.m_af.validStartChoice == 15 || m_robotContainer.m_af.validStartChoice == 16)
         m_robotContainer.m_tcf.createSourceTriggersC4C5();
 
       SmartDashboard.putNumber("ValidStartChoice", m_robotContainer.m_af.validStartChoice);
@@ -203,9 +201,8 @@ public class Robot extends TimedRobot implements Logged {
     startTime = Timer.getFPGATimestamp();
     SmartDashboard.putNumber("Finalchoice", m_robotContainer.m_af.finalChoice);
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
-   
-    
-  //  m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+
+    // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
     if (m_robotContainer.m_af.finalChoice == 0)
       m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     else
@@ -265,7 +262,7 @@ public class Robot extends TimedRobot implements Logged {
 
   @Override
   public void teleopPeriodic() {
-   
+
   }
 
   @Override

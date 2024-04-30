@@ -30,6 +30,7 @@ import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootOnFlyThenCenterTriggers;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4PathFind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenterTriggers;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenNear45ToCenter4;
 import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
@@ -234,6 +235,11 @@ public class CommandFactory implements Logged {
                                                 m_swerve);
                         case 15:
                                 return new AutoSourceShootThenCenter4PathFind(this,
+                                                m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
+                                                m_swerve);
+
+                        case 16:
+                                return new AutoSourceShootThenNear45ToCenter4(this, m_pf,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
                                                 m_swerve);
 
