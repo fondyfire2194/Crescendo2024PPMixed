@@ -45,11 +45,14 @@ public class Center4ToSourceShoot extends SequentialCommandGroup {
 
                                 new ParallelCommandGroup(
                                                 new RunPPath(swerve,
-                                                pf.pathMaps.get(sourcepaths.Center4ToSourceShoot.name()) ,
+                                                                pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
+                                                                                .name()),
                                                                 false),
                                                 cf.positionArmRunShooterSpecialCase(
-                                                                Constants.sourceShootAngle, Constants.sourceShootSpeed)),
-                                cf.transferNoteToShooter());
+                                                                Constants.sourceShootAngle,
+                                                                Constants.sourceShootSpeed)),
+
+                                cf.transferNoteToShooterCommand());
 
         }
 }

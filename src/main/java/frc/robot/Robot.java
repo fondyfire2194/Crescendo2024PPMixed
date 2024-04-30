@@ -202,11 +202,12 @@ public class Robot extends TimedRobot implements Logged {
 
     startTime = Timer.getFPGATimestamp();
     SmartDashboard.putNumber("Finalchoice", m_robotContainer.m_af.finalChoice);
-    m_robotContainer.m_transfer.intaketries = 0;
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
-    m_robotContainer.m_transfer.notesShot = 0;
+    m_robotContainer.m_swerve.toLocation = 0;
     m_robotContainer.m_swerve.fromLocation = 0;
-    m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    m_robotContainer.m_swerve.atLocation = 0;
+    
+  //  m_robotContainer.m_transfer.skipFirstNoteInSim = true;
     if (m_robotContainer.m_af.finalChoice == 0)
       m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     else

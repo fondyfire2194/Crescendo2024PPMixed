@@ -53,7 +53,6 @@ public class TransferIntakeToSensor extends Command {
     m_transfer.stopMotor();
     if (DriverStation.isTeleopEnabled())
       m_intake.stopMotor();
-    m_transfer.intaketries++;
     m_transfer.enableLimitSwitch(false);
     m_transfer.skipFirstNoteInSim = false;
   }

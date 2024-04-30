@@ -341,16 +341,16 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                 runOnce(() -> resetController()),
                 runOnce(() -> setGoal(angleRads)),
                 runOnce(() -> enable()),
-                runOnce(() -> SmartDashboard.putNumber("ENded", 911)));
+                runOnce(() -> SmartDashboard.putNumber("Ended", 911)));
     }
 
     public Command setGoalCommand(double angleRads, double tolerance) {
         return Commands.sequence(
                 Commands.runOnce(() -> angleTolerance = Units.degreesToRadians(tolerance)),
-                Commands.runOnce(() -> getController().reset(getAngleRadians()), this),
+                Commands.runOnce(() -> getController().reset(getAngleRadians())),
                 Commands.run(() -> setUpDownKv(angleRads)),
-                Commands.runOnce(() -> setGoal(angleRads), this),
-                Commands.runOnce(() -> enable(), this));
+                Commands.runOnce(() -> setGoal(angleRads)),
+                Commands.runOnce(() -> enable()));
     }
 
     public Command positionToIntakeUDACommand() {

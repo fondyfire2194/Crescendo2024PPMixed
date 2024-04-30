@@ -140,6 +140,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public Integer cameraSelection = 0;
   @Log.NT(key = "fromlocation")
   public int fromLocation;
+  @Log.NT(key = "atlocation")
+  public int atLocation;
+  @Log.NT(key = "tolocation")
+  public int toLocation;
 
   private boolean pathRunning;
   private boolean pathStarted;

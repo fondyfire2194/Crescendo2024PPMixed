@@ -49,7 +49,7 @@ public class Center5ToSourceShoot extends SequentialCommandGroup {
                                                                 false),
                                                 cf.positionArmRunShooterSpecialCase(
                                                                 Constants.sourceShootAngle, Constants.sourceShootSpeed)),
-                                cf.transferNoteToShooter());
+                                cf.transferNoteToShooterCommand());
 
         }
 }

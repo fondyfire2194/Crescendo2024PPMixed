@@ -20,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
@@ -67,6 +68,9 @@ public class CommandFactory implements Logged {
         Pose2d temp = new Pose2d();
         @Log.NT(key = "startposeflipped")
         private Pose2d tempFlipped = new Pose2d();
+        private Trigger runShooterTrigger;
+        @Log.NT(key = "startontheflyshoot")
+        public boolean startShoot;
 
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer, ClimberSubsystem climber,
@@ -80,6 +84,10 @@ public class CommandFactory implements Logged {
                 m_llv = llv;
                 m_af = af;
                 m_pf = pf;
+
+                runShooterTrigger = new Trigger(() -> startShoot);
+
+                runShooterTrigger.onTrue(transferNoteToShooterCommand());
 
         }
 
@@ -127,8 +135,10 @@ public class CommandFactory implements Logged {
                                 new TransferIntakeToSensor(m_transfer, m_intake, 3));
         }
 
-        public Command transferNoteToShooter() {
-                return m_transfer.transferToShooterCommand();
+        public Command transferNoteToShooterCommand() {
+                return Commands.parallel(
+                                m_transfer.transferToShooterCommand(),
+                                Commands.runOnce(() -> startShoot = false));
         }
 
         public Command alignShootCommand() {

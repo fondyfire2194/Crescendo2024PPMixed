@@ -58,7 +58,7 @@ public class AutoSourceShootThenCenterTriggers extends SequentialCommandGroup {
                                 cf.setStartPosebyAlliance(path),
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
-                                cf.transferNoteToShooter(),
+                                cf.transferNoteToShooterCommand(),
                                 // move to center note , pick up if there and move to shoot position then shoot
 
                                 new ParallelCommandGroup(

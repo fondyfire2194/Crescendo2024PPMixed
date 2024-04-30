@@ -429,6 +429,9 @@ public class RobotContainer implements Logged {
                                 m_cf.autopickup(FieldConstants.centerNote5PickupBlue)
                                                 .withName("Pathfind to Pickup C5"));
 
+                NamedCommands.registerCommand("ShootSet",
+                                Commands.runOnce(() -> m_cf.startShoot=true));
+
         }
 
         void configureShuffleboardAuto() {

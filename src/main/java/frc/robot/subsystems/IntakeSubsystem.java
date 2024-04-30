@@ -106,11 +106,11 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   }
 
   public Command stopIntakeCommand() {
-    return Commands.runOnce(() -> stopMotor(), this);
+    return Commands.runOnce(() -> stopMotor());
   }
 
   public Command startIntakeCommand() {
-    return Commands.runOnce(() -> setRunIntake(), this);
+    return Commands.runOnce(() -> setRunIntake());
   }
 
   public void setRunIntake() {

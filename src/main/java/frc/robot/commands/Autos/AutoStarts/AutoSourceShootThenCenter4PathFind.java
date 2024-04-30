@@ -49,7 +49,7 @@ public class AutoSourceShootThenCenter4PathFind extends SequentialCommandGroup {
                                 cf.setStartPosebyAlliance(path),
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
-                                cf.transferNoteToShooter(),
+                                cf.transferNoteToShooterCommand(),
                                 // move to center note 4, pick up if there and move to shoot position then shoot
                                 // if note at 4 not picked up, try note at 5 and shoot it
 

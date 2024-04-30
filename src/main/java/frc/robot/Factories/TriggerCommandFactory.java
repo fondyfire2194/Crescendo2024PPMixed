@@ -74,40 +74,49 @@ public class TriggerCommandFactory implements Logged {
                 // move to shoot if a note C4 is picked up. Set source of move
 
                 Trigger triggerC4ToSS = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
-                                && m_swerve.fromLocation == 0 && m_transfer.noteAtIntake()
-                                && m_transfer.intaketries == 1);
+                                && m_swerve.fromLocation == 0 && m_swerve.atLocation == 4 && m_transfer.noteAtIntake());
 
-                triggerC4ToSS.onTrue(Commands.parallel(
-                                new Center4ToSourceShoot(m_cf, m_pf, m_swerve),
+                triggerC4ToSS.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> m_swerve.fromLocation = 4),
+                                Commands.runOnce(() -> m_swerve.toLocation = 10),
+                                new Center4ToSourceShoot(m_cf, m_pf, m_swerve),
+                                Commands.runOnce(() -> m_swerve.atLocation = 10),
                                 Commands.runOnce(() -> trig1 = true)));
 
                 // when shot from note C4 ends go try for note C5
                 Trigger triggerSSToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
-                                && m_transfer.isStopped() && !m_transfer.noteAtIntake() && m_swerve.fromLocation == 4);
+                                && m_transfer.isStopped() && !m_transfer.noteAtIntake()
+                                && m_swerve.fromLocation == 4
+                                && m_swerve.atLocation == 10);
 
-                triggerSSToC5.onTrue(Commands.parallel(
-                                new SourceShootToCenter5Pickup(m_cf, m_pf, m_swerve),
+                triggerSSToC5.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> m_swerve.toLocation = 5),
                                 Commands.runOnce(() -> m_swerve.fromLocation = 10),
+                                new SourceShootToCenter5Pickup(m_cf, m_pf, m_swerve),
+                                Commands.runOnce(() -> m_swerve.atLocation = 5),
                                 Commands.runOnce(() -> trig2 = true)));
 
                 // // if note C5 is picked up, go shoot it
                 Trigger triggerC5ToSS = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
                                 m_swerve.isStopped() && m_transfer.isStopped() && m_transfer.noteAtIntake()
-                                && (m_swerve.fromLocation == 10 || m_swerve.fromLocation == 4)
-                                && m_transfer.intaketries > 1);
+                                && m_swerve.atLocation == 5
+                                && (m_swerve.fromLocation == 10 || m_swerve.fromLocation == 4));
 
-                triggerC5ToSS.onTrue(Commands.parallel(
-                                new Center5ToSourceShoot(m_cf, m_pf, m_swerve),
+                triggerC5ToSS.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> m_swerve.fromLocation = 5),
+                                Commands.runOnce(() -> m_swerve.toLocation = 10),
+                                new Center5ToSourceShoot(m_cf, m_pf, m_swerve),
+                                Commands.runOnce(() -> m_swerve.atLocation = 10),
                                 Commands.runOnce(() -> trig3 = true)));
 
                 // // if note C4 isn't collected, go try C5
                 Trigger triggerC4ToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled()
-                                && m_swerve.isStopped() && !m_transfer.noteAtIntake()
-                                && m_swerve.fromLocation == 0 && m_transfer.intaketries == 1);
+                                && m_swerve.isStopped() && !m_transfer.noteAtIntake() && m_transfer.isStopped()
+                                && m_swerve.fromLocation == 0 && m_swerve.toLocation == 4 && m_swerve.atLocation == 4);
 
                 triggerC4ToC5.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> m_swerve.fromLocation = 4),
+                                Commands.runOnce(() -> m_swerve.toLocation = 5),
                                 new RotateToAngle(m_swerve, 90),
                                 m_intake.startIntakeCommand(),
                                 new TransferIntakeToSensor(m_transfer, m_intake, .6),
@@ -120,7 +129,9 @@ public class TriggerCommandFactory implements Logged {
                                                                 .flipFieldPose(FieldConstants.sourceShootBlue)),
                                                 () -> DriverStation.getAlliance().isPresent()
                                                                 && DriverStation.getAlliance()
-                                                                                .get() == Alliance.Blue)));
+                                                                                .get() == Alliance.Blue),
+                                Commands.runOnce(() -> m_swerve.atLocation = 5),
+                                Commands.runOnce(() -> trig4 = true)));
 
         }
 

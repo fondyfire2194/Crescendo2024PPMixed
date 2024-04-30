@@ -44,11 +44,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public SparkLimitSwitch m_limitSwitch;
   @Log.NT(key = "simmoteatintake")
   public boolean simnoteatintake;
-  @Log.NT(key = "notesshot")
-  public int notesShot;
-  @Log.NT(key = "intaketries")
-  public int intaketries;
-public boolean skipFirstNoteInSim;
+  public boolean skipFirstNoteInSim;
 
   /** Creates a new transfer. */
   public TransferSubsystem(boolean showScreens) {
@@ -127,22 +123,24 @@ public boolean skipFirstNoteInSim;
 
   public Command stopTransferCommand() {
     commandrpm = 0;
+
     return Commands.runOnce(() -> stopMotor(), this);
   }
 
-  @Log.NT(key = "transfertoshootercommand")
+
   public Command transferToShooterCommand() {
-    return Commands
-        .run(() -> transferToShooter(), this)
+    return
+    Commands.run(() -> transferToShooter())
         .withTimeout(TransferConstants.clearShooterTime)
         .andThen(stopTransferCommand());
+
   }
 
   public void transferToShooter() {
     enableLimitSwitch(false);
     commandrpm = Pref.getPref("TransferToShootSpeed");
     simnoteatintake = false;
-    notesShot++;
+
     runAtVelocity(commandrpm);
   }
 
