@@ -18,19 +18,21 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.LimelightHelpers;
+import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootOnFlyThenCenterTriggers;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4PathFind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenterTriggers;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenNear45ToCenter4;
+import frc.robot.commands.Autos.AutoStarts.TestAuto;
 import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
@@ -239,9 +241,11 @@ public class CommandFactory implements Logged {
                                                 m_swerve);
 
                         case 16:
-                                return new AutoSourceShootThenNear45ToCenter4(this, m_pf,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
-                                                m_swerve);
+                                // return new AutoSourceShootThenNear45ToCenter4(this, m_pf,
+                                // m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
+                                // m_swerve);
+                                return new TestAuto(this, m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
+                                                m_swerve, m_llv, m_intake, m_transfer);
 
                         default:
                                 return Commands.none();
@@ -290,6 +294,16 @@ public class CommandFactory implements Logged {
                                 m_arm.setGoalCommand(ArmConstants.pickupAngle)
                                                 .withName("Reset All"))
                                 .asProxy();
+        }
+
+        public Command testIdea(PathPlannerPath path) {
+
+                return Commands.sequence(
+                                this.setStartPosebyAlliance(path),
+                                new ParallelRaceGroup(
+                                                new WaitCommand(2),
+                                                new RunPPath(m_swerve, path, false)));
+
         }
 
 }

@@ -5,16 +5,20 @@
 package frc.robot.commands.Drive;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.GeometryUtil;
 
 public class DriveToPickupNote extends Command {
   /** Creates a new AlignToTagSetShootSpeed. */
@@ -24,12 +28,14 @@ public class DriveToPickupNote extends Command {
   private final IntakeSubsystem m_intake;
   private final String m_camname;
   private final LimelightVision m_llv;
-  private final Pose2d m_notePose;
+  private final int m_noteNumber;
 
   double angleError = 0;
   private Timer elapsedTime = new Timer();
   double endPosition;
   private double yerror;
+  private double xerror;
+  private Pose2d activeNotePose;
 
   public DriveToPickupNote(
       SwerveSubsystem swerve,
@@ -37,14 +43,13 @@ public class DriveToPickupNote extends Command {
       IntakeSubsystem intake,
       String camname,
       LimelightVision llv,
-      Pose2d notePose)
-  {
+      int noteNumber) {
     m_swerve = swerve;
     m_transfer = transfer;
     m_intake = intake;
     m_camname = camname;
     m_llv = llv;
-    m_notePose = notePose;
+    m_noteNumber =noteNumber;;
     addRequirements(m_swerve);
   }
 
@@ -53,7 +58,18 @@ public class DriveToPickupNote extends Command {
   public void initialize() {
 
     elapsedTime.reset();
+    elapsedTime.start();
 
+    Pose2d blueNotePose = new Pose2d();
+
+    if(m_noteNumber==4) blueNotePose=FieldConstants.centerNote4PickupBlue;
+    if(m_noteNumber==5) blueNotePose=FieldConstants.centerNote5PickupBlue;
+
+
+
+    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+      activeNotePose = GeometryUtil.flipFieldPose(blueNotePose);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -69,8 +85,12 @@ public class DriveToPickupNote extends Command {
       angleError = 0;
     double rotationVal = m_swerve.m_alignNotePID.calculate(angleError, 0);
 
-     yerror = m_notePose.getY() - m_swerve.getY();
-    double xerror = m_notePose.getX() - m_swerve.getX();
+    yerror = activeNotePose.getY() - m_swerve.getY();
+    xerror = activeNotePose.getX() - m_swerve.getX();
+
+    SmartDashboard.putNumber("TAYerr", yerror);
+    SmartDashboard.putNumber("TAXerr", xerror);
+    SmartDashboard.putNumber("TAXsecs", elapsedTime.get());
 
     /*
      * Drive
@@ -78,7 +98,7 @@ public class DriveToPickupNote extends Command {
      * could be a higher or lower y value note
      */
     m_swerve.drive(
-        SwerveConstants.notePickupSpeed * yerror, // Constants.SwerveConstants.kmaxSpeed *3,
+        -SwerveConstants.notePickupSpeed * xerror * 3, // Constants.SwerveConstants.kmaxSpeed *3,
         0,
         rotationVal,
         false,
@@ -98,6 +118,6 @@ public class DriveToPickupNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(yerror) < .1 || m_transfer.noteAtIntake();
+    return Math.abs(xerror) < .1 || m_transfer.noteAtIntake();
   }
 }

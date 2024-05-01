@@ -135,7 +135,7 @@ public class TriggerCommandFactory implements Logged {
                                 new TransferIntakeToSensor(m_transfer, m_intake, .6),
                                 new DriveToPickupNote(m_swerve, m_transfer, m_intake,
                                                 CameraConstants.rearCamera.camname, m_llv,
-                                                FieldConstants.centerNote5Blue),
+                                                4),
                                 new ConditionalCommand(
                                                 m_cf.autopickup(FieldConstants.sourceShootBlue),
                                                 m_cf.autopickup(GeometryUtil

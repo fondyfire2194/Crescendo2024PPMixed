@@ -4,13 +4,10 @@
 
 package frc.robot.commands;
 
-import com.revrobotics.CANSparkBase.ControlType;
-
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 
 public class JogClimber extends Command {
   /** Creates a new JogShooter. */

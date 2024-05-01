@@ -12,10 +12,9 @@ import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.EventImportance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -41,7 +40,6 @@ import frc.robot.commands.Drive.TeleopSwerve;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
 import frc.robot.commands.Shooter.LobShoot;
 import frc.robot.commands.Shooter.ShootFromDistance;
-import frc.robot.commands.Shooter.ShootWhileMoving;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -181,13 +179,14 @@ public class RobotContainer implements Logged {
                                 m_arm.setGoalCommand(ArmConstants.pickupAngle),
                                 m_intake.stopIntakeCommand()));
 
-                // driver.b().onTrue(m_shooter.stopShooterCommand());
+                driver.b().onTrue(m_shooter.stopShooterCommand());
 
-                driver.b().onTrue(new ShootWhileMoving(m_arm, m_transfer, m_shooter, m_swerve,
-                                () -> -driver.getLeftY(),
-                                () -> driver.getLeftX(),
-                                () -> driver.getRightX(), m_llv)
-                                .withName("ShootMoving"));
+                // driver.b().onTrue(new ShootWhileMoving(m_arm, m_transfer, m_shooter,
+                // m_swerve,
+                // () -> -driver.getLeftY(),
+                // () -> driver.getLeftX(),
+                // () -> driver.getRightX(), m_llv)
+                // .withName("ShootMoving"));
 
                 driver.x().onTrue(m_shooter.startShooterCommand(3500));
 
