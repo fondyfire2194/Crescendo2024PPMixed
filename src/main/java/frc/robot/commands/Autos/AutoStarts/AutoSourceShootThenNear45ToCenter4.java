@@ -49,7 +49,7 @@ public class AutoSourceShootThenNear45ToCenter4 extends SequentialCommandGroup {
 
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
-                                Commands.runOnce(() -> swerve.curretnpathstartTime = Timer.getFPGATimestamp()),
+                                Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
 
                                 cf.setStartPosebyAlliance(path),
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,

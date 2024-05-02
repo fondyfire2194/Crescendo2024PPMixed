@@ -10,9 +10,12 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -26,6 +29,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
@@ -196,8 +200,7 @@ public class CommandFactory implements Logged {
         // }
 
         public Command setStartPosebyAlliance(PathPlannerPath path) {
-
-                temp = path.getPreviewStartingHolonomicPose();
+                temp = FieldConstants.sourceStartPose;
 
                 var alliance = DriverStation.getAlliance();
 

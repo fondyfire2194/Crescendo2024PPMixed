@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.littletonrobotics.urcl.URCL;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.REVPhysicsSim;
@@ -199,10 +200,14 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.resetModuleEncoders();
 
     startTime = Timer.getFPGATimestamp();
+
     SmartDashboard.putNumber("Finalchoice", m_robotContainer.m_af.finalChoice);
+
+    SmartDashboard.putString("ASP", Constants.getActiveSpeakerPose().toString());
+
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-    // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    m_robotContainer.m_transfer.skipFirstNoteInSim = true;
     if (m_robotContainer.m_af.finalChoice == 0)
       m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     else

@@ -193,7 +193,7 @@ public final class Constants {
                                 new PIDConstants(1.5, 0, 0), // 1.3 Rotation constants 3
                                 kmaxSpeed,
                                 flModuleOffset.getNorm(), // Drive base radius (distance from center to furthest module)
-                            //     new ReplanningConfig(true,true,.1,5));//replan if error > .1 meter or error
+                                // new ReplanningConfig(true,true,.1,5));//replan if error > .1 meter or error
                                 // spike >5 meters
                                 new ReplanningConfig());// initial replanning only
 
@@ -247,15 +247,64 @@ public final class Constants {
                 public static final Pose2d centerNote4Blue = new Pose2d(8.28, 2.44, new Rotation2d());
                 public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new Rotation2d());
 
-                public static final Pose2d centerNote4PickupBlue = new Pose2d(8.49, 2.32,
-                                new Rotation2d(Units.degreesToRadians(-157.8)));// 23.2
+                public static final Pose2d centerNote1PickupBlue = new Pose2d(8.48, 7.44,
+                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+
+                public static final Pose2d centerNote2PickupBlue = new Pose2d(8.48, 5.76,
+                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+
+                public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
+                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+
+                public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
+                                new Rotation2d(Units.degreesToRadians(23.2)));
 
                 public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
                                 new Rotation2d(Units.degreesToRadians(-176.09)));
-               
+
                 public static final Pose2d sourceShootBlue = new Pose2d(4.12, 2.18,
                                 new Rotation2d(Units.degreesToRadians(150)));
-            
+
+                public static final Pose2d sourceStartPose = new Pose2d(.72, 4.4,
+                                new Rotation2d(Units.degreesToRadians(120)));
+
+                public static final Pose2d ampStartPose = new Pose2d(.8, 6.68,
+                                new Rotation2d(Units.degreesToRadians(-120)));
+
+        }
+
+        public static Pose2d getActiveNotePickup(int note) {
+                switch (note) {
+                        case 1:
+                                return FieldConstants.centerNote1PickupBlue;
+                        case 2:
+                                return FieldConstants.centerNote2PickupBlue;
+                        case 3:
+                                return FieldConstants.centerNote3PickupBlue;
+                        case 4:
+                                return FieldConstants.centerNote4PickupBlue;
+                        case 5:
+                                return FieldConstants.centerNote5PickupBlue;
+                        default:
+                                return new Pose2d();
+                }
+        }
+
+        public static Pose2d getActiveAlternateNote(int note) {
+                switch (note) {
+                        case 1:
+                                return FieldConstants.centerNote1Blue;
+                        case 2:
+                                return FieldConstants.centerNote2Blue;
+                        case 3:
+                                return FieldConstants.centerNote3Blue;
+                        case 4:
+                                return FieldConstants.centerNote4Blue;
+                        case 5:
+                                return FieldConstants.centerNote5Blue;
+                        default:
+                                return new Pose2d();
+                }
         }
 
         public static Pose2d getActiveSpeakerPose() {

@@ -19,6 +19,11 @@
       "/SmartDashboard/CommSchd": "Scheduler"
     },
     "windows": {
+      "/Shuffleboard/Autonomous/AutoSelection": {
+        "window": {
+          "visible": true
+        }
+      },
       "/Shuffleboard/Autonomous/SourceStart": {
         "window": {
           "visible": true

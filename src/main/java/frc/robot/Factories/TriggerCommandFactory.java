@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
@@ -15,6 +16,7 @@ import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.Center5ToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenter5Pickup;
 import frc.robot.commands.Drive.DriveToPickupNote;
+import frc.robot.commands.Drive.PickUpAlternateNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -132,10 +134,11 @@ public class TriggerCommandFactory implements Logged {
                                 Commands.runOnce(() -> m_swerve.toLocation = 5),
                                 new RotateToAngle(m_swerve, 90),
                                 m_intake.startIntakeCommand(),
-                                new TransferIntakeToSensor(m_transfer, m_intake, .6),
-                                new DriveToPickupNote(m_swerve, m_transfer, m_intake,
-                                                CameraConstants.rearCamera.camname, m_llv,
-                                                4),
+                                new ParallelCommandGroup(
+                                                new TransferIntakeToSensor(m_transfer, m_intake, .6),
+                                                new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
+                                                                CameraConstants.rearCamera.camname, m_llv,
+                                                                5)),
                                 new ConditionalCommand(
                                                 m_cf.autopickup(FieldConstants.sourceShootBlue),
                                                 m_cf.autopickup(GeometryUtil

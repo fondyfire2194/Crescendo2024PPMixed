@@ -11,6 +11,7 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -45,9 +46,11 @@ public class AutoSourceShootThenCenterTriggers extends SequentialCommandGroup {
 
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
-                                Commands.runOnce(() -> swerve.curretnpathstartTime = Timer.getFPGATimestamp()),
+                                Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
 
                                 cf.setStartPosebyAlliance(path),
+                                Commands.runOnce(() -> SmartDashboard.putString("StartPose",
+                                                swerve.getPose().toString())),
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
                                 cf.transferNoteToShooterCommand(),

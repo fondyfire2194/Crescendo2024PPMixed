@@ -153,6 +153,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   @Log.NT(key = "currentpathstarttime")
   public double curretnpathstartTime;
+  @Log.NT(key = "realstates")
+  double[] rsbuff = new double[8];
+  @Log.NT(key = "desiredstates")
+  double[] desbuff = new double[8];
 
   LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this, true);
   LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this, true);
@@ -770,6 +774,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         mSwerveMods[3].getState().speedMetersPerSecond
     };
 
+   
+
     double[] theoreticalStates = {
         mSwerveMods[0].getDesiredState().angle.getDegrees(),
         mSwerveMods[0].getDesiredState().speedMetersPerSecond,
@@ -781,8 +787,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         mSwerveMods[3].getDesiredState().speedMetersPerSecond
     };
 
-    SmartDashboard.putNumberArray("Theoretical States", theoreticalStates);
-    SmartDashboard.putNumberArray("Real States", realStates);
+     rsbuff = realStates;
+     desbuff=theoreticalStates;
 
     SmartDashboard.putNumber("KeepAngle", keepAngle);
   }
@@ -843,6 +849,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
           this));
 
   public boolean checkNote;
+
+  public double currentpathstartTime;
 
   public void setPathRunning() {
     pathRunning = true;

@@ -10,14 +10,14 @@ import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
-import frc.robot.commands.Drive.CheckNoteSeen;
+import frc.robot.commands.Drive.CheckOKSwitchToDrive;
 import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -54,13 +54,18 @@ public class TestAuto extends SequentialCommandGroup {
 
                                 cf.setStartPosebyAlliance(path),
                                 new ParallelRaceGroup(
-                                                new CheckNoteSeen(llv, CameraConstants.rearCamera.camname, 3.2),
+                                                new CheckOKSwitchToDrive(swerve, llv, 1.1),
                                                 new RunPPath(swerve,
                                                                 path,
                                                                 false)),
 
-                                new DriveToPickupNote(swerve, transfer, intake, CameraConstants.rearCamera.camname, llv,
-                                                4));
+                                Commands.sequence(
+                                                Commands.runOnce(
+                                                                () -> SmartDashboard.putNumber("EndP1", swerve.getX())),
+
+                                                new DriveToPickupNote(swerve, transfer, intake,
+                                                                CameraConstants.rearCamera.camname, llv,
+                                                                4)));
 
         }
 

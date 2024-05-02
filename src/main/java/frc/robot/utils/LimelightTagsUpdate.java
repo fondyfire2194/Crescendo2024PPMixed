@@ -7,6 +7,7 @@ package frc.robot.utils;
 import org.opencv.photo.MergeDebevec;
 
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -17,17 +18,19 @@ public class LimelightTagsUpdate {
     private final SwerveSubsystem m_swerve;
     private final boolean m_useMegaTag2;
     boolean rejectUpdate;
+    int lpctr;
 
     public LimelightTagsUpdate(String camname, SwerveSubsystem swerve, boolean useMegaTag2) {
 
         m_camname = camname;
         m_swerve = swerve;
         m_useMegaTag2 = useMegaTag2;
+        lpctr = 0;
     }
 
     public void execute() {
-
-        if (m_useMegaTag2) {
+        lpctr++;
+        if (m_useMegaTag2 && !DriverStation.isDisabled()) {
 
             LimelightHelpers.SetRobotOrientation(m_camname,
                     m_swerve.getPoseEstimator().getEstimatedPosition().getRotation().getDegrees(),
@@ -53,7 +56,7 @@ public class LimelightTagsUpdate {
                     || mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && mt1.rawFiducials[0].ambiguity > .7;
 
             if (!rejectUpdate) {
-                m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999999));
+                m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 0.7));
                 m_swerve.getPoseEstimator().addVisionMeasurement(
                         mt1.pose,
                         mt1.timestampSeconds);
