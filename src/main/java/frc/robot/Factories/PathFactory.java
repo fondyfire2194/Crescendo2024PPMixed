@@ -40,17 +40,15 @@ public class PathFactory implements Logged {
     }
 
     public enum amppaths {
-        A_CN1ToCN2,
-        A_CN1ToPU,
-        A_CN1ToShoot,
-        A_CN2ToCN1,
-        A_CN2ToPU,
-        A_CN2ToShoot,
-        A_CN3ToPU,
-        A_N1ToCN1,
-        A_N1ToCN2,
-        A_S2N1,
-        A_SToCN3;
+        AmpShootToCenter1,
+        AmpShootToCenter2,
+        AmpToCenter1,
+        AmpToCenter2,
+        AmpToWing1,
+        Center1ToAmpShoot,
+        Center2ToAmpShoot,
+        Center3ToWing2
+        Center3ToAmpShoot;
     }
 
     public boolean checkAmpFilesExist() {

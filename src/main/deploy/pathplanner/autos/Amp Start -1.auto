@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp to Wing 1"
+                  "pathName": "AmptoWing1"
                 }
               },
               {
@@ -87,7 +87,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center 1 To Amp Shoot"
+                  "pathName": "Center1ToAmp Shoot"
                 }
               },
               {
@@ -112,7 +112,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Amp Shoot To Center 2"
+                  "pathName": "AmpShootToCenter2"
                 }
               },
               {
@@ -131,7 +131,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Center 2 To Amp Shoot"
+                  "pathName": "Center2ToAmpShoot"
                 }
               },
               {

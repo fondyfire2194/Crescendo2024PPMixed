@@ -17,7 +17,7 @@ import monologue.Logged;
 import monologue.Annotations.Log;
 
 /** Add your docs here. */
-public class AutoFactory implements Logged{
+public class AutoFactory implements Logged {
 
         private final PathFactory m_pf;
 
@@ -87,22 +87,14 @@ public class AutoFactory implements Logged{
                 fileCheckLayout.addBoolean("AmpFiles", () -> m_pf.ampFilesOK);
                 fileCheckLayout.addBoolean("SourceFiles", () -> m_pf.sourceFilesOK);
 
-                // rearLayout.addNumber("BatteryVolts", () ->
-                // RobotController.getBatteryVoltage());
-
         }
 
         public boolean checkChoiceChange() {
-
                 ampChoice = m_ampStartChooser.getSelected();// 0 start
                 sourceChoice = m_sourceStartChooser.getSelected();// 10 start
-
                 boolean temp = ampChoice != ampChoiceLast || sourceChoice != sourceChoiceLast;
-
                 ampChoiceLast = ampChoice;
-
                 sourceChoiceLast = sourceChoice;
-
                 return temp;
         }
 
@@ -110,18 +102,14 @@ public class AutoFactory implements Logged{
                 finalChoice = 0;
                 if (ampChoice != 0 && sourceChoice == 10)
                         finalChoice = ampChoice;
-
                 if (ampChoice == 0 && sourceChoice != 10)
                         finalChoice = sourceChoice;
-
                 SmartDashboard.putNumber("FC", finalChoice);
 
                 if (finalChoice > 0 && finalChoice < 10) {
                         m_pf.linkAmpPaths();
                         SmartDashboard.putNumber("LENGTHAmp", m_pf.pathMaps.size());
-
                 }
-
                 if (finalChoice > 10 && finalChoice < 20) {
                         m_pf.linkSourcePaths();
                         SmartDashboard.putNumber("LENGTHSource", m_pf.pathMaps.size());
@@ -129,5 +117,4 @@ public class AutoFactory implements Logged{
 
                 return finalChoice;
         }
-
 }
