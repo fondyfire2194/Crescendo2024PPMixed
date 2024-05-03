@@ -29,19 +29,6 @@ import frc.robot.subsystems.TransferSubsystem;
 /** Add your docs here. */
 public class AutoSourceThenCenter4Vision extends SequentialCommandGroup {
 
-        public PathPlannerPath getPath(String pathname) {
-                return PathPlannerPath.fromPathFile(pathname);
-        }
-
-        PathConstraints pathConstraints = new PathConstraints(
-                        3.0, 4.0,
-                        Units.degreesToRadians(360),
-                        Units.degreesToRadians(540));
-
-        public Command getPathToPose(Pose2d pose, PathConstraints constraints) {
-                return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
-        }
-
         public AutoSourceThenCenter4Vision(
                         CommandFactory cf,
                         PathPlannerPath path,
@@ -52,12 +39,11 @@ public class AutoSourceThenCenter4Vision extends SequentialCommandGroup {
 
                 addCommands(
                                 // shoot first note
-                         cf.setStartPosebyAlliance(path, FieldConstants.sourceStartPose),
+                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                 new ParallelRaceGroup(
                                                 new CheckOKSwitchToDrive(swerve, llv, 1.1),
                                                 new RunPPath(swerve,
-                                                                path,
-                                                                false)),
+                                                                path)),
 
                                 Commands.sequence(
                                                 Commands.runOnce(

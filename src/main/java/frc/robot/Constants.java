@@ -270,7 +270,6 @@ public final class Constants {
 
                 public static final Pose2d ampStartPose = new Pose2d(.8, 6.68,
                                 new Rotation2d(Units.degreesToRadians(-120)));
-
         }
 
         public static Pose2d getActiveNotePickup(int note) {

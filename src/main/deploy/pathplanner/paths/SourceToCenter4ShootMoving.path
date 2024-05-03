@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.0329595552201074,
-        "y": 2.5529623669803687
+        "x": 2.0635131712488803,
+        "y": 2.096239741694889
       },
       "isLocked": false,
       "linkedName": "Bottom Starting Point"
@@ -20,12 +20,12 @@
         "y": 1.6651716873413482
       },
       "prevControl": {
-        "x": 3.853184617219533,
-        "y": 1.5021805627063387
+        "x": 3.9864921321395794,
+        "y": 1.3108283473034628
       },
       "nextControl": {
-        "x": 6.595606914466325,
-        "y": 1.8151796645961344
+        "x": 6.642450260649451,
+        "y": 2.0376855589659812
       },
       "isLocked": false,
       "linkedName": null
@@ -48,6 +48,11 @@
     {
       "waypointRelativePos": 1.0,
       "rotationDegrees": -170.53767779197426,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": 118.45950232838932,
       "rotateFast": false
     }
   ],

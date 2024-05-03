@@ -9,6 +9,7 @@ import java.util.Map;
 
 import org.littletonrobotics.urcl.URCL;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.REVPhysicsSim;
@@ -23,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.ArmShooterByDistance;
 import frc.robot.utils.LLPipelines;
@@ -48,6 +50,8 @@ public class Robot extends TimedRobot implements Logged {
   private boolean autoHasRun;
 
   private boolean firstScan = true;
+
+  int tstctr;
 
   @Override
   public void robotInit() {
@@ -98,7 +102,7 @@ public class Robot extends TimedRobot implements Logged {
 
     FollowPathCommand.warmupCommand().schedule();
 
-    System.gc();
+    // System.gc();
 
     // PathfindingCommand.warmupCommand().schedule();
 
@@ -133,6 +137,11 @@ public class Robot extends TimedRobot implements Logged {
     if (m_robotContainer.m_arm.getCanCoderDeg() < 26)
       m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kCoast);
 
+    m_robotContainer.m_swerve.flUpdate.setLLRobotorientation();
+    m_robotContainer.m_swerve.frUpdate.setLLRobotorientation();
+    m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
+    m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
+
   }
 
   @Override
@@ -158,9 +167,14 @@ public class Robot extends TimedRobot implements Logged {
 
     if (checkAutos) {
       m_robotContainer.m_af.validStartChoice = m_robotContainer.m_af.selectAndLoadPathFiles();
-      if (m_robotContainer.m_af.validStartChoice == 11 || m_robotContainer.m_af.validStartChoice == 12
-          || m_robotContainer.m_af.validStartChoice == 13 || m_robotContainer.m_af.validStartChoice == 14)
+      if (m_robotContainer.m_af.validStartChoice > 10 && m_robotContainer.m_af.validStartChoice < 20) {
         m_robotContainer.m_tcf.createSourceTriggersC4C5();
+        m_robotContainer.m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose).runsWhenDisabled();
+      }
+      if (m_robotContainer.m_af.validStartChoice > 0 && m_robotContainer.m_af.validStartChoice < 10) {
+        m_robotContainer.m_tcf.createAmpTriggers();
+        m_robotContainer.m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
+      }
 
       SmartDashboard.putNumber("ValidStartChoice", m_robotContainer.m_af.validStartChoice);
 
@@ -172,6 +186,7 @@ public class Robot extends TimedRobot implements Logged {
   public void disabledExit() {
 
     m_robotContainer.checkCAN = false;
+
   }
 
   @Override
@@ -201,7 +216,7 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-    m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
     if (m_robotContainer.m_af.finalChoice == 0)
       m_autonomousCommand = m_robotContainer.getAutonomousCommand();
     else

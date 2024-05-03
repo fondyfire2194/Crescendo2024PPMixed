@@ -4,8 +4,6 @@
 
 package frc.robot.utils;
 
-import org.opencv.photo.MergeDebevec;
-
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.LimelightHelpers;
@@ -16,25 +14,29 @@ public class LimelightTagsUpdate {
 
     private final String m_camname;
     private final SwerveSubsystem m_swerve;
-    private final boolean m_useMegaTag2;
+    private boolean m_useMegaTag2=false;
     boolean rejectUpdate;
-    int lpctr;
 
-    public LimelightTagsUpdate(String camname, SwerveSubsystem swerve, boolean useMegaTag2) {
-
+    public LimelightTagsUpdate(String camname, SwerveSubsystem swerve) {
         m_camname = camname;
         m_swerve = swerve;
-        m_useMegaTag2 = useMegaTag2;
-        lpctr = 0;
+    }
+
+    public void setUseMegatag2(boolean on) {
+        m_useMegaTag2 = on;
+    }
+
+    public void setLLRobotorientation() {
+        LimelightHelpers.SetRobotOrientation(m_camname,
+                m_swerve.getPoseEstimator().getEstimatedPosition().getRotation().getDegrees(),
+                0, 0, 0, 0, 0);
     }
 
     public void execute() {
-        lpctr++;
-        if (m_useMegaTag2 && !DriverStation.isDisabled()) {
 
-            LimelightHelpers.SetRobotOrientation(m_camname,
-                    m_swerve.getPoseEstimator().getEstimatedPosition().getRotation().getDegrees(),
-                    0, 0, 0, 0, 0);
+        if (m_useMegaTag2) {
+
+            setLLRobotorientation();
 
             LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(m_camname);
 
@@ -53,10 +55,10 @@ public class LimelightTagsUpdate {
             LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_camname);
 
             rejectUpdate = mt1.tagCount == 0
-                    || mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && mt1.rawFiducials[0].ambiguity > .7;
+                    || mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && mt1.rawFiducials[0].ambiguity >.7 && mt1.rawFiducials[0].distToCamera > 3;
 
             if (!rejectUpdate) {
-                m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 0.7));
+                m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999));
                 m_swerve.getPoseEstimator().addVisionMeasurement(
                         mt1.pose,
                         mt1.timestampSeconds);

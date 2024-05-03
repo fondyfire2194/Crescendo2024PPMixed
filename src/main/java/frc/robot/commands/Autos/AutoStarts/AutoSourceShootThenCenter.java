@@ -25,19 +25,6 @@ import frc.robot.subsystems.SwerveSubsystem;
 /** Add your docs here. */
 public class AutoSourceShootThenCenter extends SequentialCommandGroup {
 
-        public PathPlannerPath getPath(String pathname) {
-                return PathPlannerPath.fromPathFile(pathname);
-        }
-
-        PathConstraints pathConstraints = new PathConstraints(
-                        3.0, 4.0,
-                        Units.degreesToRadians(360),
-                        Units.degreesToRadians(540));
-
-        public Command getPathToPose(Pose2d pose, PathConstraints constraints) {
-                return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
-        }
-
         public AutoSourceShootThenCenter(
                         CommandFactory cf,
                         PathPlannerPath path,
@@ -48,7 +35,8 @@ public class AutoSourceShootThenCenter extends SequentialCommandGroup {
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-                                cf.setStartPosebyAlliance(path, FieldConstants.sourceStartPose),
+                                
+                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
@@ -58,8 +46,7 @@ public class AutoSourceShootThenCenter extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
                                                 Commands.runOnce(() -> swerve.toLocation = 4),
                                                 new RunPPath(swerve,
-                                                                path,
-                                                                false),
+                                                                path),                                                          
                                                 new SequentialCommandGroup(
                                                                 Commands.waitSeconds(1),
                                                                 cf.doIntake())),

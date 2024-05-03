@@ -8,13 +8,12 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
-import frc.robot.commands.Autos.SourceStart.Center5ToSourceShoot;
-import frc.robot.commands.Autos.SourceStart.SourceShootToCenter5Pickup;
+import frc.robot.Factories.PathFactory.sourcepaths;
+import frc.robot.commands.Autos.SourceStart.CenterToSourceShoot;
+import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
 import frc.robot.commands.Drive.PickUpAlternateNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
@@ -87,13 +86,17 @@ public class TriggerCommandFactory implements Logged {
                 Trigger triggerC4ToSS = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
                                 && m_swerve.fromLocation == 0 && m_swerve.atLocation == 4 && m_transfer.noteAtIntake());
 
-                triggerC4ToSS.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.fromLocation = 4),
-                                Commands.runOnce(() -> m_swerve.toLocation = 10),
-                                new Center4ToSourceShoot(m_cf, m_pf, m_swerve),
-                                Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.atLocation = 10),
-                                                Commands.runOnce(() -> trig1 = true))));
+                triggerC4ToSS.onTrue(
+                                Commands.sequence(
+                                                Commands.runOnce(() -> m_swerve.fromLocation = 4),
+                                                Commands.runOnce(() -> m_swerve.toLocation = 10),
+                                                new CenterToSourceShoot(m_cf,
+                                                                m_pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
+                                                                                .name()),
+                                                                m_swerve),
+                                                Commands.parallel(
+                                                                Commands.runOnce(() -> m_swerve.atLocation = 10),
+                                                                Commands.runOnce(() -> trig1 = true))));
 
                 // when shot from note C4 ends go try for note C5
                 Trigger triggerSSToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
@@ -104,7 +107,8 @@ public class TriggerCommandFactory implements Logged {
                 triggerSSToC5.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> m_swerve.toLocation = 5),
                                 Commands.runOnce(() -> m_swerve.fromLocation = 10),
-                                new SourceShootToCenter5Pickup(m_cf, m_pf, m_swerve),
+                                new SourceShootToCenterPickup(m_cf, m_pf.pathMaps.get(sourcepaths.SourceShootToCenter5
+                                                .name()), m_swerve),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.atLocation = 5),
                                                 Commands.runOnce(() -> trig2 = true))));
@@ -116,12 +120,13 @@ public class TriggerCommandFactory implements Logged {
                                 && (m_swerve.fromLocation == 10 || m_swerve.fromLocation == 4));
 
                 triggerC5ToSS.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.fromLocation = 5),
+                                Commands.runOnce(() -> m_swerve.fromLocation = 4),
                                 Commands.runOnce(() -> m_swerve.toLocation = 10),
-                                new Center5ToSourceShoot(m_cf, m_pf, m_swerve),
+                                new CenterToSourceShoot(m_cf, m_pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
+                                                .name()), m_swerve),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.atLocation = 10),
-                                                Commands.runOnce(() -> trig3 = true))));
+                                                Commands.runOnce(() -> trig1 = true))));
 
                 // // if note C4 isn't collected, go try C5
                 Trigger triggerC4ToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled()

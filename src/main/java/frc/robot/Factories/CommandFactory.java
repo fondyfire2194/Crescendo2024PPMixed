@@ -11,31 +11,25 @@ import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenter4Vision;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenter4Pathfind;
-import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
-import frc.robot.commands.Pathplanner.RunPPath;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenter4Vision;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
@@ -45,6 +39,7 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.AllianceUtil;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -69,9 +64,8 @@ public class CommandFactory implements Logged {
 
         private final PathFactory m_pf;
         @Log.NT(key = "startpose")
-        Pose2d temp = new Pose2d();
-        @Log.NT(key = "startposeflipped")
-        private Pose2d tempFlipped = new Pose2d();
+        Pose2d tempPose2d = new Pose2d();
+
         private Trigger runShooterTrigger;
         @Log.NT(key = "startontheflyshoot")
         public boolean startShoot;
@@ -190,27 +184,11 @@ public class CommandFactory implements Logged {
                 }).finallyDo(() -> controller.getHID().setRumble(RumbleType.kBothRumble, 0.0));
         }
 
-        // public Command setStartPoseWithLimeLight() {
-        // return new LimelightSetStartPose(
-        // m_llName, m_swerve,
-        // pf.pathMaps.get(amppaths.A_S2N1.name()).getPreviewStartingHolonomicPose());
-        // }
-
-        public Command setStartPosebyAlliance(PathPlannerPath path, Pose2d startPose) {
-                Pose2d temp = startPose;
-                var alliance = DriverStation.getAlliance();
-                if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red)
-
-                {
-                        tempFlipped = flipPose(temp);
-                        return Commands.runOnce(() -> m_swerve.resetPoseEstimator(tempFlipped));
-                } else
-                        return Commands.runOnce(() -> m_swerve.resetPoseEstimator(temp));
-
-        }
-
-        public static Pose2d flipPose(Pose2d pose) {
-                return GeometryUtil.flipFieldPose(pose);
+        public Command setStartPosebyAlliance(Pose2d startPose) {
+                tempPose2d=startPose;
+                if (AllianceUtil.isRedAlliance())
+                        tempPose2d = GeometryUtil.flipFieldPose(startPose);
+                return Commands.runOnce(() -> m_swerve.resetPoseEstimator(tempPose2d));
         }
 
         public Command finalCommand(int choice) {
@@ -245,32 +223,6 @@ public class CommandFactory implements Logged {
                 return finalCommand(m_af.finalChoice);
         }
 
-        public Command getSecondCenterNote(PathPlannerPath path, PathPlannerPath path1) {
-
-                return new SequentialCommandGroup(
-                                new ConditionalCommand(
-                                                new SequentialCommandGroup(
-                                                                new ParallelCommandGroup(
-                                                                                new RunPPath(m_swerve, path,
-                                                                                                false),
-                                                                                doIntake()),
-                                                                new Center4ToSourceShoot(
-                                                                                this,
-                                                                                m_pf,
-                                                                                m_swerve)),
-                                                Commands.none(),
-                                                () -> !m_intake.noteMissed));
-
-        }
-
-        public Command CenterToCenterPickup(PathPlannerPath path) {
-                return new SequentialCommandGroup(
-                                new ParallelCommandGroup(
-                                                new RunPPath(m_swerve, path,
-                                                                false),
-                                                doIntake()));
-
-        }
 
         public Command resetAll() {
                 return new ParallelCommandGroup(
@@ -282,7 +234,5 @@ public class CommandFactory implements Logged {
                                                 .withName("Reset All"))
                                 .asProxy();
         }
-
-      
 
 }

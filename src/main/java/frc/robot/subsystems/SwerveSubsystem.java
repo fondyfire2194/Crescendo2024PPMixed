@@ -158,16 +158,12 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "desiredstates")
   double[] desbuff = new double[8];
 
-  LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this, true);
-  LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this, true);
-
-  private Trigger checkNoteTrigger = new Trigger(() -> checkNote = true);
+  public LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this);
+  public LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this);
 
   public SwerveSubsystem(boolean showScreens) {
     m_showScreens = showScreens;
     SmartDashboard.putNumber("DCF", Constants.SwerveConstants.driveConversionPositionFactor);
-
-    checkNoteTrigger.onTrue(doNoteVisionCommand());
 
     xLockStates[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
     xLockStates[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
@@ -402,7 +398,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return Math.IEEEremainder((gyro.getAngle()), 360);
   }
 
-  @Log.NT(key = "Poseestimate")
+  @Log.NT(key = "poseestimate")
   public Pose2d getPose() {
     if (RobotBase.isReal())
       return swervePoseEstimator.getEstimatedPosition();
@@ -609,42 +605,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public double getDistanceFromSpeaker() {
     return AllianceUtil.getSpeakerPose().getTranslation()
         .getDistance(getPose().getTranslation());
-  }
-
-  public Command doNoteVisionCommand() {
-    return Commands.runOnce(() -> doNoteVisionCorrection());
-  }
-
-  public void doNoteVisionCorrection() {
-    String rname = CameraConstants.rearCamera.camname;
-    double corrGain = .001;
-
-    if (LimelightHelpers.getTV(rname)) {
-
-      yerror = LimelightHelpers.getTX(rname);
-      capLatency = LimelightHelpers.getLatency_Capture(rname);
-      pipelineLatency = LimelightHelpers.getLatency_Pipeline(rname);
-      robotPose = getPose();
-      poseY = robotPose.getY();
-      poseX = robotPose.getX();
-      poser = robotPose.getRotation();
-      correctedY = poseY - yerror * corrGain;
-      correctionPose = new Pose2d(poseX, correctedY, poser);
-      latency = capLatency + pipelineLatency;
-
-      if (firstTime) {
-        noteSeenTime = Timer.getFPGATimestamp();
-        swervePoseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.3, .3, .8));
-
-        swervePoseEstimator.addVisionMeasurement(
-            correctionPose,
-            latency);
-
-        firstTime = false;
-      }
-    }
-
-    checkNote = false;
   }
 
   /**

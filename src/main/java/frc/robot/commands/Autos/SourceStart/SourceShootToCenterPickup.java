@@ -20,7 +20,7 @@ import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */
-public class Center4ToCenter5Pickup extends SequentialCommandGroup {
+public class SourceShootToCenterPickup extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -35,17 +35,15 @@ public class Center4ToCenter5Pickup extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public Center4ToCenter5Pickup(
+        public SourceShootToCenterPickup(
                         CommandFactory cf,
-                        PathFactory pf,
+                        PathPlannerPath path,
                         SwerveSubsystem swerve) {
 
                 addCommands(
                                 new ParallelCommandGroup(
                                                 new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5
-                                                                                .name()),
-                                                                false),
+                                                                path),
                                                 cf.doIntake()));
 
         }

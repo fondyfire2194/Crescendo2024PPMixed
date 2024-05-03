@@ -24,19 +24,6 @@ import frc.robot.subsystems.SwerveSubsystem;
 /** Add your docs here. */
 public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
 
-        public PathPlannerPath getPath(String pathname) {
-                return PathPlannerPath.fromPathFile(pathname);
-        }
-
-        PathConstraints pathConstraints = new PathConstraints(
-                        3.0, 4.0,
-                        Units.degreesToRadians(360),
-                        Units.degreesToRadians(540));
-
-        public Command getPathToPose(Pose2d pose, PathConstraints constraints) {
-                return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
-        }
-
         public AutoSourceShootMovingThenCenter(
                         CommandFactory cf,
                         PathPlannerPath path,
@@ -48,17 +35,16 @@ public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
                                 // move to center note , pick up if there and move to shoot position then shoot
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
 
-                                cf.setStartPosebyAlliance(path, FieldConstants.sourceStartPose),
+                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                 new ParallelCommandGroup(
                                                 Commands.runOnce(() -> swerve.toLocation = 4),
                                                 new RunPPath(swerve,
-                                                                path,
-                                                                false),
+                                                                path),
                                                 new SequentialCommandGroup(
                                                                 cf.positionArmRunShooterSpecialCase(
                                                                                 Constants.autoShootArmAngle,
                                                                                 Constants.autoShootRPM),
-                                                                                new WaitCommand(2),
+                                                                new WaitCommand(2),
 
                                                                 cf.doIntake())),
 
