@@ -47,7 +47,7 @@ public class PathFactory implements Logged {
         AmpToWing1,
         Center1ToAmpShoot,
         Center2ToAmpShoot,
-        Center3ToWing2
+        Center3ToWing2,
         Center3ToAmpShoot;
     }
 
@@ -100,13 +100,6 @@ public class PathFactory implements Logged {
             pathMaps.put(s.toString(), getPath(s.toString()));
         }
     }
-
-    // public enum decisionpoints {
-    // CN1,
-    // CN2, CN3,
-    // CN4,
-    // CN5;
-    // }
 
     public PathPlannerPath getPath(String pathname) {
         return PathPlannerPath.fromPathFile(pathname);

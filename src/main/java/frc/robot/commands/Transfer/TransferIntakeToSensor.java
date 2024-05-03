@@ -39,12 +39,9 @@ public class TransferIntakeToSensor extends Command {
   @Override
   public void execute() {
     m_transfer.runToSensor();
-
     m_intake.noteMissed = endTimer.hasElapsed(m_noNoteTime);
-
     m_transfer.simnoteatintake = RobotBase.isSimulation() && endTimer.hasElapsed(simmotetime)
         && !m_transfer.skipFirstNoteInSim;
-
   }
 
   // Called once the command ends or is interrupted.

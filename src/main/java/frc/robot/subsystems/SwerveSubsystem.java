@@ -43,7 +43,7 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
-import frc.robot.Robot;
+import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -607,7 +607,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   @Log.NT(key = "SpeakerDistance")
   public double getDistanceFromSpeaker() {
-    return Constants.getActiveSpeakerPose().getTranslation()
+    return AllianceUtil.getSpeakerPose().getTranslation()
         .getDistance(getPose().getTranslation());
   }
 
@@ -713,7 +713,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public double getAngleComp() {
     double temp = 0;
-    Pose2d rel = getPose().relativeTo(Constants.getActiveSpeakerPose());
+    Pose2d rel = getPose().relativeTo(AllianceUtil.getSpeakerPose());
     double angle = rel.getRotation().getRadians();
     temp = Math.sin(angle) * .001;
     return temp;
@@ -774,8 +774,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         mSwerveMods[3].getState().speedMetersPerSecond
     };
 
-   
-
     double[] theoreticalStates = {
         mSwerveMods[0].getDesiredState().angle.getDegrees(),
         mSwerveMods[0].getDesiredState().speedMetersPerSecond,
@@ -787,8 +785,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         mSwerveMods[3].getDesiredState().speedMetersPerSecond
     };
 
-     rsbuff = realStates;
-     desbuff=theoreticalStates;
+    rsbuff = realStates;
+    desbuff = theoreticalStates;
 
     SmartDashboard.putNumber("KeepAngle", keepAngle);
   }

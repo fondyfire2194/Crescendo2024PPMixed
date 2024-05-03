@@ -307,14 +307,6 @@ public final class Constants {
                 }
         }
 
-        public static Pose2d getActiveSpeakerPose() {
-                if (DriverStation.getAlliance().isPresent()
-                                && DriverStation.getAlliance().get() == Alliance.Red)
-                        return FieldConstants.speakerRedAlliance;
-                else
-                        return FieldConstants.speakerBlueAlliance;
-
-        }
 
         public static Pose2d getActiveLobPose() {
                 if (DriverStation.getAlliance().isPresent()

@@ -10,12 +10,9 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
@@ -33,10 +30,10 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootOnFlyThenCenterTriggers;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter4PathFind;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenterTriggers;
-import frc.robot.commands.Autos.AutoStarts.TestAuto;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenter4Vision;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenter4Pathfind;
 import frc.robot.commands.Autos.SourceStart.Center4ToSourceShoot;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
@@ -199,11 +196,9 @@ public class CommandFactory implements Logged {
         // pf.pathMaps.get(amppaths.A_S2N1.name()).getPreviewStartingHolonomicPose());
         // }
 
-        public Command setStartPosebyAlliance(PathPlannerPath path) {
-                temp = FieldConstants.sourceStartPose;
-
+        public Command setStartPosebyAlliance(PathPlannerPath path, Pose2d startPose) {
+                Pose2d temp = startPose;
                 var alliance = DriverStation.getAlliance();
-
                 if (alliance.isPresent() && alliance.get() == DriverStation.Alliance.Red)
 
                 {
@@ -223,31 +218,20 @@ public class CommandFactory implements Logged {
                 switch ((choice)) {
 
                         case 11:
-                                return new AutoSourceShootThenCenter4PathFind(this,
+                                return new AutoSourceShootThenCenter(this,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                 m_swerve);
-
                         case 12:
-                                return new AutoSourceShootThenCenter4PathFind(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
-                                                m_swerve);
-                        case 13:
-                                return new AutoSourceShootThenCenterTriggers(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()), m_swerve);
-                        case 14:
-                                return new AutoSourceShootOnFlyThenCenterTriggers(this,
+                                return new AutoSourceShootMovingThenCenter(this,
                                                 m_pf.pathMaps.get(sourcepaths.SourceToCenter4ShootMoving.name()),
                                                 m_swerve);
-                        case 15:
-                                return new AutoSourceShootThenCenter4PathFind(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
+                        case 13:
+                                return new AutoSourceShootCenter4Pathfind(this,
+                                                m_pf, m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                 m_swerve);
-
-                        case 16:
-                                // return new AutoSourceShootThenNear45ToCenter4(this, m_pf,
-                                // m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
-                                // m_swerve);
-                                return new TestAuto(this, m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
+                        case 14:
+                                return new AutoSourceThenCenter4Vision(this,
+                                                m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
                                                 m_swerve, m_llv, m_intake, m_transfer);
 
                         default:
@@ -299,14 +283,6 @@ public class CommandFactory implements Logged {
                                 .asProxy();
         }
 
-        public Command testIdea(PathPlannerPath path) {
-
-                return Commands.sequence(
-                                this.setStartPosebyAlliance(path),
-                                new ParallelRaceGroup(
-                                                new WaitCommand(2),
-                                                new RunPPath(m_swerve, path, false)));
-
-        }
+      
 
 }

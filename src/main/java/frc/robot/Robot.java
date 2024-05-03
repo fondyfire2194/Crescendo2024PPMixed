@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.littletonrobotics.urcl.URCL;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.REVPhysicsSim;
@@ -24,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.commands.ArmShooterByDistance;
 import frc.robot.utils.LLPipelines;
@@ -155,13 +153,13 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.cameraSelection = m_robotContainer.m_cameraChooser.getSelected();
 
     boolean checkAutos = firstScan || m_robotContainer.m_af.checkChoiceChange();
-    SmartDashboard.putBoolean("CHECKAUTOS", checkAutos);
+
     firstScan = false;
 
     if (checkAutos) {
       m_robotContainer.m_af.validStartChoice = m_robotContainer.m_af.selectAndLoadPathFiles();
-      if (m_robotContainer.m_af.validStartChoice == 13 || m_robotContainer.m_af.validStartChoice == 14
-          || m_robotContainer.m_af.validStartChoice == 15 || m_robotContainer.m_af.validStartChoice == 16)
+      if (m_robotContainer.m_af.validStartChoice == 11 || m_robotContainer.m_af.validStartChoice == 12
+          || m_robotContainer.m_af.validStartChoice == 13 || m_robotContainer.m_af.validStartChoice == 14)
         m_robotContainer.m_tcf.createSourceTriggersC4C5();
 
       SmartDashboard.putNumber("ValidStartChoice", m_robotContainer.m_af.validStartChoice);
@@ -200,10 +198,6 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.resetModuleEncoders();
 
     startTime = Timer.getFPGATimestamp();
-
-    SmartDashboard.putNumber("Finalchoice", m_robotContainer.m_af.finalChoice);
-
-    SmartDashboard.putString("ASP", Constants.getActiveSpeakerPose().toString());
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 

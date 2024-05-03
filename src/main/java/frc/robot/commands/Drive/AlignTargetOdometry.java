@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.AllianceUtil;
 
 public class AlignTargetOdometry extends Command {
   /** Creates a new AlignToTagSet */
@@ -65,7 +66,7 @@ public class AlignTargetOdometry extends Command {
         MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.SwerveConstants.stickDeadband));
 
     // get horizontal angle
-    Pose2d speakerPose = Constants.getActiveSpeakerPose();
+    Pose2d speakerPose = AllianceUtil.getSpeakerPose();
     Pose2d robotPose = m_swerve.getPose();
     double XDiff = speakerPose.getX() - robotPose.getX();
     double YDiff = speakerPose.getY() - robotPose.getY();

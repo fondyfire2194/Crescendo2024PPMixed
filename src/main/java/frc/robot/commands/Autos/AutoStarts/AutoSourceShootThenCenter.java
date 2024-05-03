@@ -17,12 +17,13 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */
-public class AutoSourceShootThenCenterTriggers extends SequentialCommandGroup {
+public class AutoSourceShootThenCenter extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -37,7 +38,7 @@ public class AutoSourceShootThenCenterTriggers extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public AutoSourceShootThenCenterTriggers(
+        public AutoSourceShootThenCenter(
                         CommandFactory cf,
                         PathPlannerPath path,
                         SwerveSubsystem swerve) {
@@ -47,10 +48,8 @@ public class AutoSourceShootThenCenterTriggers extends SequentialCommandGroup {
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-
-                                cf.setStartPosebyAlliance(path),
-                                Commands.runOnce(() -> SmartDashboard.putString("StartPose",
-                                                swerve.getPose().toString())),
+                                cf.setStartPosebyAlliance(path, FieldConstants.sourceStartPose),
+                                
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
                                 cf.transferNoteToShooterCommand(),

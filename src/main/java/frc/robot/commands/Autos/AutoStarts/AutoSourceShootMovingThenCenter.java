@@ -14,13 +14,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */
-public class AutoSourceShootOnFlyThenCenterTriggers extends SequentialCommandGroup {
+public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -35,7 +37,7 @@ public class AutoSourceShootOnFlyThenCenterTriggers extends SequentialCommandGro
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public AutoSourceShootOnFlyThenCenterTriggers(
+        public AutoSourceShootMovingThenCenter(
                         CommandFactory cf,
                         PathPlannerPath path,
                         SwerveSubsystem swerve) {
@@ -45,10 +47,10 @@ public class AutoSourceShootOnFlyThenCenterTriggers extends SequentialCommandGro
                                 // path auto shoots on the fly
                                 // move to center note , pick up if there and move to shoot position then shoot
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
-                                cf.setStartPosebyAlliance(path),
+
+                                cf.setStartPosebyAlliance(path, FieldConstants.sourceStartPose),
                                 new ParallelCommandGroup(
                                                 Commands.runOnce(() -> swerve.toLocation = 4),
-
                                                 new RunPPath(swerve,
                                                                 path,
                                                                 false),
@@ -56,6 +58,7 @@ public class AutoSourceShootOnFlyThenCenterTriggers extends SequentialCommandGro
                                                                 cf.positionArmRunShooterSpecialCase(
                                                                                 Constants.autoShootArmAngle,
                                                                                 Constants.autoShootRPM),
+                                                                                new WaitCommand(2),
 
                                                                 cf.doIntake())),
 

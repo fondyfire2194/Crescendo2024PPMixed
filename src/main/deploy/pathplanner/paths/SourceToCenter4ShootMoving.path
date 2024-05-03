@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.024481741271176,
-        "y": 2.851546472323715
+        "x": 1.0329595552201074,
+        "y": 2.5529623669803687
       },
       "isLocked": false,
       "linkedName": "Bottom Starting Point"
@@ -53,9 +53,9 @@
   ],
   "constraintZones": [
     {
-      "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.7,
-      "maxWaypointRelativePos": 2.0,
+      "name": "SlowForShoot",
+      "minWaypointRelativePos": 0.05,
+      "maxWaypointRelativePos": 0.2,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -67,7 +67,7 @@
   "eventMarkers": [
     {
       "name": "Shoot Here",
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 0.2,
       "command": {
         "type": "sequential",
         "data": {

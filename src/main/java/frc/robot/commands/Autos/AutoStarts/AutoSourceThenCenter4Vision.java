@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Drive.CheckOKSwitchToDrive;
 import frc.robot.commands.Drive.DriveToPickupNote;
@@ -26,7 +27,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 
 /** Add your docs here. */
-public class TestAuto extends SequentialCommandGroup {
+public class AutoSourceThenCenter4Vision extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -41,7 +42,7 @@ public class TestAuto extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public TestAuto(
+        public AutoSourceThenCenter4Vision(
                         CommandFactory cf,
                         PathPlannerPath path,
                         SwerveSubsystem swerve,
@@ -51,8 +52,7 @@ public class TestAuto extends SequentialCommandGroup {
 
                 addCommands(
                                 // shoot first note
-
-                                cf.setStartPosebyAlliance(path),
+                         cf.setStartPosebyAlliance(path, FieldConstants.sourceStartPose),
                                 new ParallelRaceGroup(
                                                 new CheckOKSwitchToDrive(swerve, llv, 1.1),
                                                 new RunPPath(swerve,

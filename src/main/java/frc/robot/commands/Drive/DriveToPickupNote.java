@@ -70,18 +70,10 @@ public class DriveToPickupNote extends Command {
     elapsedTime.reset();
     elapsedTime.start();
 
-    Pose2d blueNotePose = Constants.getActiveNotePickup(m_noteNumber);
-    activeNotePose = blueNotePose;
-    redAlliance = DriverStation.getAlliance().isPresent() &&
-        DriverStation.getAlliance().get() == Alliance.Red;
+    activeNotePose = AllianceUtil.flipFieldAngle(Constants.getActiveNotePickup(m_noteNumber));
 
-    Translation2d t2d = new Translation2d();
-    if (redAlliance) {
-      t2d = blueNotePose.getTranslation();
-      double rads = blueNotePose.getRotation().getRadians();
-      activeNotePose = new Pose2d(t2d, new Rotation2d(rads + Math.PI));
-    }
     SmartDashboard.putString("NotePose", activeNotePose.toString());
+
     double xStartPosition = m_swerve.getX();
   }
 

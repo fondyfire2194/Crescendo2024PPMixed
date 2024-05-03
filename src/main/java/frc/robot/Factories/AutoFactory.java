@@ -26,7 +26,7 @@ public class AutoFactory implements Logged {
         public final SendableChooser<Integer> m_ampStartChooser = new SendableChooser<Integer>();
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
-
+        @Log.NT(key = "finalchoice")
         public int finalChoice = 0;
 
         int ampChoice;
@@ -38,24 +38,18 @@ public class AutoFactory implements Logged {
         public int validStartChoice = 0;
 
         public AutoFactory(PathFactory pf, SwerveSubsystem swerve) {
-
                 m_pf = pf;
-
                 m_swerve = swerve;
 
                 m_ampStartChooser.setDefaultOption("Not Used", 0);
-
                 m_ampStartChooser.addOption("C2 then C1", 1);
                 m_ampStartChooser.addOption("C1 then C2", 2);
 
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
-                m_sourceStartChooser.addOption("C4 Then C5", 11);
-                m_sourceStartChooser.addOption("C5 Then C4", 12);
-                m_sourceStartChooser.addOption("C4 Then C5 Triggers", 13);
-                m_sourceStartChooser.addOption("C4 Then C5 Shoot Moving", 14);
-                m_sourceStartChooser.addOption("C4 Pathfind Then C5 Shoot", 15);
-                // m_sourceStartChooser.addOption("NearC45 To C4 Then C5", 16);
-                m_sourceStartChooser.addOption("TestAuto", 16);
+                m_sourceStartChooser.addOption("C4 Then C5",11);
+                m_sourceStartChooser.addOption("Shoot Moving C4 Then C5 ", 12);
+                m_sourceStartChooser.addOption("C4 Pathfind Then C5", 13);
+                m_sourceStartChooser.addOption("C4 Vision Then C5", 14);
 
                 Shuffleboard.getTab("Autonomous").add("AmpStart", m_ampStartChooser)
                                 .withSize(3, 1).withPosition(0, 0);

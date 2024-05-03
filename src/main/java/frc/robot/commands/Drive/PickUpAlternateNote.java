@@ -21,6 +21,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.GeometryUtil;
 import frc.robot.utils.LLPipelines.pipelines;
 
@@ -67,12 +68,7 @@ public class PickUpAlternateNote extends Command {
     elapsedTime.reset();
     elapsedTime.start();
 
-    Pose2d blueNotePose = Constants.getActiveAlternateNote(m_noteNumber);
-
-
-    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-      activeNotePose = GeometryUtil.flipFieldPose(blueNotePose);
-    }
+    activeNotePose = AllianceUtil.flipFieldAngle(Constants.getActiveNotePickup(m_noteNumber));
 
     double yStartPosition = m_swerve.getY();
 
@@ -109,7 +105,7 @@ public class PickUpAlternateNote extends Command {
      */
 
     m_swerve.drive(
-        Math.signum(yerror) * SwerveConstants.notePickupSpeed * 3, // Constants.SwerveConstants.kmaxSpeed *3,
+        Math.signum(yerror) * SwerveConstants.notePickupSpeed, // Constants.SwerveConstants.kmaxSpeed *3,
         0,
         rotationVal,
         false,
