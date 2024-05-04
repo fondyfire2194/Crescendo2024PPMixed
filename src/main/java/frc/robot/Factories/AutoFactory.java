@@ -44,6 +44,7 @@ public class AutoFactory implements Logged {
                 m_ampStartChooser.setDefaultOption("Not Used", 0);
                 m_ampStartChooser.addOption("C2 then C1", 1);
                 m_ampStartChooser.addOption("C1 then C2", 2);
+                
 
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5",11);

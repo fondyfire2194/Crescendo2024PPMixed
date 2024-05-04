@@ -30,7 +30,7 @@ public class PickUpAlternateNote extends Command {
   private final String m_camname;
   private final LimelightVision m_llv;
   private final int m_noteNumber;
-
+  boolean directionPlus;
   double angleError = 0;
   private Timer elapsedTime = new Timer();
   double endPosition;
@@ -66,7 +66,13 @@ public class PickUpAlternateNote extends Command {
 
     activeNotePose = AllianceUtil.flipFieldAngle(Constants.getActiveNotePickup(m_noteNumber));
 
-    double yStartPosition = m_swerve.getY();
+    double yStartPositionY = m_swerve.getY();
+
+    double ystartError = activeNotePose.getY() - yStartPositionY;
+
+    directionPlus = ystartError >= 0;
+
+    SmartDashboard.putBoolean("DIRECT", directionPlus);
 
     angleError = 0;
 
@@ -91,7 +97,7 @@ public class PickUpAlternateNote extends Command {
     yerror = activeNotePose.getY() - m_swerve.getY();
 
     SmartDashboard.putNumber("TAYerr", yerror);
-    ;
+
     SmartDashboard.putNumber("TAXsecs", elapsedTime.get());
 
     /*
@@ -99,9 +105,12 @@ public class PickUpAlternateNote extends Command {
      * assumes robot is pointing in y plane to pickup a center note;
      * could be a higher or lower y value note
      */
+    double dir = -1;
+    if (!directionPlus)
+      dir = 1;
 
     m_swerve.drive(
-        Math.signum(yerror) * SwerveConstants.notePickupSpeed, // Constants.SwerveConstants.kmaxSpeed *3,
+        dir * SwerveConstants.notePickupSpeed, // Constants.SwerveConstants.kmaxSpeed *3,
         0,
         rotationVal,
         false,

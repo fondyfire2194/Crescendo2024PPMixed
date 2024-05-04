@@ -7,6 +7,8 @@ package frc.robot;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import org.opencv.core.RotatedRect;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
@@ -37,6 +39,7 @@ import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignTargetOdometryLob;
 import frc.robot.commands.Drive.AlignToNote;
+import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
 import frc.robot.commands.Shooter.CheckShooterAtSpeed;
 import frc.robot.commands.Shooter.LobShoot;
@@ -306,11 +309,11 @@ public class RobotContainer implements Logged {
 
                 setup.povUp().onTrue(m_arm.positionToIntakeUDACommand());
 
-                // setup.povDown()
+                setup.povDown().onTrue(new RotateToAngle(m_swerve, 0));
 
-                // setup.povLeft()
+                setup.povLeft().onTrue(new RotateToAngle(m_swerve, 90));
 
-                // setup.povRight()
+                setup.povRight().onTrue(new RotateToAngle(m_swerve, -90));
 
                 // setup.start()
 

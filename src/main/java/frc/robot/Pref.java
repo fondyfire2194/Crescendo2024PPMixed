@@ -42,6 +42,10 @@ public class Pref {
 
     // align to tag
 
+    prefDict.put("rotkp", 0.003);
+    prefDict.put("rotki", 0.005);
+    prefDict.put("rotkd", 0.00001);
+
     prefDict.put("AlignKp", .01);
 
     // shooter

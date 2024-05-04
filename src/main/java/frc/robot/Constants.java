@@ -270,6 +270,9 @@ public final class Constants {
 
                 public static final Pose2d ampStartPose = new Pose2d(.8, 6.68,
                                 new Rotation2d(Units.degreesToRadians(-120)));
+
+                public static final Pose2d ampShootBlue = new Pose2d(2.84, 5.52,
+                                new Rotation2d(Units.degreesToRadians(-144)));
         }
 
         public static Pose2d getActiveNotePickup(int note) {
@@ -305,7 +308,6 @@ public final class Constants {
                                 return new Pose2d();
                 }
         }
-
 
         public static Pose2d getActiveLobPose() {
                 if (DriverStation.getAlliance().isPresent()

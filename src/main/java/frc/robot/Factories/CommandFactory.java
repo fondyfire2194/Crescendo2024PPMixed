@@ -24,8 +24,10 @@ import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.LimelightHelpers;
+import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
+import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenter4Pathfind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
@@ -194,6 +196,9 @@ public class CommandFactory implements Logged {
         public Command finalCommand(int choice) {
 
                 switch ((choice)) {
+
+                        case 1:
+                        return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()), m_swerve);
 
                         case 11:
                                 return new AutoSourceShootThenCenter(this,

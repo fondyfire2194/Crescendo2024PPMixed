@@ -11,7 +11,10 @@ import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
+import frc.robot.commands.Autos.AmpStart.AmpShootToCenterPickup;
+import frc.robot.commands.Autos.AmpStart.AutoAmpShootMovingThenCenter;
 import frc.robot.commands.Autos.SourceStart.CenterToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
 import frc.robot.commands.Drive.PickUpAlternateNote;
@@ -172,6 +175,87 @@ public class TriggerCommandFactory implements Logged {
         }
 
         public void createAmpTriggers() {
+
+                resettrigs();
+
+                Trigger triggerC2ToAS = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
+                                && m_swerve.fromLocation == 0 && m_swerve.atLocation == 2 && m_transfer.noteAtIntake());
+
+                triggerC2ToAS.onTrue(
+                                Commands.sequence(
+                                                Commands.runOnce(() -> m_swerve.fromLocation = 2),
+                                                Commands.runOnce(() -> m_swerve.toLocation = 11),
+                                                new CenterToSourceShoot(m_cf,
+                                                                m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
+                                                                                .name()),
+                                                                m_swerve),
+                                                Commands.parallel(
+                                                                Commands.runOnce(() -> m_swerve.atLocation = 11),
+                                                                Commands.runOnce(() -> trig1 = true))));
+
+                Trigger triggerASToC1 = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
+                                && m_transfer.isStopped() && !m_transfer.noteAtIntake()
+                                && m_swerve.fromLocation == 2
+                                && m_swerve.atLocation == 11);
+
+                triggerASToC1.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> m_swerve.toLocation = 1),
+                                Commands.runOnce(() -> m_swerve.fromLocation = 11),
+                                new AmpShootToCenterPickup(m_cf, m_pf.pathMaps.get(amppaths.AmpShootToCenter1
+                                                .name()), m_swerve),
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.atLocation = 1),
+                                                Commands.runOnce(() -> trig2 = true))));
+
+                Trigger triggerC1ToAS = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
+                                m_swerve.isStopped() && m_transfer.isStopped() && m_transfer.noteAtIntake()
+                                && m_swerve.atLocation == 1
+                                && (m_swerve.fromLocation == 11 || m_swerve.fromLocation == 1));
+
+                triggerC1ToAS.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> m_swerve.fromLocation = 1),
+                                Commands.runOnce(() -> m_swerve.toLocation = 11),
+                                new CenterToSourceShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
+                                                .name()), m_swerve),
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.atLocation = 11),
+                                                Commands.runOnce(() -> trig1 = true))));
+
+                Trigger triggerC2ToC1 = new Trigger(() -> DriverStation.isAutonomousEnabled()
+                                && m_swerve.isStopped() && !m_transfer.noteAtIntake() && m_transfer.isStopped()
+                                && m_swerve.fromLocation == 0 && m_swerve.toLocation == 2 && m_swerve.atLocation == 2);
+
+                triggerC2ToC1.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> m_swerve.fromLocation = 2),
+                                Commands.runOnce(() -> m_swerve.toLocation = 1),
+                                new RotateToAngle(m_swerve, -90),
+                                m_intake.startIntakeCommand(),
+                                Commands.parallel(
+                                                new TransferIntakeToSensor(m_transfer, m_intake, .6),
+                                                new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
+                                                                CameraConstants.rearCamera.camname, m_llv,
+                                                                1)),
+                                new ConditionalCommand(
+                                                m_cf.autopickup(FieldConstants.ampShootBlue),
+                                                m_cf.autopickup(GeometryUtil
+                                                                .flipFieldPose(FieldConstants.ampShootBlue)),
+                                                () -> DriverStation.getAlliance().isPresent()
+                                                                && DriverStation.getAlliance()
+                                                                                .get() == Alliance.Blue),
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.atLocation = 1),
+                                                Commands.runOnce(() -> trig4 = true))));
+
+                Trigger resetAll = new Trigger(() -> (m_swerve.toLocation == 11 && m_swerve.atLocation == 11
+                                && !m_transfer.noteAtIntake() && m_transfer.isStopped())
+                                || m_swerve.atLocation == 11
+                                                && (m_swerve.fromLocation == 1 || m_swerve.fromLocation == 11)
+                                                && !m_transfer.noteAtIntake() && m_transfer.isStopped());
+
+                resetAll.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> trig5 = true),
+                                m_cf.resetAll(),
+                                Commands.runOnce(() -> resetLocations())));
 
         }
 
