@@ -21,7 +21,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class TurnToNote extends Command {
-  private SwerveSubsystem swerve = new SwerveSubsystem(false);
+  private SwerveSubsystem swerve = new SwerveSubsystem();
 
   private double lastDetectionTime = 0.0;
 

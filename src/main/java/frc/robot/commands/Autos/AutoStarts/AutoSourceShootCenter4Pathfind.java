@@ -28,16 +28,16 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class AutoSourceShootCenter4Pathfind extends SequentialCommandGroup {
 
         // public PathPlannerPath getPath(String pathname) {
-        //         return PathPlannerPath.fromPathFile(pathname);
+        // return PathPlannerPath.fromPathFile(pathname);
         // }
 
         // PathConstraints pathConstraints = new PathConstraints(
-        //                 3.0, 4.0,
-        //                 Units.degreesToRadians(360),
-        //                 Units.degreesToRadians(540));
+        // 3.0, 4.0,
+        // Units.degreesToRadians(360),
+        // Units.degreesToRadians(540));
 
         // public Command getPathToPose(Pose2d pose, PathConstraints constraints) {
-        //         return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
+        // return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         // }
 
         public AutoSourceShootCenter4Pathfind(
@@ -47,18 +47,19 @@ public class AutoSourceShootCenter4Pathfind extends SequentialCommandGroup {
                         SwerveSubsystem swerve) {
 
                 addCommands(
-
-                                // shoot first note
-                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
-                                Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-
-                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed),
-                                cf.transferNoteToShooterCommand(),
-                                // move to center note , pick up if there and move to shoot position then shoot
-
                                 new SequentialCommandGroup(
+                                                // shoot first note
+                                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
+                                                Commands.runOnce(() -> swerve.currentpathstartTime = Timer
+                                                                .getFPGATimestamp()),
+
+                                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
+                                                                Constants.subwfrShooterSpeed),
+                                                cf.transferNoteToShooterCommand(),
+                                                // move to center note , pick up if there and move to shoot position
+                                                // then shoot
+
                                                 Commands.runOnce(() -> swerve.toLocation = 4),
                                                 new RunPPath(swerve,
                                                                 path),

@@ -288,14 +288,14 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putNumber(
-        String.valueOf(moduleNumber) + "cancoder", getCancoderDeg());
+    SmartDashboard.putNumber("Modules//" +
+        String.valueOf(+moduleNumber) + "cancoder", getCancoderDeg());
 
     // SmartDashboard.putBoolean(String.valueOf(moduleNumber) + " Characterizing",
     // characterizing);
     // SmartDashboard.putNumber(String.valueOf(moduleNumber) + " Characterization
     // Volts", characterizationVolts);
-    SmartDashboard.putNumber(String.valueOf(moduleNumber) + " DrivePosiiton", driveEncoder.getPosition());
+    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosiiton", driveEncoder.getPosition());
 
     if (characterizing) {
       driveMotor.setVoltage(characterizationVolts);

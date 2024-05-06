@@ -197,7 +197,9 @@ public class CommandFactory implements Logged {
 
                 switch ((choice)) {
 
-                        case 1:
+                        case 21:
+                        return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()), m_swerve);
+                        case 22:
                         return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()), m_swerve);
 
                         case 11:

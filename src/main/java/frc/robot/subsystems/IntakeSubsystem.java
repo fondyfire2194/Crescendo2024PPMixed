@@ -13,7 +13,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -32,7 +31,7 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   public SparkPIDController intakeController;
 
   private int loopctr;
-  private boolean m_showScreens;
+
   @Log.NT(key = "intakerun")
   private boolean runIntake;
   public boolean jogging;
@@ -40,45 +39,13 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "intakecommandrpm")
   private double commandrpm;
   public boolean noteMissed;
-  
+
   /** Creates a new Intake. */
-  public IntakeSubsystem(boolean showScreens) {
-    m_showScreens = showScreens;
+  public IntakeSubsystem() {
     intakeMotor = new CANSparkMax(Constants.CANIDConstants.intakeID, MotorType.kBrushless);
     intakeController = intakeMotor.getPIDController();
     intakeEncoder = intakeMotor.getEncoder();
     configMotor(intakeMotor, intakeEncoder, false);
-
-    if (m_showScreens) {
-
-      Shuffleboard.getTab("IntakeSubsystem").add(this)
-          .withSize(2, 1)
-          .withPosition(0, 0);
-
-      Shuffleboard.getTab("IntakeSubsystem").addNumber("IntakeRPM",
-          () -> round2dp(getRPM(), 0))
-          .withSize(1, 1)
-          .withPosition(0, 1);
-
-      Shuffleboard.getTab("IntakeSubsystem").addNumber("IntakeAmps",
-          () -> round2dp(getAmps(), 1))
-          .withSize(1, 1)
-          .withPosition(1, 1);
-
-      Shuffleboard.getTab("IntakeSubsystem").addNumber("IntakeVolts",
-          () -> intakeMotor.getAppliedOutput())
-          .withSize(1, 1)
-          .withPosition(1, 1);
-
-      Shuffleboard.getTab("IntakeSubsystem")
-          .addBoolean("StickyFault", () -> getStickyFaults() != 0)
-          .withPosition(0, 2).withSize(1, 1)
-          .withProperties(Map.of("colorWhenTrue", "red", "colorWhenFalse", "black"));
-
-      Shuffleboard.getTab("IntakeSubsystem")
-          .add("ClearFault", clearFaultsCommand())
-          .withPosition(1, 2).withSize(1, 1);
-    }
 
   }
 
@@ -125,6 +92,7 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     return runIntake;
   }
 
+  @Log.NT(key = "intakerpm")
   public double getRPM() {
     return intakeEncoder.getVelocity();
   }
@@ -179,11 +147,4 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   public String getFirmwareVersion() {
     return intakeMotor.getFirmwareString();
   }
-
-  public static double round2dp(double number, int dp) {
-    double temp = Math.pow(10, dp);
-    double temp1 = Math.round(number * temp);
-    return temp1 / temp;
-  }
-
 }

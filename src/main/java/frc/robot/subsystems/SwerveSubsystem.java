@@ -29,19 +29,16 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
@@ -161,9 +158,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this);
   public LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this);
 
-  public SwerveSubsystem(boolean showScreens) {
-    m_showScreens = showScreens;
-    SmartDashboard.putNumber("DCF", Constants.SwerveConstants.driveConversionPositionFactor);
+  public SwerveSubsystem() {
 
     xLockStates[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
     xLockStates[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
@@ -232,83 +227,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
 
     zeroGyro();
-    SmartDashboard.putBoolean("GYRO", gyro.isConnected());
+    SmartDashboard.putBoolean("Drive//GYRO", gyro.isConnected());
 
     resetPoseEstimator(new Pose2d());
-
-    if (m_showScreens) {
-
-      Shuffleboard.getTab("Drivetrain").add(this)
-          .withSize(2, 1).withPosition(0, 0);
-
-      Shuffleboard.getTab("Drivetrain").add("SetDriveKp", setDriveKp())
-          .withSize(1, 1).withPosition(5, 0);
-
-      Shuffleboard.getTab("Drivetrain").addNumber("DriveKp", () -> getDriveKp())
-          .withSize(1, 1).withPosition(5, 1);
-
-      Shuffleboard.getTab("Drivetrain").add("SetDriveFF", setDriveFF())
-          .withSize(1, 1).withPosition(6, 0);
-
-      Shuffleboard.getTab("Drivetrain").addNumber("DriveFF%",
-          () -> getDriveFF() * Constants.SwerveConstants.kmaxTheoreticalSpeed)
-          .withSize(1, 1).withPosition(6, 1);
-
-      Shuffleboard.getTab("Drivetrain").add("SetAngleKp", setAngleKp())
-          .withSize(1, 1).withPosition(7, 0);
-
-      Shuffleboard.getTab("Drivetrain").addNumber("AngleKp", () -> getAngleKp())
-          .withSize(1, 1).withPosition(7, 1);
-
-      Shuffleboard.getTab("Drivetrain").add("SetAlignKp", setAlignKpCommand())
-          .withSize(1, 1).withPosition(8, 0);
-
-      Shuffleboard.getTab("Drivetrain").addNumber("AlignKp", () -> getAlignKp())
-          .withSize(1, 1).withPosition(8, 1);
-
-      Shuffleboard.getTab("Drivetrain").add("ResetPose", this.setPoseToX0Y0())
-          .withSize(1, 1).withPosition(2, 0);
-
-      Shuffleboard.getTab("Drivetrain").addDoubleArray("Odometry",
-          () -> new double[] { getPose().getX(), getPose().getY(),
-              getPose().getRotation().getDegrees() })
-          .withPosition(0, 2)
-          .withSize(2, 1);
-
-      Shuffleboard.getTab("Drivetrain").addDoubleArray("OdometryFL",
-          () -> new double[] { llposefl.getX(), llposefl.getY(),
-              llposefl.getRotation().getDegrees() })
-          .withPosition(0, 3)
-          .withSize(2, 1);
-      Shuffleboard.getTab("Drivetrain").addDoubleArray("OdometryFR",
-          () -> new double[] { llposefr.getX(), llposefr.getY(),
-              llposefr.getRotation().getDegrees() })
-          .withPosition(0, 4)
-          .withSize(2, 1);
-
-      Shuffleboard.getTab("Drivetrain").addNumber("VXMPS", () -> getSpeeds().vxMetersPerSecond)
-          .withPosition(3, 2)
-          .withSize(1, 1);
-
-      Shuffleboard.getTab("Drivetrain").addNumber("VYMPS", () -> getSpeeds().vyMetersPerSecond)
-          .withPosition(4, 2)
-          .withSize(1, 1);
-
-      Shuffleboard.getTab("Drivetrain").addNumber("VOMPS", () -> getSpeeds().omegaRadiansPerSecond)
-          .withPosition(5, 2)
-          .withSize(1, 1);
-
-      Shuffleboard.getTab("Drivetrain").addNumber("PoseX Meters", () -> getX())
-          .withPosition(6, 2)
-          .withSize(1, 1);
-      Shuffleboard.getTab("Drivetrain").addNumber("PoseY Meters", () -> getY())
-          .withPosition(7, 2)
-          .withSize(1, 1);
-      Shuffleboard.getTab("Drivetrain").addNumber("PoseDeg", () -> getHeading().getDegrees())
-          .withPosition(8, 2)
-          .withSize(1, 1);
-
-    }
 
     setModuleDriveFF();
     setModuleDriveKp();
@@ -316,19 +237,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     firstTime = true;
   }
 
-  // public PathPlannerPath getPathToNearSource() {
-  // List<Translation2d> bezierPoints = PathPlannerPath.bezierFromPoses(
-  // new Pose2d(getPose().getTranslation().getX(),
-  // getPose().getTranslation().getY(), Rotation2d.fromDegrees(180)),
-  // new Pose2d(6.79, 1.60, Rotation2d.fromDegrees(180))
-  // );
-  // PathPlannerPath path = new PathPlannerPath(bezierPoints, new
-  // PathConstraints(3.0, 3.0, 2 * Math.PI, 3 * Math.PI), new GoalEndState(0.0,
-  // Rotation2d.fromDegrees(180)));
-  // path.preventFlipping = false;
-  // return path;
-  // }
-
+ 
   public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds) {
     driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()));
   }
@@ -748,7 +657,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     rsbuff = realStates;
     desbuff = theoreticalStates;
 
-    SmartDashboard.putNumber("KeepAngle", keepAngle);
+    SmartDashboard.putNumber("Drive//KeepAngle", keepAngle);
   }
 
   public static double round2dp(double number, int dp) {

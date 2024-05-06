@@ -4,25 +4,16 @@
 
 package frc.robot;
 
-import java.util.Map;
 import java.util.function.BooleanSupplier;
 
-import org.opencv.core.RotatedRect;
-
-import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -56,21 +47,19 @@ import monologue.Logged;
 
 public class RobotContainer implements Logged {
         /* Subsystems */
-        final SwerveSubsystem m_swerve = new SwerveSubsystem(false);
+        final SwerveSubsystem m_swerve = new SwerveSubsystem();
 
-        final IntakeSubsystem m_intake = new IntakeSubsystem(false);
+        final IntakeSubsystem m_intake = new IntakeSubsystem();
 
-        final TransferSubsystem m_transfer = new TransferSubsystem(false);
+        final TransferSubsystem m_transfer = new TransferSubsystem();
 
-        final ArmSubsystem m_arm = new ArmSubsystem(true);
+        final ArmSubsystem m_arm = new ArmSubsystem();
 
         final ClimberSubsystem m_climber = new ClimberSubsystem();
 
         final PowerDistribution m_pd = new PowerDistribution(1, ModuleType.kRev);
 
-        SendableChooser<Command> autoChooser;
-
-        public final LimelightVision m_llv = new LimelightVision(false);
+        public final LimelightVision m_llv = new LimelightVision();
 
         public final SendableChooser<Double> m_startDelayChooser = new SendableChooser<Double>();
 
@@ -84,11 +73,11 @@ public class RobotContainer implements Logged {
 
         private final CommandXboxController setup = new CommandXboxController(2);
 
-        final ShooterSubsystem m_shooter = new ShooterSubsystem(false);
+        final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
         public final PathFactory m_pf = new PathFactory(m_swerve);
 
-        public final AutoFactory m_af = new AutoFactory(m_pf, m_swerve);
+        public final AutoFactory m_af = new AutoFactory(m_pf);
 
         public final CommandFactory m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
                         m_climber, m_llv, m_af, m_pf);
@@ -117,13 +106,13 @@ public class RobotContainer implements Logged {
 
                 m_pd.resetTotalEnergy();
 
-                configureShuffleboardAuto();
-
                 m_transfer.setVelPID();
 
                 configureDriverBindings();
 
                 configureCodriverBindings();
+
+                configureChoosers();
 
                 m_intake.setPID();
 
@@ -332,10 +321,6 @@ public class RobotContainer implements Logged {
                                                 keepAngle));
         }
 
-        public Command getAutonomousCommand() {
-                return autoChooser.getSelected();
-        }
-
         private void configureCommandScheduler() {
                 SmartDashboard.putData("CommSchd", CommandScheduler.getInstance());
         }
@@ -440,7 +425,7 @@ public class RobotContainer implements Logged {
 
         }
 
-        void configureShuffleboardAuto() {
+        private void configureChoosers() {
 
                 m_startDelayChooser.setDefaultOption("0 sec", 0.);
                 m_startDelayChooser.addOption("1 sec", 1.);
@@ -461,105 +446,9 @@ public class RobotContainer implements Logged {
                 m_cameraChooser.addOption("RightCamera", 2);
                 m_cameraChooser.addOption("BothCameras", 3);
 
-                autoChooser = AutoBuilder.buildAutoChooser();
-
-                Shuffleboard.getTab("Autonomous").add("AutoSelection", autoChooser)
-                                .withSize(3, 1).withPosition(0, 0);
-
-                Shuffleboard.getTab("Autonomous").add("DelayChooser", m_startDelayChooser)
-                                .withSize(1, 1).withPosition(3, 0);
-
-                Shuffleboard.getTab("Autonomous").add("FrontCameraChooser", m_cameraChooser)
-                                .withSize(2, 1).withPosition(4, 0);
-
-                Shuffleboard.getTab("Autonomous").add("BatteryChooser", m_batteryChooser)
-                                .withSize(1, 1).withPosition(6, 0);
-
-                Shuffleboard.getTab("Autonomous").addNumber("PDEnergy", () -> m_pd.getTotalEnergy())
-                                .withSize(1, 1).withPosition(7, 0);
-
-                boolean stickYFault = false;
-                Shuffleboard.getTab("Autonomous").addBoolean("Sticky Fault", () -> stickYFault)
-                                .withSize(1, 1).withPosition(0, 2)
-                                .withProperties(Map.of("colorWhenTrue", "red", "colorWhenFalse", "black"));
-
-                Shuffleboard.getTab("Autonomous").addNumber("Gyro", () -> m_swerve.getHeadingDegrees())
-                                .withSize(1, 1).withPosition(0, 3)
-                                .withWidget("Number Slider")
-                                .withProperties(Map.of("Min", 0, "Max", 360));
-
-                ShuffleboardLayout shootLayout = Shuffleboard.getTab("Autonomous")
-                                .getLayout("Shooter", BuiltInLayouts.kList)
-                                .withPosition(4, 1)
-                                .withSize(1, 4)
-                                .withProperties(Map.of("Label position", "TOP"));
-
-                shootLayout.addNumber("CommandRPM", () -> m_shooter.commandRPM)
-                                .withPosition(1, 1).withSize(1, 1);
-
-                shootLayout.addNumber("TopRPM", () -> round2dp(m_shooter.getRPMTop(), 0))
-                                .withPosition(2, 2).withSize(1, 1);
-
-                shootLayout.addNumber("BottomRPM", () -> round2dp(m_shooter.getRPMBottom(), 0))
-                                .withPosition(1, 2).withSize(1, 1);
-
-                shootLayout.addBoolean("BothAtSpeed", () -> m_shooter.bothAtSpeed(.2))
-                                .withSize(1, 1).withPosition(3, 3)
-                                .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "red"));
-
-                shootLayout.addBoolean("RunShooter", () -> m_shooter.getRunShooter())
-                                .withSize(1, 1).withPosition(2, 3)
-                                .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "red"));
-
-                ShuffleboardLayout armLayout = Shuffleboard.getTab("Autonomous")
-                                .getLayout("Arm", BuiltInLayouts.kList)
-                                .withPosition(5, 1)
-                                .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
-
-                armLayout.addNumber("Arm Goal", () -> round2dp(Units.radiansToDegrees(m_arm.getCurrentGoal()), 2))
-                                .withSize(1, 1).withPosition(4, 2);
-
-                armLayout.addNumber("Arm Angle", () -> round2dp(m_arm.getAngleDegrees(), 2))
-                                .withSize(1, 1).withPosition(4, 1);
-                armLayout.addNumber("Arm Amps", () -> round2dp(m_arm.getAmps(), 2))
-                                .withSize(1, 1).withPosition(4, 1);
-
-                armLayout.addBoolean("AtGoal", () -> m_arm.atSetpoint())
-                                .withSize(1, 1).withPosition(4, 3)
-                                .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "red"));
-
-                ShuffleboardLayout intfrLayout = Shuffleboard.getTab("Autonomous")
-                                .getLayout("IntTFR", BuiltInLayouts.kList)
-                                .withPosition(6, 1).withSize(1, 4)
-                                .withProperties(Map.of("Label position", "TOP"));
-
-                intfrLayout.addNumber("IntakeRPM", () -> round2dp(m_intake.getRPM(), 0))
-                                .withSize(1, 1).withPosition(5, 1);
-
-                intfrLayout.addBoolean("RunIntake", () -> m_intake.getRunIntake())
-                                .withSize(1, 1).withPosition(5, 2)
-                                .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "red"));
-
-                intfrLayout.addNumber("Intake Amps", () -> round2dp(m_intake.getAmps(), 0))
-                                .withSize(1, 1).withPosition(6, 1);
-
-                intfrLayout.addNumber("Transfer RPM", () -> round2dp(m_transfer.getRPM(), 0))
-                                .withSize(1, 1).withPosition(6, 1);
-
-                intfrLayout.addBoolean("NoteSensed", () -> m_transfer.noteAtIntake())
-                                .withSize(1, 1)
-                                .withPosition(6, 2)
-                                .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "red"));
-
-                Shuffleboard.getTab("Autonomous").add("PDP", m_pd)
-                                .withPosition(7, 1);
+                SmartDashboard.putData("DelayChooser", m_startDelayChooser);
+                SmartDashboard.putData("FrontCameraChooser", m_cameraChooser);
+                SmartDashboard.putData("BatteryChooser", m_batteryChooser);
 
         }
-
-        public static double round2dp(double number, int dp) {
-                double temp = Math.pow(10, dp);
-                double temp1 = Math.round(number * temp);
-                return temp1 / temp;
-        }
-
 }

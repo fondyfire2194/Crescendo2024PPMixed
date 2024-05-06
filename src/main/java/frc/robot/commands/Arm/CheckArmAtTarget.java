@@ -29,18 +29,20 @@ public class CheckArmAtTarget extends Command {
   @Override
   public void execute() {
     loopCtr++;
-    SmartDashboard.putNumber("Armlpctr", loopCtr);
+    SmartDashboard.putNumber("Arm//Armlpctr", loopCtr);
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    loopCtr = 0; SmartDashboard.putNumber("Armlpctr", loopCtr);
+    loopCtr = 0;
+    SmartDashboard.putNumber("Arm//Armlpctr", loopCtr);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return loopCtr > 10 && m_arm.armAtSetpoint;
+    return loopCtr > 10 && m_arm.atSetpoint();
   }
 }

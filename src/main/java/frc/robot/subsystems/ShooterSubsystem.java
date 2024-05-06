@@ -8,8 +8,6 @@ import static edu.wpi.first.units.Units.Minute;
 import static edu.wpi.first.units.Units.Rotations;
 import static edu.wpi.first.units.Units.Volts;
 
-import java.util.Map;
-
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -18,9 +16,6 @@ import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -30,9 +25,9 @@ import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Pref;
 import monologue.Annotations.Log;
 import monologue.Logged;
-import frc.robot.Pref;
 
 public class ShooterSubsystem extends SubsystemBase implements Logged {
 
@@ -43,16 +38,16 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   public CANSparkMax bottomRoller;
   RelativeEncoder bottomEncoder;
-  @Log.NT(key = "shootercommandrpm")
+  @Log.NT(key = "shtrcommandrpm")
   public double commandRPM = 500;
 
   private double topSimRPM = 0;
   private double bottomSimRPM = 0;
-  @Log.NT(key = "shooteratspeed;")
+  @Log.NT(key = "shtratspeed;")
   private boolean shootersatspeed;
   public boolean m_showScreens;
 
-  @Log.NT(key = "shooterrunatvel")
+  @Log.NT(key = "shtrrunatvel")
   private boolean runShooterVel;
   private double topBottomSpeedRatio = 1;
 
@@ -61,9 +56,8 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   
 
   /** Creates a new Shooter. */
-  public ShooterSubsystem(boolean showScreens) {
-    m_showScreens = showScreens;
-
+  public ShooterSubsystem() {
+  
     topRoller = new CANSparkMax(Constants.CANIDConstants.topShooterID, MotorType.kBrushless);
     topController = topRoller.getPIDController();
     topEncoder = topRoller.getEncoder();
@@ -78,56 +72,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
     setShooterSpeedRatio(1);
 
-    if (m_showScreens) {
-
-      Shuffleboard.getTab("ShooterSubsystem").add(this)
-          .withPosition(0, 0).withSize(2, 1);
-
-      ShuffleboardLayout shootLayout = Shuffleboard.getTab("ShooterSubsystem")
-          .getLayout("Shooter", BuiltInLayouts.kList).withPosition(0, 1)
-          .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
-
-      ShuffleboardLayout shootLayout1 = Shuffleboard.getTab("ShooterSubsystem")
-          .getLayout("Shooter1", BuiltInLayouts.kList).withPosition(1, 1)
-          .withSize(1, 4).withProperties(Map.of("Label position", "TOP"));
-
-      shootLayout1
-          .addNumber("CommandRPM", () -> commandRPM)
-          .withPosition(1, 1).withSize(1, 1);
-
-      shootLayout1.addNumber(
-          "TopRPM", () -> round2dp(getRPMTop(), 0))
-          .withPosition(0, 2).withSize(1, 1);
-
-      shootLayout1.addNumber("BottomRPM",
-          () -> round2dp(getRPMBottom(), 0))
-          .withPosition(1, 2).withSize(1, 1);
-
-      shootLayout1.addNumber("TopAmps", () -> getTopAmps())
-          .withPosition(0, 3).withSize(1, 1);
-
-      shootLayout1.addNumber("BottomAmps", () -> getBottomAmps())
-          .withPosition(1, 3).withSize(1, 1);
-
-      shootLayout.addBoolean("TopAtSpeed", () -> topAtSpeed(.2))
-          .withPosition(0, 4).withSize(1, 1);
-      shootLayout.addBoolean("BotAtSpeed", () -> bottomAtSpeed(.2))
-          .withPosition(0, 4).withSize(1, 1);
-
-      shootLayout.add("SetTopGains", setTopKpKdKiCommand())
-          .withPosition(1, 4).withSize(1, 1);
-
-      shootLayout.add("SetBottomGains", setBottomKpKdKiCommand())
-          .withPosition(1, 4).withSize(1, 1);
-
-      shootLayout.addBoolean("StickyFaultTfr", () -> getStickyFaults() != 0)
-          .withPosition(3, 3).withSize(1, 1)
-          .withProperties(Map.of("colorWhenTrue", "red", "colorWhenFalse", "black"));
-      shootLayout
-          .add("ClearFaultTfr", clearFaultsCommand())
-          .withPosition(4, 3).withSize(1, 1);
-
-    }
+    
 
     topController.setOutputRange(0, 1);
 
@@ -174,7 +119,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
         Commands.runOnce(() -> setRunShooter(), this));
   }
 
-  @Log.NT(key = "shooterrun")
+  @Log.NT(key = "shtrrun")
   public Command startShooterCommandAmp(double rpm) {
     return Commands.parallel(
         Commands.runOnce(() -> commandRPM = rpm),
@@ -193,7 +138,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     return runShooterVel;
   }
 
-  @Log.NT(key = "shootercommandrpm")
+  @Log.NT(key = "shtrcommandrpm")
   public void setCommandRPM(double rpm) {
     commandRPM = rpm;
   }
@@ -202,7 +147,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     return commandRPM;
   }
 
-  @Log.NT(key = "shootertoprpm")
+  @Log.NT(key = "shtrtoprpm")
   public double getRPMTop() {
     if (RobotBase.isReal())
       return topEncoder.getVelocity();
@@ -210,7 +155,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
       return topSimRPM;
   }
 
-  @Log.NT(key = "shooterbottomrpm")
+  @Log.NT(key = "shtrbottomrpm")
   public double getRPMBottom() {
     if (RobotBase.isReal())
       return bottomEncoder.getVelocity();
@@ -269,12 +214,12 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     return topBottomSpeedRatio;
   }
 
-  @Log.NT(key = "shootertopamps")
+  @Log.NT(key = "shtrtopamps")
   public double getTopAmps() {
     return topRoller.getOutputCurrent();
   }
 
-  @Log.NT(key = "shooterbottomamps")
+  @Log.NT(key = "shtrbottomamps")
   public double getBottomAmps() {
     return bottomRoller.getOutputCurrent();
   }
@@ -374,7 +319,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
           },
           // log -> {
           // // Record a frame for the shooter motor.
-          // log.motor("shooter-wheel")
+          // log.motor("shtr-wheel")
           // .voltage(
           // m_appliedVoltage.mut_replace(
           // m_shooterMotor.get() * RobotController.getBatteryVoltage(), Volts))

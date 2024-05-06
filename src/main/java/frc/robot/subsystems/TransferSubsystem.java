@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.Map;
 
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.FaultID;
@@ -16,7 +15,6 @@ import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -47,8 +45,8 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean skipFirstNoteInSim;
 
   /** Creates a new transfer. */
-  public TransferSubsystem(boolean showScreens) {
-    m_showScreens = showScreens;
+  public TransferSubsystem() {
+   
     transferMotor = new CANSparkMax(CANIDConstants.transferID, MotorType.kBrushless);
     transferEncoder = transferMotor.getEncoder();
     transferController = transferMotor.getPIDController();
@@ -58,42 +56,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
     m_limitSwitch = transferMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     m_limitSwitch.enableLimitSwitch(true);
 
-    if (m_showScreens) {
-
-      Shuffleboard.getTab("IntakeSubsystem").add(this)
-          .withSize(2, 1)
-          .withPosition(3, 0);
-
-      Shuffleboard.getTab("IntakeSubsystem").addNumber("TransferRPM",
-          () -> round2dp(getRPM(), 0))
-          .withSize(1, 1)
-          .withPosition(3, 1);
-
-      Shuffleboard.getTab("IntakeSubsystem").addNumber("TransferAmps",
-          () -> round2dp(getAmps(), 1))
-          .withSize(1, 1)
-          .withPosition(4, 1);
-
-      // Shuffleboard.getTab("IntakeSubsystem").addNumber("NoteSensorInches",
-      // () -> round2dp(getSensorDistanceInches(), 1))
-      // .withSize(1, 1)
-      // .withPosition(3, 2);
-
-      Shuffleboard.getTab("IntakeSubsystem").addBoolean("NoteSensed", () -> noteAtIntake())
-          .withSize(1, 1)
-          .withPosition(4, 2)
-          .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "red"));
-
-      Shuffleboard.getTab("IntakeSubsystem")
-          .addBoolean("StickyFaultTfr", () -> getStickyFaults() != 0)
-          .withPosition(3, 3).withSize(1, 1)
-          .withProperties(Map.of("colorWhenTrue", "red", "colorWhenFalse", "black"));
-
-      Shuffleboard.getTab("IntakeSubsystem")
-          .add("ClearFaultTfr", clearFaultsCommand())
-          .withPosition(4, 3).withSize(1, 1);
-
-    }
+    
 
   }
 

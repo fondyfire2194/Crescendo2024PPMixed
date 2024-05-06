@@ -15,16 +15,27 @@
       "/Shuffleboard/ShooterSubsystem/ArmSubsystem": "Subsystem",
       "/Shuffleboard/ShooterSubsystem/ClearFault": "Command",
       "/Shuffleboard/ShooterSubsystem/SetAllPID": "Command",
+      "/SmartDashboard/Amp Start": "String Chooser",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
-      "/SmartDashboard/CommSchd": "Scheduler"
+      "/SmartDashboard/BatteryChooser": "String Chooser",
+      "/SmartDashboard/CommSchd": "Scheduler",
+      "/SmartDashboard/DelayChooser": "String Chooser",
+      "/SmartDashboard/FrontCameraChooser": "String Chooser",
+      "/SmartDashboard/Source Start": "String Chooser",
+      "/SmartDashboard/SubwfrStart": "String Chooser"
     },
     "windows": {
-      "/Shuffleboard/Autonomous/AmpStart": {
+      "/SmartDashboard/Amp Start": {
         "window": {
           "visible": true
         }
       },
-      "/Shuffleboard/Autonomous/SourceStart": {
+      "/SmartDashboard/Source Start": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/SubwfrStart": {
         "window": {
           "visible": true
         }

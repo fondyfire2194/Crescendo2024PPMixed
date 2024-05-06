@@ -9,7 +9,6 @@ import java.util.Map;
 
 import org.littletonrobotics.urcl.URCL;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest.FieldCentric;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.REVPhysicsSim;
@@ -92,9 +91,6 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer = new RobotContainer();
 
-    // CameraServer.startAutomaticCapture();
-
-    // Shuffleboard.selectTab("Autonomous");
     Monologue.setupMonologue(m_robotContainer, "/Monologue", false, true);
 
     DriverStation.startDataLog(DataLogManager.getLog());
@@ -161,7 +157,7 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_swerve.cameraSelection = m_robotContainer.m_cameraChooser.getSelected();
 
-    boolean checkAutos = firstScan || m_robotContainer.m_af.checkChoiceChange();
+    boolean checkAutos = m_robotContainer.m_af.checkChoiceChange();
 
     firstScan = false;
 
@@ -216,10 +212,10 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-     m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
 
     if (m_robotContainer.m_af.finalChoice == 0)
-      m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+      m_autonomousCommand = m_robotContainer.m_cf.getAutonomousCommand();
     else
       m_autonomousCommand = m_robotContainer.m_cf.getAutonomousCommand();
 

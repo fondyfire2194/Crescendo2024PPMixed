@@ -21,7 +21,6 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.SingleJointedArmSim;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
@@ -136,7 +135,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                     6,
                     new Color8Bit(Color.kRed)));
 
-    public ArmSubsystem(boolean showScreens) {
+    public ArmSubsystem() {
         super(
                 new ProfiledPIDController(
                         5,
@@ -147,7 +146,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                                 ArmConstants.kTrapAccelerationRadPerSecSquared)),
                 0);
 
-        m_showScreens = showScreens;
         useSoftwareLimit = false;
 
         // armMotor = new CANSparkMax(CANIDConstants.armID, MotorType.kBrushless);
@@ -163,81 +161,8 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         armfeedforward = new ArmFeedforward(ArmConstants.armKs, ArmConstants.armKg, ArmConstants.armKv,
                 ArmConstants.armKa);
 
-        if (m_showScreens) {
+        armEncoder.setPosition(Units.degreesToRadians(15));
 
-            Shuffleboard.getTab("ShooterSubsystem").add(this)
-                    .withPosition(3, 0).withSize(2, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addBoolean("OnTravelLimit", () -> onLimit())
-                    .withPosition(5, 0).withSize(1, 1)
-                    .withProperties(Map.of("colorWhenTrue", "green", "colorWhenFalse", "black"));
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .add("SetAllPID", setPIDGainsCommand())
-                    .withPosition(6, 0).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addNumber("CurrentAngleDeg", () -> round2dp(Units.radiansToDegrees(getAngleRadians())))
-                    .withPosition(4, 1).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addNumber("CanCoderDeg", () -> round2dp(getCanCoderDeg()))
-                    .withPosition(5, 1).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addNumber("Setpoint",
-                            () -> round2dp(Units.radiansToDegrees(getController().getSetpoint().position)))
-                    .withPosition(7, 3).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addNumber("VelRadPerSec", () -> round2dp(getRadsPerSec()))
-                    .withPosition(3, 1).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addNumber("VperMPS", () -> round2dp(getVoltsPerRadPerSec()))
-                    .withPosition(6, 2).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addNumber("Goal", () -> round2dp(Units.radiansToDegrees(getController().getGoal().position)))
-                    .withPosition(6, 1).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addBoolean("StickyFault", () -> getStickyFaults() != 0)
-                    .withPosition(3, 2).withSize(1, 1)
-                    .withProperties(Map.of("colorWhenTrue", "red", "colorWhenFalse", "black"));
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .add("ClearFault", clearFaultsCommand())
-                    .withPosition(4, 2).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addNumber("Amps", () -> armMotor.getOutputCurrent())
-                    .withPosition(5, 0).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .add("Arm to 15 Deg", setGoalCommand(Units.degreesToRadians(15)))
-                    .withPosition(3, 3).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .add("Arm to 25 Deg", setGoalCommand(Units.degreesToRadians(25)))
-                    .withPosition(4, 3).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .add("Arm to 45 Deg", setGoalCommand(Units.degreesToRadians(45)))
-                    .withPosition(5, 3).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .add("Arm to 60 Deg", setGoalCommand(Units.degreesToRadians(60)))
-                    .withPosition(6, 3).withSize(1, 1);
-
-            Shuffleboard.getTab("ShooterSubsystem")
-                    .addBoolean("PIDEnabled", () -> isEnabled() && enableArm)
-                    .withPosition(5, 2).withSize(1, 1);
-
-            armEncoder.setPosition(Units.degreesToRadians(15));
-
-        }
         setGoal(Units.degreesToRadians(18)); // 15
         // pid.setIZone(Units.degreesToRadians(.5));
         // pid.setIntegratorRange(-Units.degreesToRadians(.1),
@@ -267,7 +192,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             setGoal(armAngleRads);
         }
         getpidenebled();
-
+        
         if (RobotBase.isSimulation()) {
             double diff = currentGoalAngle - simAngleRads;
 

@@ -10,6 +10,7 @@ import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -64,12 +65,14 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
   public void periodic() {
     // This method will be called once per scheduler run
 
-    // SmartDashboard.putNumber("Climber RPM Left", getRPMLeft());
-    // SmartDashboard.putNumber("Climber RPM Right", getRPMRight());
-    //SmartDashboard.putNumber("ClimberLeft", loopctr)
+    SmartDashboard.putNumber("Climber// Left RPM", getRPMLeft());
+    SmartDashboard.putNumber("Climber// Right RPM", getRPMRight());
 
-    // SmartDashboard.putNumber("Amps", climberMotor.getOutputCurrent());
-    // SmartDashboard.putNumber("Position", climberEncoder.getPosition());
+
+    SmartDashboard.putNumber("Climber// Left Amps", climberMotorLeft.getOutputCurrent());
+    SmartDashboard.putNumber("Climber// Left Position", climberEncoderLeft.getPosition());
+    SmartDashboard.putNumber("Climber// Right Amps", climberMotorRight.getOutputCurrent());
+    SmartDashboard.putNumber("Climber// Right Position", climberEncoderRight.getPosition());
 
   }
 
