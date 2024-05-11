@@ -6,7 +6,6 @@
 package frc.robot.commands.Drive;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -15,10 +14,8 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.LimelightHelpers.LimelightTarget_Detector;
 
-import java.util.function.DoubleSupplier;
 
 import frc.robot.subsystems.SwerveSubsystem;
-
 
 public class TurnToNote extends Command {
   private SwerveSubsystem swerve = new SwerveSubsystem();
@@ -27,23 +24,15 @@ public class TurnToNote extends Command {
 
   private Rotation2d desiredRotation = Rotation2d.fromDegrees(0.0);
 
-  private PIDController turnToNoteController =
-      new PIDController(SwerveConstants.driveKP, 0, SwerveConstants.driveKD);
+  private PIDController turnToNoteController = new PIDController(SwerveConstants.driveKP, 0, SwerveConstants.driveKD);
 
-  private DoubleSupplier forwardSpeed;
-  private DoubleSupplier strafeSpeed;
-
-  private SlewRateLimiter forwardRateLimiter =
-      new SlewRateLimiter(SwerveConstants.maxTranslationalAcceleration);
-  private SlewRateLimiter strafeRateLimiter =
-      new SlewRateLimiter(SwerveConstants.maxTranslationalAcceleration);
+  private final boolean m_direction;
 
   /** Creates a new TurnToNote. */
-  public TurnToNote(DoubleSupplier forwardSpeed, DoubleSupplier strafeSpeed, SwerveSubsystem swerve) {
-    this.forwardSpeed = forwardSpeed;
-    this.strafeSpeed = strafeSpeed;
-    this.swerve = swerve;
+  public TurnToNote(boolean direction, SwerveSubsystem swerve) {
 
+    this.swerve = swerve;
+    m_direction = direction;
     turnToNoteController.setTolerance(Units.degreesToRadians(1));
     turnToNoteController.enableContinuousInput(lastDetectionTime, lastDetectionTime);
 
@@ -53,15 +42,16 @@ public class TurnToNote extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   private void updateDesiredRotation() {
     if (!LimelightHelpers.getTV(CameraConstants.rearCamera.camname)) {
       return;
     }
 
-    LimelightHelpers.Results results =
-        LimelightHelpers.getLatestResults(CameraConstants.rearCamera.camname).targetingResults;
+    LimelightHelpers.Results results = LimelightHelpers
+        .getLatestResults(CameraConstants.rearCamera.camname).targetingResults;
     if (results.timestamp_LIMELIGHT_publish == lastDetectionTime) {
       return;
     }
@@ -81,31 +71,11 @@ public class TurnToNote extends Command {
   @Override
   public void execute() {
     updateDesiredRotation();
-    double turningSpeed =
-        turnToNoteController.calculate(
-            swerve.getHeading().getRadians(), desiredRotation.getRadians());
-
-    double forwardMetersPerSecond =
-        -forwardSpeed.getAsDouble() * SwerveConstants.maxTranslationalAcceleration;
-    double strafeMetersPerSecond =
-        strafeSpeed.getAsDouble() * SwerveConstants.maxTranslationalAcceleration;
-
-    forwardMetersPerSecond = forwardRateLimiter.calculate(forwardMetersPerSecond);
-    strafeMetersPerSecond = strafeRateLimiter.calculate(strafeMetersPerSecond);
-
-    if (Math.abs(forwardMetersPerSecond) < Units.inchesToMeters(0.5)) {
-      forwardMetersPerSecond = 0.0;
-      forwardRateLimiter.reset(0.0);
-    }
-
-    if (Math.abs(strafeMetersPerSecond) < Units.inchesToMeters(0.5)) {
-      strafeMetersPerSecond = 0.0;
-      strafeRateLimiter.reset(0.0);
-    }
+    double turningSpeed = turnToNoteController.calculate(
+        swerve.getHeading().getRadians(), desiredRotation.getRadians());
 
     swerve.drive(
-        forwardMetersPerSecond,
-        strafeMetersPerSecond,
+        0, 0,
         turningSpeed * SwerveConstants.turnToAngleMaxVelocity,
         true,
         true,
@@ -115,14 +85,13 @@ public class TurnToNote extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    forwardRateLimiter.reset(0.0);
-    strafeRateLimiter.reset(0.0);
+  
     turnToNoteController.reset();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

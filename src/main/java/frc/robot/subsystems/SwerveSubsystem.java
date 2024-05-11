@@ -137,13 +137,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   private double noteSeenTime;
 
   public Integer cameraSelection = 0;
-  @Log.NT(key = "location_from")
-  public int fromLocation;
-  @Log.NT(key = "location_at")
-  public int atLocation;
-  @Log.NT(key = "location_to")
-  public int toLocation;
 
+  @Log.NT(key = "autostep")
   public int autostep;
 
   private boolean pathRunning;
@@ -519,7 +514,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-
+SmartDashboard.putNumber("AUSEp", autostep);
     loopctr++;
     if (loopctr == 50 && DriverStation.isDisabled()) {
       boolean check = checkModuleCansOK();
@@ -696,11 +691,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     desbuff = theoreticalStates;
 
     SmartDashboard.putNumber("Drive//KeepAngle", keepAngle);
-  }
-
-  public void setFromTo(int from, int to) {
-    fromLocation = from;
-    toLocation = to;
   }
 
   public static double round2dp(double number, int dp) {

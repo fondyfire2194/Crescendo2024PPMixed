@@ -37,7 +37,6 @@ public class AutoAmpShootMovingThenCenter extends SequentialCommandGroup {
 
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                 new ParallelCommandGroup(
-                                                Commands.runOnce(() -> swerve.toLocation = 2),
                                                 new RunPPath(swerve,
                                                                 path),
                                                 new SequentialCommandGroup(
@@ -46,9 +45,7 @@ public class AutoAmpShootMovingThenCenter extends SequentialCommandGroup {
                                                                                 Constants.autoShootRPM),
                                                                 new WaitCommand(2),
 
-                                                                cf.doIntake())),
-
-                                Commands.runOnce(() -> swerve.atLocation = 2));
+                                                                cf.doIntake())));
 
         }
 

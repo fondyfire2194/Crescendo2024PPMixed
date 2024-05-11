@@ -159,19 +159,23 @@ public class Robot extends TimedRobot implements Logged {
 
     boolean checkAutos = m_robotContainer.m_af.checkChoiceChange();
 
+    if (firstScan)
+      m_robotContainer.m_tcf.createCommonTriggers();
+
     firstScan = false;
 
     if (checkAutos) {
       m_robotContainer.m_af.validStartChoice = m_robotContainer.m_af.selectAndLoadPathFiles();
+      SmartDashboard.putNumber("Auto//ValidStartChoice", m_robotContainer.m_af.validStartChoice);
+
       if (m_robotContainer.m_af.validStartChoice > 10 && m_robotContainer.m_af.validStartChoice < 20) {
-        m_robotContainer.m_tcf.createSourceTriggersC4C5();
+        m_robotContainer.m_tcf.createSourceTriggers();
         m_robotContainer.m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose).runsWhenDisabled();
       }
-      if (m_robotContainer.m_af.validStartChoice > 20 && m_robotContainer.m_af.validStartChoice < 30) {
-        m_robotContainer.m_tcf.createAmpTriggers();
-        m_robotContainer.m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
-      }
-
+    }
+    if (m_robotContainer.m_af.validStartChoice > 20 && m_robotContainer.m_af.validStartChoice < 30) {
+      m_robotContainer.m_tcf.createAmpTriggers();
+      m_robotContainer.m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
     }
 
   }
@@ -210,8 +214,8 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-    m_robotContainer.m_transfer.skipFirstNoteInSim = true;
-    m_robotContainer.m_transfer.skipSecondNoteInSim = true;
+    // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    // m_robotContainer.m_transfer.skipSecondNoteInSim = true;
 
     if (m_robotContainer.m_af.finalChoice == 0 && m_robotContainer.m_af.validChoice)
       m_autonomousCommand = m_robotContainer.m_af.m_subwfrStartChooser.getSelected();

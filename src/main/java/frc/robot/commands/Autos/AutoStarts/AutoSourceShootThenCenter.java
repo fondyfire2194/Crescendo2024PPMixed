@@ -4,15 +4,10 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -35,7 +30,7 @@ public class AutoSourceShootThenCenter extends SequentialCommandGroup {
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-
+                                Commands.runOnce(() -> SmartDashboard.putNumber("RNG", 990)),
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
@@ -44,14 +39,12 @@ public class AutoSourceShootThenCenter extends SequentialCommandGroup {
                                 // move to center note , pick up if there and move to shoot position then shoot
 
                                 new ParallelCommandGroup(
-                                                Commands.runOnce(() -> swerve.toLocation = 4),
+                                               
                                                 new RunPPath(swerve,
                                                                 path),
                                                 new SequentialCommandGroup(
                                                                 Commands.waitSeconds(1),
                                                                 cf.doIntake())),
-
-                                // Commands.runOnce(() -> swerve.atLocation = 4));
                                 Commands.runOnce(() -> swerve.autostep = 1));
 
         }

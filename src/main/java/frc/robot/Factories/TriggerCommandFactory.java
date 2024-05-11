@@ -4,6 +4,8 @@
 
 package frc.robot.Factories;
 
+import com.pathplanner.lib.path.PathPlannerPath;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -18,6 +20,7 @@ import frc.robot.commands.Autos.SourceStart.CenterToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
 import frc.robot.commands.Drive.PickUpAlternateNote;
 import frc.robot.commands.Drive.RotateToAngle;
+import frc.robot.commands.Drive.TurnToNote;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
@@ -49,6 +52,20 @@ public class TriggerCommandFactory implements Logged {
         private boolean trig5;
         @Log.NT(key = "trig6")
         private boolean trig6;
+        private boolean stepRunning;
+        private int step0 = 0;
+        private int step1 = 1;// check for note C2/C4 - step 2 if present step 6 if not
+        private int step2 = 2;// move from C2/C4 note to shoot set step 3
+        private int step3 = 3;// move from shoot to second note for pickup set step 4
+        private int step4 = 4;// check for second note C1/C5 - step 5 if present step 7 if not
+        private int step5 = 5;// move from second note to shoot set end step
+        private int step6 = 6;// first note pickup failed find second one if possible and go to shoot it
+        private int step7 = 7;// second note pickup failed set end step
+
+        private int endit = 8;
+
+        public boolean sourceActive = false;
+        public boolean ampActive = false;
 
         public TriggerCommandFactory(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,
                         LimelightVision llv, PathFactory pf, CommandFactory cf) {
@@ -67,74 +84,106 @@ public class TriggerCommandFactory implements Logged {
                 trig4 = false;
                 trig5 = false;
                 trig6 = false;
-                resetLocations();
+                m_swerve.autostep = step0;
+                stepRunning = false;
+        }
+
+        public void createCommonTriggers() {
+
+                Trigger checkFirstNote = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
+                                && !stepRunning && m_swerve.autostep == step1);
+
+                checkFirstNote.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> stepRunning = true),
+                                new ConditionalCommand(
+                                                Commands.runOnce(() -> m_swerve.autostep = 2),
+                                                Commands.runOnce(() -> m_swerve.autostep = 6),
+                                                () -> m_transfer.noteAtIntake()),
+                                Commands.runOnce(() -> stepRunning = false)));
+
+                Trigger resetAll = new Trigger(() -> (m_swerve.autostep == endit && !stepRunning
+                                && !m_transfer.noteAtIntake() && m_transfer.isStopped()));
+
+                // stop shooter and intake, move intake to pickup position, stop transfer
+                // 2 conditions at shoot position from 5 and no note or at 5 from 4 or 10 and no
+                // note
+
+                resetAll.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> stepRunning = true),
+                                m_cf.resetAll(),
+                                Commands.runOnce(() -> trig5 = true),
+                                Commands.runOnce(() -> stepRunning = false),
+                                Commands.runOnce(() -> m_swerve.autostep = step0)));
+
         }
         // location conditions from, to and at are used to sequnce the triggers
         // 0 = start, 10 = source shoot, 4, 5 are center notes
 
-        private void resetLocations() {
-                m_swerve.toLocation = 0;
-                m_swerve.fromLocation = 0;
-                m_swerve.atLocation = 0;
-
-        }
-
-        public void createSourceTriggersC4C5() {
+        public void createSourceTriggers() {
 
                 resettrigs();
+                ampActive = false;
+                sourceActive = true;
 
-                // move to shoot if a note C4 is picked up. Set source of move
+                // Step 2 go shoot first note
+                Trigger firstNoteToShootSource = new Trigger(
+                                () -> DriverStation.isAutonomousEnabled() && sourceActive && m_swerve.isStopped()
+                                                && !stepRunning && m_swerve.autostep == step2);
 
-                Trigger triggerC4ToSS = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
-                                && m_swerve.fromLocation == 0 && m_swerve.atLocation == 4 && m_transfer.noteAtIntake());
+                // when shot from 1st note ends go try for second note set next step to 3 if
+                // note
+                Trigger shootToSecondNoteSource = new Trigger(() -> DriverStation.isAutonomousEnabled()
+                                && sourceActive && m_swerve.isStopped()
+                                && m_transfer.isStopped() && !stepRunning && m_swerve.autostep == step3);
 
-                triggerC4ToSS.onTrue(
+                // // if second note is picked up, go shoot it
+                Trigger secondNoteToShootSource = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
+                                sourceActive && m_swerve.isStopped() && m_transfer.isStopped()
+                                && m_transfer.noteAtIntake()
+                                && !stepRunning && m_swerve.autostep == step4);
+
+                // // if note C4 isn't collected, go try C5
+                Trigger firstNoteToSecondNoteSource = new Trigger(() -> DriverStation.isAutonomousEnabled()
+                                && sourceActive && m_swerve.isStopped() && !m_transfer.noteAtIntake()
+                                && m_transfer.isStopped()
+                                && !stepRunning && m_swerve.autostep == step6);
+
+                // set step 2 if note present or step 6 if not
+
+                firstNoteToShootSource.onTrue(
                                 Commands.sequence(
-                                                Commands.runOnce(() -> m_swerve.setFromTo(4, 10)),
+                                                Commands.runOnce(() -> stepRunning = true),
                                                 new CenterToSourceShoot(m_cf,
                                                                 m_pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
                                                                                 .name()),
                                                                 m_swerve),
                                                 Commands.parallel(
-                                                                Commands.runOnce(() -> m_swerve.atLocation = 10),
-                                                                Commands.runOnce(() -> trig1 = true))));
+                                                                Commands.runOnce(() -> m_swerve.autostep = step3),
+                                                                Commands.runOnce(() -> trig1 = true),
+                                                                Commands.runOnce(() -> stepRunning = false))));
 
-                // when shot from note C4 ends go try for note C5
-                Trigger triggerSSToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
-                                && m_transfer.isStopped() && !m_transfer.noteAtIntake()
-                                && m_swerve.fromLocation == 4
-                                && m_swerve.atLocation == 10);
-
-                triggerSSToC5.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.setFromTo(10, 5)),
+                shootToSecondNoteSource.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> stepRunning = true),
                                 new SourceShootToCenterPickup(m_cf, m_pf.pathMaps.get(sourcepaths.SourceShootToCenter5
                                                 .name()), m_swerve),
                                 Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.atLocation = 5),
-                                                Commands.runOnce(() -> trig2 = true))));
+                                                Commands.runOnce(() -> m_swerve.autostep = step4),
+                                                Commands.runOnce(() -> trig2 = true),
+                                                Commands.runOnce(() -> stepRunning = false))));
 
-                // // if note C5 is picked up, go shoot it
-                Trigger triggerC5ToSS = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
-                                m_swerve.isStopped() && m_transfer.isStopped() && m_transfer.noteAtIntake()
-                                && m_swerve.atLocation == 5
-                                && (m_swerve.fromLocation == 10 || m_swerve.fromLocation == 4));
-
-                triggerC5ToSS.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.setFromTo(4, 10)),
+                secondNoteToShootSource.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> stepRunning = true),
                                 new CenterToSourceShoot(m_cf, m_pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
                                                 .name()), m_swerve),
                                 Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.atLocation = 10),
-                                                Commands.runOnce(() -> trig1 = true))));
+                                                Commands.runOnce(() -> m_swerve.autostep = step4),
+                                                Commands.runOnce(() -> trig2 = true),
+                                                Commands.runOnce(() -> stepRunning = false))));
 
-                // // if note C4 isn't collected, go try C5
-                Trigger triggerC4ToC5 = new Trigger(() -> DriverStation.isAutonomousEnabled()
-                                && m_swerve.isStopped() && !m_transfer.noteAtIntake() && m_transfer.isStopped()
-                                && m_swerve.fromLocation == 0 && m_swerve.toLocation == 4 && m_swerve.atLocation == 4);
-
-                triggerC4ToC5.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.setFromTo(4, 5)),
-                                new RotateToAngle(m_swerve, 90),
+                firstNoteToSecondNoteSource.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> stepRunning = true),
+                                // new TurnToNote(true, m_swerve),
+                                new RotateToAngle(m_swerve, -90),
                                 m_intake.startIntakeCommand(),
                                 Commands.parallel(
                                                 new TransferIntakeToSensor(m_transfer, m_intake, .6),
@@ -149,76 +198,70 @@ public class TriggerCommandFactory implements Logged {
                                                                 && DriverStation.getAlliance()
                                                                                 .get() == Alliance.Blue),
                                 Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.atLocation = 5),
-                                                Commands.runOnce(() -> trig4 = true))));
-
-                // stop shooter and intake, move intake to pickup position, stop transfer
-                // 2 conditions at shoot position from 5 and no note or at 5 from 4 or 10 and no
-                // note
-
-                Trigger resetAll = new Trigger(() -> (m_swerve.fromLocation == 5 && m_swerve.atLocation == 10
-                                && !m_transfer.noteAtIntake() && m_transfer.isStopped())
-                                || m_swerve.atLocation == 5
-                                                && (m_swerve.fromLocation == 4 || m_swerve.fromLocation == 10)
-                                                && !m_transfer.noteAtIntake() && m_transfer.isStopped());
-
-                resetAll.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> trig5 = true),
-                                m_cf.resetAll(),
-                                Commands.runOnce(() -> resetLocations())));
+                                                Commands.runOnce(() -> m_swerve.autostep = endit),
+                                                Commands.runOnce(() -> trig4 = true),
+                                                Commands.runOnce(() -> stepRunning = false))));
 
         }
 
         public void createAmpTriggers() {
 
                 resettrigs();
+                ampActive = true;
+                sourceActive = false;
+                // Step 2 go shoot first note
+                Trigger firstNoteToShootAmp = new Trigger(
+                                () -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
+                                                && ampActive && !stepRunning && m_swerve.autostep == step2);
 
-                Trigger triggerC2ToAS = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
-                                && m_swerve.fromLocation == 0 && m_swerve.atLocation == 2 && m_transfer.noteAtIntake());
+                // when shot from 1st note ends go try for second note set next step to 3 if
+                // note
+                Trigger shootToSecondNoteAmp = new Trigger(() -> DriverStation.isAutonomousEnabled()
+                                && m_swerve.isStopped() && ampActive
+                                && m_transfer.isStopped() && !stepRunning && m_swerve.autostep == step3);
 
-                triggerC2ToAS.onTrue(
+                // // if second note is picked up, go shoot it
+                Trigger secondNoteToShootAmp = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
+                                ampActive && m_swerve.isStopped() && m_transfer.isStopped() && m_transfer.noteAtIntake()
+                                && !stepRunning && m_swerve.autostep == step4);
+
+                // // if note C4 isn't collected, go try C5
+                Trigger firstNoteToSecondNoteAmp = new Trigger(() -> DriverStation.isAutonomousEnabled()
+                                && ampActive && m_swerve.isStopped() && !m_transfer.noteAtIntake()
+                                && m_transfer.isStopped()
+                                && !stepRunning && m_swerve.autostep == step6);
+
+                firstNoteToShootAmp.onTrue(
                                 Commands.sequence(
-                                                Commands.runOnce(() -> m_swerve.setFromTo(2, 11)),
+                                                Commands.runOnce(() -> stepRunning = true),
                                                 new CenterToSourceShoot(m_cf,
                                                                 m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
                                                                                 .name()),
                                                                 m_swerve),
                                                 Commands.parallel(
-                                                                Commands.runOnce(() -> m_swerve.atLocation = 11),
-                                                                Commands.runOnce(() -> trig1 = true))));
-
-                Trigger triggerASToC1 = new Trigger(() -> DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
-                                && m_transfer.isStopped() && !m_transfer.noteAtIntake()
-                                && m_swerve.fromLocation == 2
-                                && m_swerve.atLocation == 11);
-
-                triggerASToC1.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.setFromTo(11, 1)),
+                                                                Commands.runOnce(() -> m_swerve.autostep = step3),
+                                                                Commands.runOnce(() -> trig1 = true),
+                                                                Commands.runOnce(() -> stepRunning = false))));
+                shootToSecondNoteAmp.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> stepRunning = true),
                                 new AmpShootToCenterPickup(m_cf, m_pf.pathMaps.get(amppaths.AmpShootToCenter1
                                                 .name()), m_swerve),
                                 Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.atLocation = 1),
-                                                Commands.runOnce(() -> trig2 = true))));
+                                                Commands.runOnce(() -> m_swerve.autostep = step4),
+                                                Commands.runOnce(() -> trig2 = true),
+                                                Commands.runOnce(() -> stepRunning = false))));
 
-                Trigger triggerC1ToAS = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
-                                m_swerve.isStopped() && m_transfer.isStopped() && m_transfer.noteAtIntake()
-                                && m_swerve.atLocation == 1
-                                && (m_swerve.fromLocation == 11 || m_swerve.fromLocation == 1));
-
-                triggerC1ToAS.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.setFromTo(11, 1)),
+                secondNoteToShootAmp.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> stepRunning = true),
                                 new CenterToSourceShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
                                                 .name()), m_swerve),
                                 Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.atLocation = 11),
-                                                Commands.runOnce(() -> trig1 = true))));
+                                                Commands.runOnce(() -> m_swerve.autostep = step4),
+                                                Commands.runOnce(() -> trig2 = true),
+                                                Commands.runOnce(() -> stepRunning = false))));
 
-                Trigger triggerC2ToC1 = new Trigger(() -> DriverStation.isAutonomousEnabled()
-                                && m_swerve.isStopped() && !m_transfer.noteAtIntake() && m_transfer.isStopped()
-                                && m_swerve.fromLocation == 0 && m_swerve.toLocation == 2 && m_swerve.atLocation == 2);
-
-                triggerC2ToC1.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.setFromTo(2, 1)),
+                firstNoteToSecondNoteAmp.onTrue(Commands.sequence(
+                                Commands.runOnce(() -> stepRunning = true),
                                 new RotateToAngle(m_swerve, -90),
                                 m_intake.startIntakeCommand(),
                                 Commands.parallel(
@@ -234,19 +277,9 @@ public class TriggerCommandFactory implements Logged {
                                                                 && DriverStation.getAlliance()
                                                                                 .get() == Alliance.Blue),
                                 Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.atLocation = 1),
-                                                Commands.runOnce(() -> trig4 = true))));
-
-                Trigger resetAll = new Trigger(() -> (m_swerve.fromLocation == 1 && m_swerve.atLocation == 11
-                                && !m_transfer.noteAtIntake() && m_transfer.isStopped())
-                                || m_swerve.atLocation == 1
-                                                && (m_swerve.fromLocation == 2 || m_swerve.fromLocation == 11)
-                                                && !m_transfer.noteAtIntake() && m_transfer.isStopped());
-
-                resetAll.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> trig5 = true),
-                                m_cf.resetAll(),
-                                Commands.runOnce(() -> resetLocations())));
+                                                Commands.runOnce(() -> m_swerve.autostep = endit),
+                                                Commands.runOnce(() -> trig4 = true),
+                                                Commands.runOnce(() -> stepRunning = false))));
 
         }
 

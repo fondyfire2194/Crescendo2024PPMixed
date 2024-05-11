@@ -60,7 +60,6 @@ public class AutoSourceShootCenter4Pathfind extends SequentialCommandGroup {
                                                 // move to center note , pick up if there and move to shoot position
                                                 // then shoot
 
-                                                Commands.runOnce(() -> swerve.toLocation = 4),
                                                 new RunPPath(swerve,
                                                                 path),
                                                 new WaitCommand(1),
@@ -69,9 +68,7 @@ public class AutoSourceShootCenter4Pathfind extends SequentialCommandGroup {
                                                                                 pf.pathMaps.get(sourcepaths.NearCenter4toCenter4
                                                                                                 .name())),
                                                                 Commands.waitSeconds(.1)),
-                                                cf.doIntake()),
-
-                                Commands.runOnce(() -> swerve.atLocation = 4));
+                                                cf.doIntake()));
 
         }
 

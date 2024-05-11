@@ -104,7 +104,7 @@ public class AutoFactory implements Logged {
                 }
 
                 SmartDashboard.putBoolean("Auto//Valid Auto Start Choice", validChoice);
-                SmartDashboard.putNumber("Auto//ValidStartChoice", validStartChoice);
+               
 
                 return finalChoice;
         }
