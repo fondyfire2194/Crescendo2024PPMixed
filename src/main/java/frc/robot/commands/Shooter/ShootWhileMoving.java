@@ -27,10 +27,11 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
+import monologue.Logged;
 
 import java.util.function.DoubleSupplier;
 
-public class ShootWhileMoving extends Command {
+public class ShootWhileMoving extends Command implements Logged {
   private static InterpolatingDoubleTreeMap angleToleranceMap = new InterpolatingDoubleTreeMap();
 
   static {
@@ -179,7 +180,7 @@ public class ShootWhileMoving extends Command {
           - shotTime * (fieldSpeeds.vxMetersPerSecond + fieldAccelX * feedTime * 0.5);
       double virtualGoalY = speakerPose.getY()
           - shotTime * (fieldSpeeds.vyMetersPerSecond + fieldAccelY * feedTime * 0.5);
-
+      
       virtualGoalLocation = new Translation2d(virtualGoalX, virtualGoalY);
 
       double virtualDistance = robotPose.minus(virtualGoalLocation).getNorm();
@@ -212,7 +213,7 @@ public class ShootWhileMoving extends Command {
     SmartDashboard.putNumber("AutoShoot/Desired Angle", armAngle);
 
     // Shooter speed
-    m_shooter.commandRPM = Constants.shooterRPMMap.get(distance);
+    m_shooter.topCommandRPM = Constants.shooterRPMMap.get(distance);
 
     Rotation2d desiredAngle = robotPose.minus(virtualGoalLocation).getAngle().plus(Rotation2d.fromRadians(Math.PI));
 

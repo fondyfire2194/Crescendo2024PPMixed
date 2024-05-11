@@ -1,4 +1,11 @@
 {
+  "HALProvider": {
+    "Other Devices": {
+      "window": {
+        "visible": false
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -17,6 +24,7 @@
       "/Shuffleboard/ShooterSubsystem/SetAllPID": "Command",
       "/SmartDashboard/Amp Start": "String Chooser",
       "/SmartDashboard/Arm Sim": "Mechanism2d",
+      "/SmartDashboard/Arm//Arm Sim": "Mechanism2d",
       "/SmartDashboard/BatteryChooser": "String Chooser",
       "/SmartDashboard/CommSchd": "Scheduler",
       "/SmartDashboard/DelayChooser": "String Chooser",
@@ -30,6 +38,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Arm//Arm Sim": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Source Start": {
         "window": {
           "visible": true
@@ -39,6 +52,25 @@
         "window": {
           "visible": true
         }
+      }
+    }
+  },
+  "NetworkTables": {
+    "Transitory Values": {
+      "open": false
+    },
+    "transitory": {
+      "Monologue": {
+        "m_shooter": {
+          "open": true
+        },
+        "m_transfer": {
+          "open": true
+        },
+        "open": true
+      },
+      "SmartDashboard": {
+        "open": true
       }
     }
   },

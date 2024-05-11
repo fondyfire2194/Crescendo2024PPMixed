@@ -13,12 +13,15 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
+import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.IntakeConstants;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -111,6 +114,13 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     if (!runIntake && !jogging) {
       stopMotor();
       // intakeLimiter.reset(0);
+    }
+
+    if (DriverStation.isDisabled() && loopctr == 50) {
+      int temp = intakeMotor.getDeviceId();
+      boolean intakecanok = temp == CANIDConstants.intakeID;
+      SmartDashboard.putBoolean("Intake//IntakeCanOK", intakecanok);
+      loopctr = 0;
     }
   }
 

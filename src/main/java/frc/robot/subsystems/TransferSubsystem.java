@@ -14,7 +14,9 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkLimitSwitch;
 import com.revrobotics.SparkPIDController;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -43,6 +45,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "simmoteatintake")
   public boolean simnoteatintake;
   public boolean skipFirstNoteInSim;
+  public boolean skipSecondNoteInSim;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {
@@ -126,7 +129,14 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
+    loopctr++;
     // This method will be called once per scheduler run
+    if (DriverStation.isDisabled() && loopctr == 50) {
+      int temp = transferMotor.getDeviceId();
+      boolean transfercanok = temp == CANIDConstants.transferID;
+      SmartDashboard.putBoolean("Transfer//TransferCanOK", transfercanok);
+      loopctr = 0;
+    }
   }
 
   public void enableLimitSwitch(boolean enable) {

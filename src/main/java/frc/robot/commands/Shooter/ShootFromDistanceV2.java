@@ -13,18 +13,22 @@ import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class ShootFromDistance extends Command {
+public class ShootFromDistanceV2 extends Command {
   /** Creates a new JogShooter. */
   private ShooterSubsystem m_shooter;
   private SwerveSubsystem m_swerve;
   private ArmSubsystem m_arm;
   public double distance;
+  private double speakerSlotCenterHeight = Units.inchesToMeters(80);
+  private double shooterArmPivotPointHeight = Units.inchesToMeters(10);
+  private double heightDifference = speakerSlotCenterHeight - shooterArmPivotPointHeight;
 
-  public ShootFromDistance(ShooterSubsystem shooter, SwerveSubsystem swerve, ArmSubsystem arm) {
+  public ShootFromDistanceV2(ShooterSubsystem shooter, SwerveSubsystem swerve, ArmSubsystem arm) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_swerve = swerve;
     m_arm = arm;
+    // addRequirements(m_shooter, m_arm);
   }
 
   // Called when the command is initially scheduled.
@@ -33,13 +37,17 @@ public class ShootFromDistance extends Command {
     m_arm.setTolerance(ArmConstants.angleTolerance);
     m_arm.resetController();
     m_arm.enable();
+
   }
 
   @Override
   public void execute() {
     distance = m_swerve.getDistanceFromSpeaker();
-    m_arm.setGoal(Units.degreesToRadians(Constants.armAngleMap.get(distance)));
-    SmartDashboard.putNumber("DistanceAngle", Constants.armAngleMap.get(distance));
+
+    double armAngleRads = calcAngleFromDistance(distance);
+
+    m_arm.setGoal(armAngleRads);
+    SmartDashboard.putNumber("DistanceAngle", Units.radiansToDegrees(armAngleRads));
 
     m_shooter.startShooter(Constants.shooterRPMMap.get(distance));
     SmartDashboard.putNumber("DistanceRPM", m_shooter.topCommandRPM);
@@ -51,5 +59,9 @@ public class ShootFromDistance extends Command {
   @Override
   public boolean isFinished() {
     return false;
+  }
+
+  private double calcAngleFromDistance(double distance) {
+    return Math.atan(heightDifference / distance);
   }
 }

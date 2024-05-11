@@ -15,7 +15,9 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
+import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Pref;
 import monologue.Annotations.Log;
@@ -38,8 +41,10 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   public CANSparkMax bottomRoller;
   RelativeEncoder bottomEncoder;
-  @Log.NT(key = "shtrcommandrpm")
-  public double commandRPM = 500;
+  @Log.NT(key = "shtrtopcommandrpm")
+  public double topCommandRPM = 500;
+  @Log.NT(key = "shtrbottomcommandrpm")
+  public double bottomCommandRPM = 500;
 
   private double topSimRPM = 0;
   private double bottomSimRPM = 0;
@@ -49,15 +54,14 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   @Log.NT(key = "shtrrunatvel")
   private boolean runShooterVel;
-  private double topBottomSpeedRatio = 1;
 
   private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(2500);
   private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(2500);
-  
+  private int loopctr;
 
   /** Creates a new Shooter. */
   public ShooterSubsystem() {
-  
+
     topRoller = new CANSparkMax(Constants.CANIDConstants.topShooterID, MotorType.kBrushless);
     topController = topRoller.getPIDController();
     topEncoder = topRoller.getEncoder();
@@ -69,10 +73,6 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     bottomController = bottomRoller.getPIDController();
 
     configMotor(bottomRoller, bottomEncoder, true);
-
-    setShooterSpeedRatio(1);
-
-    
 
     topController.setOutputRange(0, 1);
 
@@ -114,16 +114,23 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   }
 
   public Command startShooterCommand(double rpm) {
-    return Commands.parallel(
-        Commands.runOnce(() -> commandRPM = rpm),
-        Commands.runOnce(() -> setRunShooter(), this));
+    return Commands.runOnce((() -> startShooter(rpm)));
   }
 
-  @Log.NT(key = "shtrrun")
-  public Command startShooterCommandAmp(double rpm) {
-    return Commands.parallel(
-        Commands.runOnce(() -> commandRPM = rpm),
-        Commands.runOnce(() -> setRunShooter(), this));
+  public Command startShooterCommand(double toprpm, double bottomrpm) {
+    return Commands.runOnce(() -> startShooter(toprpm, bottomrpm));
+  }
+
+  public void startShooter(double rpm) {
+    topCommandRPM = rpm;
+    bottomCommandRPM = rpm;
+    setRunShooter();
+  }
+
+  public void startShooter(double toprpm, double bottomrpm) {
+    topCommandRPM = toprpm;
+    bottomCommandRPM = bottomrpm;
+    setRunShooter();
   }
 
   public void setRunShooter() {
@@ -138,14 +145,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     return runShooterVel;
   }
 
-  @Log.NT(key = "shtrcommandrpm")
-  public void setCommandRPM(double rpm) {
-    commandRPM = rpm;
-  }
-
-  public double getCommandRPM() {
-    return commandRPM;
-  }
+  // o// }
 
   @Log.NT(key = "shtrtoprpm")
   public double getRPMTop() {
@@ -164,9 +164,10 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   }
 
   public void increaseShooterRPM(double val) {
-    commandRPM += val;
-    if (commandRPM > ShooterConstants.maxShooterMotorRPM)
-      commandRPM = ShooterConstants.maxShooterMotorRPM;
+    topCommandRPM += val;
+    bottomCommandRPM = topCommandRPM;
+    if (topCommandRPM > ShooterConstants.maxShooterMotorRPM)
+      topCommandRPM = ShooterConstants.maxShooterMotorRPM;
   }
 
   public Command increaseRPMCommand(double val) {
@@ -174,9 +175,10 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   }
 
   public void decreaseShooterRPM(double val) {
-    commandRPM -= val;
-    if (commandRPM < ShooterConstants.minShooterMotorRPM)
-      commandRPM = ShooterConstants.minShooterMotorRPM;
+    topCommandRPM -= val;
+    bottomCommandRPM = topCommandRPM;
+    if (topCommandRPM < ShooterConstants.minShooterMotorRPM)
+      topCommandRPM = ShooterConstants.minShooterMotorRPM;
   }
 
   public Command decreaseRPMCommand(double val) {
@@ -184,34 +186,16 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   }
 
   public boolean topAtSpeed(double pct) {
-    return commandRPM != 0 && Math.abs(commandRPM - getRPMTop()) < commandRPM / 4;
+    return topCommandRPM != 0 && Math.abs(topCommandRPM - getRPMTop()) < topCommandRPM / 4;
   }
 
   public boolean bottomAtSpeed(double pct) {
-    return commandRPM != 0 && Math.abs(commandRPM - getRPMBottom()) < commandRPM * pct;
+    return bottomCommandRPM != 0 && Math.abs(bottomCommandRPM - getRPMBottom()) < bottomCommandRPM * pct;
   }
 
   public boolean bothAtSpeed(double pct) {
     shootersatspeed = topAtSpeed(pct) && bottomAtSpeed(pct);
     return shootersatspeed;
-  }
-
-  public void setShooterSpeedRatio(double ratio) {
-    if (ratio < 0 || ratio > 1.2)
-      ratio = 1;
-    topBottomSpeedRatio = ratio;
-  }
-
-  public Command setShooterRatioCommand(double ratio) {
-    return Commands.runOnce(() -> setShooterSpeedRatio(ratio));
-  }
-
-  public Command resetShooterRatioCommand() {
-    return Commands.runOnce(() -> setShooterSpeedRatio(1));
-  }
-
-  public double getShooterSpeedRatio() {
-    return topBottomSpeedRatio;
   }
 
   @Log.NT(key = "shtrtopamps")
@@ -240,34 +224,38 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void simulationPeriodic() {
-    double simrpmdiff = commandRPM - topSimRPM;
+    double simrpmdiff = topCommandRPM - topSimRPM;
     double speedAdder = 50;// every 20 ms so 1000 per sec
     if (simrpmdiff < 0)
       speedAdder = -speedAdder;
-    if (topSimRPM != commandRPM)
+    if (topSimRPM != topCommandRPM)
       topSimRPM += speedAdder;
 
-    simrpmdiff = commandRPM - bottomSimRPM;
+    simrpmdiff = bottomCommandRPM - bottomSimRPM;
     speedAdder = 50;
     if (simrpmdiff < 0)
       speedAdder = -speedAdder;
-    if (bottomSimRPM != commandRPM)
+    if (bottomSimRPM != bottomCommandRPM)
       bottomSimRPM += speedAdder;
 
   }
 
   @Override
   public void periodic() {
-    // topBottomSpeedRatio = Pref.getPref("ShooterSpeedRatio");
-
-    // SmartDashboard.putNumber("TOPVolts", topRoller.get() *
-    // RobotController.getBatteryVoltage());
-    // SmartDashboard.putNumber("BotVolts", bottomRoller.get() *
-    // RobotController.getBatteryVoltage());
+    loopctr++;
+    if (DriverStation.isDisabled() && loopctr == 50) {
+      int temp = 0;
+      temp = topRoller.getDeviceId();
+      boolean topcanok = temp == CANIDConstants.topShooterID;
+      temp = bottomRoller.getDeviceId();
+      boolean bottomcanok = temp == CANIDConstants.bottomShooterID;
+      SmartDashboard.putBoolean("Shooter//ShooterCanOK", topcanok && bottomcanok);
+      loopctr = 0;
+    }
 
     if (runShooterVel) {
-      double bottomrpm = getCommandRPM();
-      double toprpm = bottomrpm * topBottomSpeedRatio;
+      double toprpm = getTopCommandRPM();
+      double bottomrpm = getBottomCommandRPM();
       if (RobotBase.isReal()) {
         topController.setReference(topSpeedLimiter.calculate(toprpm), ControlType.kVelocity, 0);
         bottomController.setReference(bottomSpeedLimiter.calculate(bottomrpm), ControlType.kVelocity, 0);
@@ -277,14 +265,16 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     }
   }
 
-  public double rpmTrackDistance(double meters) {
-    return Constants.shooterRPMMap.get(meters);
+  private double getTopCommandRPM() {
+    return topCommandRPM;
   }
 
-  public static double round2dp(double number, int dp) {
-    double temp = Math.pow(10, dp);
-    double temp1 = Math.round(number * temp);
-    return temp1 / temp;
+  private double getBottomCommandRPM() {
+    return bottomCommandRPM;
+  }
+
+  public double rpmTrackDistance(double meters) {
+    return Constants.shooterRPMMap.get(meters);
   }
 
   public Command setTopKpKdKiCommand() {
@@ -317,17 +307,6 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
             bottomRoller.setVoltage(volts.in(Volts));
             topRoller.setVoltage(volts.in(Volts));
           },
-          // log -> {
-          // // Record a frame for the shooter motor.
-          // log.motor("shtr-wheel")
-          // .voltage(
-          // m_appliedVoltage.mut_replace(
-          // m_shooterMotor.get() * RobotController.getBatteryVoltage(), Volts))
-          // .angularPosition(m_angle.mut_replace(m_shooterEncoder.getDistance(),
-          // Rotations))
-          // .angularVelocity(
-          // m_velocity.mut_replace(m_shooterEncoder.getRate(), RotationsPerSecond));
-          // },
           log -> {
             log.motor("Top")
                 .voltage(Volts.of(topRoller.getAppliedOutput() * topRoller.getBusVoltage()))

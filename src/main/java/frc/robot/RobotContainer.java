@@ -98,7 +98,7 @@ public class RobotContainer implements Logged {
                 registerNamedCommands();
 
                 if (RobotBase.isReal()) {
-                        Pref.deleteUnused();
+                        // Pref.deleteUnused();
                         Pref.addMissing();
                 }
 
@@ -147,7 +147,8 @@ public class RobotContainer implements Logged {
                                 new TransferIntakeToSensor(m_transfer, m_intake, 120),
                                 m_cf.rumbleCommand(driver),
                                 m_arm.setGoalCommand(ArmConstants.pickupAngle))
-                                .withTimeout(10));
+                                .withTimeout(10)
+                                .andThen(m_arm.setGoalCommand(Units.degreesToRadians(19))));
 
                 // driver.leftBumper().whileTrue(new ParallelCommandGroup(new
                 // AlignTargetOdometry(
@@ -172,8 +173,8 @@ public class RobotContainer implements Logged {
                                 m_arm.setGoalCommand(ArmConstants.pickupAngle),
                                 m_intake.stopIntakeCommand()));
 
-                driver.b().onTrue(m_shooter.stopShooterCommand());
-
+                // driver.b().onTrue(m_shooter.stopShooterCommand());
+                driver.b().onTrue(m_cf.doAmpShot());
                 // driver.b().onTrue(new ShootWhileMoving(m_arm, m_transfer, m_shooter,
                 // m_swerve,
                 // () -> -driver.getLeftY(),

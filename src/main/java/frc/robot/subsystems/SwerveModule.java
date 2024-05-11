@@ -26,6 +26,7 @@ import frc.lib.config.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
+import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.GlobalConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Pref;
@@ -58,6 +59,7 @@ public class SwerveModule extends SubsystemBase {
   private double characterizationVolts;
   private boolean characterizing;
   private SwerveModuleState previousState = new SwerveModuleState();
+
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -273,11 +275,8 @@ public class SwerveModule extends SubsystemBase {
   public double getDrivePosition() {
     if (RobotBase.isReal())
       return driveEncoder.getPosition();
-
     else {
-
       return m_simDrivePosition;
-
     }
   }
 
@@ -285,11 +284,23 @@ public class SwerveModule extends SubsystemBase {
     return getDrivePosition() / SwerveConstants.wheelRadius;
   }
 
+  public int getDriveMotorID() {
+    return driveMotor.getDeviceId();
+  }
+
+  public int getAngleMotorID() {
+    return angleMotor.getDeviceId();
+  }
+
+  public int getCancoderID() {
+    return m_turnCancoder.getDeviceID();
+  }
+
   @Override
   public void periodic() {
 
     SmartDashboard.putNumber("Modules//" +
-        String.valueOf(+moduleNumber) + "cancoder", getCancoderDeg());
+        String.valueOf(+moduleNumber) + " cancoder", getCancoderDeg());
 
     // SmartDashboard.putBoolean(String.valueOf(moduleNumber) + " Characterizing",
     // characterizing);
@@ -350,12 +361,6 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
 
-  }
-
-  public static double round2dp(double number, int dp) {
-    number = Math.round(number * dp);
-    number /= 100;
-    return number;
   }
 
 }

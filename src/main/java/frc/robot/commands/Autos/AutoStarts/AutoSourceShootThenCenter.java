@@ -35,9 +35,9 @@ public class AutoSourceShootThenCenter extends SequentialCommandGroup {
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-                                
+
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                                
+
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
                                 cf.transferNoteToShooterCommand(),
@@ -46,12 +46,13 @@ public class AutoSourceShootThenCenter extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
                                                 Commands.runOnce(() -> swerve.toLocation = 4),
                                                 new RunPPath(swerve,
-                                                                path),                                                          
+                                                                path),
                                                 new SequentialCommandGroup(
                                                                 Commands.waitSeconds(1),
                                                                 cf.doIntake())),
 
-                                Commands.runOnce(() -> swerve.atLocation = 4));
+                                // Commands.runOnce(() -> swerve.atLocation = 4));
+                                Commands.runOnce(() -> swerve.autostep = 1));
 
         }
 

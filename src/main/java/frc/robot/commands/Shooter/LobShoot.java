@@ -20,37 +20,37 @@ public class LobShoot extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     m_shooter = shooter;
     m_swerve = swerve;
-    
-    //addRequirements(m_shooter, m_arm);
+
+    // addRequirements(m_shooter, m_arm);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    
-        m_shooter.setRunShooter();
 
   }
+
   @Override
   public void execute() {
-    distance = m_swerve.getDistanceFromSpeaker();     
-    
+    distance = m_swerve.getDistanceFromSpeaker();
+
     double rpm = 2700;
     if (distance > 10.0) {
       rpm = 3100;
     } else if (distance < 7.0) {
       rpm = 2600;
     } else {
-      rpm = 2600 + ((10.0-distance) / 2) * 500;
+      rpm = 2600 + ((10.0 - distance) / 2) * 500;
     }
 
     ChassisSpeeds fieldSpeeds = m_swerve.getSpeeds();
 
-    double velocity = Math.sqrt(Math.pow(fieldSpeeds.vxMetersPerSecond, 2) + Math.pow(fieldSpeeds.vxMetersPerSecond, 2));
+    double velocity = Math
+        .sqrt(Math.pow(fieldSpeeds.vxMetersPerSecond, 2) + Math.pow(fieldSpeeds.vxMetersPerSecond, 2));
     double velocityDecreasor = velocity * 150;
     rpm = rpm - velocityDecreasor;
 
-    m_shooter.commandRPM = rpm;
+    m_shooter.startShooter(rpm);
 
   }
 

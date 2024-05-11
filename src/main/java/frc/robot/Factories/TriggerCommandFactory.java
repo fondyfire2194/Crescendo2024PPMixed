@@ -14,7 +14,6 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.AmpStart.AmpShootToCenterPickup;
-import frc.robot.commands.Autos.AmpStart.AutoAmpShootMovingThenCenter;
 import frc.robot.commands.Autos.SourceStart.CenterToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
 import frc.robot.commands.Drive.PickUpAlternateNote;
@@ -91,8 +90,7 @@ public class TriggerCommandFactory implements Logged {
 
                 triggerC4ToSS.onTrue(
                                 Commands.sequence(
-                                                Commands.runOnce(() -> m_swerve.fromLocation = 4),
-                                                Commands.runOnce(() -> m_swerve.toLocation = 10),
+                                                Commands.runOnce(() -> m_swerve.setFromTo(4, 10)),
                                                 new CenterToSourceShoot(m_cf,
                                                                 m_pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
                                                                                 .name()),
@@ -108,8 +106,7 @@ public class TriggerCommandFactory implements Logged {
                                 && m_swerve.atLocation == 10);
 
                 triggerSSToC5.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.toLocation = 5),
-                                Commands.runOnce(() -> m_swerve.fromLocation = 10),
+                                Commands.runOnce(() -> m_swerve.setFromTo(10, 5)),
                                 new SourceShootToCenterPickup(m_cf, m_pf.pathMaps.get(sourcepaths.SourceShootToCenter5
                                                 .name()), m_swerve),
                                 Commands.parallel(
@@ -123,8 +120,7 @@ public class TriggerCommandFactory implements Logged {
                                 && (m_swerve.fromLocation == 10 || m_swerve.fromLocation == 4));
 
                 triggerC5ToSS.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.fromLocation = 4),
-                                Commands.runOnce(() -> m_swerve.toLocation = 10),
+                                Commands.runOnce(() -> m_swerve.setFromTo(4, 10)),
                                 new CenterToSourceShoot(m_cf, m_pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
                                                 .name()), m_swerve),
                                 Commands.parallel(
@@ -137,8 +133,7 @@ public class TriggerCommandFactory implements Logged {
                                 && m_swerve.fromLocation == 0 && m_swerve.toLocation == 4 && m_swerve.atLocation == 4);
 
                 triggerC4ToC5.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.fromLocation = 4),
-                                Commands.runOnce(() -> m_swerve.toLocation = 5),
+                                Commands.runOnce(() -> m_swerve.setFromTo(4, 5)),
                                 new RotateToAngle(m_swerve, 90),
                                 m_intake.startIntakeCommand(),
                                 Commands.parallel(
@@ -161,7 +156,7 @@ public class TriggerCommandFactory implements Logged {
                 // 2 conditions at shoot position from 5 and no note or at 5 from 4 or 10 and no
                 // note
 
-                Trigger resetAll = new Trigger(() -> (m_swerve.toLocation == 10 && m_swerve.atLocation == 10
+                Trigger resetAll = new Trigger(() -> (m_swerve.fromLocation == 5 && m_swerve.atLocation == 10
                                 && !m_transfer.noteAtIntake() && m_transfer.isStopped())
                                 || m_swerve.atLocation == 5
                                                 && (m_swerve.fromLocation == 4 || m_swerve.fromLocation == 10)
@@ -183,8 +178,7 @@ public class TriggerCommandFactory implements Logged {
 
                 triggerC2ToAS.onTrue(
                                 Commands.sequence(
-                                                Commands.runOnce(() -> m_swerve.fromLocation = 2),
-                                                Commands.runOnce(() -> m_swerve.toLocation = 11),
+                                                Commands.runOnce(() -> m_swerve.setFromTo(2, 11)),
                                                 new CenterToSourceShoot(m_cf,
                                                                 m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
                                                                                 .name()),
@@ -199,8 +193,7 @@ public class TriggerCommandFactory implements Logged {
                                 && m_swerve.atLocation == 11);
 
                 triggerASToC1.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.toLocation = 1),
-                                Commands.runOnce(() -> m_swerve.fromLocation = 11),
+                                Commands.runOnce(() -> m_swerve.setFromTo(11, 1)),
                                 new AmpShootToCenterPickup(m_cf, m_pf.pathMaps.get(amppaths.AmpShootToCenter1
                                                 .name()), m_swerve),
                                 Commands.parallel(
@@ -213,8 +206,7 @@ public class TriggerCommandFactory implements Logged {
                                 && (m_swerve.fromLocation == 11 || m_swerve.fromLocation == 1));
 
                 triggerC1ToAS.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.fromLocation = 1),
-                                Commands.runOnce(() -> m_swerve.toLocation = 11),
+                                Commands.runOnce(() -> m_swerve.setFromTo(11, 1)),
                                 new CenterToSourceShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
                                                 .name()), m_swerve),
                                 Commands.parallel(
@@ -226,8 +218,7 @@ public class TriggerCommandFactory implements Logged {
                                 && m_swerve.fromLocation == 0 && m_swerve.toLocation == 2 && m_swerve.atLocation == 2);
 
                 triggerC2ToC1.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.fromLocation = 2),
-                                Commands.runOnce(() -> m_swerve.toLocation = 1),
+                                Commands.runOnce(() -> m_swerve.setFromTo(2, 1)),
                                 new RotateToAngle(m_swerve, -90),
                                 m_intake.startIntakeCommand(),
                                 Commands.parallel(
@@ -246,10 +237,10 @@ public class TriggerCommandFactory implements Logged {
                                                 Commands.runOnce(() -> m_swerve.atLocation = 1),
                                                 Commands.runOnce(() -> trig4 = true))));
 
-                Trigger resetAll = new Trigger(() -> (m_swerve.toLocation == 11 && m_swerve.atLocation == 11
+                Trigger resetAll = new Trigger(() -> (m_swerve.fromLocation == 1 && m_swerve.atLocation == 11
                                 && !m_transfer.noteAtIntake() && m_transfer.isStopped())
-                                || m_swerve.atLocation == 11
-                                                && (m_swerve.fromLocation == 1 || m_swerve.fromLocation == 11)
+                                || m_swerve.atLocation == 1
+                                                && (m_swerve.fromLocation == 2 || m_swerve.fromLocation == 11)
                                                 && !m_transfer.noteAtIntake() && m_transfer.isStopped());
 
                 resetAll.onTrue(Commands.sequence(

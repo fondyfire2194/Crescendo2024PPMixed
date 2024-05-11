@@ -6,7 +6,6 @@ package frc.robot.Factories;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
-import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -14,16 +13,17 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.LimelightHelpers;
+import frc.robot.Pref;
 import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Arm.CheckArmAtTarget;
@@ -119,14 +119,6 @@ public class CommandFactory implements Logged {
 
         }
 
-        public Command positionArmRunShooterAmp(double armAngleDeg, double shooterSpeed) {
-                return new ParallelCommandGroup(
-                                m_arm.setGoalCommand(Units.degreesToRadians(armAngleDeg)),
-                                m_shooter.startShooterCommandAmp(shooterSpeed),
-                                new CheckArmAtTarget(m_arm),
-                                new CheckShooterAtSpeed(m_shooter, .2));
-        }
-
         // @Log.NT(key = "dointakecommand")
         public Command doIntake() {
                 return new ParallelCommandGroup(
@@ -187,7 +179,7 @@ public class CommandFactory implements Logged {
         }
 
         public Command setStartPosebyAlliance(Pose2d startPose) {
-                tempPose2d=startPose;
+                tempPose2d = startPose;
                 if (AllianceUtil.isRedAlliance())
                         tempPose2d = GeometryUtil.flipFieldPose(startPose);
                 return Commands.runOnce(() -> m_swerve.resetPoseEstimator(tempPose2d));
@@ -196,11 +188,6 @@ public class CommandFactory implements Logged {
         public Command finalCommand(int choice) {
 
                 switch ((choice)) {
-
-                        case 21:
-                        return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()), m_swerve);
-                        case 22:
-                        return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()), m_swerve);
 
                         case 11:
                                 return new AutoSourceShootThenCenter(this,
@@ -219,6 +206,13 @@ public class CommandFactory implements Logged {
                                                 m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
                                                 m_swerve, m_llv, m_intake, m_transfer);
 
+                        case 21:
+                                return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
+                                                m_swerve);
+                        case 22:
+                                return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
+                                                m_swerve);
+
                         default:
                                 return Commands.none();
 
@@ -230,11 +224,9 @@ public class CommandFactory implements Logged {
                 return finalCommand(m_af.finalChoice);
         }
 
-
         public Command resetAll() {
                 return new ParallelCommandGroup(
                                 m_shooter.stopShooterCommand(),
-                                Commands.runOnce(() -> m_shooter.setCommandRPM(500)),
                                 m_intake.stopIntakeCommand(),
                                 m_transfer.stopTransferCommand(),
                                 m_arm.setGoalCommand(ArmConstants.pickupAngle)
@@ -242,4 +234,27 @@ public class CommandFactory implements Logged {
                                 .asProxy();
         }
 
+        public Command doAmpShot() {
+                return new SequentialCommandGroup(
+                                Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
+                                m_arm.setGoalCommand(Units.degreesToRadians(90)),
+                                new CheckArmAtTarget(m_arm),
+                                m_arm.setGoalCommand(Units.degreesToRadians(Pref.getPref("AmpArmDegrees"))),
+                                m_shooter.startShooterCommand(
+                                                Pref.getPref("AmpTopRPM"), Pref.getPref("AmpBottomRPM")),
+                                new CheckShooterAtSpeed(m_shooter, .05),
+                                new CheckArmAtTarget(m_arm),
+                                Commands.parallel(
+                                                m_transfer.transferToShooterCommand(),
+                                                new WaitCommand(Pref.getPref("AmpArmIncrementDelay")),
+                                                m_arm.setGoalCommand(
+                                                                Units.degreesToRadians(Pref.getPref("AmpArmDegrees")) +
+                                                                                Units.degreesToRadians(Pref.getPref(
+                                                                                                "AmpDegreeIncrement"))),
+                                                new WaitCommand(1)),
+
+                                Commands.parallel(
+                                                m_shooter.stopShooterCommand(),
+                                                m_arm.setGoalCommand(ArmConstants.armMinRadians)));
+        }
 }

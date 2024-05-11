@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,6 +34,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
   RelativeEncoder climberEncoderLeft;
   RelativeEncoder climberEncoderRight;
   public boolean showClimber = true;
+  private int loopctr;
 
   public ClimberSubsystem() {
     climberMotorLeft = new CANSparkMax(CANIDConstants.climberIDLeft, MotorType.kBrushless);
@@ -64,6 +66,17 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+     loopctr++;
+    if (DriverStation.isDisabled() && loopctr == 50) {
+      int temp = 0;
+      temp = climberMotorLeft.getDeviceId();
+      boolean leftcanok = temp == CANIDConstants.climberIDLeft;
+      temp = climberMotorRight.getDeviceId();
+      boolean rightcanok = temp == CANIDConstants.climberIDRight;
+      SmartDashboard.putBoolean("Climber//ClimberCanOK", leftcanok & rightcanok);
+      loopctr = 0;
+    }
 
     SmartDashboard.putNumber("Climber// Left RPM", getRPMLeft());
     SmartDashboard.putNumber("Climber// Right RPM", getRPMRight());

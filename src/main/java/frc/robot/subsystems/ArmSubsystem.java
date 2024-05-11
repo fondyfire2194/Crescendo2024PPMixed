@@ -18,6 +18,7 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -102,6 +103,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     @Log.NT(key = "simanglerads")
     private double simAngleRads;
 
+    private boolean cancoderok;
+
+    private int checkCounter;
+
     private final DCMotor m_armGearbox = DCMotor.getNEO(1);
 
     private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(
@@ -135,6 +140,8 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                     6,
                     new Color8Bit(Color.kRed)));
 
+    private boolean useMotorEncoder;
+
     public ArmSubsystem() {
         super(
                 new ProfiledPIDController(
@@ -161,7 +168,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         armfeedforward = new ArmFeedforward(ArmConstants.armKs, ArmConstants.armKg, ArmConstants.armKv,
                 ArmConstants.armKa);
 
-        armEncoder.setPosition(Units.degreesToRadians(15));
+        armEncoder.setPosition(Units.degreesToRadians(ArmConstants.armMinRadians));
 
         setGoal(Units.degreesToRadians(18)); // 15
         // pid.setIZone(Units.degreesToRadians(.5));
@@ -170,7 +177,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         pid.reset();
         setKp();
 
-        SmartDashboard.putData("Arm Sim", m_mech2d);
+        SmartDashboard.putData("Arm//Arm Sim", m_mech2d);
         m_armTower.setColor(new Color8Bit(Color.kBlue));
     }
 
@@ -192,16 +199,33 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             setGoal(armAngleRads);
         }
         getpidenebled();
-        
-        if (RobotBase.isSimulation()) {
-            double diff = currentGoalAngle - simAngleRads;
-
-            if (diff != 0)
-                simAngleRads += diff / 10;
+        checkCounter++;
+        if (checkCounter == 50) {
+            int temp = 0;
+            boolean armMotorOK = false;
+            temp = getCanCoderID();
+            cancoderok = (temp == CANIDConstants.armCancoderID);
+            SmartDashboard.putBoolean("Arm//ArmCancoderOK", cancoderok);
+            if (DriverStation.isDisabled()) {
+                temp = armMotor.getDeviceId();
+                armMotorOK = (temp == CANIDConstants.armID);
+                SmartDashboard.putBoolean("Arm//ArmCanOK", armMotorOK);
+            }
+            checkCounter = 0;
         }
+    }
+
+    @Override
+    public void simulationPeriodic() {
+
+        double diff = currentGoalAngle - simAngleRads;
+
+        if (diff != 0)
+            simAngleRads += diff / 10;
 
         // Update the Mechanism Arm angle based on the simulated arm angle
         m_arm.setAngle(Units.radiansToDegrees(getAngleRadians()));
+
         m_armTarget.setAngle(Units.radiansToDegrees(getCurrentGoal()));
 
     }
@@ -265,8 +289,8 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                 runOnce(() -> setTolerance(ArmConstants.angleTolerance)),
                 runOnce(() -> resetController()),
                 runOnce(() -> setGoal(angleRads)),
-                runOnce(() -> enable()),
-                runOnce(() -> SmartDashboard.putNumber("Ended", 911)));
+                runOnce(() -> enable()));
+
     }
 
     public Command setGoalCommand(double angleRads, double tolerance) {
@@ -324,10 +348,21 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     @Log.NT(key = "armrads")
     public double getAngleRadians() {
-        if (RobotBase.isReal())
-            return getCanCoderRad();
-        else
+        if (RobotBase.isReal()) {
+            if (useMotorEncoder)
+                return getCanCoderRad();
+            else
+                return armEncoder.getPosition();
+        } else
             return simAngleRads;
+    }
+
+    public void setUseMotorEncoder(boolean on){
+        useMotorEncoder=on;
+    }
+
+    public boolean getUseMotorEncoder(){
+        return useMotorEncoder;
     }
 
     @Log.NT(key = "armdegs")
@@ -447,10 +482,13 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         return armCancoder.getVelocity().getValueAsDouble() * Math.PI;
     }
 
+    public int getCanCoderID() {
+        return armCancoder.getDeviceID();
+    }
+
     public void setKp() {
         pid.setP(Pref.getPref("armKp"));
-        // getController().setP(Pref.getPref("armKp"));
-        SmartDashboard.putNumber("PPP", pid.getP());
+
     }
 
     public void setKd() {

@@ -4,15 +4,11 @@
 
 package frc.robot.Factories;
 
-import java.util.List;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-
-import frc.robot.subsystems.SwerveSubsystem;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -25,7 +21,7 @@ public class AutoFactory implements Logged {
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
 
-        SendableChooser<Command> m_subwfrStartChooser;
+        public SendableChooser<Command> m_subwfrStartChooser;
 
         @Log.NT(key = "finalchoice")
         public int finalChoice = 0;
@@ -40,18 +36,22 @@ public class AutoFactory implements Logged {
         public int validStartChoice = 0;
         String subwfrdefnam;
 
+        public boolean validChoice;
+
         public AutoFactory(PathFactory pf) {
                 m_pf = pf;
-
-                m_ampStartChooser.setDefaultOption("Not Used", 20);
-                m_ampStartChooser.addOption("C2 then C1", 21);
-                m_ampStartChooser.addOption("C1 then C2", 22);
 
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5", 11);
                 m_sourceStartChooser.addOption("Shoot Moving C4 Then C5 ", 12);
                 m_sourceStartChooser.addOption("C4 Pathfind Then C5", 13);
                 m_sourceStartChooser.addOption("C4 Vision Then C5", 14);
+
+
+
+                m_ampStartChooser.setDefaultOption("Not Used", 20);
+                m_ampStartChooser.addOption("C2 then C1", 21);
+                m_ampStartChooser.addOption("C1 then C2", 22);
 
                 m_subwfrStartChooser = AutoBuilder.buildAutoChooser();
 
@@ -68,6 +68,7 @@ public class AutoFactory implements Logged {
                 ampChoice = m_ampStartChooser.getSelected();// 20 start
                 sourceChoice = m_sourceStartChooser.getSelected();// 10 start
                 subwfrcchoice = m_subwfrStartChooser.getSelected().getName();
+                SmartDashboard.putNumber("SWLGTH", subwfrcchoice.length());
                 boolean temp = ampChoice != ampChoiceLast || sourceChoice != sourceChoiceLast
                                 || subwfrcchoice != subwfrcchoicelasst;
 
@@ -79,10 +80,7 @@ public class AutoFactory implements Logged {
 
         public int selectAndLoadPathFiles() {
                 finalChoice = 0;
-                boolean validChoice = false;
-
-                SmartDashboard.putNumber("LENGTHAmp", 0);
-                SmartDashboard.putNumber("LENGTHSource", 0);
+                validChoice = false;
 
                 boolean validAmpChoice = ampChoice != 20;
                 boolean validSourceChoice = sourceChoice != 10;
@@ -91,22 +89,22 @@ public class AutoFactory implements Logged {
                 if (validAmpChoice && !validSourceChoice && !validSubwfrChoice) {
                         m_pf.linkAmpPaths();
                         validChoice = true;
-                        finalChoice=ampChoice;
-                        SmartDashboard.putNumber("LENGTHAmp", m_pf.pathMaps.size());
+                        finalChoice = ampChoice;
+
                 }
 
                 if (validSourceChoice && !validAmpChoice && !validSubwfrChoice) {
                         m_pf.linkSourcePaths();
                         validChoice = true;
-                        finalChoice=sourceChoice;
-                        SmartDashboard.putNumber("LENGTHSource", m_pf.pathMaps.size());
+                        finalChoice = sourceChoice;
                 }
 
                 if (!validAmpChoice && !validSourceChoice && validSubwfrChoice) {
                         validChoice = true;
                 }
 
-                SmartDashboard.putBoolean("ValidChoice", validChoice);
+                SmartDashboard.putBoolean("Auto//Valid Auto Start Choice", validChoice);
+                SmartDashboard.putNumber("Auto//ValidStartChoice", validStartChoice);
 
                 return finalChoice;
         }

@@ -52,6 +52,8 @@ public class TransferIntakeToSensor extends Command {
       m_intake.stopMotor();
     m_transfer.enableLimitSwitch(false);
     m_transfer.skipFirstNoteInSim = false;
+    m_transfer.skipSecondNoteInSim = false;
+    
   }
 
   // Returns true when the command should end.

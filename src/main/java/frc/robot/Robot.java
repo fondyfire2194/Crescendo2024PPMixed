@@ -167,12 +167,10 @@ public class Robot extends TimedRobot implements Logged {
         m_robotContainer.m_tcf.createSourceTriggersC4C5();
         m_robotContainer.m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose).runsWhenDisabled();
       }
-      if (m_robotContainer.m_af.validStartChoice > 0 && m_robotContainer.m_af.validStartChoice < 10) {
+      if (m_robotContainer.m_af.validStartChoice > 20 && m_robotContainer.m_af.validStartChoice < 30) {
         m_robotContainer.m_tcf.createAmpTriggers();
         m_robotContainer.m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
       }
-
-      SmartDashboard.putNumber("ValidStartChoice", m_robotContainer.m_af.validStartChoice);
 
     }
 
@@ -212,10 +210,11 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-    // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    m_robotContainer.m_transfer.skipSecondNoteInSim = true;
 
-    if (m_robotContainer.m_af.finalChoice == 0)
-      m_autonomousCommand = m_robotContainer.m_cf.getAutonomousCommand();
+    if (m_robotContainer.m_af.finalChoice == 0 && m_robotContainer.m_af.validChoice)
+      m_autonomousCommand = m_robotContainer.m_af.m_subwfrStartChooser.getSelected();
     else
       m_autonomousCommand = m_robotContainer.m_cf.getAutonomousCommand();
 
@@ -252,7 +251,7 @@ public class Robot extends TimedRobot implements Logged {
       m_autonomousCommand.cancel();
     }
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
-    new ArmShooterByDistance().schedule();
+    // new ArmShooterByDistance().schedule();
 
     m_robotContainer.m_swerve.setIdleMode(true);
     m_robotContainer.m_arm.enable();

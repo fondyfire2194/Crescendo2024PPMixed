@@ -42,7 +42,7 @@ public class LimelightVision extends SubsystemBase {
   public String rname = CameraConstants.rearCamera.camname;
 
   public LimelightVision() {
-   
+
     if (CameraConstants.rearCamera.isUsed)
       setRearNoteDetectorPipeline();
 
@@ -109,10 +109,14 @@ public class LimelightVision extends SubsystemBase {
 
     loopctr++;
 
-
     SmartDashboard.putBoolean("LL//FrontLeftCamOk", limelightExistsfl);
     SmartDashboard.putBoolean("LL//FrontRightCamOk", limelightExistsfr);
     SmartDashboard.putBoolean("LL//RearCamOk", limelightExistsr);
+
+    boolean allcamsok = CameraConstants.frontLeftCamera.isUsed && limelightExistsfl
+        && CameraConstants.frontRightCamera.isUsed && limelightExistsfr
+        && CameraConstants.rearCamera.isUsed && limelightExistsr;
+    SmartDashboard.putBoolean("LL//CamsOK", allcamsok);
   }
 
   public void setAprilTag_ALL_Pipeline() {

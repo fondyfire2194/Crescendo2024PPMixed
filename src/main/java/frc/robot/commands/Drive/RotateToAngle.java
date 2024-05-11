@@ -44,8 +44,7 @@ public class RotateToAngle extends PIDCommand {
     m_controller.setI(Pref.getPref("rotki"));
     m_controller.setD(Pref.getPref("rotkd"));
     m_controller.setTolerance(1);
-    SmartDashboard.putNumber("RoTp", m_controller.getP());
-    SmartDashboard.putNumber("RoTpp", tempp);
+  
 
   }
 

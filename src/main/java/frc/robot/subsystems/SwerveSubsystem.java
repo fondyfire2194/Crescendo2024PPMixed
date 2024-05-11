@@ -137,12 +137,14 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   private double noteSeenTime;
 
   public Integer cameraSelection = 0;
-  @Log.NT(key = "fromlocation")
+  @Log.NT(key = "location_from")
   public int fromLocation;
-  @Log.NT(key = "atlocation")
+  @Log.NT(key = "location_at")
   public int atLocation;
-  @Log.NT(key = "tolocation")
+  @Log.NT(key = "location_to")
   public int toLocation;
+
+  public int autostep;
 
   private boolean pathRunning;
   private boolean pathStarted;
@@ -227,7 +229,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
 
     zeroGyro();
-    SmartDashboard.putBoolean("Drive//GYRO", gyro.isConnected());
 
     resetPoseEstimator(new Pose2d());
 
@@ -237,7 +238,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     firstTime = true;
   }
 
- 
   public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds) {
     driveRobotRelative(ChassisSpeeds.fromFieldRelativeSpeeds(fieldRelativeSpeeds, getPose().getRotation()));
   }
@@ -424,6 +424,32 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return positions;
   }
 
+  private boolean checkMod0CanIDs() {
+    int tempd = 0;
+    tempd = mSwerveMods[0].getDriveMotorID();
+    return SwerveConstants.Mod0.driveMotorID == tempd
+        && SwerveConstants.Mod0.angleMotorID == mSwerveMods[0].getAngleMotorID()
+        && SwerveConstants.Mod0.cancoderID == mSwerveMods[0].getCancoderID();
+  }
+
+  private boolean checkMod1CanIDs() {
+    return SwerveConstants.Mod1.driveMotorID == mSwerveMods[1].getDriveMotorID()
+        && SwerveConstants.Mod1.angleMotorID == mSwerveMods[1].getAngleMotorID()
+        && SwerveConstants.Mod1.cancoderID == mSwerveMods[1].getCancoderID();
+  }
+
+  private boolean checkMod2CanIDs() {
+    return SwerveConstants.Mod2.driveMotorID == mSwerveMods[2].getDriveMotorID()
+        && SwerveConstants.Mod2.angleMotorID == mSwerveMods[2].getAngleMotorID()
+        && SwerveConstants.Mod2.cancoderID == mSwerveMods[2].getCancoderID();
+  }
+
+  private boolean checkMod3CanIDs() {
+    return SwerveConstants.Mod3.driveMotorID == mSwerveMods[3].getDriveMotorID()
+        && SwerveConstants.Mod3.angleMotorID == mSwerveMods[3].getAngleMotorID()
+        && SwerveConstants.Mod3.cancoderID == mSwerveMods[3].getCancoderID();
+  }
+
   public SwerveModuleState[] getStates() {
     SwerveModuleState[] states = new SwerveModuleState[4];
     for (SwerveModule mod : mSwerveMods) {
@@ -486,10 +512,20 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return lookForNote;
   }
 
+  public boolean checkModuleCansOK() {
+    return checkMod0CanIDs() && checkMod1CanIDs()
+        && checkMod2CanIDs() && checkMod3CanIDs();
+  }
+
   @Override
   public void periodic() {
 
     loopctr++;
+    if (loopctr == 50 && DriverStation.isDisabled()) {
+      boolean check = checkModuleCansOK();
+      SmartDashboard.putBoolean("Drive//DriveCanOk", check);
+      loopctr = 0;
+    }
 
     swervePoseEstimator.update(getYaw(), getPositions());
 
@@ -508,6 +544,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
       setPathRunning();
       resetPathStarted();
     }
+
+    SmartDashboard.putNumber("Drive//GyroYaw", getYaw().getDegrees());
   }
 
   @Log.NT(key = "SpeakerDistance")
@@ -633,14 +671,14 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   private void putStates() {
 
     double[] realStates = {
-        mSwerveMods[0].getState().angle.getDegrees(),
-        mSwerveMods[0].getState().speedMetersPerSecond,
-        mSwerveMods[1].getState().angle.getDegrees(),
-        mSwerveMods[1].getState().speedMetersPerSecond,
-        mSwerveMods[2].getState().angle.getDegrees(),
-        mSwerveMods[2].getState().speedMetersPerSecond,
-        mSwerveMods[3].getState().angle.getDegrees(),
-        mSwerveMods[3].getState().speedMetersPerSecond
+        round2dp(mSwerveMods[0].getState().angle.getDegrees(), 2),
+        round2dp(mSwerveMods[0].getState().speedMetersPerSecond, 2),
+        round2dp(mSwerveMods[1].getState().angle.getDegrees(), 2),
+        round2dp(mSwerveMods[1].getState().speedMetersPerSecond, 2),
+        round2dp(mSwerveMods[2].getState().angle.getDegrees(), 2),
+        round2dp(mSwerveMods[2].getState().speedMetersPerSecond, 2),
+        round2dp(mSwerveMods[3].getState().angle.getDegrees(), 2),
+        round2dp(mSwerveMods[3].getState().speedMetersPerSecond, 2)
     };
 
     double[] theoreticalStates = {
@@ -658,6 +696,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     desbuff = theoreticalStates;
 
     SmartDashboard.putNumber("Drive//KeepAngle", keepAngle);
+  }
+
+  public void setFromTo(int from, int to) {
+    fromLocation = from;
+    toLocation = to;
   }
 
   public static double round2dp(double number, int dp) {
