@@ -4,8 +4,6 @@
 
 package frc.robot.Factories;
 
-import org.ejml.ops.FConvertArrays;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.GeometryUtil;
@@ -13,11 +11,9 @@ import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -120,9 +116,11 @@ public class CommandFactory implements Logged {
                                 () -> Commands.none(),
                                 () -> {
                                         m_shooter.startShooter(
-                                                        Constants.shooterLobRPMMap.get(m_swerve.getDistanceFromLobTarget()));
+                                                        Constants.shooterLobRPMMap
+                                                                        .get(m_swerve.getDistanceFromLobTarget()));
                                         m_arm.setGoal(Units.degreesToRadians(
-                                                        Constants.armLobAngleMap.get(m_swerve.getDistanceFromLobTarget())));
+                                                        Constants.armLobAngleMap
+                                                                        .get(m_swerve.getDistanceFromLobTarget())));
                                 },
                                 (interrupted) -> Commands.none(),
                                 () -> false);
@@ -138,7 +136,7 @@ public class CommandFactory implements Logged {
 
         // @Log.NT(key = "dointakecommand")
         public Command doIntake() {
-                return new ParallelCommandGroup(
+                return Commands.parallel(
                                 m_intake.startIntakeCommand(),
                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
                                 new TransferIntakeToSensor(m_transfer, m_intake, 3));
@@ -242,7 +240,7 @@ public class CommandFactory implements Logged {
         }
 
         public Command resetAll() {
-                return new ParallelCommandGroup(
+                return Commands.parallel(
                                 m_shooter.stopShooterCommand(),
                                 m_intake.stopIntakeCommand(),
                                 m_transfer.stopTransferCommand(),
@@ -252,7 +250,7 @@ public class CommandFactory implements Logged {
         }
 
         public Command doAmpShot() {
-                return new SequentialCommandGroup(
+                return Commands.sequence(
                                 Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
                                 m_arm.setGoalCommand(Units.degreesToRadians(90)),
                                 // new CheckArmAtTarget(m_arm),

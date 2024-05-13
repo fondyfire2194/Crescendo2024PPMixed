@@ -9,7 +9,6 @@ import com.pathplanner.lib.path.PathPlannerPath;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
@@ -38,11 +37,11 @@ public class AutoSourceShootThenCenter extends SequentialCommandGroup {
                                 cf.transferNoteToShooterCommand(),
                                 // move to center note , pick up if there and move to shoot position then shoot
 
-                                new ParallelCommandGroup(
-                                               
+                                Commands.parallel(
+
                                                 new RunPPath(swerve,
                                                                 path),
-                                                new SequentialCommandGroup(
+                                                Commands.sequence(
                                                                 Commands.waitSeconds(1),
                                                                 cf.doIntake())),
                                 Commands.runOnce(() -> swerve.autostep = 1));

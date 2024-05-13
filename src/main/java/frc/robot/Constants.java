@@ -532,9 +532,6 @@ public final class Constants {
         public static double ampArmAngle = 100;// degrees
         public static double ampShooterSpeed = 700;// rpm
 
-        public static double lobArmAngle = 50;// degrees
-        public static double lobShooterSpeed = 2800;// rpm
-
         public static double subwfrArmAngle = 60;// degrees
         public static double subwfrShooterSpeed = 3000;// rpm
 

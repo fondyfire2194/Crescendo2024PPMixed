@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
@@ -38,7 +37,6 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
-import monologue.Annotations.Log;
 import monologue.Logged;
 
 public class RobotContainer implements Logged {
@@ -210,8 +208,7 @@ public class RobotContainer implements Logged {
                 codriver.rightTrigger().whileTrue(m_climber.lowerClimberArmsCommand(0.6))
                                 .onFalse(m_climber.stopClimberCommand());
 
-                codriver.rightBumper().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.lobArmAngle,
-                                Constants.lobShooterSpeed));
+              //  codriver.rightBumper().onTrue(
 
                 codriver.a().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                 Constants.subwfrShooterSpeed));

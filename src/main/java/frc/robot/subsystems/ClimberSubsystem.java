@@ -24,8 +24,7 @@ import frc.robot.Pref;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
-
-public class ClimberSubsystem extends SubsystemBase implements Logged{
+public class ClimberSubsystem extends SubsystemBase implements Logged {
   /** Creates a new Climber. */
   CANSparkMax climberMotorLeft;
   CANSparkMax climberMotorRight;
@@ -58,7 +57,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
     encoder.setVelocityConversionFactor(Constants.ClimberConstants.climberConversionVelocityFactor);
     encoder.setPositionConversionFactor(Constants.ClimberConstants.climberConversionPositionFactor);
     motor.enableVoltageCompensation(Constants.ClimberConstants.voltageComp);
-    //motor.setOpenLoopRampRate(3);
+    // motor.setOpenLoopRampRate(3);
     motor.burnFlash();
     encoder.setPosition(0.0);
   }
@@ -67,7 +66,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
   public void periodic() {
     // This method will be called once per scheduler run
 
-     loopctr++;
+    loopctr++;
     if (DriverStation.isDisabled() && loopctr == 50) {
       int temp = 0;
       temp = climberMotorLeft.getDeviceId();
@@ -80,7 +79,6 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
 
     SmartDashboard.putNumber("Climber// Left RPM", getRPMLeft());
     SmartDashboard.putNumber("Climber// Right RPM", getRPMRight());
-
 
     SmartDashboard.putNumber("Climber// Left Amps", climberMotorLeft.getOutputCurrent());
     SmartDashboard.putNumber("Climber// Left Position", climberEncoderLeft.getPosition());
@@ -102,7 +100,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
 
   public void runClimberMotor(double speed) {
     if (getPositionLeft() > 130) {
-      speed = speed*0.5;
+      speed = speed * 0.5;
     }
     climberMotorLeft.setVoltage(speed * RobotController.getBatteryVoltage());
     climberMotorRight.setVoltage(speed * RobotController.getBatteryVoltage());
@@ -110,14 +108,14 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
 
   public void lowerClimber(double speed) {
     // if (climberEncoder.getPosition() > 60) {
-    //   runClimberMotor(speed);
+    // runClimberMotor(speed);
     // } else {
-    //   runClimberMotor(speed * .5);
+    // runClimberMotor(speed * .5);
     // }
     if (getPositionLeft() < 10) {
       runClimberMotor(speed * 0.2);
     } else {
-        runClimberMotor(speed);
+      runClimberMotor(speed);
     }
   }
 
@@ -153,7 +151,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
     return Commands.runOnce(() -> climberMotorLeft.clearFaults());
   }
 
-   public Command clearFaultsRightCommand() {
+  public Command clearFaultsRightCommand() {
     return Commands.runOnce(() -> climberMotorRight.clearFaults());
   }
 
@@ -161,7 +159,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
     return climberMotorLeft.getFaults();
   }
 
-   public int getFaultsRight() {
+  public int getFaultsRight() {
     return climberMotorRight.getFaults();
   }
 
@@ -169,7 +167,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
     return climberMotorLeft.getStickyFaults();
   }
 
-    public int getStickyFaultsRight() {
+  public int getStickyFaultsRight() {
     return climberMotorRight.getStickyFaults();
   }
 
@@ -188,7 +186,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
   }
 
   public Command lockClimberCommand() {
-    return Commands.runOnce(()->lockClimber());
+    return Commands.runOnce(() -> lockClimber());
   }
 
   public void unlockClimber() {
@@ -196,10 +194,10 @@ public class ClimberSubsystem extends SubsystemBase implements Logged{
   }
 
   public Command unlockClimberCommand() {
-    return Commands.runOnce(()->unlockClimber());
+    return Commands.runOnce(() -> unlockClimber());
   }
 
   public Command clearFaultsCommand() {
-    return new SequentialCommandGroup(clearFaultsLeftCommand(), clearFaultsRightCommand());
+    return Commands.sequence(clearFaultsLeftCommand(), clearFaultsRightCommand());
   }
 }
