@@ -10,12 +10,9 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.CameraConstants.CameraValues;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.LimelightVision;
-
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TransferSubsystem;
 
 public class AlignToNote extends Command {
   /** Creates a new AlignToTagSetShootSpeed. */
@@ -30,26 +27,23 @@ public class AlignToNote extends Command {
   private SlewRateLimiter rotationLimiter = new SlewRateLimiter(3.0);
 
   private final SwerveSubsystem m_swerve;
-  private final TransferSubsystem m_transfer;
-  private final CameraValues m_camval;
+  private final String m_camname;
   private final LimelightVision m_llv;
 
   private double rotationVal;
 
   public AlignToNote(
       SwerveSubsystem swerve,
-      TransferSubsystem transfer,
       LimelightVision llv,
+      String camname,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
-      DoubleSupplier rotSup,
-      CameraValues camval)
+      DoubleSupplier rotSup)
 
   {
     m_swerve = swerve;
     m_llv = llv;
-    m_transfer = transfer;
-    m_camval = camval;
+    m_camname = camname;
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
     this.rotationSup = rotSup;
@@ -76,15 +70,16 @@ public class AlignToNote extends Command {
 
     // get horizontal angle
 
-    if (LimelightHelpers.getTV(m_camval.camname)) {
+    if (LimelightHelpers.getTV(m_camname)) {
 
-      double angleError = LimelightHelpers.getTX(m_camval.camname);
+      double angleError = LimelightHelpers.getTX(m_camname);
 
-      double distanceApprox = LimelightHelpers.getTY(m_camval.camname);
+      double distanceApprox = LimelightHelpers.getTY(m_camname);
 
       rotationVal = m_swerve.m_alignNotePID.calculate(angleError, 0);
 
     }
+
     /* Drive */
     m_swerve.drive(
         translationVal *= Constants.SwerveConstants.kmaxSpeed,
@@ -103,6 +98,6 @@ public class AlignToNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transfer.noteAtIntake();
+    return false;
   }
 }

@@ -125,10 +125,10 @@ public class RobotContainer implements Logged {
 
                 // KEEP IN BUTTON ORDER
 
-                fieldRelative = driver.a().negate();
+                fieldRelative = driver.y().negate().and(driver.rightBumper().negate());
 
                 keepAngle = () -> false;
-//align for speaker shots
+                // align for speaker shots
                 driver.leftTrigger().whileTrue(
                                 Commands.parallel(
                                                 new AlignTargetOdometry(
@@ -137,16 +137,37 @@ public class RobotContainer implements Logged {
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), true),
                                                 m_cf.positionArmRunShooterByDistance()));
-//pick up notes
+                // pick up notes
                 driver.rightBumper().onTrue(
                                 Commands.sequence(
                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
                                                 Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                                m_intake.startIntakeCommand(),
+                                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
+                                                m_cf.rumbleCommand(driver)));
+
+                // pick up notes with vision align
+                driver.rightBumper().and(driver.a()).onTrue(
+                                Commands.sequence(
+                                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
+                                                Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                                m_intake.startIntakeCommand(),
                                                 Commands.deadline(
                                                                 new TransferIntakeToSensor(m_transfer, m_intake, 120),
-                                                                m_intake.startIntakeCommand()),
-                                                m_cf.rumbleCommand(driver)));
-//align with amp corner for lob shots
+                                                                Commands.deadline(
+                                                                                new TransferIntakeToSensor(m_transfer,
+                                                                                                m_intake, 120),
+                                                                                new AlignToNote(
+                                                                                                m_swerve,
+                                                                                                m_llv,
+                                                                                                CameraConstants.rearCamera.camname,
+                                                                                                () -> -driver.getLeftY(),
+                                                                                                () -> driver.getLeftX(),
+                                                                                                () -> driver.getRightX())),
+
+                                                                m_cf.rumbleCommand(driver))));
+
+                // align with amp corner for lob shots
                 driver.leftBumper().whileTrue(
                                 Commands.parallel(
                                                 new AlignTargetOdometry(
@@ -155,13 +176,13 @@ public class RobotContainer implements Logged {
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), false),
                                                 m_cf.positionArmRunShooterByDistanceLob()));
-//shoot
+                // shoot
                 driver.rightTrigger().onTrue(
-                        Commands.sequence(
-                                m_transfer.transferToShooterCommand(),
-                                m_shooter.stopShooterCommand(),
-                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
-                                m_intake.stopIntakeCommand()));
+                                Commands.sequence(
+                                                m_transfer.transferToShooterCommand(),
+                                                m_shooter.stopShooterCommand(),
+                                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
+                                                m_intake.stopIntakeCommand()));
 
                 driver.b().onTrue(m_shooter.stopShooterCommand());
 
@@ -174,7 +195,7 @@ public class RobotContainer implements Logged {
 
                 driver.x().onTrue(m_shooter.startShooterCommand(3500));
 
-                driver.y().onTrue(m_cf.doAmpShot());
+                driver.a().onTrue(m_cf.doAmpShot());
 
                 driver.povUp().onTrue(m_shooter.increaseRPMCommand(100));
 
@@ -186,11 +207,7 @@ public class RobotContainer implements Logged {
 
                 driver.start().onTrue(Commands.runOnce(() -> m_swerve.zeroGyro()));
 
-                driver.back().whileTrue(new AlignToNote(m_swerve, m_transfer, m_llv,
-                                () -> -driver.getLeftY(),
-                                () -> driver.getLeftX(),
-                                () -> driver.getRightX(),
-                                CameraConstants.rearCamera));
+                // driver.back().
 
         }
 
@@ -208,7 +225,7 @@ public class RobotContainer implements Logged {
                 codriver.rightTrigger().whileTrue(m_climber.lowerClimberArmsCommand(0.6))
                                 .onFalse(m_climber.stopClimberCommand());
 
-              //  codriver.rightBumper().onTrue(
+                // codriver.rightBumper().onTrue(
 
                 codriver.a().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                 Constants.subwfrShooterSpeed));

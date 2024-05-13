@@ -183,7 +183,6 @@ public class TriggerCommandFactory implements Logged {
 
                 firstNoteToSecondNoteSource.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
-                                // new TurnToNote(true, m_swerve),
                                 new FindNote(m_swerve, true, m_llv, CameraConstants.rearCamera.camname),
                                 m_intake.startIntakeCommand(),
                                 Commands.parallel(

@@ -27,7 +27,6 @@ import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.commands.ArmShooterByDistance;
 import frc.robot.utils.LLPipelines;
 import monologue.Annotations.Log;
 import monologue.Logged;

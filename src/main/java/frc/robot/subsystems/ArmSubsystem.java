@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import java.util.Map;
-
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.revrobotics.CANSparkBase.FaultID;
 import com.revrobotics.CANSparkBase.IdleMode;
@@ -33,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.lib.util.CANSparkMaxUtil;
@@ -138,8 +137,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                     Units.radiansToDegrees(getCurrentGoal()),
                     6,
                     new Color8Bit(Color.kRed)));
-
+    @Log.NT(key = "usemotorencoder")
     private boolean useMotorEncoder;
+
+    Trigger setMotorEncoderToCancoder;
 
     public ArmSubsystem() {
         super(
@@ -167,9 +168,11 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         armfeedforward = new ArmFeedforward(ArmConstants.armKs, ArmConstants.armKg, ArmConstants.armKv,
                 ArmConstants.armKa);
 
-        armEncoder.setPosition(Units.degreesToRadians(ArmConstants.armMinRadians));
+        setUseMotorEncoder(false);
 
-        setGoal(Units.degreesToRadians(18)); // 15
+        presetArmEncoderToCancoder();
+
+        setGoal(getCanCoderRad());
         // pid.setIZone(Units.degreesToRadians(.5));
         // pid.setIntegratorRange(-Units.degreesToRadians(.1),
         // Units.degreesToRadians(.1));
@@ -178,6 +181,12 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
         SmartDashboard.putData("Arm//Arm Sim", m_mech2d);
         m_armTower.setColor(new Color8Bit(Color.kBlue));
+
+        setMotorEncoderToCancoder = new Trigger(
+                () -> isStopped() && !useMotorEncoder && getCurrentGoal() == ArmConstants.armMinRadians
+                        && getAtSetpoint());
+
+        setMotorEncoderToCancoder.onTrue(Commands.runOnce(() -> presetArmEncoderToCancoder()));
     }
 
     private void configMotor(CANSparkMax motor, RelativeEncoder encoder, boolean reverse) {
@@ -374,6 +383,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         return useMotorEncoder;
     }
 
+    private void presetArmEncoderToCancoder() {
+        armEncoder.setPosition(getCanCoderRad());
+    }
+
     @Log.NT(key = "armdegs")
     public double getAngleDegrees() {
         return Units.radiansToDegrees(getAngleRadians());
@@ -381,8 +394,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     @Log.NT(key = "armatsetpoint")
     public boolean getAtSetpoint() {
-        return Math.abs(getCurrentGoal() - getAngleRadians()) < angleTolerance;
-
+        return isStopped() && Math.abs(getCurrentGoal() - getAngleRadians()) < angleTolerance;
     }
 
     public double getVoltsPerRadPerSec() {
@@ -490,6 +502,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     public double getCanCoderRadPerSec() {
         return armCancoder.getVelocity().getValueAsDouble() * Math.PI;
+    }
+
+    public boolean isStopped() {
+        return Math.abs(getCanCoderRadPerSec()) < Units.degreesToRadians(1);
     }
 
     public int getCanCoderID() {

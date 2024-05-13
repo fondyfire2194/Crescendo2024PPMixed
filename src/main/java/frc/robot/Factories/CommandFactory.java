@@ -251,25 +251,29 @@ public class CommandFactory implements Logged {
 
         public Command doAmpShot() {
                 return Commands.sequence(
-                                Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
-                                m_arm.setGoalCommand(Units.degreesToRadians(90)),
-                                // new CheckArmAtTarget(m_arm),
-                                m_arm.setGoalCommand(Units.degreesToRadians(Pref.getPref("AmpArmDegrees"))),
                                 m_shooter.startShooterCommand(
                                                 Pref.getPref("AmpTopRPM"), Pref.getPref("AmpBottomRPM")),
-                                // new CheckShooterAtSpeed(m_shooter, .05),
-                                // new CheckArmAtTarget(m_arm),
+                                m_arm.setGoalCommand(ArmConstants.armMinRadians),
+                                Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
+                                m_arm.setGoalCommand(Units.degreesToRadians(90)),
+                                Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                m_arm.setGoalCommand(Units.degreesToRadians(Pref.getPref("AmpArmDegrees"))),
+                                Commands.none().until(() -> m_arm.getAtSetpoint()),
                                 Commands.parallel(
                                                 m_transfer.transferToShooterCommand(),
-                                                new WaitCommand(Pref.getPref("AmpArmIncrementDelay")),
-                                                m_arm.setGoalCommand(
-                                                                Units.degreesToRadians(Pref.getPref("AmpArmDegrees")) +
+                                                Commands.sequence(
+                                                                new WaitCommand(Pref.getPref("AmpArmIncrementDelay")),
+                                                                m_arm.setGoalCommand(
                                                                                 Units.degreesToRadians(Pref.getPref(
-                                                                                                "AmpDegreeIncrement"))),
+                                                                                                "AmpArmDegrees"))
+                                                                                                + Units.degreesToRadians(
+                                                                                                                Pref.getPref("AmpDegreeIncrement")))),
                                                 new WaitCommand(1)),
-
                                 Commands.parallel(
                                                 m_shooter.stopShooterCommand(),
-                                                m_arm.setGoalCommand(ArmConstants.armMinRadians)));
+                                                m_arm.setGoalCommand(ArmConstants.armMinRadians),
+                                                Commands.none().until(() -> m_arm.getAtSetpoint())),
+                                Commands.runOnce(() -> m_arm.setUseMotorEncoder(false)));
         }
 }
