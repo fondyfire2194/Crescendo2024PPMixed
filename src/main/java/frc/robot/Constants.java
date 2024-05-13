@@ -308,15 +308,6 @@ public final class Constants {
                 }
         }
 
-        public static Pose2d getActiveLobPose() {
-                if (DriverStation.getAlliance().isPresent()
-                                && DriverStation.getAlliance().get() == Alliance.Red)
-                        return FieldConstants.lobRedAlliance;
-                else
-                        return FieldConstants.lobBlueAlliance;
-
-        }
-
         public static final class AprilTagConstants {
                 @Log.NT(key = "apriltaglayout")
                 public static AprilTagFieldLayout layout;
@@ -497,7 +488,7 @@ public final class Constants {
                 shotTimeMap.put(Units.inchesToMeters(280.), 0.83);
         }
 
-        /** Arm angle look up table key: meters, values: degrees */
+        /** Shooter look up table key: meters, values: rpm */
         public static final InterpolatingDoubleTreeMap shooterRPMMap = new InterpolatingDoubleTreeMap();
         static {
                 shooterRPMMap.put(distance_0, 3000.);
@@ -516,6 +507,26 @@ public final class Constants {
                 shooterRPMMap.put(distance_13, 4250.);
                 shooterRPMMap.put(distance_14, 4500.);
                 shooterRPMMap.put(distance_15, 4600.);
+        }
+
+        public static final InterpolatingDoubleTreeMap armLobAngleMap = new InterpolatingDoubleTreeMap();
+
+        static {
+                armLobAngleMap.put(distance_7, 32.0);
+                armLobAngleMap.put(distance_8, 30.0);
+                armLobAngleMap.put(distance_9, 28.0);
+                armLobAngleMap.put(distance_10, 27.0); // 27
+
+        }
+        /** Shooter look up table key: meters, values: rpm */
+        public static final InterpolatingDoubleTreeMap shooterLobRPMMap = new InterpolatingDoubleTreeMap();
+        static {
+                shooterLobRPMMap.put(distance_7, 3500.);
+                shooterLobRPMMap.put(distance_8, 3500.);
+                shooterLobRPMMap.put(distance_9, 3500.);
+                shooterLobRPMMap.put(distance_10, 3750.);
+                shooterLobRPMMap.put(distance_11, 4000.);
+                shooterLobRPMMap.put(distance_12, 4000.);
         }
 
         public static double ampArmAngle = 100;// degrees
@@ -582,7 +593,7 @@ public final class Constants {
                 public static final int armContinuousCurrentLimit = 40;
                 public static double armMinRadians = Units.degreesToRadians(15);
                 public static double armMaxRadians = Units.degreesToRadians(75);
-                public static double pickupAngle = Units.degreesToRadians(25);
+                public static double pickupAngleRadians = Units.degreesToRadians(25);
                 public static double midRange = Units.degreesToRadians(35);
 
                 public static double kTrapVelocityRadPerSecond = Units.degreesToRadians(90);

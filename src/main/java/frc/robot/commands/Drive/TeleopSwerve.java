@@ -13,7 +13,7 @@ public class TeleopSwerve extends Command {
   private DoubleSupplier translationSup;
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
-  private BooleanSupplier fieldCentric;
+  private BooleanSupplier fieldRelative;
   private BooleanSupplier keepAngle;
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
@@ -24,7 +24,7 @@ public class TeleopSwerve extends Command {
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
       DoubleSupplier rotationSup,
-      BooleanSupplier fieldCentric,
+      BooleanSupplier fieldRelative,
       BooleanSupplier keepAngle) {
     this.s_Swerve = s_Swerve;
     addRequirements(s_Swerve);
@@ -32,7 +32,7 @@ public class TeleopSwerve extends Command {
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
     this.rotationSup = rotationSup;
-    this.fieldCentric = fieldCentric;
+    this.fieldRelative = fieldRelative;
     this.keepAngle = keepAngle;
   }
 
@@ -48,20 +48,12 @@ public class TeleopSwerve extends Command {
 
     /* Drive */
     s_Swerve.drive(
-
         translationVal *= Constants.SwerveConstants.kmaxSpeed,
         strafeVal *= Constants.SwerveConstants.kmaxSpeed,
         rotationVal *= Constants.SwerveConstants.kmaxAngularVelocity,
-        !fieldCentric.getAsBoolean(),
+        fieldRelative.getAsBoolean(),
         true,
-        keepAngle.getAsBoolean());
-
-    // SmartDashboard.putBoolean("FieldCentric", fieldCentric.getAsBoolean());
-    // SmartDashboard.putNumber("TransVal", translationVal);
-    // SmartDashboard.putNumber("StrafeVal", strafeVal);
-    // SmartDashboard.putNumber("RotVal", rotationVal);
-  
-    
+        keepAngle.getAsBoolean());   
 
   }
 }

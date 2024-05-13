@@ -98,8 +98,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     private double activeKv;
 
     private double lastGoal;
-    @Log.NT(key = "armatsetpoint")
-    public boolean armAtSetpoint;
+
     @Log.NT(key = "simanglerads")
     private double simAngleRads;
 
@@ -284,21 +283,31 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         angleTolerance = tolerance;
     }
 
+    private double checkArmLimits(double val) {
+        double temp = 0;
+        if (val >= ArmConstants.armMaxRadians)
+            temp = ArmConstants.armMaxRadians;
+        if (val <= ArmConstants.armMinRadians)
+            temp = ArmConstants.armMinRadians;
+        return temp;
+    }
+
     public Command setGoalCommand(double angleRads) {
+        double armrads = checkArmLimits(angleRads);
         return Commands.sequence(
                 runOnce(() -> setTolerance(ArmConstants.angleTolerance)),
                 runOnce(() -> resetController()),
-                runOnce(() -> setGoal(angleRads)),
+                runOnce(() -> setGoal(armrads)),
                 runOnce(() -> enable()));
-
     }
 
     public Command setGoalCommand(double angleRads, double tolerance) {
+        double armrads = checkArmLimits(angleRads);
         return Commands.sequence(
                 Commands.runOnce(() -> angleTolerance = Units.degreesToRadians(tolerance)),
-                Commands.runOnce(() -> getController().reset(getAngleRadians())),
-                Commands.run(() -> setUpDownKv(angleRads)),
-                Commands.runOnce(() -> setGoal(angleRads)),
+                Commands.runOnce(() -> resetController()),
+                Commands.runOnce(() -> setUpDownKv(armrads)),
+                Commands.runOnce(() -> setGoal(armrads)),
                 Commands.runOnce(() -> enable()));
     }
 
@@ -306,7 +315,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         return Commands.sequence(
                 setGoalCommand(Units.degreesToRadians(20)),
                 new WaitCommand(1),
-                setGoalCommand(ArmConstants.pickupAngle));
+                setGoalCommand(ArmConstants.pickupAngleRadians));
     }
 
     public void setUpDownKv(double rads) {
@@ -357,11 +366,11 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             return simAngleRads;
     }
 
-    public void setUseMotorEncoder(boolean on){
-        useMotorEncoder=on;
+    public void setUseMotorEncoder(boolean on) {
+        useMotorEncoder = on;
     }
 
-    public boolean getUseMotorEncoder(){
+    public boolean getUseMotorEncoder() {
         return useMotorEncoder;
     }
 
@@ -370,9 +379,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         return Units.radiansToDegrees(getAngleRadians());
     }
 
-    public boolean atSetpoint() {
-        armAtSetpoint = Math.abs(getCurrentGoal() - getAngleRadians()) < angleTolerance;
-        return armAtSetpoint;
+    @Log.NT(key = "armatsetpoint")
+    public boolean getAtSetpoint() {
+        return Math.abs(getCurrentGoal() - getAngleRadians()) < angleTolerance;
+
     }
 
     public double getVoltsPerRadPerSec() {

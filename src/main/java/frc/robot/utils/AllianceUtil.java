@@ -40,4 +40,8 @@ public class AllianceUtil {
   public static Pose2d getSpeakerPose() {
     return isRedAlliance() ? FieldConstants.speakerRedAlliance : FieldConstants.speakerBlueAlliance;
   }
+
+  public static Pose2d getLobPose() {
+    return isRedAlliance() ? FieldConstants.lobRedAlliance : FieldConstants.lobBlueAlliance;
+  }
 }

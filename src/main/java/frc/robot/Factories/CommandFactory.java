@@ -4,6 +4,8 @@
 
 package frc.robot.Factories;
 
+import org.ejml.ops.FConvertArrays;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.GeometryUtil;
@@ -11,6 +13,7 @@ import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -26,13 +29,11 @@ import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
 import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
-import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenter4Pathfind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenter4Vision;
-import frc.robot.commands.Shooter.CheckShooterAtSpeed;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -101,21 +102,37 @@ public class CommandFactory implements Logged {
                                 0);
         }
 
-        public Command positionArmRunShooterByDistance(double distance) {
-                return new ParallelCommandGroup(
-                                m_arm.setGoalCommand(Units.degreesToRadians(Constants.armAngleMap.get(distance))),
-                                new CheckArmAtTarget(m_arm),
-                                m_shooter.startShooterCommand(Constants.shooterRPMMap.get(distance)),
-                                new CheckShooterAtSpeed(m_shooter, .2));
+        public Command positionArmRunShooterByDistance() {
+                return new FunctionalCommand(
+                                () -> Commands.none(),
+                                () -> {
+                                        m_shooter.startShooter(
+                                                        Constants.shooterRPMMap.get(m_swerve.getDistanceFromSpeaker()));
+                                        m_arm.setGoal(Units.degreesToRadians(
+                                                        Constants.armAngleMap.get(m_swerve.getDistanceFromSpeaker())));
+                                },
+                                (interrupted) -> Commands.none(),
+                                () -> false);
+        }
+
+        public Command positionArmRunShooterByDistanceLob() {
+                return new FunctionalCommand(
+                                () -> Commands.none(),
+                                () -> {
+                                        m_shooter.startShooter(
+                                                        Constants.shooterLobRPMMap.get(m_swerve.getDistanceFromLobTarget()));
+                                        m_arm.setGoal(Units.degreesToRadians(
+                                                        Constants.armLobAngleMap.get(m_swerve.getDistanceFromLobTarget())));
+                                },
+                                (interrupted) -> Commands.none(),
+                                () -> false);
         }
 
         // @Log.NT(key = "posarmrunshootercommand")
         public Command positionArmRunShooterSpecialCase(double armAngleDeg, double shooterSpeed) {
                 return Commands.parallel(
                                 m_arm.setGoalCommand(Units.degreesToRadians(armAngleDeg)),
-                                new CheckArmAtTarget(m_arm),
-                                m_shooter.startShooterCommand(shooterSpeed),
-                                new CheckShooterAtSpeed(m_shooter, .2));
+                                m_shooter.startShooterCommand(shooterSpeed));
 
         }
 
@@ -123,7 +140,7 @@ public class CommandFactory implements Logged {
         public Command doIntake() {
                 return new ParallelCommandGroup(
                                 m_intake.startIntakeCommand(),
-                                m_arm.setGoalCommand(ArmConstants.pickupAngle),
+                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
                                 new TransferIntakeToSensor(m_transfer, m_intake, 3));
         }
 
@@ -229,7 +246,7 @@ public class CommandFactory implements Logged {
                                 m_shooter.stopShooterCommand(),
                                 m_intake.stopIntakeCommand(),
                                 m_transfer.stopTransferCommand(),
-                                m_arm.setGoalCommand(ArmConstants.pickupAngle)
+                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians)
                                                 .withName("Reset All"))
                                 .asProxy();
         }
@@ -238,12 +255,12 @@ public class CommandFactory implements Logged {
                 return new SequentialCommandGroup(
                                 Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
                                 m_arm.setGoalCommand(Units.degreesToRadians(90)),
-                                new CheckArmAtTarget(m_arm),
+                                // new CheckArmAtTarget(m_arm),
                                 m_arm.setGoalCommand(Units.degreesToRadians(Pref.getPref("AmpArmDegrees"))),
                                 m_shooter.startShooterCommand(
                                                 Pref.getPref("AmpTopRPM"), Pref.getPref("AmpBottomRPM")),
-                                new CheckShooterAtSpeed(m_shooter, .05),
-                                new CheckArmAtTarget(m_arm),
+                                // new CheckShooterAtSpeed(m_shooter, .05),
+                                // new CheckArmAtTarget(m_arm),
                                 Commands.parallel(
                                                 m_transfer.transferToShooterCommand(),
                                                 new WaitCommand(Pref.getPref("AmpArmIncrementDelay")),

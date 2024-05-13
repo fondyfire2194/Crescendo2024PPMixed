@@ -26,15 +26,10 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.TriggerCommandFactory;
 import frc.robot.commands.JogClimber;
-import frc.robot.commands.Arm.CheckArmAtTarget;
 import frc.robot.commands.Drive.AlignTargetOdometry;
-import frc.robot.commands.Drive.AlignTargetOdometryLob;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
-import frc.robot.commands.Shooter.CheckShooterAtSpeed;
-import frc.robot.commands.Shooter.LobShoot;
-import frc.robot.commands.Shooter.ShootFromDistance;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -43,6 +38,7 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import monologue.Annotations.Log;
 import monologue.Logged;
 
 public class RobotContainer implements Logged {
@@ -85,13 +81,13 @@ public class RobotContainer implements Logged {
         public final TriggerCommandFactory m_tcf = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
                         m_llv, m_pf, m_cf);
 
-        BooleanSupplier fieldCentric;
-
         BooleanSupplier keepAngle;
 
         public boolean checkCAN;
 
         private String commandname;
+
+        public BooleanSupplier fieldRelative;
 
         public RobotContainer() {
 
@@ -131,50 +127,46 @@ public class RobotContainer implements Logged {
 
                 // KEEP IN BUTTON ORDER
 
-                fieldCentric = driver.a();
+                fieldRelative = driver.a().negate();
+
                 keepAngle = () -> false;
-
-                driver.leftTrigger().whileTrue(new ParallelCommandGroup(new AlignTargetOdometry(
-                                m_swerve,
-                                () -> -driver.getLeftY(),
-                                () -> driver.getLeftX(),
-                                () -> driver.getRightX()),
-                                // .alongWith(m_cf.rumbleCommand(driver)),
-                                new ShootFromDistance(m_shooter, m_swerve, m_arm)));
-
-                driver.rightBumper().onTrue(Commands.parallel(
-                                m_intake.startIntakeCommand(),
-                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
-                                m_cf.rumbleCommand(driver),
-                                m_arm.setGoalCommand(ArmConstants.pickupAngle))
-                                .withTimeout(10)
-                                .andThen(m_arm.setGoalCommand(Units.degreesToRadians(19))));
-
-                // driver.leftBumper().whileTrue(new ParallelCommandGroup(new
-                // AlignTargetOdometry(
-                // m_swerve,
-                // () -> -driver.getLeftY(),
-                // () -> driver.getLeftX(),
-                // () -> driver.getRightX()),
-                // // .alongWith(m_cf.rumbleCommand(driver)),
-                // new LobShoot(m_shooter, m_swerve)))
-                // .onTrue(m_arm.setGoalCommand(Units.degreesToRadians(Constants.lobArmAngle)));
-                driver.leftBumper().whileTrue(new AlignTargetOdometryLob(
-                                m_swerve,
-                                () -> -driver.getLeftY(),
-                                () -> driver.getLeftX(),
-                                () -> driver.getRightX()));
-                // .onTrue(m_arm.setGoalCommand(Units.degreesToRadians(Constants.lobArmAngle)));
-
-                driver.rightTrigger().onTrue(Commands.sequence(
+//align for speaker shots
+                driver.leftTrigger().whileTrue(
+                                Commands.parallel(
+                                                new AlignTargetOdometry(
+                                                                m_swerve,
+                                                                () -> -driver.getLeftY(),
+                                                                () -> driver.getLeftX(),
+                                                                () -> driver.getRightX(), true),
+                                                m_cf.positionArmRunShooterByDistance()));
+//pick up notes
+                driver.rightBumper().onTrue(
+                                Commands.sequence(
+                                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
+                                                Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                                Commands.deadline(
+                                                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
+                                                                m_intake.startIntakeCommand()),
+                                                m_cf.rumbleCommand(driver)));
+//align with amp corner for lob shots
+                driver.leftBumper().whileTrue(
+                                Commands.parallel(
+                                                new AlignTargetOdometry(
+                                                                m_swerve,
+                                                                () -> -driver.getLeftY(),
+                                                                () -> driver.getLeftX(),
+                                                                () -> driver.getRightX(), false),
+                                                m_cf.positionArmRunShooterByDistanceLob()));
+//shoot
+                driver.rightTrigger().onTrue(
+                        Commands.sequence(
                                 m_transfer.transferToShooterCommand(),
-                                // new WaitCommand(3),
                                 m_shooter.stopShooterCommand(),
-                                m_arm.setGoalCommand(ArmConstants.pickupAngle),
+                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
                                 m_intake.stopIntakeCommand()));
 
-                // driver.b().onTrue(m_shooter.stopShooterCommand());
-                driver.b().onTrue(m_cf.doAmpShot());
+                driver.b().onTrue(m_shooter.stopShooterCommand());
+
                 // driver.b().onTrue(new ShootWhileMoving(m_arm, m_transfer, m_shooter,
                 // m_swerve,
                 // () -> -driver.getLeftY(),
@@ -184,14 +176,7 @@ public class RobotContainer implements Logged {
 
                 driver.x().onTrue(m_shooter.startShooterCommand(3500));
 
-                driver.y().onTrue(Commands.sequence(
-                                new ShootFromDistance(m_shooter, m_swerve, m_arm).withTimeout(0.1),
-                                new CheckShooterAtSpeed(m_shooter, .2),
-                                new CheckArmAtTarget(m_arm),
-                                m_transfer.transferToShooterCommand(),
-                                m_shooter.stopShooterCommand(),
-                                m_arm.setGoalCommand(ArmConstants.pickupAngle),
-                                m_intake.stopIntakeCommand()));
+                driver.y().onTrue(m_cf.doAmpShot());
 
                 driver.povUp().onTrue(m_shooter.increaseRPMCommand(100));
 
@@ -237,16 +222,7 @@ public class RobotContainer implements Logged {
                 codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,
                                 Constants.tapeLineShooterSpeed));
 
-                // codriver.y().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.allianceLineArmAngle,
-                // Constants.allianceLineShooterSpeed));
-                codriver.y().whileTrue(new ParallelCommandGroup(new AlignTargetOdometry(
-                                m_swerve,
-                                () -> -driver.getLeftY(),
-                                () -> driver.getLeftX(),
-                                () -> driver.getRightX()),
-                                // .alongWith(m_cf.rumbleCommand(driver)),
-                                new LobShoot(m_shooter, m_swerve)))
-                                .onTrue(m_arm.setGoalCommand(Units.degreesToRadians(Constants.lobArmAngle)));
+                // codriver.y().whileTrue(
 
                 codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
 
@@ -318,7 +294,7 @@ public class RobotContainer implements Logged {
                                                 () -> -driver.getLeftY(),
                                                 () -> -driver.getLeftX(),
                                                 () -> -driver.getRawAxis(4),
-                                                fieldCentric,
+                                                fieldRelative,
                                                 keepAngle));
         }
 
@@ -358,7 +334,7 @@ public class RobotContainer implements Logged {
                                                 .withName("Transfer Stop"));
 
                 NamedCommands.registerCommand("Arm To Intake",
-                                m_arm.setGoalCommand(ArmConstants.pickupAngle).asProxy()
+                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians).asProxy()
                                                 .withName("ArmToIntake"));
 
                 // NamedCommands.registerCommand("Shooter Low Speed",

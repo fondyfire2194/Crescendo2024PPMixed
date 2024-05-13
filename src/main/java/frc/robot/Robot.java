@@ -13,6 +13,8 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.REVPhysicsSim;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -122,6 +124,8 @@ public class Robot extends TimedRobot implements Logged {
     // This method needs to be called periodically, or no logging annotations will
     // process properly.
     Monologue.updateAll();
+
+    SmartDashboard.putBoolean("FieldRelative", m_robotContainer.fieldRelative.getAsBoolean());
   }
 
   @Override
@@ -137,6 +141,9 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.frUpdate.setLLRobotorientation();
     m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
     m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
+
+    if (RobotBase.isSimulation())
+      m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(0, 0, new Rotation2d(Math.PI)));
 
   }
 
@@ -222,8 +229,8 @@ public class Robot extends TimedRobot implements Logged {
     else
       m_autonomousCommand = m_robotContainer.m_cf.getAutonomousCommand();
 
-    SmartDashboard.putString("AUTOCMS", m_autonomousCommand.toString());
-
+    SmartDashboard.putString("Auto//AUTOCMS", m_autonomousCommand.toString());
+    SmartDashboard.putBoolean("Auto//AutoHasRun", autoHasRun);
     if (!autoHasRun && Timer.getFPGATimestamp() > startTime + m_startDelay
         && m_autonomousCommand != null) {
       m_autonomousCommand.schedule();
@@ -254,6 +261,9 @@ public class Robot extends TimedRobot implements Logged {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    m_robotContainer.m_transfer.simnoteatintake = false;
+
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
     // new ArmShooterByDistance().schedule();
 

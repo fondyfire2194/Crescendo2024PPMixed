@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -24,6 +25,7 @@ public class AlignTargetOdometry extends Command {
   private DoubleSupplier translationSup;
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
+  private boolean speaker;
 
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
@@ -39,11 +41,13 @@ public class AlignTargetOdometry extends Command {
       SwerveSubsystem swerve,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
-      DoubleSupplier rotSup) {
+      DoubleSupplier rotSup,
+      boolean speaker) {
     m_swerve = swerve;
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
     this.rotationSup = rotSup;
+    this.speaker = speaker;
     addRequirements(m_swerve);
   }
 
@@ -66,17 +70,22 @@ public class AlignTargetOdometry extends Command {
         MathUtil.applyDeadband(rotationSup.getAsDouble(), Constants.SwerveConstants.stickDeadband));
 
     // get horizontal angle
-    Pose2d speakerPose = AllianceUtil.getSpeakerPose();
+    Pose2d targetPose = AllianceUtil.getSpeakerPose();
+    if (!speaker)
+      targetPose = AllianceUtil.getLobPose();
+
+    SmartDashboard.putString("LOBPOSE", targetPose.toString());
+
     Pose2d robotPose = m_swerve.getPose();
-    double XDiff = speakerPose.getX() - robotPose.getX();
-    double YDiff = speakerPose.getY() - robotPose.getY();
+    double XDiff = targetPose.getX() - robotPose.getX();
+    double YDiff = targetPose.getY() - robotPose.getY();
     double angleRad = Math.atan2(YDiff, XDiff);
     double angle = Units.radiansToDegrees(angleRad);
 
     double angleError = Math.IEEEremainder(Math.abs(angle - 180), 180);
-    // SmartDashboard.putNumber("AngleError", angleError);
+     SmartDashboard.putNumber("AngleError", angleError);
     double angleErrorRobot = angleError + robotPose.getRotation().getDegrees();
-    // SmartDashboard.putNumber("AngleErrorSign", angleErrorRobot);
+     SmartDashboard.putNumber("AngleErrorSign", angleErrorRobot);
 
     if (DriverStation.getAlliance().isPresent()
         && DriverStation.getAlliance().get() == Alliance.Red) {
@@ -84,7 +93,7 @@ public class AlignTargetOdometry extends Command {
     } else {
       rotationVal = m_alignTargetPID.calculate(angleErrorRobot, 180);
     }
-
+SmartDashboard.putNumber("ROTATVAL", rotationVal);
     m_swerve.drive(
         translationVal *= Constants.SwerveConstants.kmaxSpeed,
         -(strafeVal *= Constants.SwerveConstants.kmaxSpeed),

@@ -44,6 +44,7 @@ import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
 import monologue.Annotations.Log;
 import monologue.Logged;
+import java.util.function.BooleanSupplier;
 
 public class SwerveSubsystem extends SubsystemBase implements Logged {
   // The gyro sensor
@@ -514,7 +515,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-SmartDashboard.putNumber("AUSEp", autostep);
+    SmartDashboard.putNumber("AUSEp", autostep);
     loopctr++;
     if (loopctr == 50 && DriverStation.isDisabled()) {
       boolean check = checkModuleCansOK();
@@ -545,8 +546,14 @@ SmartDashboard.putNumber("AUSEp", autostep);
 
   @Log.NT(key = "SpeakerDistance")
   public double getDistanceFromSpeaker() {
-    return AllianceUtil.getSpeakerPose().getTranslation()
-        .getDistance(getPose().getTranslation());
+    return round2dp(AllianceUtil.getSpeakerPose().getTranslation()
+        .getDistance(getPose().getTranslation()), 2);
+  }
+
+  @Log.NT(key = "AmpDistance")
+  public double getDistanceFromLobTarget() {
+    return round2dp(AllianceUtil.getLobPose().getTranslation()
+        .getDistance(getPose().getTranslation()), 2);
   }
 
   /**

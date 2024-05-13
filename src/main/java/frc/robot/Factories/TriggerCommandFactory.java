@@ -18,6 +18,7 @@ import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.AmpStart.AmpShootToCenterPickup;
 import frc.robot.commands.Autos.SourceStart.CenterToSourceShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
+import frc.robot.commands.Drive.FindNote;
 import frc.robot.commands.Drive.PickUpAlternateNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TurnToNote;
@@ -183,7 +184,7 @@ public class TriggerCommandFactory implements Logged {
                 firstNoteToSecondNoteSource.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
                                 // new TurnToNote(true, m_swerve),
-                                new RotateToAngle(m_swerve, -90),
+                                new FindNote(m_swerve, true, m_llv, CameraConstants.rearCamera.camname),
                                 m_intake.startIntakeCommand(),
                                 Commands.parallel(
                                                 new TransferIntakeToSensor(m_transfer, m_intake, .6),

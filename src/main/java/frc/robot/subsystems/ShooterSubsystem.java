@@ -114,11 +114,13 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   }
 
   public Command startShooterCommand(double rpm) {
-    return Commands.runOnce((() -> startShooter(rpm)));
+    return Commands.run(() -> startShooter(rpm))
+        .until(() -> bothAtSpeed(.2));
   }
 
   public Command startShooterCommand(double toprpm, double bottomrpm) {
-    return Commands.runOnce(() -> startShooter(toprpm, bottomrpm));
+    return Commands.run(() -> startShooter(toprpm, bottomrpm))
+        .until(() -> bothAtSpeed(.2));
   }
 
   public void startShooter(double rpm) {
@@ -161,6 +163,11 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
       return bottomEncoder.getVelocity();
     else
       return bottomSimRPM;
+  }
+
+  public void setCommandRPM(double rpm) {
+    topCommandRPM = rpm;
+    bottomCommandRPM = rpm;
   }
 
   public void increaseShooterRPM(double val) {
