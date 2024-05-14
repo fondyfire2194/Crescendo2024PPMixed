@@ -757,9 +757,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public boolean checkNote;
 
   public double currentpathstartTime;
-  
+
   @Log.NT(key = "alignedtotarget")
   public boolean alignedToTarget;
+  @Log.NT(key = "targetpose")
+  public Pose2d targetPose = new Pose2d();
 
   public void setPathRunning() {
     pathRunning = true;

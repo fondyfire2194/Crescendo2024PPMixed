@@ -11,8 +11,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -36,7 +34,7 @@ public class AlignTargetOdometry extends Command {
   public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
 
   private double rotationVal;
-  private Pose2d targetPose;
+ 
 
   public AlignTargetOdometry(
       SwerveSubsystem swerve,
@@ -58,13 +56,13 @@ public class AlignTargetOdometry extends Command {
     m_alignTargetPID.enableContinuousInput(-180, 180);
     m_alignTargetPID.setTolerance(0.2);
 
-    Pose2d targetPose = AllianceUtil.getSpeakerPose();
+    m_swerve.targetPose = AllianceUtil.getSpeakerPose();
     if (!speaker) {
-      targetPose = AllianceUtil.getLobPose();
+     m_swerve. targetPose = AllianceUtil.getLobPose();
       m_alignTargetPID.setTolerance(1);
     }
 
-    SmartDashboard.putString("LOBPOSE", targetPose.toString());
+    SmartDashboard.putString("TgtPOSE", m_swerve.targetPose.toString());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -81,24 +79,14 @@ public class AlignTargetOdometry extends Command {
     // get horizontal angle
 
     Pose2d robotPose = m_swerve.getPose();
-    double XDiff = targetPose.getX() - robotPose.getX();
-    double YDiff = targetPose.getY() - robotPose.getY();
+    double XDiff = m_swerve.targetPose.getX() - robotPose.getX();
+    double YDiff = m_swerve.targetPose.getY() - robotPose.getY();
     double angleRad = Math.atan2(YDiff, XDiff);
     double angle = Units.radiansToDegrees(angleRad);
 
-    double angleError = Math.IEEEremainder(Math.abs(angle - 180), 180);
-    SmartDashboard.putNumber("AngleError", angleError);
-    double angleErrorRobot = angleError + robotPose.getRotation().getDegrees();
-    SmartDashboard.putNumber("AngleErrorSign", angleErrorRobot);
-
-    if (DriverStation.getAlliance().isPresent()
-        && DriverStation.getAlliance().get() == Alliance.Red) {
-      rotationVal = m_alignTargetPID.calculate(angleErrorRobot, 0);
-    } else {
-      rotationVal = m_alignTargetPID.calculate(angleErrorRobot, 180);
-    }
-    SmartDashboard.putNumber("ROTATVAL", rotationVal);
-    m_swerve.drive(
+    rotationVal = m_alignTargetPID.calculate(robotPose.getRotation().getDegrees(), angle);
+  
+      m_swerve.drive(
         translationVal *= Constants.SwerveConstants.kmaxSpeed,
         -(strafeVal *= Constants.SwerveConstants.kmaxSpeed),
         rotationVal *= Constants.SwerveConstants.kmaxAngularVelocity,
@@ -106,7 +94,7 @@ public class AlignTargetOdometry extends Command {
         true,
         false);
 
-        m_swerve.alignedToTarget= m_alignTargetPID.atSetpoint();
+    m_swerve.alignedToTarget = m_alignTargetPID.atSetpoint();
   }
 
   // Called once the command ends or is interrupted.

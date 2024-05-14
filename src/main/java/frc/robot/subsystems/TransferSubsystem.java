@@ -4,7 +4,6 @@
 
 package frc.robot.subsystems;
 
-
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.FaultID;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -46,11 +45,12 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean simnoteatintake;
   public boolean skipFirstNoteInSim;
   public boolean skipSecondNoteInSim;
-public boolean lobbing;
+  @Log.NT(key = "lobbing")
+  public boolean lobbing;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {
-   
+
     transferMotor = new CANSparkMax(CANIDConstants.transferID, MotorType.kBrushless);
     transferEncoder = transferMotor.getEncoder();
     transferController = transferMotor.getPIDController();
@@ -59,8 +59,6 @@ public boolean lobbing;
 
     m_limitSwitch = transferMotor.getForwardLimitSwitch(SparkLimitSwitch.Type.kNormallyOpen);
     m_limitSwitch.enableLimitSwitch(true);
-
-    
 
   }
 
@@ -94,10 +92,8 @@ public boolean lobbing;
     return Commands.runOnce(() -> stopMotor(), this);
   }
 
-
   public Command transferToShooterCommand() {
-    return
-    Commands.run(() -> transferToShooter())
+    return Commands.run(() -> transferToShooter())
         .withTimeout(TransferConstants.clearShooterTime)
         .andThen(stopTransferCommand());
 
