@@ -46,6 +46,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean simnoteatintake;
   public boolean skipFirstNoteInSim;
   public boolean skipSecondNoteInSim;
+public boolean lobbing;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {

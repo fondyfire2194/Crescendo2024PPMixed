@@ -215,6 +215,10 @@ public final class Constants {
 
                 public static double wheelRadius = Units.inchesToMeters(4) / 2;
 
+                public static double minLobDistance = Units.feetToMeters(20);
+
+                public static double maxLobDistance = Units.feetToMeters(30);
+
         }
 
         public static final class KeepAngle {

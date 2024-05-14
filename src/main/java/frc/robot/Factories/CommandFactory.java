@@ -113,7 +113,7 @@ public class CommandFactory implements Logged {
 
         public Command positionArmRunShooterByDistanceLob() {
                 return new FunctionalCommand(
-                                () -> Commands.none(),
+                                () -> Commands.runOnce(() -> m_transfer.lobbing = true),
                                 () -> {
                                         m_shooter.startShooter(
                                                         Constants.shooterLobRPMMap
@@ -122,7 +122,7 @@ public class CommandFactory implements Logged {
                                                         Constants.armLobAngleMap
                                                                         .get(m_swerve.getDistanceFromLobTarget())));
                                 },
-                                (interrupted) -> Commands.none(),
+                                (interrupted) -> Commands.runOnce(() -> m_transfer.lobbing = false),
                                 () -> false);
         }
 

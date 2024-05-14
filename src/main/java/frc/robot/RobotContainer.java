@@ -11,15 +11,19 @@ import com.pathplanner.lib.auto.NamedCommands;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.event.BooleanEvent;
+import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -87,6 +91,12 @@ public class RobotContainer implements Logged {
 
         public BooleanSupplier fieldRelative;
 
+        private Trigger doLobShot;
+
+        EventLoop checkAutoSelectLoop;
+
+        private BooleanEvent doAutoSetup;
+
         public RobotContainer() {
 
                 registerNamedCommands();
@@ -119,6 +129,25 @@ public class RobotContainer implements Logged {
                 setDefaultCommands();
 
                 m_shooter.setBottomKpKdKi();
+
+                doLobShot = new Trigger(() -> m_transfer.lobbing
+                                && m_transfer.noteAtIntake()
+                                && m_shooter.bothAtSpeed(1)
+                                && m_arm.getAtSetpoint()
+                                && m_swerve.alignedToTarget
+                                && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
+                                && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
+
+                doLobShot.onTrue(m_transfer.transferToShooterCommand());
+
+                m_tcf.createCommonTriggers();
+
+                checkAutoSelectLoop = new EventLoop();
+
+                doAutoSetup = new BooleanEvent(checkAutoSelectLoop, m_af::checkChoiceChange);
+
+                doAutoSetup.ifHigh(() -> doAutoStuff());
+
         }
 
         private void configureDriverBindings() {
@@ -441,5 +470,21 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putData("FrontCameraChooser", m_cameraChooser);
                 SmartDashboard.putData("BatteryChooser", m_batteryChooser);
 
+        }
+
+        void doAutoStuff() {
+                m_af.validStartChoice = m_af.selectAndLoadPathFiles();
+
+                SmartDashboard.putNumber("Auto//ValidStartChoice", m_af.validStartChoice);
+
+                if (m_af.validStartChoice > 10 && m_af.validStartChoice < 20) {
+                        m_tcf.createSourceTriggers();
+                        m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose).runsWhenDisabled();
+                }
+
+                if (m_af.validStartChoice > 20 && m_af.validStartChoice < 30) {
+                        m_tcf.createAmpTriggers();
+                        m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
+                }
         }
 }

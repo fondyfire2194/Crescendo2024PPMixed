@@ -44,7 +44,6 @@ import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
 import monologue.Annotations.Log;
 import monologue.Logged;
-import java.util.function.BooleanSupplier;
 
 public class SwerveSubsystem extends SubsystemBase implements Logged {
   // The gyro sensor
@@ -758,6 +757,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public boolean checkNote;
 
   public double currentpathstartTime;
+  
+  @Log.NT(key = "alignedtotarget")
+  public boolean alignedToTarget;
 
   public void setPathRunning() {
     pathRunning = true;

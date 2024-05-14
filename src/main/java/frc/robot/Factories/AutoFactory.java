@@ -47,8 +47,6 @@ public class AutoFactory implements Logged {
                 m_sourceStartChooser.addOption("C4 Pathfind Then C5", 13);
                 m_sourceStartChooser.addOption("C4 Vision Then C5", 14);
 
-
-
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("C2 then C1", 21);
                 m_ampStartChooser.addOption("C1 then C2", 22);
@@ -63,6 +61,7 @@ public class AutoFactory implements Logged {
 
         }
 
+        // This method is run by an EventLoop in RobotContainer
         public boolean checkChoiceChange() {
 
                 ampChoice = m_ampStartChooser.getSelected();// 20 start
@@ -104,7 +103,6 @@ public class AutoFactory implements Logged {
                 }
 
                 SmartDashboard.putBoolean("Auto//Valid Auto Start Choice", validChoice);
-               
 
                 return finalChoice;
         }
