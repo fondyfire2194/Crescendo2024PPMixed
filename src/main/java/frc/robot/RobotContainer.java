@@ -87,11 +87,11 @@ public class RobotContainer implements Logged {
 
         public boolean checkCAN;
 
-        private String commandname;
-
         public BooleanSupplier fieldRelative;
 
         private Trigger doLobShot;
+        private Trigger doMovingShot;
+        private Trigger doAutoMovingShot;
 
         EventLoop checkAutoSelectLoop;
 
@@ -135,10 +135,29 @@ public class RobotContainer implements Logged {
                                 && m_shooter.bothAtSpeed(1)
                                 && m_arm.getAtSetpoint()
                                 && m_swerve.alignedToTarget
+                                && Math.abs(m_swerve.getSpeeds().vxMetersPerSecond) < 1
                                 && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
                                 && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
 
                 doLobShot.onTrue(m_transfer.transferToShooterCommand());
+
+                doMovingShot = new Trigger(() -> m_transfer.shootmoving
+                                && m_transfer.noteAtIntake()
+                                && m_shooter.bothAtSpeed(1)
+                                && m_arm.getAtSetpoint()
+                                && m_swerve.alignedToTarget
+                                && Math.abs(m_swerve.getSpeeds().vxMetersPerSecond) < 1
+                                && m_swerve.getDistanceFromSpeaker() < SwerveConstants.maxMovingShotDistance);
+
+                doMovingShot.onTrue(m_transfer.transferToShooterCommand());
+
+                doAutoMovingShot = new Trigger(() -> m_transfer.autoShootmoving
+                                && m_transfer.noteAtIntake()
+                                && m_shooter.bothAtSpeed(1)
+                                && m_arm.getAtSetpoint()
+                                && m_swerve.alignedToTarget);
+
+                doAutoMovingShot.onTrue(m_transfer.transferToShooterCommand());
 
                 m_tcf.createCommonTriggers();
 
@@ -146,7 +165,7 @@ public class RobotContainer implements Logged {
 
                 doAutoSetup = new BooleanEvent(checkAutoSelectLoop, m_af::checkChoiceChange);
 
-                doAutoSetup.ifHigh(() -> doAutoStuff());
+                doAutoSetup.ifHigh(() -> setAutoData());
 
         }
 
@@ -478,17 +497,14 @@ public class RobotContainer implements Logged {
 
         }
 
-        void doAutoStuff() {
+        void setAutoData() {
                 m_af.validStartChoice = m_af.selectAndLoadPathFiles();
 
-                SmartDashboard.putNumber("Auto//ValidStartChoice", m_af.validStartChoice);
-
-                if (m_af.validStartChoice > 10 && m_af.validStartChoice < 20) {
+                if (m_af.validStartChoice >= m_af.minsourceauto && m_af.validStartChoice <= m_af.maxsourceauto) {
                         m_tcf.createSourceTriggers();
                         m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose).runsWhenDisabled();
                 }
-
-                if (m_af.validStartChoice > 20 && m_af.validStartChoice < 30) {
+                if (m_af.validStartChoice >= m_af.minampauto && m_af.validStartChoice <= m_af.maxampauto) {
                         m_tcf.createAmpTriggers();
                         m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
                 }

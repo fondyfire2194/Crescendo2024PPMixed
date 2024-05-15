@@ -20,7 +20,7 @@ import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */
-public class CenterToSourceShoot extends SequentialCommandGroup {
+public class CenterToShoot extends SequentialCommandGroup {
 
         public PathPlannerPath getPath(String pathname) {
                 return PathPlannerPath.fromPathFile(pathname);
@@ -35,7 +35,7 @@ public class CenterToSourceShoot extends SequentialCommandGroup {
                 return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
         }
 
-        public CenterToSourceShoot(
+        public CenterToShoot(
                         CommandFactory cf,
                         PathPlannerPath path,
                         SwerveSubsystem swerve) {

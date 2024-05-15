@@ -70,8 +70,6 @@ public class PathFactory implements Logged {
 
     public enum sourcepaths {
         SourceToCenter4,
-        SourceToCenter4ShootMoving,
-        SourceToCenter4ShootMovingVision,
         SourceToCenter5,
         SourceToNearCenter4,
         SourceToNearCenter5,

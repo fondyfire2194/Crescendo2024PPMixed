@@ -82,9 +82,9 @@ public class AlignTargetOdometry extends Command {
     double XDiff = m_swerve.targetPose.getX() - robotPose.getX();
     double YDiff = m_swerve.targetPose.getY() - robotPose.getY();
     double angleRad = Math.atan2(YDiff, XDiff);
-    double angle = Units.radiansToDegrees(angleRad);
+    double currentAngleToSpeaker = Units.radiansToDegrees(angleRad);
 
-    rotationVal = m_alignTargetPID.calculate(robotPose.getRotation().getDegrees(), angle);
+    rotationVal = m_alignTargetPID.calculate(robotPose.getRotation().getDegrees(), currentAngleToSpeaker);
   
       m_swerve.drive(
         translationVal *= Constants.SwerveConstants.kmaxSpeed,

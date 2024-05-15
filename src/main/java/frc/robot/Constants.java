@@ -219,6 +219,8 @@ public final class Constants {
 
                 public static double maxLobDistance = Units.feetToMeters(30);
 
+                public static double maxMovingShotDistance = Units.feetToMeters(30);
+
         }
 
         public static final class KeepAngle {
@@ -323,6 +325,7 @@ public final class Constants {
                                 e.printStackTrace();
                         }
                 }
+
         }
 
         public static final class GlobalConstants {

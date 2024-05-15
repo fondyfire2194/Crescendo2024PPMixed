@@ -35,22 +35,27 @@ public class AutoFactory implements Logged {
         @Log.NT(key = "validstartchoice")
         public int validStartChoice = 0;
         String subwfrdefnam;
+        public int minsourceauto;
+        public int maxsourceauto;
+        public int minampauto;
+        public int maxampauto;
 
         public boolean validChoice;
 
         public AutoFactory(PathFactory pf) {
                 m_pf = pf;
-
+                minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5", 11);
                 m_sourceStartChooser.addOption("Shoot Moving C4 Then C5 ", 12);
                 m_sourceStartChooser.addOption("C4 Pathfind Then C5", 13);
                 m_sourceStartChooser.addOption("C4 Vision Then C5", 14);
-
+                maxsourceauto = 14;
+                minampauto = 21;
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
-                m_ampStartChooser.addOption("C2 then C1", 21);
-                m_ampStartChooser.addOption("C1 then C2", 22);
-
+                m_ampStartChooser.addOption("Shoot C2 then C1", 21);
+                m_ampStartChooser.addOption("Shoot Moving C2 the C1", 22);
+                maxampauto = 22;
                 m_subwfrStartChooser = AutoBuilder.buildAutoChooser();
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);

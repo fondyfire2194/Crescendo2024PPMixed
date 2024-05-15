@@ -45,7 +45,6 @@ public class ShootWhileMoving extends Command implements Logged {
   private final TransferSubsystem m_transfer;
   private final ShooterSubsystem m_shooter;
   private final SwerveSubsystem m_swerve;
-  private LimelightVision m_llv;
 
   public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
   private Pose2d speakerPose;
@@ -78,8 +77,7 @@ public class ShootWhileMoving extends Command implements Logged {
       SwerveSubsystem swerve,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
-      DoubleSupplier rotSup,
-      LimelightVision llv) {
+      DoubleSupplier rotSup) {
     m_arm = arm;
     m_transfer = transfer;
     m_shooter = shooter;
@@ -88,8 +86,6 @@ public class ShootWhileMoving extends Command implements Logged {
     m_strafeSup = strafeSup;
     m_rotationSup = rotSup;
 
-    m_llv = llv;
-
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_swerve);
   }
@@ -97,6 +93,8 @@ public class ShootWhileMoving extends Command implements Logged {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_transfer.shootmoving = true;
+
     m_alignTargetPID.enableContinuousInput(-180, 180);
     m_alignTargetPID.setTolerance(0.2);
 
@@ -131,12 +129,7 @@ public class ShootWhileMoving extends Command implements Logged {
    * Make the shot if the robot, shooter and angle are in range
    * 
    * else start over at step 1
-   * 
-   * 
-   * 
-   * 
-   * 
-   * 
+   *  
    */
 
   @Override
@@ -180,7 +173,7 @@ public class ShootWhileMoving extends Command implements Logged {
           - shotTime * (fieldSpeeds.vxMetersPerSecond + fieldAccelX * feedTime * 0.5);
       double virtualGoalY = speakerPose.getY()
           - shotTime * (fieldSpeeds.vyMetersPerSecond + fieldAccelY * feedTime * 0.5);
-      
+
       virtualGoalLocation = new Translation2d(virtualGoalX, virtualGoalY);
 
       double virtualDistance = robotPose.minus(virtualGoalLocation).getNorm();
@@ -189,10 +182,10 @@ public class ShootWhileMoving extends Command implements Logged {
 
       double virtualArmAngle = Constants.armAngleMap.get(virtualDistance);
 
-      SmartDashboard.putNumber("AutoShoot/VirtualDistance", virtualDistance);
-      SmartDashboard.putNumber("AutoShoot/VirtualShotTimefromMap", virtualShotTime);
-      SmartDashboard.putNumber("AutoShoot/VirtualAnglefromMap", virtualArmAngle);
-      SmartDashboard.putNumber("AutoShoot/ShotTimeDifference", virtualShotTime - shotTime);
+      SmartDashboard.putNumber("AutoShootMoving/VirtualDistance", virtualDistance);
+      SmartDashboard.putNumber("AutoShootMoving/VirtualShotTimefromMap", virtualShotTime);
+      SmartDashboard.putNumber("AutoShootMoving/VirtualAnglefromMap", virtualArmAngle);
+      SmartDashboard.putNumber("AutoShootMoving/ShotTimeDifference", virtualShotTime - shotTime);
 
       if (Math.abs(virtualShotTime - shotTime) <= 0.01) {
         shotTime = virtualShotTime;
@@ -225,11 +218,11 @@ public class ShootWhileMoving extends Command implements Logged {
 
     double armAngleError = armAngle - m_arm.getAngleDegrees();
 
-    SmartDashboard.putNumber("AutoShoot/Arm Angle Error", armAngleError);
+    SmartDashboard.putNumber("AutoShootMoving/Arm Angle Error", armAngleError);
 
     Rotation2d driveAngleError = robotAngle.minus(desiredAngle);
 
-    SmartDashboard.putNumber("AutoShoot/Drive Angle Error", driveAngleError.getDegrees());
+    SmartDashboard.putNumber("AutoShootMoving/Drive Angle Error", driveAngleError.getDegrees());
 
     if (setpointDebouncer.calculate(
         Math.abs(armAngleError) < ArmConstants.autoShootAngleTolerance
@@ -260,7 +253,7 @@ public class ShootWhileMoving extends Command implements Logged {
   public void end(boolean interrupted) {
     m_transfer.stopMotor();
     m_shooter.stopMotors();
-
+    m_transfer.shootmoving = false;
   }
 
   // Returns true when the command should end.

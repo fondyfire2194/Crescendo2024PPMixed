@@ -14,6 +14,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
 public class AutoAmpShootThenCenter extends SequentialCommandGroup {
@@ -26,6 +27,9 @@ public class AutoAmpShootThenCenter extends SequentialCommandGroup {
                 addCommands(
 
                                 // shoot first note
+                                Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
+
+                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
 

@@ -47,6 +47,10 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean skipSecondNoteInSim;
   @Log.NT(key = "lobbing")
   public boolean lobbing;
+  @Log.NT(key = "shootmoving")
+  public boolean shootmoving;
+  @Log.NT(key = "autoshootmoving")
+  public boolean autoShootmoving;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {

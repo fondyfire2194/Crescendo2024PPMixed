@@ -12,8 +12,10 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
+import frc.robot.commands.Drive.CheckAlignedToSpeaker;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
 public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
@@ -27,20 +29,24 @@ public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
 
                                 // path auto shoots on the fly
                                 // move to center note , pick up if there and move to shoot position then shoot
-                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
+                                Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
 
+                                // path auto shoots on the fly
+                                // move to center note , pick up if there and move to shoot position then shoot
+                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
+                                Commands.runOnce(() -> cf.setAutoShootMoving(true)),
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                                Commands.parallel(
+                                cf.setArmShooterValues(Constants.autoShootArmAngle, Constants.autoShootRPM),
+                                cf.setAutoShootMoving(true),
+                                Commands.deadline(
                                                 new RunPPath(swerve,
                                                                 path),
-                                                Commands.sequence(
-                                                                cf.positionArmRunShooterSpecialCase(
-                                                                                Constants.autoShootArmAngle,
-                                                                                Constants.autoShootRPM),
-                                                                new WaitCommand(2),
-
-                                                                cf.doIntake())));
-
+                                                new CheckAlignedToSpeaker(swerve, 2)),
+                                Commands.sequence(
+                                                new WaitCommand(2),
+                                                cf.setAutoShootMoving(false),
+                                                cf.doIntake()),
+                                Commands.runOnce(() -> swerve.autostep = 1));
         }
 
 }

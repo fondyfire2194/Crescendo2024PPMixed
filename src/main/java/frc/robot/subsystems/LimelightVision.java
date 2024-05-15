@@ -4,42 +4,57 @@
 
 package frc.robot.subsystems;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import java.util.Optional;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.networktables.StructArrayTopic;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.AprilTagConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.utils.LLPipelines;
+import monologue.Logged;
+import monologue.Annotations.Log;
 
-public class LimelightVision extends SubsystemBase {
+public class LimelightVision extends SubsystemBase implements Logged {
   /** Creates a new LimelightVision. */
 
   private double llHeartbeatfl;
   private double llHeartbeatLastfl;
   private int samplesfl;
+  @Log.NT(key = "flexists")
   public boolean limelightExistsfl;
 
   private double llHeartbeatfr;
   private double llHeartbeatLastfr;
   private int samplesfr;
+  @Log.NT(key = "frexists")
   public boolean limelightExistsfr;
 
   private double llHeartbeatr;
   private double llHeartbeatLastr;
   private int samplesr;
+  @Log.NT(key = "rexists")
   public boolean limelightExistsr;
   private int loopctr;
 
   public String flname = CameraConstants.frontLeftCamera.camname;
   public String frname = CameraConstants.frontRightCamera.camname;
   public String rname = CameraConstants.rearCamera.camname;
+
+  Optional<Pose3d> temp;
 
   public LimelightVision() {
 

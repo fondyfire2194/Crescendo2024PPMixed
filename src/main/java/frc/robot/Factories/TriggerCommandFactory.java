@@ -16,12 +16,11 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.AmpStart.AmpShootToCenterPickup;
-import frc.robot.commands.Autos.SourceStart.CenterToSourceShoot;
+import frc.robot.commands.Autos.SourceStart.CenterToShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
 import frc.robot.commands.Drive.FindNote;
 import frc.robot.commands.Drive.PickUpAlternateNote;
 import frc.robot.commands.Drive.RotateToAngle;
-import frc.robot.commands.Drive.TurnToNote;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
@@ -64,8 +63,9 @@ public class TriggerCommandFactory implements Logged {
         private int step7 = 7;// second note pickup failed set end step
 
         private int endit = 8;
-
+        @Log.NT(key = "sourceauto")
         public boolean sourceActive = false;
+        @Log.NT(key = "ampauto")
         public boolean ampActive = false;
 
         public TriggerCommandFactory(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,
@@ -154,7 +154,7 @@ public class TriggerCommandFactory implements Logged {
                 firstNoteToShootSource.onTrue(
                                 Commands.sequence(
                                                 Commands.runOnce(() -> stepRunning = true),
-                                                new CenterToSourceShoot(m_cf,
+                                                new CenterToShoot(m_cf,
                                                                 m_pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
                                                                                 .name()),
                                                                 m_swerve),
@@ -174,7 +174,7 @@ public class TriggerCommandFactory implements Logged {
 
                 secondNoteToShootSource.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
-                                new CenterToSourceShoot(m_cf, m_pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
+                                new CenterToShoot(m_cf, m_pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
                                                 .name()), m_swerve),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.autostep = step4),
@@ -234,7 +234,7 @@ public class TriggerCommandFactory implements Logged {
                 firstNoteToShootAmp.onTrue(
                                 Commands.sequence(
                                                 Commands.runOnce(() -> stepRunning = true),
-                                                new CenterToSourceShoot(m_cf,
+                                                new CenterToShoot(m_cf,
                                                                 m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
                                                                                 .name()),
                                                                 m_swerve),
@@ -253,7 +253,7 @@ public class TriggerCommandFactory implements Logged {
 
                 secondNoteToShootAmp.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
-                                new CenterToSourceShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
+                                new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
                                                 .name()), m_swerve),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.autostep = step4),

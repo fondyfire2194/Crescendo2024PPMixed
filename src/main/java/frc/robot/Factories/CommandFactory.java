@@ -21,10 +21,12 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
 import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
+import frc.robot.commands.Autos.AmpStart.AutoAmpShootMovingThenCenter;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenter4Pathfind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
@@ -169,6 +171,16 @@ public class CommandFactory implements Logged {
                                 Commands.run(() -> m_shooter.rpmTrackDistance(meters)));
         }
 
+        public Command setArmShooterValues(double armAngle, double shooterRPM) {
+                return Commands.parallel(
+                                m_arm.setGoalCommand(Units.degreesToRadians(armAngle)),
+                                m_shooter.startShooterCommand(shooterRPM));
+        }
+
+        public Command setAutoShootMoving(boolean on) {
+                return Commands.runOnce(() -> m_transfer.autoShootmoving = on);
+        }
+
         public Command clearStickyFaultsCommand() {
                 return Commands.parallel(
                                 m_arm.clearFaultsCommand(),
@@ -210,7 +222,7 @@ public class CommandFactory implements Logged {
                                                 m_swerve);
                         case 12:
                                 return new AutoSourceShootMovingThenCenter(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4ShootMoving.name()),
+                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                 m_swerve);
                         case 13:
                                 return new AutoSourceShootCenter4Pathfind(this,
@@ -225,7 +237,8 @@ public class CommandFactory implements Logged {
                                 return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
                                                 m_swerve);
                         case 22:
-                                return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
+                                return new AutoAmpShootMovingThenCenter(this,
+                                                m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
                                                 m_swerve);
 
                         default:

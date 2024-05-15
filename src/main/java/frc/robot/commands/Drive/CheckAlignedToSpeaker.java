@@ -4,35 +4,29 @@
 
 package frc.robot.commands.Drive;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
+
 import frc.robot.subsystems.SwerveSubsystem;
 
-public class AutoAlignSpeaker extends Command {
- 
+public class CheckAlignedToSpeaker extends Command {
 
   private final SwerveSubsystem m_swerve;
-  public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
+  private final double m_alignTolDeg;
 
-  private double rotationVal;
-
-
-  public AutoAlignSpeaker(
-      SwerveSubsystem swerve) {
+  public CheckAlignedToSpeaker(
+      SwerveSubsystem swerve,
+      double alignTolDeg) {
 
     m_swerve = swerve;
-
-    addRequirements(m_swerve);
+    m_alignTolDeg = alignTolDeg;
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_alignTargetPID.enableContinuousInput(-180, 180);
-    m_alignTargetPID.setTolerance(0.2);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -45,17 +39,10 @@ public class AutoAlignSpeaker extends Command {
     double YDiff = m_swerve.targetPose.getY() - robotPose.getY();
     double angleRad = Math.atan2(YDiff, XDiff);
     double currentAngleToSpeaker = Units.radiansToDegrees(angleRad);
+    double robotAngle = robotPose.getRotation().getDegrees();
 
-    rotationVal = m_alignTargetPID.calculate(robotPose.getRotation().getDegrees(), currentAngleToSpeaker);
+    m_swerve.alignedToTarget = Math.abs(currentAngleToSpeaker - robotAngle) < m_alignTolDeg;
 
-    m_swerve.alignedToTarget = m_alignTargetPID.atSetpoint();
-
-    m_swerve.drive(
-        0, 0,
-        rotationVal *= Constants.SwerveConstants.kmaxAngularVelocity,
-        true,
-        true,
-        false);
   }
 
   // Called once the command ends or is interrupted.
@@ -66,6 +53,6 @@ public class AutoAlignSpeaker extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_swerve.alignedToTarget;
+    return false;
   }
 }
