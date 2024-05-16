@@ -287,9 +287,9 @@ public class RobotContainer implements Logged {
 
                 driver.back().onTrue(
                                 Commands.sequence(
-                                                m_cf.positionArmRunShooterSpecialCase(Pref.getPref("DemoAngleDeg"),
-                                                                Pref.getPref("DemoRPM")),
-                                                Commands.waitSeconds(1),
+                                                m_cf.positionArmRunShooterSpecialCase(45,
+                                                                4750),
+                                                Commands.waitSeconds(2),
                                                 m_cf.transferNoteToShooterCommand(),
                                                 new WaitCommand(1))
                                                 .andThen(

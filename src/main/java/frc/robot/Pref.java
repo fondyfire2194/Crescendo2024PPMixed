@@ -98,11 +98,6 @@ public class Pref {
     prefDict.put("UnlockNumber", 0.);
 
 
-    //demo shoot long
-
-    prefDict.put("DemoAngleDeg", 45.);
-    prefDict.put("DemoRPM", 4750.);
-
 
   }
 
