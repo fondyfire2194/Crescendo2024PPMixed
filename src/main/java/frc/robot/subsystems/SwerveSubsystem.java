@@ -136,8 +136,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "noteseentime")
   private double noteSeenTime;
 
-  public Integer cameraSelection = 0;
-
   @Log.NT(key = "autostep")
   public int autostep;
 
@@ -154,6 +152,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this);
   public LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this);
+
+  private boolean mod0connected;
+  private boolean mod1connected;
+  private boolean mod2connected;
+  private boolean mod3connected;
 
   public SwerveSubsystem() {
 
@@ -419,30 +422,20 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return positions;
   }
 
-  private boolean checkMod0CanIDs() {
-    int tempd = 0;
-    tempd = mSwerveMods[0].getDriveMotorID();
-    return SwerveConstants.Mod0.driveMotorID == tempd
-        && SwerveConstants.Mod0.angleMotorID == mSwerveMods[0].getAngleMotorID()
-        && SwerveConstants.Mod0.cancoderID == mSwerveMods[0].getCancoderID();
+  private boolean checkMod0CansOK() {
+    return mSwerveMods[0].checkDriveMotorCanOK() && mSwerveMods[0].checkAngleMotorCanOK();
   }
 
-  private boolean checkMod1CanIDs() {
-    return SwerveConstants.Mod1.driveMotorID == mSwerveMods[1].getDriveMotorID()
-        && SwerveConstants.Mod1.angleMotorID == mSwerveMods[1].getAngleMotorID()
-        && SwerveConstants.Mod1.cancoderID == mSwerveMods[1].getCancoderID();
+  private boolean checkMod1CansOK() {
+    return mSwerveMods[1].checkDriveMotorCanOK() && mSwerveMods[1].checkAngleMotorCanOK();
   }
 
-  private boolean checkMod2CanIDs() {
-    return SwerveConstants.Mod2.driveMotorID == mSwerveMods[2].getDriveMotorID()
-        && SwerveConstants.Mod2.angleMotorID == mSwerveMods[2].getAngleMotorID()
-        && SwerveConstants.Mod2.cancoderID == mSwerveMods[2].getCancoderID();
+  private boolean checkMod2CansOK() {
+    return mSwerveMods[2].checkDriveMotorCanOK() && mSwerveMods[2].checkAngleMotorCanOK();
   }
 
-  private boolean checkMod3CanIDs() {
-    return SwerveConstants.Mod3.driveMotorID == mSwerveMods[3].getDriveMotorID()
-        && SwerveConstants.Mod3.angleMotorID == mSwerveMods[3].getAngleMotorID()
-        && SwerveConstants.Mod3.cancoderID == mSwerveMods[3].getCancoderID();
+  private boolean checkMod3CansOK() {
+    return mSwerveMods[3].checkDriveMotorCanOK() && mSwerveMods[3].checkAngleMotorCanOK();
   }
 
   public SwerveModuleState[] getStates() {
@@ -507,19 +500,26 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return lookForNote;
   }
 
-  public boolean checkModuleCansOK() {
-    return checkMod0CanIDs() && checkMod1CanIDs()
-        && checkMod2CanIDs() && checkMod3CanIDs();
-  }
-
   @Override
   public void periodic() {
     SmartDashboard.putNumber("AUSEp", autostep);
     loopctr++;
-    if (loopctr == 50 && DriverStation.isDisabled()) {
-      boolean check = checkModuleCansOK();
-      SmartDashboard.putBoolean("Drive//DriveCanOk", check);
-      loopctr = 0;
+
+    if (!mod0connected) {
+      mod0connected = checkMod0CansOK();
+      SmartDashboard.putBoolean("Drive//Ok0ModCan", mod0connected);
+    }
+    if (!mod1connected) {
+      mod1connected = checkMod1CansOK();
+      SmartDashboard.putBoolean("Drive//Ok1ModCan", mod1connected);
+    }
+    if (!mod2connected) {
+      mod2connected = checkMod2CansOK();
+      SmartDashboard.putBoolean("Drive//Ok2ModCan", mod2connected);
+    }
+    if (!mod3connected) {
+      mod3connected = checkMod3CansOK();
+      SmartDashboard.putBoolean("Drive//Ok3ModCan", mod3connected);
     }
 
     swervePoseEstimator.update(getYaw(), getPositions());

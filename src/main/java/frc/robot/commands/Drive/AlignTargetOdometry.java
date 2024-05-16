@@ -83,6 +83,9 @@ public class AlignTargetOdometry extends Command {
     double YDiff = m_swerve.targetPose.getY() - robotPose.getY();
     double angleRad = Math.atan2(YDiff, XDiff);
     double currentAngleToSpeaker = Units.radiansToDegrees(angleRad);
+    SmartDashboard.putNumber("CAS", currentAngleToSpeaker);
+    SmartDashboard.putNumber("CAROB", robotPose.getRotation().getDegrees());
+
 
     rotationVal = m_alignTargetPID.calculate(robotPose.getRotation().getDegrees(), currentAngleToSpeaker);
   

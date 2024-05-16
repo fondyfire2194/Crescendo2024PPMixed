@@ -6,15 +6,15 @@ package frc.robot.subsystems;
 
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
@@ -35,6 +35,9 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
   public boolean showClimber = true;
   private int loopctr;
 
+  private boolean leftClimberMotorConnected;
+  private boolean rightClimberMotorConnected;
+
   public ClimberSubsystem() {
     climberMotorLeft = new CANSparkMax(CANIDConstants.climberIDLeft, MotorType.kBrushless);
     climberMotorRight = new CANSparkMax(CANIDConstants.climberIDRight, MotorType.kBrushless);
@@ -45,7 +48,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
     unlockClimber();
     configMotor(climberMotorRight, climberEncoderRight, false);
     configMotor(climberMotorLeft, climberEncoderLeft, true);
-
+    
   }
 
   private void configMotor(CANSparkMax motor, RelativeEncoder encoder, boolean reverse) {
@@ -66,15 +69,15 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    loopctr++;
-    if (DriverStation.isDisabled() && loopctr == 50) {
-      int temp = 0;
-      temp = climberMotorLeft.getDeviceId();
-      boolean leftcanok = temp == CANIDConstants.climberIDLeft;
-      temp = climberMotorRight.getDeviceId();
-      boolean rightcanok = temp == CANIDConstants.climberIDRight;
-      SmartDashboard.putBoolean("Climber//ClimberCanOK", leftcanok & rightcanok);
-      loopctr = 0;
+    
+    if (!leftClimberMotorConnected) {
+      leftClimberMotorConnected = checkMotorCanOK(climberMotorLeft);
+      SmartDashboard.putBoolean("Climber//OKLClimber", leftClimberMotorConnected);
+    }
+    
+    if (!rightClimberMotorConnected) {
+      rightClimberMotorConnected = checkMotorCanOK(climberMotorRight);
+      SmartDashboard.putBoolean("Climber//OKRClimber", rightClimberMotorConnected);
     }
 
     SmartDashboard.putNumber("Climber// Left RPM", getRPMLeft());
@@ -85,6 +88,11 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
     SmartDashboard.putNumber("Climber// Right Amps", climberMotorRight.getOutputCurrent());
     SmartDashboard.putNumber("Climber// Right Position", climberEncoderRight.getPosition());
 
+  }
+
+  private boolean checkMotorCanOK(CANSparkMax motor) {
+    double temp = motor.getOpenLoopRampRate();
+    return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
   }
 
   public void stopMotors() {

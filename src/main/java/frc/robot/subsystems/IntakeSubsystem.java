@@ -9,11 +9,13 @@ import java.util.Map;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -42,6 +44,7 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "intakecommandrpm")
   private double commandrpm;
   public boolean noteMissed;
+  private boolean intakeMotorConnected;
 
   /** Creates a new Intake. */
   public IntakeSubsystem() {
@@ -61,11 +64,8 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     encoder.setVelocityConversionFactor(Constants.IntakeConstants.intakeConversionVelocityFactor);
     encoder.setPositionConversionFactor(Constants.IntakeConstants.intakeConversionPositionFactor);
     motor.enableVoltageCompensation(Constants.IntakeConstants.voltageComp);
-    // intakeMotor.setClosedLoopRampRate(1);
-    // intakeMotor.setOpenLoopRampRate(1);
     motor.burnFlash();
     encoder.setPosition(0.0);
-
   }
 
   public void stopMotor() {
@@ -113,15 +113,17 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     }
     if (!runIntake && !jogging) {
       stopMotor();
-      // intakeLimiter.reset(0);
     }
 
-    if (DriverStation.isDisabled() && loopctr == 50) {
-      int temp = intakeMotor.getDeviceId();
-      boolean intakecanok = temp == CANIDConstants.intakeID;
-      SmartDashboard.putBoolean("Intake//IntakeCanOK", intakecanok);
-      loopctr = 0;
+    if (!intakeMotorConnected) {
+      intakeMotorConnected = checkMotorCanOK(intakeMotor);
+      SmartDashboard.putBoolean("Intake//OKIntakeMotor", intakeMotorConnected);
     }
+  }
+
+  private boolean checkMotorCanOK(CANSparkMax motor) {
+    double temp = motor.getOpenLoopRampRate();
+    return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
   }
 
   private void runAtVelocity(double rpm) {

@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
+import frc.robot.Constants;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.TransferConstants;
 import monologue.Annotations.Log;
@@ -51,6 +52,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean shootmoving;
   @Log.NT(key = "autoshootmoving")
   public boolean autoShootmoving;
+  private boolean transferMotorConnected;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {
@@ -132,12 +134,17 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public void periodic() {
     loopctr++;
     // This method will be called once per scheduler run
-    if (DriverStation.isDisabled() && loopctr == 50) {
-      int temp = transferMotor.getDeviceId();
-      boolean transfercanok = temp == CANIDConstants.transferID;
-      SmartDashboard.putBoolean("Transfer//TransferCanOK", transfercanok);
-      loopctr = 0;
+
+    if (!transferMotorConnected) {
+      transferMotorConnected = checkMotorCanOK(transferMotor);
+      SmartDashboard.putBoolean("Transfer//OKTransferMotor", transferMotorConnected);
     }
+
+  }
+
+  private boolean checkMotorCanOK(CANSparkMax motor) {
+    double temp = motor.getOpenLoopRampRate();
+    return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
   }
 
   public void enableLimitSwitch(boolean enable) {

@@ -11,6 +11,7 @@ import static edu.wpi.first.units.Units.Volts;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
@@ -58,6 +59,8 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(2500);
   private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(2500);
   private int loopctr;
+  private boolean topMotorConnected;
+  private boolean bottomMotorConnected;
 
   /** Creates a new Shooter. */
   public ShooterSubsystem() {
@@ -110,7 +113,11 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   }
 
   public Command stopShooterCommand() {
-    return Commands.runOnce(() -> stopMotors());
+    return Commands.parallel(
+        Commands.runOnce(() -> stopMotors()),
+        Commands.runOnce(() -> topCommandRPM = 500),
+        Commands.runOnce(() -> bottomCommandRPM = 500));
+
   }
 
   public Command startShooterCommand(double rpm) {
@@ -250,15 +257,10 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     loopctr++;
-    if (DriverStation.isDisabled() && loopctr == 50) {
-      int temp = 0;
-      temp = topRoller.getDeviceId();
-      boolean topcanok = temp == CANIDConstants.topShooterID;
-      temp = bottomRoller.getDeviceId();
-      boolean bottomcanok = temp == CANIDConstants.bottomShooterID;
-      SmartDashboard.putBoolean("Shooter//ShooterCanOK", topcanok && bottomcanok);
-      loopctr = 0;
-    }
+
+    var st = topRoller.getMotorTemperature();
+
+    SmartDashboard.putNumber("TRFW", st);
 
     if (runShooterVel) {
       double toprpm = getTopCommandRPM();
@@ -270,6 +272,21 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     } else {
       stopMotors();
     }
+    if (!topMotorConnected) {
+      topMotorConnected = checkMotorCanOK(topRoller);
+      SmartDashboard.putBoolean("Shooter//OKTShooter", topMotorConnected);
+    }
+
+    if (!bottomMotorConnected) {
+      bottomMotorConnected = checkMotorCanOK(bottomRoller);
+      SmartDashboard.putBoolean("Shooter//OKBShooter", bottomMotorConnected);
+    }
+
+  }
+
+  private boolean checkMotorCanOK(CANSparkMax motor) {
+    double temp = motor.getOpenLoopRampRate();
+    return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
   }
 
   private double getTopCommandRPM() {

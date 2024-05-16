@@ -25,7 +25,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.utils.LLPipelines;
 import monologue.Annotations.Log;
@@ -52,6 +51,8 @@ public class Robot extends TimedRobot implements Logged {
   private boolean firstScan = true;
 
   int tstctr;
+
+  private int canivorectr;
 
   @Override
   public void robotInit() {
@@ -107,6 +108,7 @@ public class Robot extends TimedRobot implements Logged {
 
     double startupTimeSeconds = Timer.getFPGATimestamp() - startTime;
     DataLogManager.log("Startup Time (ms): " + startupTimeSeconds * 1000.0);
+
   }
 
   @Override
@@ -123,6 +125,17 @@ public class Robot extends TimedRobot implements Logged {
     // This method needs to be called periodically, or no logging annotations will
     // process properly.
     Monologue.updateAll();
+
+    if (RobotBase.isReal()) {
+
+      canivorectr++;
+      SmartDashboard.putNumber("CVCTS", canivorectr);
+      if (canivorectr >= 100) {
+        m_robotContainer.logCanivore();
+        canivorectr = 0;
+      }
+      m_robotContainer.busUtil = m_robotContainer.canInfo.BusUtilization;
+    }
 
     SmartDashboard.putBoolean("FieldRelative", m_robotContainer.fieldRelative.getAsBoolean());
   }
@@ -161,16 +174,12 @@ public class Robot extends TimedRobot implements Logged {
       m_robotContainer.m_swerve.setIdleMode(false);
     }
 
-    m_robotContainer.m_swerve.cameraSelection = m_robotContainer.m_cameraChooser.getSelected();
-    
     m_robotContainer.checkAutoSelectLoop.poll();
-     
+
   }
 
   @Override
   public void disabledExit() {
-
-    m_robotContainer.checkCAN = false;
 
   }
 
@@ -189,11 +198,7 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_swerve.setIdleMode(true);
 
-    m_robotContainer.m_swerve.cameraSelection = m_robotContainer.m_cameraChooser.getSelected();
-
     m_startDelay = m_robotContainer.m_startDelayChooser.getSelected();
-
-    m_robotContainer.m_swerve.cameraSelection = m_robotContainer.m_cameraChooser.getSelected();
 
     m_robotContainer.m_swerve.resetModuleEncoders();
 

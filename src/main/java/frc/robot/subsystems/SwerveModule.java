@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 import com.revrobotics.SparkPIDController.ArbFFUnits;
@@ -59,7 +60,6 @@ public class SwerveModule extends SubsystemBase {
   private double characterizationVolts;
   private boolean characterizing;
   private SwerveModuleState previousState = new SwerveModuleState();
-
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -337,6 +337,16 @@ public class SwerveModule extends SubsystemBase {
     return Commands.parallel(
         Commands.runOnce(() -> driveMotor.clearFaults()),
         Commands.runOnce(() -> angleMotor.clearFaults()));
+  }
+
+  public boolean checkDriveMotorCanOK() {
+    double temp = driveMotor.getOpenLoopRampRate();
+    return RobotBase.isSimulation() || driveMotor.setOpenLoopRampRate(temp) == REVLibError.kOk;
+  }
+
+  public boolean checkAngleMotorCanOK() {
+    double temp = angleMotor.getOpenLoopRampRate();
+    return RobotBase.isSimulation() || angleMotor.setOpenLoopRampRate(temp) == REVLibError.kOk;
   }
 
   public double getFaults() {

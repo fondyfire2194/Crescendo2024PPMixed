@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
+import com.ctre.phoenix6.CANBus;
+import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.util.Units;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
@@ -41,6 +44,7 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import monologue.Annotations.Log;
 import monologue.Logged;
 
 public class RobotContainer implements Logged {
@@ -63,8 +67,6 @@ public class RobotContainer implements Logged {
 
         public final SendableChooser<String> m_batteryChooser = new SendableChooser<String>();
 
-        public final SendableChooser<Integer> m_cameraChooser = new SendableChooser<Integer>();
-
         private final CommandXboxController driver = new CommandXboxController(0);
 
         private final CommandXboxController codriver = new CommandXboxController(1);
@@ -85,8 +87,6 @@ public class RobotContainer implements Logged {
 
         BooleanSupplier keepAngle;
 
-        public boolean checkCAN;
-
         public BooleanSupplier fieldRelative;
 
         private Trigger doLobShot;
@@ -96,6 +96,12 @@ public class RobotContainer implements Logged {
         EventLoop checkAutoSelectLoop;
 
         private BooleanEvent doAutoSetup;
+
+        private Trigger canivoreCheck;
+
+        public CANBusStatus canInfo;
+        @Log.NT(key = "canivoreutil")
+        public float busUtil;
 
         public RobotContainer() {
 
@@ -167,6 +173,24 @@ public class RobotContainer implements Logged {
 
                 doAutoSetup.ifHigh(() -> setAutoData());
 
+                if (RobotBase.isReal()) {
+
+                        canInfo = CANBus.getStatus("CV1");
+                        busUtil = canInfo.BusUtilization;
+
+                        canivoreCheck = new Trigger(
+                                        () -> !canInfo.Status.isOK() || canInfo.Status.isError()
+                                                        || canInfo.Status.isWarning());
+
+                        canivoreCheck.onTrue(Commands.runOnce(() -> logCanivore()));
+                }
+
+        }
+
+        public void logCanivore() {
+                log("errcanivore", canInfo.Status.isError());
+                log("warncanivore", canInfo.Status.isWarning());
+                log("okcanivore", canInfo.Status.isOK());
         }
 
         private void configureDriverBindings() {
@@ -261,7 +285,18 @@ public class RobotContainer implements Logged {
 
                 driver.start().onTrue(Commands.runOnce(() -> m_swerve.zeroGyro()));
 
-                // driver.back().
+                driver.back().onTrue(
+                                Commands.sequence(
+                                                m_cf.positionArmRunShooterSpecialCase(Pref.getPref("DemoAngleDeg"),
+                                                                Pref.getPref("DemoRPM")),
+                                                Commands.waitSeconds(1),
+                                                m_cf.transferNoteToShooterCommand(),
+                                                new WaitCommand(1))
+                                                .andThen(
+                                                                Commands.parallel(
+                                                                                m_arm.setGoalCommand(
+                                                                                                ArmConstants.pickupAngleRadians),
+                                                                                m_shooter.stopShooterCommand())));
 
         }
 
@@ -486,13 +521,8 @@ public class RobotContainer implements Logged {
                 m_batteryChooser.addOption("E", "E");
                 m_batteryChooser.addOption("F", "F");
 
-                m_cameraChooser.setDefaultOption("NO Cameras", 0);
-                m_cameraChooser.addOption("LeftCamera", 1);
-                m_cameraChooser.addOption("RightCamera", 2);
-                m_cameraChooser.addOption("BothCameras", 3);
-
                 SmartDashboard.putData("DelayChooser", m_startDelayChooser);
-                SmartDashboard.putData("FrontCameraChooser", m_cameraChooser);
+
                 SmartDashboard.putData("BatteryChooser", m_batteryChooser);
 
         }

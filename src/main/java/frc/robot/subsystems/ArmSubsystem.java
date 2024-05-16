@@ -6,6 +6,7 @@ import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkBase.SoftLimitDirection;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.REVLibError;
 import com.revrobotics.RelativeEncoder;
 
 import edu.wpi.first.math.VecBuilder;
@@ -16,7 +17,6 @@ import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.State;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Timer;
@@ -100,8 +100,9 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     private double simAngleRads;
 
     private boolean cancoderok;
+    private boolean motorok;
 
-    private int checkCounter;
+    private int checkCancoderCounter;
 
     private final DCMotor m_armGearbox = DCMotor.getNEO(1);
 
@@ -141,6 +142,9 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     Trigger setMotorEncoderToCancoder;
 
     private boolean newGoal;
+
+    private int cancdrokctr;
+    private double cancdrposnlast;
 
     public ArmSubsystem() {
         super(
@@ -184,13 +188,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         SmartDashboard.putData("Arm//Arm Sim", m_mech2d);
         m_armTower.setColor(new Color8Bit(Color.kBlue));
 
-        // setMotorEncoderToCancoder = new Trigger(
-        // () -> isStopped() && !useMotorEncoder && getCurrentGoal() ==
-        // ArmConstants.armMinRadians
-        // && getAtSetpoint());
-
-        // setMotorEncoderToCancoder.onTrue(Commands.runOnce(() ->
-        // presetArmEncoderToCancoder()));
     }
 
     private void configMotor(CANSparkMax motor, RelativeEncoder encoder, boolean reverse) {
@@ -210,21 +207,40 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         if (!enableArm) {
             setGoal(armAngleRads);
         }
-        getpidenebled();
-        checkCounter++;
-        if (checkCounter == 50) {
-            int temp = 0;
-            boolean armMotorOK = false;
-            temp = getCanCoderID();
-            cancoderok = (temp == CANIDConstants.armCancoderID);
-            SmartDashboard.putBoolean("Arm//ArmCancoderOK", cancoderok);
-            if (DriverStation.isDisabled()) {
-                temp = armMotor.getDeviceId();
-                armMotorOK = (temp == CANIDConstants.armID);
-                SmartDashboard.putBoolean("Arm//ArmCanOK", armMotorOK);
-            }
-            checkCounter = 0;
+
+        checkCancoderCounter++;
+        if (checkCancoderCounter == 10) {
+            cancoderok = RobotBase.isSimulation() || checkCancoderCanOK();
+            checkCancoderCounter = 0;
+            SmartDashboard.putBoolean("Arm//OKCancoder", cancoderok);
         }
+
+        if (!armMotorConnected) {
+            armMotorConnected = checkMotorCanOK(armMotor);
+            SmartDashboard.putBoolean("Arm//OKArmMotor", armMotorConnected);
+        }
+
+    }
+
+    private boolean checkCancoderCanOK() {
+        SmartDashboard.putNumber("CCCTR", cancdrokctr);
+        double currentPosition = getAngleDegrees();
+        SmartDashboard.putNumber("CCCp", currentPosition);
+        SmartDashboard.putNumber("CCLp", lastPosition);
+        if (lastPosition == 0)
+            lastPosition = currentPosition;
+        if (currentPosition == lastPosition) {
+            cancdrokctr++;
+            lastPosition = currentPosition;
+        } else {
+            cancdrokctr = 0;
+        }
+        return RobotBase.isSimulation() || cancdrokctr < 3;
+    }
+
+    private boolean checkMotorCanOK(CANSparkMax motor) {
+        double temp = motor.getOpenLoopRampRate();
+        return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
     }
 
     @Override
@@ -296,20 +312,16 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         angleTolerance = tolerance;
     }
 
-    private double checkArmLimits(double val) {
-        double temp = 0;
-        if (val >= ArmConstants.armMaxRadians)
-            temp = ArmConstants.armMaxRadians;
-        if (val <= ArmConstants.armMinRadians)
-            temp = ArmConstants.armMinRadians;
-        return temp;
-    }
+    // private double checkArmLimits(double val) {
+    // return Math.max(ArmConstants.armMinRadians, Math.min(val,
+    // ArmConstants.armMaxRadians));
+    // }
 
     public Command setGoalCommand(double angleRads) {
         newGoal = true;
-        double armrads = checkArmLimits(angleRads);
+
         return Commands.sequence(
-                runOnce(() -> setGoal(armrads)),
+                runOnce(() -> setGoal(angleRads)),
                 runOnce(() -> setTolerance(ArmConstants.angleTolerance)),
                 runOnce(() -> resetController()),
                 runOnce(() -> enable()),
@@ -318,14 +330,12 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     public Command setGoalCommand(double angleRads, double tolerance) {
         newGoal = true;
-        double armrads = checkArmLimits(angleRads);
         return Commands.sequence(
-                runOnce(() -> setGoal(armrads)),
+                runOnce(() -> setGoal(angleRads)),
                 runOnce(() -> angleTolerance = Units.degreesToRadians(tolerance)),
                 runOnce(() -> resetController()),
-                runOnce(() -> setUpDownKv(armrads)),
-
-                Commands.runOnce(() -> enable()));
+                runOnce(() -> setUpDownKv(angleRads)),
+                runOnce(() -> enable()));
     }
 
     public Command positionToIntakeUDACommand() {
@@ -374,7 +384,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     @Log.NT(key = "armrads")
     public double getAngleRadians() {
         if (RobotBase.isReal()) {
-            if (useMotorEncoder)
+            if (!useMotorEncoder)
                 return getCanCoderRad();
             else
                 return armEncoder.getPosition();

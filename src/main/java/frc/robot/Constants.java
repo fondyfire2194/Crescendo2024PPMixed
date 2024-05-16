@@ -18,8 +18,6 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.units.Distance;
 import edu.wpi.first.units.Measure;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.lib.config.SwerveModuleConstants;
 import monologue.Annotations.Log;
 
@@ -220,6 +218,8 @@ public final class Constants {
                 public static double maxLobDistance = Units.feetToMeters(30);
 
                 public static double maxMovingShotDistance = Units.feetToMeters(30);
+
+             
 
         }
 
@@ -536,6 +536,7 @@ public final class Constants {
                 shooterLobRPMMap.put(distance_12, 4000.);
         }
 
+
         public static double ampArmAngle = 100;// degrees
         public static double ampShooterSpeed = 700;// rpm
 
@@ -596,7 +597,7 @@ public final class Constants {
                 public static final IdleMode armIdleMode = IdleMode.kBrake;
                 public static final int armContinuousCurrentLimit = 40;
                 public static double armMinRadians = Units.degreesToRadians(15);
-                public static double armMaxRadians = Units.degreesToRadians(75);
+                public static double armMaxRadians = Units.degreesToRadians(110);
                 public static double pickupAngleRadians = Units.degreesToRadians(25);
                 public static double midRange = Units.degreesToRadians(35);
 

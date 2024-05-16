@@ -97,6 +97,13 @@ public class Pref {
     prefDict.put("LockNumber", 1.);
     prefDict.put("UnlockNumber", 0.);
 
+
+    //demo shoot long
+
+    prefDict.put("DemoAngleDeg", 45.);
+    prefDict.put("DemoRPM", 4750.);
+
+
   }
 
   public static void ensureRioPrefs() {
