@@ -205,9 +205,9 @@ public class SwerveModule extends SubsystemBase {
     if (isOpenLoop) {
       double percentOutput = desiredState.speedMetersPerSecond / Constants.SwerveConstants.kmaxSpeed;
       driveMotor.setVoltage(percentOutput * RobotController.getBatteryVoltage());
-      SmartDashboard.putNumber(String.valueOf(moduleNumber) + " driveVolts",
+      SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " driveVolts",
           percentOutput * RobotController.getBatteryVoltage());
-      SmartDashboard.putNumber(String.valueOf(moduleNumber) + " driveKv",
+      SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " driveKv",
           percentOutput * RobotController.getBatteryVoltage() / getDriveVelocity());
     }
     boolean feedforward = true;
@@ -282,18 +282,6 @@ public class SwerveModule extends SubsystemBase {
 
   public double getPositionRadians() {
     return getDrivePosition() / SwerveConstants.wheelRadius;
-  }
-
-  public int getDriveMotorID() {
-    return driveMotor.getDeviceId();
-  }
-
-  public int getAngleMotorID() {
-    return angleMotor.getDeviceId();
-  }
-
-  public int getCancoderID() {
-    return m_turnCancoder.getDeviceID();
   }
 
   @Override

@@ -177,14 +177,19 @@ public class LimelightVision extends SubsystemBase implements Logged {
     else
       return "Problem";
   }
-
+  @Log.NT(key = "noteseen")
   public int getNumberNotesSeen() {
     return (int) LimelightHelpers
         .getLatestResults(CameraConstants.rearCamera.camname).targetingResults.targets_Detector.length;
   }
 
+  @Log.NT(key = "noteseen")
   public boolean getNoteSeen() {
     return LimelightHelpers.getTV(CameraConstants.rearCamera.camname);
+  }
+  @Log.NT(key = "noteseenangle")
+  public double getNoteSeenTx() {
+    return LimelightHelpers.getTX(CameraConstants.rearCamera.camname);
   }
 
   public int getTagId(CameraConstants.CameraValues cam) {

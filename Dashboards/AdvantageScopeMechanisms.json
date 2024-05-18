@@ -1,0 +1,401 @@
+{
+  "hubs": [
+    {
+      "x": -21,
+      "y": -28,
+      "width": 1063,
+      "height": 567,
+      "state": {
+        "sidebar": {
+          "width": 319,
+          "expanded": [
+            "/Monologue/m_swerve/Poseestimate",
+            "/SmartDashboard/AutoShoot",
+            "/SmartDashboard/VisionSystemSim-main",
+            "/SmartDashboard/VisionSystemSim-main/Sim Field",
+            "/SmartDashboard/VisionSystemSim-main/Sim Field/visibleTargetPoses",
+            "/SmartDashboard/VisionSystemSim-main/Sim Field/VisionEstimation",
+            "/Monologue/m_tcf/m_cf",
+            "/SmartDashboard/Real States",
+            "/Monologue/m_tcf/m_cf/m_swerve",
+            "/Monologue/m_swerve/Poseestimate/rotation",
+            "/Monologue/m_swerve/Poseestimate/translation",
+            "/Shuffleboard/Autonomous",
+            "/Shuffleboard/Autonomous/Arm",
+            "/Shuffleboard/Autonomous/Shooter",
+            "/Monologue/m_swerve/realstates",
+            "/Monologue/m_tcf/m_cf/m_swerve/realstates",
+            "/NT",
+            "/NT/Shuffleboard",
+            "/NT/Shuffleboard/Autonomous/AutoSelection",
+            "/NT/Shuffleboard/Autonomous/SourceStart",
+            "/NT/SmartDashboard",
+            "/NT/Monologue/m_transfer",
+            "/NT/Shuffleboard/Autonomous/RearCam",
+            "/NT/Shuffleboard/Autonomous/Shooter",
+            "/NT/Monologue/m_swerve/Poseestimate",
+            "/NT/Monologue/m_swerve/Poseestimate/translation",
+            "/NT/Monologue/m_swerve/Poseestimate/rotation",
+            "/NT/SmartDashboard/CommSchd",
+            "/NT/SmartDashboard/CommSchd/Names",
+            "/NT/Monologue/m_tcf",
+            "/NT/Monologue/m_swerve/yaw",
+            "/Monologue/m_tcf/m_cf/m_intake",
+            "/Monologue/m_swerve/poseestimate",
+            "/Monologue/m_swerve/poseestimate/rotation",
+            "/Monologue/m_tcf/m_cf/m_transfer",
+            "/NT/Monologue",
+            "/NT/Shuffleboard/Autonomous/Arm",
+            "/NT/Shuffleboard/Autonomous",
+            "/SmartDashboard/Auto",
+            "/Monologue/m_swerve/poseestimate/translation",
+            "/photonvision",
+            "/SmartDashboard/Field",
+            "/poses",
+            "/Monologue/m_af",
+            "/Monologue/m_tcf/m_cf/m_arm",
+            "/SmartDashboard/Arm",
+            "/SmartDashboard",
+            "/Monologue",
+            "/Monologue/m_arm",
+            "/Monologue/m_shooter",
+            "/Monologue/m_climber",
+            "/limelight-rear",
+            "/SmartDashboard/LL",
+            "/Monologue/m_intake",
+            "/Monologue/m_transfer",
+            "/Monologue/m_llv"
+          ]
+        },
+        "tabs": {
+          "selected": 1,
+          "tabs": [
+            {
+              "type": 0,
+              "path": "../docs/INDEX.md"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_arm/armgoalrads",
+                      "color": "#af2437",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_arm/armrads",
+                      "color": "#80588e",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_arm/currentgoalrads",
+                      "color": "#aacaee",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_arm/armatsetpoint",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_arm/isstopped",
+                      "color": "#e5b31b",
+                      "show": false
+                    },
+                    {
+                      "key": "NT:/Monologue/m_arm/usemotorencoder",
+                      "color": "#e48b32",
+                      "show": false
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_arm/armamps",
+                      "color": "#c0b487",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Arm"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_intake/intakerpm",
+                      "color": "#2b66a2",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_intake/intakerun",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_transfer/transfernoteatintake",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_intake/intakeAmps",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Intake"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrtopcommandrpm",
+                      "color": "#af2437",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrbottomcommandrpm",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtratspeed;",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrrunatvel",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrtopamps",
+                      "color": "#e48b32",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrbottomamps",
+                      "color": "#aacaee",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Shooter"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_transfer/transferrpm",
+                      "color": "#2b66a2",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_transfer/transfernoteatintake",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_transfer/transferamps",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Transfer"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberLeftRPM",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberRightRPM",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberPositionLeft",
+                      "color": "#af2437",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberPositionRight",
+                      "color": "#80588e",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberLeftAmps",
+                      "color": "#e48b32",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberRightAmps",
+                      "color": "#aacaee",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Climber"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_llv/noteseenangle",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_llv/noteseen",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_llv/rexists",
+                      "color": "#2b66a2",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": []
+                }
+              },
+              "title": "RearCamera"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "3.2.1"
+}

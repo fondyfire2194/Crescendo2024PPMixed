@@ -53,6 +53,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "autoshootmoving")
   public boolean autoShootmoving;
   private boolean transferMotorConnected;
+public boolean OKShootMoving;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {

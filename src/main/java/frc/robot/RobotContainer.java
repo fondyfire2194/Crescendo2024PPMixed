@@ -148,6 +148,7 @@ public class RobotContainer implements Logged {
                 doLobShot.onTrue(m_transfer.transferToShooterCommand());
 
                 doMovingShot = new Trigger(() -> m_transfer.shootmoving
+                                && m_transfer.OKShootMoving
                                 && m_transfer.noteAtIntake()
                                 && m_shooter.bothAtSpeed(1)
                                 && m_arm.getAtSetpoint()
@@ -191,6 +192,7 @@ public class RobotContainer implements Logged {
                 log("errcanivore", canInfo.Status.isError());
                 log("warncanivore", canInfo.Status.isWarning());
                 log("okcanivore", canInfo.Status.isOK());
+                log("canivoredesc", canInfo.Status.getDescription());
         }
 
         private void configureDriverBindings() {
@@ -376,7 +378,7 @@ public class RobotContainer implements Logged {
 
                 setup.y().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(70)));
 
-                setup.povUp().onTrue(m_arm.positionToIntakeUDACommand());
+                //setup.povUp().onTrue(
 
                 setup.povDown().onTrue(new RotateToAngle(m_swerve, 0));
 

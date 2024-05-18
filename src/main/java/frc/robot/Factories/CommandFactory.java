@@ -267,12 +267,12 @@ public class CommandFactory implements Logged {
                                 m_shooter.startShooterCommand(
                                                 Pref.getPref("AmpTopRPM"), Pref.getPref("AmpBottomRPM")),
                                 m_arm.setGoalCommand(ArmConstants.armMinRadians),
-                                Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                Commands.waitUntil(() -> m_arm.getAtSetpoint()),
                                 Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
                                 m_arm.setGoalCommand(Units.degreesToRadians(90)),
-                                Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                Commands.waitUntil(() -> m_arm.getAtSetpoint()),
                                 m_arm.setGoalCommand(Units.degreesToRadians(Pref.getPref("AmpArmDegrees"))),
-                                Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                Commands.waitUntil(() -> m_arm.getAtSetpoint()),
                                 Commands.parallel(
                                                 m_transfer.transferToShooterCommand(),
                                                 Commands.sequence(
