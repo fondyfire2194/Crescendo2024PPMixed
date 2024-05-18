@@ -216,14 +216,21 @@ public class RobotContainer implements Logged {
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), true),
                                                 m_cf.positionArmRunShooterByDistance()));
-                // pick up notes
-                driver.rightBumper().onTrue(
-                                Commands.sequence(
-                                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
-                                                Commands.none().until(() -> m_arm.getAtSetpoint()),
-                                                m_intake.startIntakeCommand(),
-                                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
-                                                m_cf.rumbleCommand(driver)));
+                // // pick up notes
+                // driver.rightBumper().onTrue(
+                // Commands.sequence(
+                // m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
+                // Commands.waitUntil(() -> m_arm.getAtSetpoint()),
+                // m_intake.startIntakeCommand(),
+                // new TransferIntakeToSensor(m_transfer, m_intake, 120)).andThen(
+                // m_cf.rumbleCommand(driver)));
+
+                driver.rightBumper().onTrue(Commands.parallel(
+                                m_intake.startIntakeCommand(),
+                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
+                                m_cf.rumbleCommand(driver),
+                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians))
+                                .withTimeout(10));
 
                 // pick up notes with vision align
                 driver.rightBumper().and(driver.a()).onTrue(
@@ -274,13 +281,13 @@ public class RobotContainer implements Logged {
                 // driver.b().onTrue(new ShootWhileMoving(m_arm, m_transfer, m_shooter,
                 // m_swerve,
                 // () -> -driver.getLeftY(),
-                // () -> driver.getLeftX(),
+                // () -> driver.getLeftX(),f
                 // () -> driver.getRightX(), m_llv)
                 // .withName("ShootMoving"));
 
                 driver.x().onTrue(m_shooter.startShooterCommand(3500));
 
-                driver.a().onTrue(m_cf.doAmpShot());
+                driver.rightBumper().negate().and(driver.a()).onTrue(m_cf.doAmpShot());
 
                 driver.povUp().onTrue(m_shooter.increaseRPMCommand(100));
 
@@ -581,12 +588,12 @@ public class RobotContainer implements Logged {
 
         @Log.NT(key = "stickyfault")
         public boolean getStickyFaults() {
-                return m_arm.getStickyFaults() == 0
-                                && m_intake.getStickyFaults() == 0
-                                && m_transfer.getStickyFaults() == 0
-                                && m_shooter.getTopStickyFaults() == 0 && m_shooter.getBottomStickyFaults() == 0
-                                && m_climber.getLeftStickyFaults() == 0 && m_climber.getRightStickyFaults() == 0
-                                && m_swerve.getModuleStickyFaults() == 0;
+                return m_arm.getStickyFaults() != 0
+                                && m_intake.getStickyFaults() != 0
+                                && m_transfer.getStickyFaults() != 0
+                                && m_shooter.getTopStickyFaults() != 0 && m_shooter.getBottomStickyFaults() != 0
+                                && m_climber.getLeftStickyFaults() != 0 && m_climber.getRightStickyFaults() != 0
+                                && m_swerve.getModuleStickyFaults() != 0;
 
         }
 

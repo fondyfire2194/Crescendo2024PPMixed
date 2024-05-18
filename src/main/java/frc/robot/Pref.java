@@ -85,19 +85,18 @@ public class Pref {
     prefDict.put("armKIZone", .00001);
 
     // amp shot
-    prefDict.put("AmpArmDegrees", 95.);
-    prefDict.put("AmpTopRPM", 300.);
-    prefDict.put("AmpBottomRPM", 100.);
+    prefDict.put("AmpArmDegrees", 112.);
+    prefDict.put("AmpTopRPM", 1000.);
+    prefDict.put("AmpBottomRPM", 500.);
+    prefDict.put("TransferToShootSpeedAmp", 4000.);
 
-    prefDict.put("AmpArmIncrementDelay", .5);
-    prefDict.put("AmpDegreeIncrement", 6.);
-    
+    prefDict.put("AmpArmIncrementDelay", .1);
+    prefDict.put("AmpDegreeIncrement", 23.);
+
     // climber
 
     prefDict.put("LockNumber", 1.);
     prefDict.put("UnlockNumber", 0.);
-
-
 
   }
 

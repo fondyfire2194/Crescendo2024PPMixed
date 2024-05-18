@@ -106,6 +106,21 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   }
 
+  public Command transferToShooterCommandAmp() {
+    return Commands.run(() -> transferToShooterAmp())
+        .withTimeout(TransferConstants.clearShooterTime)
+        .andThen(stopTransferCommand());
+
+  }
+
+  public void transferToShooterAmp() {
+    enableLimitSwitch(false);
+    commandrpm = Pref.getPref("TransferToShootSpeedAmp");
+    simnoteatintake = false;
+
+    runAtVelocity(commandrpm);
+  }
+
   public void transferToShooter() {
     enableLimitSwitch(false);
     commandrpm = Pref.getPref("TransferToShootSpeed");

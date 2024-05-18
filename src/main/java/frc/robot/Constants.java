@@ -601,9 +601,9 @@ public final class Constants {
                 public static double pickupAngleRadians = Units.degreesToRadians(25);
                 public static double midRange = Units.degreesToRadians(35);
 
-                public static double kTrapVelocityRadPerSecond = Units.degreesToRadians(90);
+                public static double kTrapVelocityRadPerSecond = Units.degreesToRadians(180);
 
-                public static final double kTrapAccelerationRadPerSecSquared = Units.degreesToRadians(120);
+                public static final double kTrapAccelerationRadPerSecSquared = Units.degreesToRadians(240);
 
                 public static final double armKg = 0.55;
                 public static final double armKs = 0.22;// 0.11941;
