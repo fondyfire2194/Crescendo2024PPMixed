@@ -579,14 +579,14 @@ public class RobotContainer implements Logged {
                                 m_swerve.clearStickFaultsCommand());
         }
 
-        @Log.NT(key = "nostickyfault")
+        @Log.NT(key = "stickyfault")
         public boolean getStickyFaults() {
-                return !(m_arm.getStickyFaults() == 0
+                return m_arm.getStickyFaults() == 0
                                 && m_intake.getStickyFaults() == 0
                                 && m_transfer.getStickyFaults() == 0
                                 && m_shooter.getTopStickyFaults() == 0 && m_shooter.getBottomStickyFaults() == 0
                                 && m_climber.getLeftStickyFaults() == 0 && m_climber.getRightStickyFaults() == 0
-                                && m_swerve.getModuleStickyFaults() == 0);
+                                && m_swerve.getModuleStickyFaults() == 0;
 
         }
 

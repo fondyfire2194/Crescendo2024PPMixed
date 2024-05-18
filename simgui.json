@@ -26,11 +26,13 @@
       "/SmartDashboard/Arm Sim": "Mechanism2d",
       "/SmartDashboard/Arm//Arm Sim": "Mechanism2d",
       "/SmartDashboard/BatteryChooser": "String Chooser",
+      "/SmartDashboard/ClearStickyFaults": "Command",
       "/SmartDashboard/CommSchd": "Scheduler",
       "/SmartDashboard/DelayChooser": "String Chooser",
       "/SmartDashboard/FrontCameraChooser": "String Chooser",
       "/SmartDashboard/Source Start": "String Chooser",
-      "/SmartDashboard/SubwfrStart": "String Chooser"
+      "/SmartDashboard/SubwfrStart": "String Chooser",
+      "/SmartDashboard/TestCan": "Command"
     },
     "windows": {
       "/SmartDashboard/Amp Start": {
