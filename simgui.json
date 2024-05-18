@@ -30,6 +30,7 @@
       "/SmartDashboard/CommSchd": "Scheduler",
       "/SmartDashboard/DelayChooser": "String Chooser",
       "/SmartDashboard/FrontCameraChooser": "String Chooser",
+      "/SmartDashboard/GetRPMAnglea": "Command",
       "/SmartDashboard/Source Start": "String Chooser",
       "/SmartDashboard/SubwfrStart": "String Chooser",
       "/SmartDashboard/TestCan": "Command"
@@ -41,6 +42,11 @@
         }
       },
       "/SmartDashboard/Arm//Arm Sim": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/GetRPMAnglea": {
         "window": {
           "visible": true
         }

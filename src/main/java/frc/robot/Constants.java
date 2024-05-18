@@ -213,13 +213,13 @@ public final class Constants {
 
                 public static double wheelRadius = Units.inchesToMeters(4) / 2;
 
-                public static double minLobDistance = Units.feetToMeters(20);
+                public static double minLobDistance = Units.feetToMeters(33);// 9 meters
 
-                public static double maxLobDistance = Units.feetToMeters(30);
+                public static double maxLobDistance = Units.feetToMeters(43);// 13
+
+                public static double rangeLobDistance = maxLobDistance - minLobDistance;
 
                 public static double maxMovingShotDistance = Units.feetToMeters(30);
-
-             
 
         }
 
@@ -519,26 +519,17 @@ public final class Constants {
         public static final InterpolatingDoubleTreeMap armLobAngleMap = new InterpolatingDoubleTreeMap();
 
         static {
-                armLobAngleMap.put(distance_7, 32.0);
-                armLobAngleMap.put(distance_8, 30.0);
-                armLobAngleMap.put(distance_9, 28.0);
-                armLobAngleMap.put(distance_10, 27.0); // 27
-
+                armLobAngleMap.put(SwerveConstants.minLobDistance, 50.);
+                armLobAngleMap.put(SwerveConstants.minLobDistance + SwerveConstants.rangeLobDistance / 2, 32.0);
+                armLobAngleMap.put(SwerveConstants.maxLobDistance, 40.);
         }
         /** Shooter look up table key: meters, values: rpm */
         public static final InterpolatingDoubleTreeMap shooterLobRPMMap = new InterpolatingDoubleTreeMap();
         static {
-                shooterLobRPMMap.put(distance_7, 3500.);
-                shooterLobRPMMap.put(distance_8, 3500.);
-                shooterLobRPMMap.put(distance_9, 3500.);
-                shooterLobRPMMap.put(distance_10, 3750.);
-                shooterLobRPMMap.put(distance_11, 4000.);
-                shooterLobRPMMap.put(distance_12, 4000.);
+                shooterLobRPMMap.put(SwerveConstants.minLobDistance, 2000.);
+                shooterLobRPMMap.put(SwerveConstants.minLobDistance + SwerveConstants.rangeLobDistance / 2, 2400.0);
+                shooterLobRPMMap.put(SwerveConstants.maxLobDistance, 2800.);
         }
-
-
-        public static double ampArmAngle = 100;// degrees
-        public static double ampShooterSpeed = 700;// rpm
 
         public static double subwfrArmAngle = 60;// degrees
         public static double subwfrShooterSpeed = 3000;// rpm

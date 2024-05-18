@@ -5,11 +5,9 @@
 package frc.robot;
 
 import java.util.function.BooleanSupplier;
-
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.auto.NamedCommands;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -32,11 +30,13 @@ import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.TriggerCommandFactory;
+import frc.robot.commands.ArmShooterByDistance;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
+import frc.robot.commands.Shooter.ShootWhileMoving;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -122,6 +122,8 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putData("TestCan", this.testAllCan().ignoringDisable(true));
 
                 SmartDashboard.putData("ClearStickyFaults", this.clearAllStickyFaultsCommand().ignoringDisable(true));
+
+                SmartDashboard.putData("GetRPMAnglea", new ArmShooterByDistance().ignoringDisable(true));
 
                 configureDriverBindings();
 
@@ -216,14 +218,6 @@ public class RobotContainer implements Logged {
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), true),
                                                 m_cf.positionArmRunShooterByDistance()));
-                // // pick up notes
-                // driver.rightBumper().onTrue(
-                // Commands.sequence(
-                // m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
-                // Commands.waitUntil(() -> m_arm.getAtSetpoint()),
-                // m_intake.startIntakeCommand(),
-                // new TransferIntakeToSensor(m_transfer, m_intake, 120)).andThen(
-                // m_cf.rumbleCommand(driver)));
 
                 driver.rightBumper().onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),
@@ -239,19 +233,17 @@ public class RobotContainer implements Logged {
                                                 Commands.none().until(() -> m_arm.getAtSetpoint()),
                                                 m_intake.startIntakeCommand(),
                                                 Commands.deadline(
-                                                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
-                                                                Commands.deadline(
-                                                                                new TransferIntakeToSensor(m_transfer,
-                                                                                                m_intake, 120),
-                                                                                new AlignToNote(
-                                                                                                m_swerve,
-                                                                                                m_llv,
-                                                                                                CameraConstants.rearCamera.camname,
-                                                                                                () -> -driver.getLeftY(),
-                                                                                                () -> driver.getLeftX(),
-                                                                                                () -> driver.getRightX())),
+                                                                new TransferIntakeToSensor(m_transfer,
+                                                                                m_intake, 120),
+                                                                new AlignToNote(
+                                                                                m_swerve,
+                                                                                m_llv,
+                                                                                CameraConstants.rearCamera.camname,
+                                                                                () -> -driver.getLeftY(),
+                                                                                () -> driver.getLeftX(),
+                                                                                () -> driver.getRightX())),
 
-                                                                m_cf.rumbleCommand(driver))));
+                                                m_cf.rumbleCommand(driver)));
 
                 // align with amp corner for lob shots
                 driver.leftBumper().whileTrue(

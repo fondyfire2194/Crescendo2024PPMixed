@@ -24,7 +24,7 @@ public class AlignTargetOdometry extends Command {
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
   private boolean speaker;
-
+  private boolean virtualTarget;
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
@@ -61,8 +61,6 @@ public class AlignTargetOdometry extends Command {
      m_swerve. targetPose = AllianceUtil.getLobPose();
       m_alignTargetPID.setTolerance(1);
     }
-
-    SmartDashboard.putString("TgtPOSE", m_swerve.targetPose.toString());
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -83,8 +81,8 @@ public class AlignTargetOdometry extends Command {
     double YDiff = m_swerve.targetPose.getY() - robotPose.getY();
     double angleRad = Math.atan2(YDiff, XDiff);
     double currentAngleToSpeaker = Units.radiansToDegrees(angleRad);
-    SmartDashboard.putNumber("CAS", currentAngleToSpeaker);
-    SmartDashboard.putNumber("CAROB", robotPose.getRotation().getDegrees());
+    // SmartDashboard.putNumber("CAS", currentAngleToSpeaker);
+    // SmartDashboard.putNumber("CAROB", robotPose.getRotation().getDegrees());
 
 
     rotationVal = m_alignTargetPID.calculate(robotPose.getRotation().getDegrees(), currentAngleToSpeaker);

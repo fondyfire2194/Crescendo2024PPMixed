@@ -566,7 +566,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         .getDistance(getPose().getTranslation()), 2);
   }
 
-  @Log.NT(key = "AmpDistance")
+  @Log.NT(key = "lobDistance")
   public double getDistanceFromLobTarget() {
     return round2dp(AllianceUtil.getLobPose().getTranslation()
         .getDistance(getPose().getTranslation()), 2);
@@ -779,6 +779,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public boolean alignedToTarget;
   @Log.NT(key = "targetpose")
   public Pose2d targetPose = new Pose2d();
+  @Log.NT(key = "virtualtargetpose")
+  public Pose2d virtualPose=new Pose2d();
 
   public void setPathRunning() {
     pathRunning = true;
