@@ -59,8 +59,9 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(2500);
   private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(2500);
   private int loopctr;
-  private boolean topMotorConnected;
-  private boolean bottomMotorConnected;
+  public boolean topMotorConnected;
+  public boolean bottomMotorConnected;
+  
 
   /** Creates a new Shooter. */
   public ShooterSubsystem() {
@@ -222,18 +223,20 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     return bottomRoller.getOutputCurrent();
   }
 
-  public Command clearFaultsCommand() {
-    return Commands.parallel(
+  @Log.NT(key = "shootertopstickyfault")
+  public int getTopStickyFaults() {
+    return topRoller.getStickyFaults();
+  }
+
+  @Log.NT(key = "shooterbottomstickyfault")
+  public int getBottomStickyFaults() {
+    return bottomRoller.getStickyFaults();
+  }
+
+  public Command clearStickyFaultsCommand() {
+    return Commands.sequence(
         Commands.runOnce(() -> topRoller.clearFaults()),
-        Commands.runOnce(() -> bottomRoller.clearFaults()));
-  }
-
-  public int getFaults() {
-    return topRoller.getFaults() + bottomRoller.getFaults();
-  }
-
-  public int getStickyFaults() {
-    return topRoller.getStickyFaults() + bottomRoller.getStickyFaults();
+        runOnce(() -> bottomRoller.clearFaults()));
   }
 
   @Override
@@ -287,6 +290,12 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   private boolean checkMotorCanOK(CANSparkMax motor) {
     double temp = motor.getOpenLoopRampRate();
     return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
+  }
+
+  public Command testCan() {
+    return Commands.parallel(
+        Commands.runOnce(() -> topMotorConnected = false),
+        runOnce(() -> bottomMotorConnected = false));
   }
 
   private double getTopCommandRPM() {

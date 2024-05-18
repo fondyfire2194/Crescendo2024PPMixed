@@ -181,15 +181,7 @@ public class CommandFactory implements Logged {
                 return Commands.runOnce(() -> m_transfer.autoShootmoving = on);
         }
 
-        public Command clearStickyFaultsCommand() {
-                return Commands.parallel(
-                                m_arm.clearFaultsCommand(),
-                                m_intake.clearFaultsCommand(),
-                                m_transfer.clearFaultsCommand(),
-                                m_climber.clearFaultsCommand(),
-                                m_swerve.clearFaultsCommand());
-        }
-
+       
         public Command rumbleCommand(CommandXboxController controller) {
                 return Commands.run(() -> {
                         if (m_swerve.getOnTarget())

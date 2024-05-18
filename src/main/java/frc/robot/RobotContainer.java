@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.event.EventLoop;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -117,6 +118,10 @@ public class RobotContainer implements Logged {
                 m_pd.resetTotalEnergy();
 
                 m_transfer.setVelPID();
+
+                SmartDashboard.putData("TestCan", this.testAllCan().ignoringDisable(true));
+
+                SmartDashboard.putData("ClearStickyFaults", this.clearAllStickyFaultsCommand().ignoringDisable(true));
 
                 configureDriverBindings();
 
@@ -378,7 +383,7 @@ public class RobotContainer implements Logged {
 
                 setup.y().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(70)));
 
-                //setup.povUp().onTrue(
+                // setup.povUp().onTrue(
 
                 setup.povDown().onTrue(new RotateToAngle(m_swerve, 0));
 
@@ -541,4 +546,48 @@ public class RobotContainer implements Logged {
                         m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
                 }
         }
+
+        public Command testAllCan() {
+                return Commands.sequence(
+                                m_arm.testCan(),
+                                m_climber.testCan(),
+                                m_intake.testCan(),
+                                m_transfer.testCan(),
+                                m_shooter.testCan(),
+                                m_swerve.testAllCan());
+        }
+
+        @Log.NT(key = "canOK")
+        public boolean isCanOK() {
+                return m_arm.armMotorConnected
+                                && m_intake.intakeMotorConnected
+                                && m_transfer.transferMotorConnected
+                                && m_shooter.topMotorConnected && m_shooter.bottomMotorConnected
+                                && m_climber.leftMotorConnected && m_climber.rightMotorConnected
+                                && m_swerve.mod0connected && m_swerve.mod1connected
+                                && m_swerve.mod2connected && m_swerve.mod3connected;
+
+        }
+
+        public Command clearAllStickyFaultsCommand() {
+                return Commands.sequence(
+                                m_arm.clearStickyFaultsCommand(),
+                                m_climber.clearStickyFaultsCommand(),
+                                m_intake.clearStickyFaultsCommand(),
+                                m_transfer.clearStickyFaultsCommand(),
+                                m_shooter.clearStickyFaultsCommand(),
+                                m_swerve.clearStickFaultsCommand());
+        }
+
+        @Log.NT(key = "nostickyfault")
+        public boolean getStickyFaults() {
+                return !(m_arm.getStickyFaults() == 0
+                                && m_intake.getStickyFaults() == 0
+                                && m_transfer.getStickyFaults() == 0
+                                && m_shooter.getTopStickyFaults() == 0 && m_shooter.getBottomStickyFaults() == 0
+                                && m_climber.getLeftStickyFaults() == 0 && m_climber.getRightStickyFaults() == 0
+                                && m_swerve.getModuleStickyFaults() == 0);
+
+        }
+
 }

@@ -153,10 +153,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this);
   public LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this);
 
-  private boolean mod0connected;
-  private boolean mod1connected;
-  private boolean mod2connected;
-  private boolean mod3connected;
+  public boolean mod0connected;
+  public boolean mod1connected;
+  public boolean mod2connected;
+  public boolean mod3connected;
+
 
   public SwerveSubsystem() {
 
@@ -330,6 +331,14 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         + mSwerveMods[3].getStickyFaults();
   }
 
+  public Command clearStickFaultsCommand() {
+    return Commands.sequence(
+        mSwerveMods[0].clearFaultsCommand(),
+        mSwerveMods[1].clearFaultsCommand(),
+        mSwerveMods[2].clearFaultsCommand(),
+        mSwerveMods[3].clearFaultsCommand());
+  }
+
   public void setModuleDriveKp() {
     mSwerveMods[0].setDriveKp();
     mSwerveMods[1].setDriveKp();
@@ -436,6 +445,14 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   private boolean checkMod3CansOK() {
     return mSwerveMods[3].checkDriveMotorCanOK() && mSwerveMods[3].checkAngleMotorCanOK();
+  }
+
+  public Command testAllCan() {
+    return Commands.sequence(
+        Commands.runOnce(() -> mod0connected = false),
+        runOnce(() -> mod1connected = false),
+        runOnce(() -> mod2connected = false),
+        runOnce(() -> mod3connected = false));
   }
 
   public SwerveModuleState[] getStates() {

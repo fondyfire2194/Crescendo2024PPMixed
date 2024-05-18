@@ -44,7 +44,7 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "intakecommandrpm")
   private double commandrpm;
   public boolean noteMissed;
-  private boolean intakeMotorConnected;
+  public boolean intakeMotorConnected;
 
   /** Creates a new Intake. */
   public IntakeSubsystem() {
@@ -126,6 +126,10 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
   }
 
+  public Command testCan() {
+    return runOnce(() -> intakeMotorConnected = false);
+  }
+
   private void runAtVelocity(double rpm) {
     intakeController.setReference(rpm, ControlType.kVelocity);
   }
@@ -144,19 +148,13 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     intakeController.setFF(IntakeConstants.intakeKFF);
   }
 
-  public Command clearFaultsCommand() {
-    return Commands.runOnce(() -> intakeMotor.clearFaults());
-  }
-
-  public int getFaults() {
-    return intakeMotor.getFaults();
-  }
-
+   @Log.NT(key = "intakestickyfault")
   public int getStickyFaults() {
     return intakeMotor.getStickyFaults();
   }
 
-  public String getFirmwareVersion() {
-    return intakeMotor.getFirmwareString();
+  public Command clearStickyFaultsCommand() {
+    return Commands.runOnce(() -> intakeMotor.clearFaults());
   }
+
 }

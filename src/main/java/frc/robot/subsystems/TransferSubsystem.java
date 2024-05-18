@@ -52,8 +52,8 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean shootmoving;
   @Log.NT(key = "autoshootmoving")
   public boolean autoShootmoving;
-  private boolean transferMotorConnected;
-public boolean OKShootMoving;
+  public boolean transferMotorConnected;
+  public boolean OKShootMoving;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {
@@ -140,12 +140,15 @@ public boolean OKShootMoving;
       transferMotorConnected = checkMotorCanOK(transferMotor);
       SmartDashboard.putBoolean("Transfer//OKTransferMotor", transferMotorConnected);
     }
-
   }
 
   private boolean checkMotorCanOK(CANSparkMax motor) {
     double temp = motor.getOpenLoopRampRate();
     return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
+  }
+
+  public Command testCan() {
+    return Commands.runOnce(() -> transferMotorConnected = false);
   }
 
   public void enableLimitSwitch(boolean enable) {
@@ -186,19 +189,12 @@ public boolean OKShootMoving;
     return transferMotor.getFault(FaultID.kHardLimitRev);
   }
 
-  public int getFaults() {
-    return transferMotor.getFaults();
-  }
-
+  @Log.NT(key = "transferstickyfault")
   public int getStickyFaults() {
     return transferMotor.getStickyFaults();
   }
 
-  public void clearFaults() {
-    transferMotor.clearFaults();
-  }
-
-  public Command clearFaultsCommand() {
+  public Command clearStickyFaultsCommand() {
     return Commands.runOnce(() -> transferMotor.clearFaults());
   }
 

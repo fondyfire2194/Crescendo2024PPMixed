@@ -322,9 +322,10 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public Command clearFaultsCommand() {
-    return Commands.parallel(
+    return Commands.sequence(
         Commands.runOnce(() -> driveMotor.clearFaults()),
-        Commands.runOnce(() -> angleMotor.clearFaults()));
+        runOnce(() -> angleMotor.clearFaults()),
+        runOnce(() -> m_turnCancoder.clearStickyFaults()));
   }
 
   public boolean checkDriveMotorCanOK() {
@@ -335,10 +336,6 @@ public class SwerveModule extends SubsystemBase {
   public boolean checkAngleMotorCanOK() {
     double temp = angleMotor.getOpenLoopRampRate();
     return RobotBase.isSimulation() || angleMotor.setOpenLoopRampRate(temp) == REVLibError.kOk;
-  }
-
-  public double getFaults() {
-    return driveMotor.getFaults() + angleMotor.getFaults() + m_turnCancoder.getFaultField().getValueAsDouble();
   }
 
   public double getStickyFaults() {

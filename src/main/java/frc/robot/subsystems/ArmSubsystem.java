@@ -464,16 +464,20 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                 || armMotor.isSoftLimitEnabled(SoftLimitDirection.kReverse);
     }
 
-    public Command clearFaultsCommand() {
-        return Commands.runOnce(() -> armMotor.clearFaults());
-    }
-
-    public int getFaults() {
-        return armMotor.getFaults();
-    }
-
+    @Log.NT(key = "armstickyfault")
     public int getStickyFaults() {
         return armMotor.getStickyFaults();
+    }
+
+    @Log.NT(key = "armscancodertickyfault")
+    public int getCancoderStickyFaults() {
+        return armCancoder.getStickyFaultField().getValue();
+    }
+
+    public Command clearStickyFaultsCommand() {
+        return Commands.sequence(
+                Commands.runOnce(() -> armMotor.clearFaults()),
+                runOnce(() -> armCancoder.clearStickyFaults()));
     }
 
     public double round2dp(double number) {
@@ -503,6 +507,12 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     @Log.NT(key = "isstopped")
     public boolean isStopped() {
         return Math.abs(getCanCoderRadPerSec()) < Units.degreesToRadians(1);
+    }
+
+    public Command testCan() {
+        return Commands.parallel(
+                Commands.runOnce(() -> armMotorConnected = false),
+                runOnce(() -> cancoderconnected = false));
     }
 
     public void setKp() {

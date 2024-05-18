@@ -35,8 +35,8 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
   public boolean showClimber = true;
   private int loopctr;
 
-  private boolean leftClimberMotorConnected;
-  private boolean rightClimberMotorConnected;
+  public boolean leftMotorConnected;
+  public boolean rightMotorConnected;
 
   public ClimberSubsystem() {
     climberMotorLeft = new CANSparkMax(CANIDConstants.climberIDLeft, MotorType.kBrushless);
@@ -48,7 +48,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
     unlockClimber();
     configMotor(climberMotorRight, climberEncoderRight, false);
     configMotor(climberMotorLeft, climberEncoderLeft, true);
-    
+
   }
 
   private void configMotor(CANSparkMax motor, RelativeEncoder encoder, boolean reverse) {
@@ -69,15 +69,14 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    
-    if (!leftClimberMotorConnected) {
-      leftClimberMotorConnected = checkMotorCanOK(climberMotorLeft);
-      SmartDashboard.putBoolean("Climber//OKLClimber", leftClimberMotorConnected);
+    if (!leftMotorConnected) {
+      leftMotorConnected = checkMotorCanOK(climberMotorLeft);
+      SmartDashboard.putBoolean("Climber//OKLClimber", leftMotorConnected);
     }
-    
-    if (!rightClimberMotorConnected) {
-      rightClimberMotorConnected = checkMotorCanOK(climberMotorRight);
-      SmartDashboard.putBoolean("Climber//OKRClimber", rightClimberMotorConnected);
+
+    if (!rightMotorConnected) {
+      rightMotorConnected = checkMotorCanOK(climberMotorRight);
+      SmartDashboard.putBoolean("Climber//OKRClimber", rightMotorConnected);
     }
 
     SmartDashboard.putNumber("Climber// Left RPM", getRPMLeft());
@@ -93,6 +92,12 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
   private boolean checkMotorCanOK(CANSparkMax motor) {
     double temp = motor.getOpenLoopRampRate();
     return RobotBase.isSimulation() || motor.setOpenLoopRampRate(temp) == REVLibError.kOk;
+  }
+
+  public Command testCan() {
+    return Commands.parallel(
+        Commands.runOnce(() -> leftMotorConnected = false),
+        runOnce(() -> rightMotorConnected = false));
   }
 
   public void stopMotors() {
@@ -155,28 +160,20 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
     return climberEncoderRight.getPosition();
   }
 
-  public Command clearFaultsLeftCommand() {
-    return Commands.runOnce(() -> climberMotorLeft.clearFaults());
-  }
-
-  public Command clearFaultsRightCommand() {
-    return Commands.runOnce(() -> climberMotorRight.clearFaults());
-  }
-
-  public int getFaultsLeft() {
-    return climberMotorLeft.getFaults();
-  }
-
-  public int getFaultsRight() {
-    return climberMotorRight.getFaults();
-  }
-
-  public int getStickyFaultsLeft() {
+  @Log.NT(key = "climberleftstickyfault")
+  public int getLeftStickyFaults() {
     return climberMotorLeft.getStickyFaults();
   }
 
-  public int getStickyFaultsRight() {
+  @Log.NT(key = "climberrightstickyfault")
+  public int getRightStickyFaults() {
     return climberMotorRight.getStickyFaults();
+  }
+
+  public Command clearStickyFaultsCommand() {
+    return Commands.sequence(
+        Commands.runOnce(() -> climberMotorLeft.clearFaults()),
+        runOnce(() -> climberMotorRight.clearFaults()));
   }
 
   @Log.NT(key = "ClimberLeftAmps")
@@ -205,7 +202,4 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
     return Commands.runOnce(() -> unlockClimber());
   }
 
-  public Command clearFaultsCommand() {
-    return Commands.sequence(clearFaultsLeftCommand(), clearFaultsRightCommand());
-  }
 }
