@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
@@ -100,32 +101,56 @@ public class CommandFactory implements Logged {
                                 0);
         }
 
-        public Command positionArmRunShooterByDistance() {
+        public Command positionArmRunShooterByDistance(boolean lob, boolean calcAngles) {
+
                 return new FunctionalCommand(
-                                () -> Commands.none(),
+
+                                () -> Commands.runOnce(() -> m_transfer.lobbing = lob),
+
                                 () -> {
-                                        m_shooter.startShooter(
-                                                        Constants.shooterRPMMap.get(m_swerve.getDistanceFromSpeaker()));
-                                        m_arm.setGoal(Units.degreesToRadians(
-                                                        Constants.armAngleMap.get(m_swerve.getDistanceFromSpeaker())));
+                                        if (lob) {
+                                                m_shooter.startShooter(
+                                                                Constants.shooterLobRPMMap.get(
+                                                                                m_swerve.getDistanceFromStage()));
+                                                m_arm.setTolerance(ArmConstants.angleTolerance);
+                                                m_arm.setTarget(Units.degreesToRadians(
+                                                                getArmAngleFromTarget(FieldConstants.stageHeight,
+                                                                                m_swerve.getDistanceFromStage())));
+                                        } else {
+                                                m_shooter.startShooter(
+                                                                Constants.shooterRPMMap.get(
+                                                                                m_swerve.getDistanceFromTarget(false)));
+                                                m_arm.setToleranceByDistance(Units
+                                                                .degreesToRadians(m_swerve
+                                                                                .getDistanceFromTarget(false)));
+
+                                                if (calcAngles)
+                                                        m_arm.setTarget(Units.degreesToRadians(
+                                                                        Constants.armAngleMap.get(m_swerve
+                                                                                        .getDistanceFromTarget(
+                                                                                                        false))));
+
+                                                else
+                                                        m_arm.setTarget(Units.degreesToRadians(
+                                                                        getArmAngleFromTarget(
+                                                                                        FieldConstants.speakerSlotHeight,
+                                                                                        m_swerve.getDistanceFromTarget(
+                                                                                                        false))));
+                                        }
                                 },
+
                                 (interrupted) -> Commands.none(),
+
                                 () -> false);
         }
 
-        public Command positionArmRunShooterByDistanceLob() {
-                return new FunctionalCommand(
-                                () -> Commands.runOnce(() -> m_transfer.lobbing = true),
-                                () -> {
-                                        m_shooter.startShooter(
-                                                        Constants.shooterLobRPMMap
-                                                                        .get(m_swerve.getDistanceFromLobTarget()));
-                                        m_arm.setGoal(Units.degreesToRadians(
-                                                        Constants.armLobAngleMap
-                                                                        .get(m_swerve.getDistanceFromLobTarget())));
-                                },
-                                (interrupted) -> Commands.runOnce(() -> m_transfer.lobbing = false),
-                                () -> false);
+        public Command armFollowTargetDistance() {
+                return Commands.parallel(
+                                m_arm.setGoalCommand(Constants.armAngleMap
+                                                .get(m_swerve.targetPose.getTranslation().getNorm())),
+                                Commands.runOnce(() -> m_arm.setToleranceByDistance(
+                                                m_swerve.targetPose.getTranslation().getNorm())));
+
         }
 
         // @Log.NT(key = "posarmrunshootercommand")
@@ -181,7 +206,12 @@ public class CommandFactory implements Logged {
                 return Commands.runOnce(() -> m_transfer.autoShootmoving = on);
         }
 
-       
+        public double getArmAngleFromTarget(double height, double distance) {
+                double opp = height - ArmConstants.armPivotZ;
+                double rads = Math.atan(opp / distance);
+                return Units.radiansToDegrees(rads);
+        }
+
         public Command rumbleCommand(CommandXboxController controller) {
                 return Commands.run(() -> {
                         if (m_swerve.getOnTarget())
@@ -260,7 +290,7 @@ public class CommandFactory implements Logged {
                                                 Pref.getPref("AmpTopRPM"), Pref.getPref("AmpBottomRPM")),
                                 m_arm.setGoalCommand(ArmConstants.armMinRadians),
                                 Commands.waitUntil(() -> m_arm.getAtSetpoint()),
-                               // Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
+                                // Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
                                 m_arm.setGoalCommand(Units.degreesToRadians(90)),
                                 Commands.waitUntil(() -> m_arm.getAtSetpoint()),
                                 m_arm.setGoalCommand(Units.degreesToRadians(Pref.getPref("AmpArmDegrees"))),

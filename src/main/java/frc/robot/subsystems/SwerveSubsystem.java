@@ -158,7 +158,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public boolean mod2connected;
   public boolean mod3connected;
 
-
   public SwerveSubsystem() {
 
     xLockStates[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
@@ -322,6 +321,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "ydistance")
   public double getY() {
     return getPose().getY();
+  }
+
+  @Log.NT(key = "robdegrees")
+  public double getAngleDegrees() {
+    return getPose().getRotation().getDegrees();
   }
 
   public double getModuleStickyFaults() {
@@ -560,7 +564,19 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     SmartDashboard.putNumber("Drive//GyroYaw", getYaw().getDegrees());
   }
 
-  @Log.NT(key = "SpeakerDistance")
+  @Log.NT(key = "targetPose")
+  public void setTargetPose(boolean lob) {
+    targetPose = AllianceUtil.getSpeakerPose();
+    if (lob)
+      targetPose = AllianceUtil.getLobPose();
+  }
+
+  @Log.NT(key = "stagepose")
+  public Pose2d getStagePose() {
+    return AllianceUtil.getStagePose();
+  }
+
+  @Log.NT(key = "speakerDistance")
   public double getDistanceFromSpeaker() {
     return round2dp(AllianceUtil.getSpeakerPose().getTranslation()
         .getDistance(getPose().getTranslation()), 2);
@@ -570,6 +586,30 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public double getDistanceFromLobTarget() {
     return round2dp(AllianceUtil.getLobPose().getTranslation()
         .getDistance(getPose().getTranslation()), 2);
+  }
+
+  @Log.NT(key = "stageDistance")
+  public double getDistanceFromStage() {
+    return round2dp(AllianceUtil.getStagePose().getTranslation()
+        .getDistance(getPose().getTranslation()), 2);
+  }
+
+  public double getDistanceFromTarget(boolean lob) {
+    if (lob)
+      return round2dp(AllianceUtil.getLobPose().getTranslation()
+          .getDistance(getPose().getTranslation()), 2);
+    else
+      return round2dp(AllianceUtil.getSpeakerPose().getTranslation()
+          .getDistance(getPose().getTranslation()), 2);
+
+  }
+
+  public double getAngleRadsToTarget() {
+    double XDiff = targetPose.getX() - getX();
+    double YDiff = targetPose.getY() - getY();
+    double angleRad = Math.atan2(YDiff, XDiff);
+    double currentRadsToTarget = Units.radiansToDegrees(angleRad);
+    return currentRadsToTarget;
   }
 
   /**
@@ -780,7 +820,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "targetpose")
   public Pose2d targetPose = new Pose2d();
   @Log.NT(key = "virtualtargetpose")
-  public Pose2d virtualPose=new Pose2d();
+  public Pose2d virtualPose = new Pose2d();
+  @Log.NT(key = "stagepose")
+  public Pose2d stagePose = new Pose2d();
 
   public void setPathRunning() {
     pathRunning = true;

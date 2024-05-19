@@ -30,7 +30,7 @@ import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.TriggerCommandFactory;
-import frc.robot.commands.ArmShooterByDistance;
+import frc.robot.commands.ViewArmShooterByDistance;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
@@ -123,7 +123,7 @@ public class RobotContainer implements Logged {
 
                 SmartDashboard.putData("ClearStickyFaults", this.clearAllStickyFaultsCommand().ignoringDisable(true));
 
-                SmartDashboard.putData("GetRPMAnglea", new ArmShooterByDistance().ignoringDisable(true));
+                SmartDashboard.putData("ViewRPMAngles", new ViewArmShooterByDistance(m_cf).ignoringDisable(true));
 
                 configureDriverBindings();
 
@@ -216,8 +216,8 @@ public class RobotContainer implements Logged {
                                                                 m_swerve,
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
-                                                                () -> driver.getRightX(), true),
-                                                m_cf.positionArmRunShooterByDistance()));
+                                                                () -> driver.getRightX(), false),
+                                                m_cf.positionArmRunShooterByDistance(false, true)));
 
                 driver.rightBumper().onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),
@@ -252,8 +252,8 @@ public class RobotContainer implements Logged {
                                                                 m_swerve,
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
-                                                                () -> driver.getRightX(), false),
-                                                m_cf.positionArmRunShooterByDistanceLob()))
+                                                                () -> driver.getRightX(), true),
+                                                m_cf.positionArmRunShooterByDistance(true, false)))
 
                                 .onFalse(
                                                 Commands.parallel(
@@ -263,6 +263,7 @@ public class RobotContainer implements Logged {
                 // shoot
                 driver.rightTrigger().onTrue(
                                 Commands.sequence(
+                                                Commands.waitUntil(() -> m_arm.getAtSetpoint()),
                                                 m_transfer.transferToShooterCommand(),
                                                 m_shooter.stopShooterCommand(),
                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
@@ -325,8 +326,8 @@ public class RobotContainer implements Logged {
                 codriver.a().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                 Constants.subwfrShooterSpeed));
 
-                codriver.b().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.safeStageArmAngle,
-                                Constants.safeStageShooterSpeed));
+                // codriver.b().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.safeStageArmAngle,
+                // Constants.safeStageShooterSpeed));
 
                 codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,
                                 Constants.tapeLineShooterSpeed));

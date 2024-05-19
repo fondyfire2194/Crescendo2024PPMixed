@@ -309,6 +309,20 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         angleTolerance = tolerance;
     }
 
+    public void setToleranceByDistance(double distance) {
+        angleTolerance = ArmConstants.angleTolerance;
+    }
+
+
+
+
+    public void setTarget(double anglerads) {
+        currentGoalRads = anglerads;
+        setGoal(currentGoalRads);
+        resetController();
+        enable();
+    }
+
     public Command setGoalCommand(double angleRads) {
         return Commands.sequence(
                 runOnce(() -> currentGoalRads = angleRads),
@@ -469,7 +483,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         return armMotor.getStickyFaults();
     }
 
-    @Log.NT(key = "armscancodertickyfault")
+    @Log.NT(key = "armscancoderstickyfault")
     public int getCancoderStickyFaults() {
         return armCancoder.getStickyFaultField().getValue();
     }

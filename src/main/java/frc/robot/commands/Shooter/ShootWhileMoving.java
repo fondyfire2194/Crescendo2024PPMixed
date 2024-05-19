@@ -86,15 +86,14 @@ public class ShootWhileMoving extends Command implements Logged {
 
   /*
    * Step 1 Calculate the distance to the real speaker and get the shot time from
-   * the table;
+   * the table; Shot time * shot distance is used as a substitute for shot velocity
    * Then do the following in a loop up to 5 times
    * Step 2 Create a virtual speaker from the real speaker pose and the robot
    * velocity and acceleration.
    * Step 3 Calculate the distance to the virtual speaker and lookup the shot time
    * for it
    * * align the robot to the virtual target, get the shooter speed and arm angle
-   * to the virtual
-   * distance and angle lookup tables
+   * to the virtual distance and angle lookup tables
    * Step 4 Calculate the difference between real and virtual shot times,
    * Step 5 If the absolute value of the time difference is less than a constant
    * (.01 secs?)

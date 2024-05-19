@@ -33,7 +33,8 @@
       "/SmartDashboard/GetRPMAnglea": "Command",
       "/SmartDashboard/Source Start": "String Chooser",
       "/SmartDashboard/SubwfrStart": "String Chooser",
-      "/SmartDashboard/TestCan": "Command"
+      "/SmartDashboard/TestCan": "Command",
+      "/SmartDashboard/ViewRPMAngles": "Command"
     },
     "windows": {
       "/SmartDashboard/Amp Start": {

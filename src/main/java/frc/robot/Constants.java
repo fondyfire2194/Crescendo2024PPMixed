@@ -233,8 +233,16 @@ public final class Constants {
                 public static final double FIELD_WIDTH = 8.21;
                 public static final double FIELD_LENGTH = 16.54;
 
+                public static final double stageHeight = Units.inchesToMeters(96);
+                public static final double speakerSlotHeight = Units.inchesToMeters( 80.4375);
+
                 public static final Pose2d speakerBlueAlliance = new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0.0));
                 public static final Pose2d speakerRedAlliance = new Pose2d(16.54, 5.5, Rotation2d.fromDegrees(180.0));
+
+                public static final Pose2d stageBlueAlliance = new Pose2d(Units.inchesToMeters(190), FIELD_WIDTH / 2,
+                                Rotation2d.fromDegrees(0.0));// 8 ft high
+                public static final Pose2d stageRedAlliance = new Pose2d(FIELD_LENGTH - Units.inchesToMeters(190),
+                                FIELD_WIDTH / 2, Rotation2d.fromDegrees(180.0));
 
                 public static final Pose2d lobBlueAlliance = new Pose2d(0.0, 7.1, Rotation2d.fromDegrees(0.0));
                 public static final Pose2d lobRedAlliance = new Pose2d(16.54, 7.1, Rotation2d.fromDegrees(180.0));
@@ -518,11 +526,6 @@ public final class Constants {
 
         public static final InterpolatingDoubleTreeMap armLobAngleMap = new InterpolatingDoubleTreeMap();
 
-        static {
-                armLobAngleMap.put(SwerveConstants.minLobDistance, 50.);
-                armLobAngleMap.put(SwerveConstants.minLobDistance + SwerveConstants.rangeLobDistance / 2, 32.0);
-                armLobAngleMap.put(SwerveConstants.maxLobDistance, 40.);
-        }
         /** Shooter look up table key: meters, values: rpm */
         public static final InterpolatingDoubleTreeMap shooterLobRPMMap = new InterpolatingDoubleTreeMap();
         static {
@@ -552,8 +555,8 @@ public final class Constants {
         public static double tapeLineArmAngle = 40;
         public static double tapeLineShooterSpeed = 3500;
 
-        public static double safeStageArmAngle = 37;
-        public static double safeStageShooterSpeed = 3500;
+        // public static double safeStageArmAngle = 37;
+        // public static double safeStageShooterSpeed = 3500;
 
         public static double allianceLineArmAngle = 24;
         public static double allianceLineShooterSpeed = 4500;
@@ -619,7 +622,7 @@ public final class Constants {
 
                 public static double armMass = Units.lbsToKilograms(30.0);
 
-                public static final double armPivotZ = Units.inchesToMeters(10.3);
+                public static final double armPivotZ = Units.inchesToMeters(10.3);// 10.3
                 public static final double armPivotX = Units.inchesToMeters(-7.5);
 
                 public static final double reverseMovementLimitAngle = Units.degreesToRadians(18);

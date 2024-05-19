@@ -23,7 +23,7 @@ public class AlignTargetOdometry extends Command {
   private DoubleSupplier translationSup;
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
-  private boolean speaker;
+  private boolean lob;
   private boolean virtualTarget;
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
@@ -34,19 +34,19 @@ public class AlignTargetOdometry extends Command {
   public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
 
   private double rotationVal;
- 
 
   public AlignTargetOdometry(
       SwerveSubsystem swerve,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
       DoubleSupplier rotSup,
-      boolean speaker) {
+      boolean lob) {
     m_swerve = swerve;
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
     this.rotationSup = rotSup;
-    this.speaker = speaker;
+    this.lob = lob;
+    ;
     addRequirements(m_swerve);
   }
 
@@ -55,12 +55,8 @@ public class AlignTargetOdometry extends Command {
   public void initialize() {
     m_alignTargetPID.enableContinuousInput(-180, 180);
     m_alignTargetPID.setTolerance(0.2);
-
-    m_swerve.targetPose = AllianceUtil.getSpeakerPose();
-    if (!speaker) {
-     m_swerve. targetPose = AllianceUtil.getLobPose();
-      m_alignTargetPID.setTolerance(1);
-    }
+    m_swerve.setTargetPose(lob);
+    m_alignTargetPID.setTolerance(1);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -76,18 +72,11 @@ public class AlignTargetOdometry extends Command {
 
     // get horizontal angle
 
-    Pose2d robotPose = m_swerve.getPose();
-    double XDiff = m_swerve.targetPose.getX() - robotPose.getX();
-    double YDiff = m_swerve.targetPose.getY() - robotPose.getY();
-    double angleRad = Math.atan2(YDiff, XDiff);
-    double currentAngleToSpeaker = Units.radiansToDegrees(angleRad);
-    // SmartDashboard.putNumber("CAS", currentAngleToSpeaker);
-    // SmartDashboard.putNumber("CAROB", robotPose.getRotation().getDegrees());
+    double currentAngleToTarget = m_swerve.getAngleRadsToTarget();
 
+    rotationVal = m_alignTargetPID.calculate(m_swerve.getAngleDegrees(), currentAngleToTarget);
 
-    rotationVal = m_alignTargetPID.calculate(robotPose.getRotation().getDegrees(), currentAngleToSpeaker);
-  
-      m_swerve.drive(
+    m_swerve.drive(
         translationVal *= Constants.SwerveConstants.kmaxSpeed,
         -(strafeVal *= Constants.SwerveConstants.kmaxSpeed),
         rotationVal *= Constants.SwerveConstants.kmaxAngularVelocity,
