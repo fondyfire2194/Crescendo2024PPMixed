@@ -24,7 +24,6 @@ public class AlignTargetOdometry extends Command {
   private DoubleSupplier strafeSup;
   private DoubleSupplier rotationSup;
   private boolean lob;
-  private boolean virtualTarget;
   // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
   private SlewRateLimiter translationLimiter = new SlewRateLimiter(3.0);
   private SlewRateLimiter strafeLimiter = new SlewRateLimiter(3.0);
@@ -46,7 +45,7 @@ public class AlignTargetOdometry extends Command {
     this.strafeSup = strafeSup;
     this.rotationSup = rotSup;
     this.lob = lob;
-    ;
+
     addRequirements(m_swerve);
   }
 
@@ -54,9 +53,14 @@ public class AlignTargetOdometry extends Command {
   @Override
   public void initialize() {
     m_alignTargetPID.enableContinuousInput(-180, 180);
-    m_alignTargetPID.setTolerance(0.2);
-    m_swerve.setTargetPose(lob);
-    m_alignTargetPID.setTolerance(1);
+    if (!lob) {
+      m_swerve.setTargetPose(AllianceUtil.getSpeakerPose());
+      m_alignTargetPID.setTolerance(0.2);
+    }
+    else {
+      m_swerve.setTargetPose(AllianceUtil.getLobPose());
+      m_alignTargetPID.setTolerance(1);
+    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

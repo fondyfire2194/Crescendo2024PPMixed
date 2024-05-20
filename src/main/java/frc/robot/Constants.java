@@ -448,23 +448,20 @@ public final class Constants {
                 public static double velocityTolerance = .05;
                 public static double gearing;
                 public static double circumference;
-
                 public static double jogSpeed = .25;
                 public static double debounceTime = .1;
                 public static double kAccelCompFactor = 0.100; // in units of seconds
 
         }
 
-       
-
         public static final InterpolatingDoubleTreeMap shotTimeMap = new InterpolatingDoubleTreeMap();
         // arm angle, time
         static {
-                shotTimeMap.put(Units.inchesToMeters(80.), 0.78);
-                shotTimeMap.put(Units.inchesToMeters(130.), 0.80);
-                shotTimeMap.put(Units.inchesToMeters(190.), 0.81);
-                shotTimeMap.put(Units.inchesToMeters(240.), 0.82);
-                shotTimeMap.put(Units.inchesToMeters(280.), 0.83);
+                shotTimeMap.put(Units.inchesToMeters(80.), 0.078);
+                shotTimeMap.put(Units.inchesToMeters(130.), 0.080);
+                shotTimeMap.put(Units.inchesToMeters(190.), 0.081);
+                shotTimeMap.put(Units.inchesToMeters(240.), 0.082);
+                shotTimeMap.put(Units.inchesToMeters(280.), 0.083);
         }
 
 

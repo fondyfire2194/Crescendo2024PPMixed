@@ -65,7 +65,6 @@ public class ShootWhileMoving extends Command implements Logged {
     m_shooter = shooter;
     m_swerve = swerve;
     m_sd = sd;
-    ;
 
     // Use addRequirements() here to declare subsystem dependencies.
 
@@ -77,6 +76,7 @@ public class ShootWhileMoving extends Command implements Logged {
     m_transfer.shootmoving = true;
 
     speakerPose = AllianceUtil.getSpeakerPose();
+
     SmartDashboard.putNumberArray("OdometrySpeaker",
         new double[] { speakerPose.getX(), speakerPose.getY(), speakerPose.getRotation().getDegrees() });
 
@@ -121,20 +121,21 @@ public class ShootWhileMoving extends Command implements Logged {
     double fieldAccelX = accelXFilter.calculate(fieldAcceleration.vxMetersPerSecond);
     double fieldAccelY = accelYFilter.calculate(fieldAcceleration.vyMetersPerSecond);
 
-    SmartDashboard.putNumber("AutoShoot/Acceleration X", fieldAccelX);
-    SmartDashboard.putNumber("AutoShoot/Acceleration Y", fieldAccelY);
+    SmartDashboard.putNumber("AutoShootMoving/Acceleration X", fieldAccelX);
+    SmartDashboard.putNumber("AutoShootMoving/Acceleration Y", fieldAccelY);
 
     double xdistance = speakerPose.getX() - robotPose.getX();
     double ydistance = speakerPose.getY() - robotPose.getY();
     double distance = Math.sqrt(xdistance * xdistance + ydistance * ydistance);
-    double shotTime = Constants.shotTimeMap.get(distance);
 
+    double shotTime = Constants.shotTimeMap.get(distance);
     double armAngle = m_sd.armAngleMap.get(distance);
     double rpm = m_sd.shooterRPMMap.get(distance);
-    SmartDashboard.putNumber("AutoShoot/distancetospeaker", distance);
-    SmartDashboard.putNumber("AutoShoot/shottimefrommap", shotTime);
-    SmartDashboard.putNumber("AutoShoot/anglefrommap", armAngle);
-    SmartDashboard.putNumber("AutoShoot/rpmfrommap", rpm);
+
+    SmartDashboard.putNumber("AutoShootMoving///distancetospeaker", distance);
+    SmartDashboard.putNumber("AutoShootMoving//shottimefrommap", shotTime);
+    SmartDashboard.putNumber("AutoShootMoving//anglefrommap", armAngle);
+    SmartDashboard.putNumber("AutoShootMoving//rpmfrommap", rpm);
 
     Translation2d virtualGoalLocation = new Translation2d();
 
@@ -144,21 +145,29 @@ public class ShootWhileMoving extends Command implements Logged {
     // shot time
 
     for (int i = 0; i < 5; i++) {
+      double xDistanceTraveledInShotTime = (shotTime * fieldSpeeds.vxMetersPerSecond + fieldAccelX * feedTime * 0.5);
 
-      double virtualGoalX = speakerPose.getX()
-          - shotTime * (fieldSpeeds.vxMetersPerSecond + fieldAccelX * feedTime * 0.5);
+      double virtualGoalX = speakerPose.getX() - xDistanceTraveledInShotTime;
+      SmartDashboard.putNumber("Vshottime", shotTime);
+
+      double yDistanceTraveledInShotTime = (shotTime * fieldSpeeds.vyMetersPerSecond + fieldAccelY * feedTime * 0.5);
       double virtualGoalY = speakerPose.getY()
-          - shotTime * (fieldSpeeds.vyMetersPerSecond + fieldAccelY * feedTime * 0.5);
-
+          - yDistanceTraveledInShotTime;
+      SmartDashboard.putNumber("AutoShootMoving//xTravelInShotTime", xDistanceTraveledInShotTime);
+      SmartDashboard.putNumber("AutoShootMoving//yTravelInShotTime", yDistanceTraveledInShotTime);
       virtualGoalLocation = new Translation2d(virtualGoalX, virtualGoalY);
 
-      double virtualDistance = robotPose.minus(virtualGoalLocation).getNorm();
+      double virtualDistance = robotPose.getDistance(virtualGoalLocation);
 
       double virtualShotTime = Constants.shotTimeMap.get(virtualDistance);
 
       double virtualArmAngle = m_sd.armAngleMap.get(virtualDistance);
 
       double virtualRPM = m_sd.shooterRPMMap.get(virtualDistance);
+
+      Pose2d virtualPose = new Pose2d(virtualGoalLocation, speakerPose.getRotation());
+
+      m_swerve.setTargetPose(virtualPose);
 
       SmartDashboard.putNumber("AutoShootMoving/virtualDistance", virtualDistance);
       SmartDashboard.putNumber("AutoShootMoving/virtualShotTimefromMap", virtualShotTime);

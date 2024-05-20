@@ -12,14 +12,15 @@ import edu.wpi.first.math.util.Units;
 /** Add your docs here. */
 public class ShootingData {
 
-    public ArrayList<ShotInfo> si = new ArrayList<ShotInfo>(25);
+    public ArrayList<ShotInfo> si = new ArrayList<ShotInfo>();
 
     public InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
-    /** Shooter look up table key: meters, values: rpm */
+    /** Shooter look up table key: feet, values: rpm */
     public InterpolatingDoubleTreeMap shooterRPMMap = new InterpolatingDoubleTreeMap();
 
     public ShootingData() {
-                {
+        {
+            si.clear();
             si.add(new ShotInfo(4.25, 60, 3000));
             si.add(new ShotInfo(5.25, 51, 3000));
             si.add(new ShotInfo(6.25, 46, 3000));
@@ -41,13 +42,10 @@ public class ShootingData {
 
         /** Arm angle look up table key: meters, values: degrees */
 
-        for (int i = 0; i < si.size(); i++)
-
-        {
+        for (int i = 0; i < si.size(); i++) {
             armAngleMap.put(si.get(i).getDistance(),
                     si.get(i).getArm());
         }
-
         for (int i = 0; i < si.size(); i++) {
             shooterRPMMap.put(si.get(i).getDistance(), si.get(i).getSpeed());
         }

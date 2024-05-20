@@ -38,6 +38,7 @@ import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
+import frc.robot.commands.Shooter.ShootWhileMoving;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -214,6 +215,15 @@ public class RobotContainer implements Logged {
 
                 keepAngle = () -> false;
                 // align for speaker shots
+                // driver.leftTrigger().whileTrue(
+                // Commands.parallel(
+                // new AlignTargetOdometry(
+                // m_swerve,
+                // () -> -driver.getLeftY(),
+                // () -> driver.getLeftX(),
+                // () -> driver.getRightX(), false),
+                // m_cf.positionArmRunShooterByDistance(false));
+
                 driver.leftTrigger().whileTrue(
                                 Commands.parallel(
                                                 new AlignTargetOdometry(
@@ -221,7 +231,7 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), false),
-                                                m_cf.positionArmRunShooterByDistance(false, true)));
+                                                new ShootWhileMoving(m_arm, m_transfer, m_shooter, m_swerve, m_sd)));
 
                 driver.rightBumper().onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),
@@ -274,13 +284,6 @@ public class RobotContainer implements Logged {
                                                 m_intake.stopIntakeCommand()));
 
                 driver.b().onTrue(m_shooter.stopShooterCommand());
-
-                // driver.b().onTrue(new ShootWhileMoving(m_arm, m_transfer, m_shooter,
-                // m_swerve,
-                // () -> -driver.getLeftY(),
-                // () -> driver.getLeftX(),f
-                // () -> driver.getRightX(), m_llv)
-                // .withName("ShootMoving"));
 
                 driver.x().onTrue(m_shooter.startShooterCommand(3500));
 

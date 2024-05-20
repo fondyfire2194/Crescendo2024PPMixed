@@ -565,10 +565,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   }
 
   @Log.NT(key = "targetPose")
-  public void setTargetPose(boolean lob) {
-    targetPose = AllianceUtil.getSpeakerPose();
-    if (lob)
-      targetPose = AllianceUtil.getLobPose();
+  public void setTargetPose(Pose2d pose) {
+      targetPose = pose;
   }
 
   @Log.NT(key = "stagepose")
