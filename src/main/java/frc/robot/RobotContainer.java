@@ -5,15 +5,17 @@
 package frc.robot;
 
 import java.util.function.BooleanSupplier;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.event.BooleanEvent;
 import edu.wpi.first.wpilibj.event.EventLoop;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -30,13 +32,12 @@ import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.TriggerCommandFactory;
-import frc.robot.commands.ViewArmShooterByDistance;
 import frc.robot.commands.JogClimber;
+import frc.robot.commands.ViewArmShooterByDistance;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
-import frc.robot.commands.Shooter.ShootWhileMoving;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -45,6 +46,7 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.ShootingData;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -76,12 +78,14 @@ public class RobotContainer implements Logged {
 
         final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
+        ShootingData m_sd = new ShootingData();
+
         public final PathFactory m_pf = new PathFactory(m_swerve);
 
         public final AutoFactory m_af = new AutoFactory(m_pf);
 
         public final CommandFactory m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
-                        m_climber, m_llv, m_af, m_pf);
+                        m_climber, m_llv, m_af, m_pf, m_sd);
 
         public final TriggerCommandFactory m_tcf = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
                         m_llv, m_pf, m_cf);
@@ -123,7 +127,7 @@ public class RobotContainer implements Logged {
 
                 SmartDashboard.putData("ClearStickyFaults", this.clearAllStickyFaultsCommand().ignoringDisable(true));
 
-                SmartDashboard.putData("ViewRPMAngles", new ViewArmShooterByDistance(m_cf).ignoringDisable(true));
+                SmartDashboard.putData("ViewRPMAngles", new ViewArmShooterByDistance(m_cf, m_sd).ignoringDisable(true));
 
                 configureDriverBindings();
 

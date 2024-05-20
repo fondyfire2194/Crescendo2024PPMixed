@@ -7,20 +7,22 @@ package frc.robot.commands;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
+import frc.robot.utils.ShootingData;
 
 public class ViewArmShooterByDistance extends Command {
   /** Creates a new ArmShooterByDistance. */
   private final CommandFactory m_cf;
+  private final ShootingData m_sd;
   double distance;
   int loopctr;
 
-  public ViewArmShooterByDistance(CommandFactory cf) {
+  public ViewArmShooterByDistance(CommandFactory cf, ShootingData sd) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_cf = cf;
+    m_sd = sd;
   }
 
   // Called when the command is initially scheduled.
@@ -36,8 +38,9 @@ public class ViewArmShooterByDistance extends Command {
 
     loopctr++;
     if (loopctr == 5) {
-      double rpm = Constants.shooterRPMMap.get(distance);
-      double angle = Constants.armAngleMap.get(distance);
+
+      double rpm = m_sd.shooterRPMMap.get(distance);
+      double angle = m_sd.armAngleMap.get(distance);
       double calcAngle = m_cf.getArmAngleFromTarget(FieldConstants.speakerSlotHeight, distance);
       double stageAngle = m_cf.getArmAngleFromTarget(FieldConstants.stageHeight, distance);
 
@@ -49,6 +52,7 @@ public class ViewArmShooterByDistance extends Command {
 
       SmartDashboard.putNumber("ArmCalc//DistRPM", rpm);
       SmartDashboard.putNumber("ArmCalc//DistAngle", angle);
+
       SmartDashboard.putNumber("ArmCalc//CalcAngle", calcAngle);
       SmartDashboard.putNumber("ArmCalc//StageAngle", stageAngle);
       SmartDashboard.putNumber("ArmCalc//CalcAngleTan", angleTan);

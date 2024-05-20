@@ -306,10 +306,6 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     return bottomCommandRPM;
   }
 
-  public double rpmTrackDistance(double meters) {
-    return Constants.shooterRPMMap.get(meters);
-  }
-
   public Command setTopKpKdKiCommand() {
     return Commands.runOnce(() -> setTopKpKdKi());
   }

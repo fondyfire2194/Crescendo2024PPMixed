@@ -295,12 +295,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         return armAngleRads;
     }
 
-    public void trackDistance(double meters) {
-        setTolerance(ArmConstants.angleTolerance);
-        double angle = Constants.armAngleMap.get(meters);
-        setGoal(angle);
-    }
-
     public void resetController() {
         getController().reset(getAngleRadians());
     }
@@ -312,9 +306,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     public void setToleranceByDistance(double distance) {
         angleTolerance = ArmConstants.angleTolerance;
     }
-
-
-
 
     public void setTarget(double anglerads) {
         currentGoalRads = anglerads;

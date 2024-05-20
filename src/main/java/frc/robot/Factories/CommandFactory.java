@@ -42,6 +42,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
+import frc.robot.utils.ShootingData;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -65,6 +66,9 @@ public class CommandFactory implements Logged {
         private final AutoFactory m_af;
 
         private final PathFactory m_pf;
+
+        private final ShootingData m_sd;
+
         @Log.NT(key = "startpose")
         Pose2d tempPose2d = new Pose2d();
 
@@ -74,7 +78,7 @@ public class CommandFactory implements Logged {
 
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer, ClimberSubsystem climber,
-                        LimelightVision llv, AutoFactory af, PathFactory pf) {
+                        LimelightVision llv, AutoFactory af, PathFactory pf, ShootingData sd) {
                 m_swerve = swerve;
                 m_shooter = shooter;
                 m_arm = arm;
@@ -84,6 +88,7 @@ public class CommandFactory implements Logged {
                 m_llv = llv;
                 m_af = af;
                 m_pf = pf;
+                m_sd = sd;
 
                 runShooterTrigger = new Trigger(() -> startShoot);
 
@@ -118,7 +123,7 @@ public class CommandFactory implements Logged {
                                                                                 m_swerve.getDistanceFromStage())));
                                         } else {
                                                 m_shooter.startShooter(
-                                                                Constants.shooterRPMMap.get(
+                                                                m_sd.shooterRPMMap.get(
                                                                                 m_swerve.getDistanceFromTarget(false)));
                                                 m_arm.setToleranceByDistance(Units
                                                                 .degreesToRadians(m_swerve
@@ -126,7 +131,7 @@ public class CommandFactory implements Logged {
 
                                                 if (calcAngles)
                                                         m_arm.setTarget(Units.degreesToRadians(
-                                                                        Constants.armAngleMap.get(m_swerve
+                                                                        m_sd.armAngleMap.get(m_swerve
                                                                                         .getDistanceFromTarget(
                                                                                                         false))));
 
@@ -146,7 +151,7 @@ public class CommandFactory implements Logged {
 
         public Command armFollowTargetDistance() {
                 return Commands.parallel(
-                                m_arm.setGoalCommand(Constants.armAngleMap
+                                m_arm.setGoalCommand(m_sd.armAngleMap
                                                 .get(m_swerve.targetPose.getTranslation().getNorm())),
                                 Commands.runOnce(() -> m_arm.setToleranceByDistance(
                                                 m_swerve.targetPose.getTranslation().getNorm())));
@@ -191,9 +196,10 @@ public class CommandFactory implements Logged {
         }
 
         public Command alignShootCommand(double meters) {
-                return Commands.parallel(alignToTag(),
-                                Commands.run(() -> m_arm.trackDistance(meters)),
-                                Commands.run(() -> m_shooter.rpmTrackDistance(meters)));
+                return Commands.parallel(
+                                alignToTag(),
+                                m_arm.setGoalCommand(m_sd.armAngleMap.get(meters)),
+                                m_shooter.startShooterCommand(m_sd.shooterRPMMap.get(meters)));
         }
 
         public Command setArmShooterValues(double armAngle, double shooterRPM) {

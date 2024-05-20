@@ -47,17 +47,17 @@
           "visible": true
         }
       },
-      "/SmartDashboard/GetRPMAnglea": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/Source Start": {
         "window": {
           "visible": true
         }
       },
       "/SmartDashboard/SubwfrStart": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/ViewRPMAngles": {
         "window": {
           "visible": true
         }

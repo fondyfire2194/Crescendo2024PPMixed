@@ -234,7 +234,7 @@ public final class Constants {
                 public static final double FIELD_LENGTH = 16.54;
 
                 public static final double stageHeight = Units.inchesToMeters(96);
-                public static final double speakerSlotHeight = Units.inchesToMeters( 80.4375);
+                public static final double speakerSlotHeight = Units.inchesToMeters(80.4375);
 
                 public static final Pose2d speakerBlueAlliance = new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0.0));
                 public static final Pose2d speakerRedAlliance = new Pose2d(16.54, 5.5, Rotation2d.fromDegrees(180.0));
@@ -288,7 +288,7 @@ public final class Constants {
                                 new Rotation2d(Units.degreesToRadians(-144)));
         }
 
-        public static Pose2d getActiveNotePickup(int note) {
+        public static Pose2d getActiveNotePickup(final int note) {
                 switch (note) {
                         case 1:
                                 return FieldConstants.centerNote1PickupBlue;
@@ -305,7 +305,7 @@ public final class Constants {
                 }
         }
 
-        public static Pose2d getActiveAlternateNote(int note) {
+        public static Pose2d getActiveAlternateNote(final int note) {
                 switch (note) {
                         case 1:
                                 return FieldConstants.centerNote1Blue;
@@ -329,7 +329,7 @@ public final class Constants {
                         try {
                                 layout = AprilTagFieldLayout
                                                 .loadFromResource(AprilTagFields.k2024Crescendo.m_resourceFile);
-                        } catch (Exception e) {
+                        } catch (final Exception e) {
                                 e.printStackTrace();
                         }
                 }
@@ -371,11 +371,12 @@ public final class Constants {
                         public boolean isActive = false;
 
                         public CameraValues(
-                                        String camname,
-                                        String ipaddress,
-                                        double forward, double side, double up, double roll, double pitch, double yaw,
-                                        boolean isUsed,
-                                        boolean isActive) {
+                                        final String camname,
+                                        final String ipaddress,
+                                        final double forward, final double side, final double up, final double roll,
+                                        final double pitch, final double yaw,
+                                        final boolean isUsed,
+                                        final boolean isActive) {
                                 this.camname = camname;
                                 this.ipaddress = ipaddress;
                                 this.forward = forward;
@@ -454,44 +455,7 @@ public final class Constants {
 
         }
 
-        static double distance_0 = Units.feetToMeters(4.25);
-        static double distance_1 = Units.feetToMeters(5.25);
-        static double distance_2 = Units.feetToMeters(6.25);
-        static double distance_3 = Units.feetToMeters(7.25);
-        static double distance_4 = Units.feetToMeters(8.25);
-        static double distance_5 = Units.feetToMeters(9.25);
-        static double distance_6 = Units.feetToMeters(10.25);
-        static double distance_7 = Units.feetToMeters(11.25);
-        static double distance_8 = Units.feetToMeters(12.25);
-        static double distance_9 = Units.feetToMeters(13.25);
-        static double distance_10 = Units.feetToMeters(14.25);
-        static double distance_11 = Units.feetToMeters(15.25);
-        static double distance_12 = Units.feetToMeters(16.25);
-        static double distance_13 = Units.feetToMeters(17.25);
-        static double distance_14 = Units.feetToMeters(18.25);
-        static double distance_15 = Units.feetToMeters(19.25);
-
-        /** Arm angle look up table key: meters, values: degrees */
-        public static final InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
-
-        static {
-                armAngleMap.put(distance_0, 60.0);
-                armAngleMap.put(distance_1, 51.0);
-                armAngleMap.put(distance_2, 46.0);
-                armAngleMap.put(distance_3, 42.0);
-                armAngleMap.put(distance_4, 39.0);
-                armAngleMap.put(distance_5, 36.0); // 38
-                armAngleMap.put(distance_6, 34.0);
-                armAngleMap.put(distance_7, 32.0);
-                armAngleMap.put(distance_8, 30.0);
-                armAngleMap.put(distance_9, 28.0);
-                armAngleMap.put(distance_10, 27.0); // 27
-                armAngleMap.put(distance_11, 26.0);
-                armAngleMap.put(distance_12, 25.0);
-                armAngleMap.put(distance_13, 24.0);
-                armAngleMap.put(distance_14, 23.5);
-                armAngleMap.put(distance_15, 22.0);
-        }
+       
 
         public static final InterpolatingDoubleTreeMap shotTimeMap = new InterpolatingDoubleTreeMap();
         // arm angle, time
@@ -503,28 +467,6 @@ public final class Constants {
                 shotTimeMap.put(Units.inchesToMeters(280.), 0.83);
         }
 
-        /** Shooter look up table key: meters, values: rpm */
-        public static final InterpolatingDoubleTreeMap shooterRPMMap = new InterpolatingDoubleTreeMap();
-        static {
-                shooterRPMMap.put(distance_0, 3000.);
-                shooterRPMMap.put(distance_1, 3000.);
-                shooterRPMMap.put(distance_2, 3000.);
-                shooterRPMMap.put(distance_3, 3000.);
-                shooterRPMMap.put(distance_4, 3000.);
-                shooterRPMMap.put(distance_5, 3250.);
-                shooterRPMMap.put(distance_6, 3500.);
-                shooterRPMMap.put(distance_7, 3500.);
-                shooterRPMMap.put(distance_8, 3500.);
-                shooterRPMMap.put(distance_9, 3500.);
-                shooterRPMMap.put(distance_10, 3750.);
-                shooterRPMMap.put(distance_11, 4000.);
-                shooterRPMMap.put(distance_12, 4000.);
-                shooterRPMMap.put(distance_13, 4250.);
-                shooterRPMMap.put(distance_14, 4500.);
-                shooterRPMMap.put(distance_15, 4600.);
-        }
-
-        public static final InterpolatingDoubleTreeMap armLobAngleMap = new InterpolatingDoubleTreeMap();
 
         /** Shooter look up table key: meters, values: rpm */
         public static final InterpolatingDoubleTreeMap shooterLobRPMMap = new InterpolatingDoubleTreeMap();

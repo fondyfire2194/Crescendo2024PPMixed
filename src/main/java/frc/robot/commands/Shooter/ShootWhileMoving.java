@@ -21,6 +21,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
+import frc.robot.utils.ShootingData;
 import monologue.Logged;
 
 public class ShootWhileMoving extends Command implements Logged {
@@ -37,6 +38,7 @@ public class ShootWhileMoving extends Command implements Logged {
   private final TransferSubsystem m_transfer;
   private final ShooterSubsystem m_shooter;
   private final SwerveSubsystem m_swerve;
+  private final ShootingData m_sd;
 
   private Pose2d speakerPose;
 
@@ -55,12 +57,14 @@ public class ShootWhileMoving extends Command implements Logged {
       ArmSubsystem arm,
       TransferSubsystem transfer,
       ShooterSubsystem shooter,
-      SwerveSubsystem swerve) {
+      SwerveSubsystem swerve,
+      ShootingData sd) {
 
     m_arm = arm;
     m_transfer = transfer;
     m_shooter = shooter;
     m_swerve = swerve;
+    m_sd = sd;
     ;
 
     // Use addRequirements() here to declare subsystem dependencies.
@@ -86,7 +90,8 @@ public class ShootWhileMoving extends Command implements Logged {
 
   /*
    * Step 1 Calculate the distance to the real speaker and get the shot time from
-   * the table; Shot time * shot distance is used as a substitute for shot velocity
+   * the table; Shot time * shot distance is used as a substitute for shot
+   * velocity
    * Then do the following in a loop up to 5 times
    * Step 2 Create a virtual speaker from the real speaker pose and the robot
    * velocity and acceleration.
@@ -124,8 +129,8 @@ public class ShootWhileMoving extends Command implements Logged {
     double distance = Math.sqrt(xdistance * xdistance + ydistance * ydistance);
     double shotTime = Constants.shotTimeMap.get(distance);
 
-    double armAngle = Constants.armAngleMap.get(distance);
-    double rpm = Constants.shooterRPMMap.get(distance);
+    double armAngle = m_sd.armAngleMap.get(distance);
+    double rpm = m_sd.shooterRPMMap.get(distance);
     SmartDashboard.putNumber("AutoShoot/distancetospeaker", distance);
     SmartDashboard.putNumber("AutoShoot/shottimefrommap", shotTime);
     SmartDashboard.putNumber("AutoShoot/anglefrommap", armAngle);
@@ -151,9 +156,9 @@ public class ShootWhileMoving extends Command implements Logged {
 
       double virtualShotTime = Constants.shotTimeMap.get(virtualDistance);
 
-      double virtualArmAngle = Constants.armAngleMap.get(virtualDistance);
+      double virtualArmAngle = m_sd.armAngleMap.get(virtualDistance);
 
-      double virtualRPM = Constants.shooterRPMMap.get(virtualDistance);
+      double virtualRPM = m_sd.shooterRPMMap.get(virtualDistance);
 
       SmartDashboard.putNumber("AutoShootMoving/virtualDistance", virtualDistance);
       SmartDashboard.putNumber("AutoShootMoving/virtualShotTimefromMap", virtualShotTime);
@@ -165,7 +170,7 @@ public class ShootWhileMoving extends Command implements Logged {
       if (Math.abs(virtualShotTime - shotTime) <= 0.01) {
         distance = virtualDistance;
         shotTime = virtualShotTime;
-        armAngle = virtualArmAngle;        
+        armAngle = virtualArmAngle;
         rpm = virtualRPM;
         break;
       }
@@ -182,7 +187,7 @@ public class ShootWhileMoving extends Command implements Logged {
     SmartDashboard.putNumber("AutoShoot/Desired Angle", armAngle);
 
     // Shooter speed
-    m_shooter.topCommandRPM = Constants.shooterRPMMap.get(distance);
+    m_shooter.topCommandRPM = m_sd.shooterRPMMap.get(distance);
 
     Rotation2d desiredAngle = robotPose.minus(virtualGoalLocation).getAngle().plus(Rotation2d.fromRadians(Math.PI));
 

@@ -109,6 +109,8 @@ public class Robot extends TimedRobot implements Logged {
     double startupTimeSeconds = Timer.getFPGATimestamp() - startTime;
     DataLogManager.log("Startup Time (ms): " + startupTimeSeconds * 1000.0);
 
+   
+
   }
 
   @Override
