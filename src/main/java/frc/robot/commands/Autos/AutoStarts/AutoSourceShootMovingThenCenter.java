@@ -4,14 +4,14 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
+import frc.robot.Factories.PathFactory;
+import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Drive.CheckAlignedToSpeaker;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -22,8 +22,9 @@ public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
 
         public AutoSourceShootMovingThenCenter(
                         CommandFactory cf,
-                        PathPlannerPath path,
-                        SwerveSubsystem swerve) {
+                        PathFactory pf,
+                        SwerveSubsystem swerve,
+                        boolean innerNoteFirst) {
 
                 addCommands(
 
@@ -33,20 +34,30 @@ public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
 
                                 // path auto shoots on the fly
                                 // move to center note , pick up if there and move to shoot position then shoot
-                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
-                                Commands.runOnce(() -> cf.setAutoShootMoving(true)),
+                
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                 cf.setArmShooterValues(Constants.autoShootArmAngle, Constants.autoShootRPM),
-                                cf.setAutoShootMoving(true),
+                              //  cf.setAutoShootMoving(true),
                                 Commands.deadline(
-                                                new RunPPath(swerve,
-                                                                path),
+                                                Commands.either(
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(
+                                                                                                sourcepaths.SourceToCenter4
+                                                                                                                .name())),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(
+                                                                                                sourcepaths.SourceShootToCenter5
+                                                                                                                .name())),
+                                                                () -> innerNoteFirst),
+
                                                 new CheckAlignedToSpeaker(swerve, 2)),
                                 Commands.sequence(
                                                 new WaitCommand(2),
-                                                cf.setAutoShootMoving(false),
+                                             //   cf.setAutoShootMoving(false),
                                                 cf.doIntake()),
-                                Commands.runOnce(() -> swerve.autostep = 1));
+                                                Commands.parallel(
+                                                        Commands.runOnce(() -> swerve.autostep = 1),
+                                                        Commands.runOnce(() -> cf.innerNoteFirst = innerNoteFirst)));
         }
 
 }

@@ -339,7 +339,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         if (temp > ArmConstants.armMaxRadians)
             temp = ArmConstants.armMaxRadians;
         setGoal(temp);
-
     }
 
     public void decrementArmAngle(double valdeg) {
@@ -348,13 +347,11 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         if (temp < ArmConstants.armMinRadians)
             temp = ArmConstants.armMinRadians;
         setGoal(temp);
-
     }
 
     @Log.NT(key = "armgoalrads")
     public double getCurrentGoalRads() {
         return getController().getGoal().position;
-
     }
 
     @Log.NT(key = "armgoaldeg")
@@ -371,6 +368,16 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                 return armEncoder.getPosition();
         } else
             return simAngleRads;
+    }
+
+    @Log.NT(key = "armerrorrads")
+    public double getAngleErrorRadians() {
+        return getCurrentGoalRads() - getAngleRadians();
+    }
+
+    @Log.NT(key = "armerrordeg")
+    public double getAngleErrorDegrees() {
+        return Units.radiansToDegrees(getAngleErrorRadians());
     }
 
     @Log.NT(key = "armdegs")

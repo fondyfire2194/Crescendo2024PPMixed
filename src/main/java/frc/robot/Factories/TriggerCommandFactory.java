@@ -96,7 +96,7 @@ public class TriggerCommandFactory implements Logged {
 
                 checkFirstNote.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
-                                new ConditionalCommand(
+                                Commands.either(
                                                 Commands.runOnce(() -> m_swerve.autostep = 2),
                                                 Commands.runOnce(() -> m_swerve.autostep = 6),
                                                 () -> m_transfer.noteAtIntake()),
@@ -154,53 +154,87 @@ public class TriggerCommandFactory implements Logged {
                 firstNoteToShootSource.onTrue(
                                 Commands.sequence(
                                                 Commands.runOnce(() -> stepRunning = true),
-                                                new CenterToShoot(m_cf,
-                                                                m_pf.pathMaps.get(sourcepaths.Center4ToSourceShoot
-                                                                                .name()),
-                                                                m_swerve),
+                                                Commands.either(
+                                                                new CenterToShoot(m_cf,
+                                                                                m_pf.pathMaps.get(
+                                                                                                sourcepaths.Center4ToSourceShoot
+                                                                                                                .name()),
+                                                                                m_swerve),
+                                                                new CenterToShoot(m_cf,
+                                                                                m_pf.pathMaps.get(
+                                                                                                sourcepaths.Center5ToSourceShoot
+                                                                                                                .name()),
+                                                                                m_swerve),
+
+                                                                () -> m_cf.innerNoteFirst),
                                                 Commands.parallel(
                                                                 Commands.runOnce(() -> m_swerve.autostep = step3),
                                                                 Commands.runOnce(() -> trig1 = true),
                                                                 Commands.runOnce(() -> stepRunning = false))));
 
-                shootToSecondNoteSource.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> stepRunning = true),
-                                new SourceShootToCenterPickup(m_cf, m_pf.pathMaps.get(sourcepaths.SourceShootToCenter5
-                                                .name()), m_swerve),
-                                Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.autostep = step4),
-                                                Commands.runOnce(() -> trig2 = true),
-                                                Commands.runOnce(() -> stepRunning = false))));
+                shootToSecondNoteSource.onTrue(
+                                Commands.sequence(
+                                                Commands.runOnce(() -> stepRunning = true),
+                                                Commands.either(
+                                                                new SourceShootToCenterPickup(m_cf,
+                                                                                m_pf.pathMaps.get(
+                                                                                                sourcepaths.SourceShootToCenter5
+                                                                                                                .name()),
+                                                                                m_swerve),
+                                                                new SourceShootToCenterPickup(m_cf,
+                                                                                m_pf.pathMaps.get(
+                                                                                                sourcepaths.SourceShootToCenter4
+                                                                                                                .name()),
+                                                                                m_swerve),
+                                                                () -> m_cf.innerNoteFirst),
+                                                Commands.parallel(
+                                                                Commands.runOnce(() -> m_swerve.autostep = step4),
+                                                                Commands.runOnce(() -> trig2 = true),
+                                                                Commands.runOnce(() -> stepRunning = false))));
 
-                secondNoteToShootSource.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> stepRunning = true),
-                                new CenterToShoot(m_cf, m_pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
-                                                .name()), m_swerve),
-                                Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.autostep = step4),
-                                                Commands.runOnce(() -> trig2 = true),
-                                                Commands.runOnce(() -> stepRunning = false))));
+                secondNoteToShootSource.onTrue(
+                                Commands.sequence(
+                                                Commands.runOnce(() -> stepRunning = true),
+                                                Commands.either(
+                                                                new CenterToShoot(m_cf,
+                                                                                m_pf.pathMaps.get(
+                                                                                                sourcepaths.Center5ToSourceShoot
+                                                                                                                .name()),
+                                                                                m_swerve),
+                                                                new CenterToShoot(m_cf,
+                                                                                m_pf.pathMaps.get(
+                                                                                                sourcepaths.Center4ToSourceShoot
+                                                                                                                .name()),
+                                                                                m_swerve),
+                                                                () -> m_cf.innerNoteFirst),
 
-                firstNoteToSecondNoteSource.onTrue(Commands.sequence(
-                                Commands.runOnce(() -> stepRunning = true),
-                                new FindNote(m_swerve, true, m_llv, CameraConstants.rearCamera.camname),
-                                m_intake.startIntakeCommand(),
-                                Commands.parallel(
-                                                new TransferIntakeToSensor(m_transfer, m_intake, .6),
-                                                new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
-                                                                CameraConstants.rearCamera.camname, m_llv,
-                                                                5)),
-                                new ConditionalCommand(
-                                                m_cf.autopickup(FieldConstants.sourceShootBlue),
-                                                m_cf.autopickup(GeometryUtil
-                                                                .flipFieldPose(FieldConstants.sourceShootBlue)),
-                                                () -> DriverStation.getAlliance().isPresent()
-                                                                && DriverStation.getAlliance()
-                                                                                .get() == Alliance.Blue),
-                                Commands.parallel(
-                                                Commands.runOnce(() -> m_swerve.autostep = endit),
-                                                Commands.runOnce(() -> trig4 = true),
-                                                Commands.runOnce(() -> stepRunning = false))));
+                                                Commands.parallel(
+                                                                Commands.runOnce(() -> m_swerve.autostep = step4),
+                                                                Commands.runOnce(() -> trig2 = true),
+                                                                Commands.runOnce(() -> stepRunning = false))));
+
+                // firstNoteToSecondNoteSource.onTrue(
+                // Commands.sequence(
+                // Commands.runOnce(() -> stepRunning = true),
+                // new FindNote(m_swerve, true, m_llv, CameraConstants.rearCamera.camname),
+                // m_intake.startIntakeCommand(),
+                // Commands.parallel(
+                // new TransferIntakeToSensor(m_transfer, m_intake, .6),
+                // new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
+                // CameraConstants.rearCamera.camname,
+                // m_llv,
+                // 5)),
+                // Commands.either(
+                // m_cf.autopickup(FieldConstants.sourceShootBlue),
+                // m_cf.autopickup(GeometryUtil
+                // .flipFieldPose(FieldConstants.sourceShootBlue)),
+                // () -> DriverStation.getAlliance().isPresent()
+                // && DriverStation.getAlliance()
+                // .get() == Alliance.Blue),
+                // Commands.parallel(
+                // Commands.runOnce(() -> m_swerve.autostep = endit),
+                // Commands.runOnce(() -> trig4 = true),
+                // Commands.runOnce(() -> stepRunning = false))));
 
         }
 
@@ -234,18 +268,37 @@ public class TriggerCommandFactory implements Logged {
                 firstNoteToShootAmp.onTrue(
                                 Commands.sequence(
                                                 Commands.runOnce(() -> stepRunning = true),
-                                                new CenterToShoot(m_cf,
-                                                                m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
-                                                                                .name()),
-                                                                m_swerve),
+
+                                                Commands.either(
+                                                                new CenterToShoot(m_cf, m_pf.pathMaps.get(
+                                                                                amppaths.Center2ToAmpShoot
+                                                                                                .name()),
+                                                                                m_swerve),
+                                                                new CenterToShoot(m_cf, m_pf.pathMaps.get(
+                                                                                amppaths.Center1ToAmpShoot
+                                                                                                .name()),
+                                                                                m_swerve),
+                                                                () -> m_cf.innerNoteFirst),
+
                                                 Commands.parallel(
                                                                 Commands.runOnce(() -> m_swerve.autostep = step3),
                                                                 Commands.runOnce(() -> trig1 = true),
+
                                                                 Commands.runOnce(() -> stepRunning = false))));
                 shootToSecondNoteAmp.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
-                                new AmpShootToCenterPickup(m_cf, m_pf.pathMaps.get(amppaths.AmpShootToCenter1
-                                                .name()), m_swerve),
+                                Commands.either(
+                                                new AmpShootToCenterPickup(m_cf,
+                                                                m_pf.pathMaps.get(amppaths.AmpShootToCenter1
+                                                                                .name()),
+                                                                m_swerve),
+                                                new AmpShootToCenterPickup(m_cf,
+                                                                m_pf.pathMaps.get(amppaths.AmpShootToCenter2
+                                                                                .name()),
+                                                                m_swerve),
+
+                                                () -> m_cf.innerNoteFirst),
+
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.autostep = step4),
                                                 Commands.runOnce(() -> trig2 = true),
@@ -253,8 +306,13 @@ public class TriggerCommandFactory implements Logged {
 
                 secondNoteToShootAmp.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
-                                new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
-                                                .name()), m_swerve),
+                                Commands.either(
+                                                new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
+                                                                .name()), m_swerve),
+                                                new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
+                                                                .name()), m_swerve),
+                                                () -> m_cf.innerNoteFirst),
+
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.autostep = step4),
                                                 Commands.runOnce(() -> trig2 = true),
@@ -269,7 +327,7 @@ public class TriggerCommandFactory implements Logged {
                                                 new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
                                                                 CameraConstants.rearCamera.camname, m_llv,
                                                                 1)),
-                                new ConditionalCommand(
+                                Commands.either(
                                                 m_cf.autopickup(FieldConstants.ampShootBlue),
                                                 m_cf.autopickup(GeometryUtil
                                                                 .flipFieldPose(FieldConstants.ampShootBlue)),

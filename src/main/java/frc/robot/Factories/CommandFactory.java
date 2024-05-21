@@ -29,10 +29,10 @@ import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootMovingThenCenter;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenter4Pathfind;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenterPathfind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenter4Vision;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenterVision;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -75,6 +75,7 @@ public class CommandFactory implements Logged {
         private Trigger runShooterTrigger;
         @Log.NT(key = "startontheflyshoot")
         public boolean startShoot;
+        public boolean innerNoteFirst;
 
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer, ClimberSubsystem climber,
@@ -245,29 +246,37 @@ public class CommandFactory implements Logged {
                 switch ((choice)) {
 
                         case 11:
-                                return new AutoSourceShootThenCenter(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
-                                                m_swerve);
+                                return new AutoSourceShootThenCenter(this, m_pf,
+                                                m_swerve, true);
+
                         case 12:
-                                return new AutoSourceShootMovingThenCenter(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
-                                                m_swerve);
+                                return new AutoSourceShootThenCenter(this, m_pf,
+                                                m_swerve, false);
+
                         case 13:
-                                return new AutoSourceShootCenter4Pathfind(this,
-                                                m_pf, m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
-                                                m_swerve);
+                                return new AutoSourceShootMovingThenCenter(this, m_pf,
+                                                m_swerve, true);
                         case 14:
-                                return new AutoSourceThenCenter4Vision(this,
-                                                m_pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
-                                                m_swerve, m_llv, m_intake, m_transfer);
+                                return new AutoSourceShootCenterPathfind(this, m_pf,                                                
+                                                m_swerve,true);
+                        case 15:
+                                return new AutoSourceThenCenterVision(this, m_pf,
+                                                m_swerve, m_llv, m_intake, m_transfer, true);
 
                         case 21:
-                                return new AutoAmpShootThenCenter(this, m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
-                                                m_swerve);
+                                return new AutoAmpShootThenCenter(this, m_pf,
+                                                m_swerve, true);
                         case 22:
-                                return new AutoAmpShootMovingThenCenter(this,
-                                                m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
-                                                m_swerve);
+                                return new AutoAmpShootThenCenter(this, m_pf,
+                                                m_swerve, false);
+                        // case 23:
+                        // return new AutoAmpShootThenCenter(this, m_pf,
+                        // m_swerve, true);
+
+                        // case 24:
+                        // return new AutoAmpShootMovingThenCenter(this,
+                        // m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
+                        // m_swerve);
 
                         default:
                                 return Commands.none();

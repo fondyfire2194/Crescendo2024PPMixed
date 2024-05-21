@@ -153,7 +153,7 @@ public class RobotContainer implements Logged {
                                 && m_shooter.bothAtSpeed(1)
                                 && m_arm.getAtSetpoint()
                                 && m_swerve.alignedToTarget
-                                && Math.abs(m_swerve.getSpeeds().vxMetersPerSecond) < 1
+                                && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
                                 && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
                                 && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
 
@@ -165,7 +165,7 @@ public class RobotContainer implements Logged {
                                 && m_shooter.bothAtSpeed(1)
                                 && m_arm.getAtSetpoint()
                                 && m_swerve.alignedToTarget
-                                && Math.abs(m_swerve.getSpeeds().vxMetersPerSecond) < 1
+                                && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
                                 && m_swerve.getDistanceFromSpeaker() < SwerveConstants.maxMovingShotDistance);
 
                 doMovingShot.onTrue(m_transfer.transferToShooterCommand());
@@ -215,16 +215,16 @@ public class RobotContainer implements Logged {
 
                 keepAngle = () -> false;
                 // align for speaker shots
-                // driver.leftTrigger().whileTrue(
-                // Commands.parallel(
-                // new AlignTargetOdometry(
-                // m_swerve,
-                // () -> -driver.getLeftY(),
-                // () -> driver.getLeftX(),
-                // () -> driver.getRightX(), false),
-                // m_cf.positionArmRunShooterByDistance(false));
+                driver.leftTrigger().and(driver.a().negate()).whileTrue(
+                                Commands.parallel(
+                                                new AlignTargetOdometry(
+                                                                m_swerve,
+                                                                () -> -driver.getLeftY(),
+                                                                () -> driver.getLeftX(),
+                                                                () -> driver.getRightX(), false),
+                                                m_cf.positionArmRunShooterByDistance(false, false)));
 
-                driver.leftTrigger().whileTrue(
+                driver.leftTrigger().and(driver.a()).whileTrue(
                                 Commands.parallel(
                                                 new AlignTargetOdometry(
                                                                 m_swerve,
@@ -233,7 +233,7 @@ public class RobotContainer implements Logged {
                                                                 () -> driver.getRightX(), false),
                                                 new ShootWhileMoving(m_arm, m_transfer, m_shooter, m_swerve, m_sd)));
 
-                driver.rightBumper().onTrue(Commands.parallel(
+                driver.rightBumper().and(driver.a().negate()).onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),
                                 new TransferIntakeToSensor(m_transfer, m_intake, 120),
                                 m_cf.rumbleCommand(driver),
@@ -287,7 +287,8 @@ public class RobotContainer implements Logged {
 
                 driver.x().onTrue(m_shooter.startShooterCommand(3500));
 
-                driver.rightBumper().negate().and(driver.a()).onTrue(m_cf.doAmpShot());
+                driver.a().and(driver.leftTrigger().negate()).and(driver.rightBumper().negate())
+                                .onTrue(m_cf.doAmpShot());
 
                 driver.povUp().onTrue(m_shooter.increaseRPMCommand(100));
 

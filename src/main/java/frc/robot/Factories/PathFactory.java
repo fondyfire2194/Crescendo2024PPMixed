@@ -75,6 +75,7 @@ public class PathFactory implements Logged {
         SourceToNearCenter5,
         SourceToNearCenter4_5,
         NearCenter4toCenter4,
+        NearCenter5toCenter5,
         SourceShootToCenter4,
         SourceShootToCenter5,
         Center4ToSourceShoot,

@@ -12,6 +12,9 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
+import frc.robot.Factories.PathFactory;
+import frc.robot.Factories.PathFactory.amppaths;
+import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.AllianceUtil;
@@ -21,16 +24,17 @@ public class AutoAmpShootThenCenter extends SequentialCommandGroup {
 
         public AutoAmpShootThenCenter(
                         CommandFactory cf,
-                        PathPlannerPath path,
-                        SwerveSubsystem swerve) {
+                        PathFactory pf,
+                        SwerveSubsystem swerve,
+                        boolean innerNoteFirst) {
 
                 addCommands(
 
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
 
-                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
-                                Commands.runOnce(() -> swerve.currentPlannerPath = path),
+                                // Commands.runOnce(() -> swerve.currentPlannerPath = path),
+                                // Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
 
                                 cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
@@ -41,12 +45,22 @@ public class AutoAmpShootThenCenter extends SequentialCommandGroup {
                                 // move to center note , pick up if there and move to shoot position then shoot
 
                                 Commands.parallel(
-                                                new RunPPath(swerve,
-                                                                path),
+                                                Commands.either(
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(
+                                                                                                amppaths.AmpToCenter2
+                                                                                                                .name())),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(
+                                                                                                amppaths.AmpToCenter1
+                                                                                                                .name())),
+                                                                () -> innerNoteFirst),
                                                 Commands.sequence(
                                                                 Commands.waitSeconds(1),
                                                                 cf.doIntake())),
-                                Commands.runOnce(() -> swerve.autostep = 1));
+                                Commands.parallel(
+                                                Commands.runOnce(() -> swerve.autostep = 1),
+                                                Commands.runOnce(() -> cf.innerNoteFirst = innerNoteFirst)));
 
         }
 

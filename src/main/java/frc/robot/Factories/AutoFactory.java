@@ -47,14 +47,16 @@ public class AutoFactory implements Logged {
                 minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5", 11);
-                m_sourceStartChooser.addOption("Shoot Moving C4 Then C5 ", 12);
-                m_sourceStartChooser.addOption("C4 Pathfind Then C5", 13);
-                m_sourceStartChooser.addOption("C4 Vision Then C5", 14);
-                maxsourceauto = 14;
+                m_sourceStartChooser.addOption("C5 Then C4", 12);
+                m_sourceStartChooser.addOption("Shoot Moving C4 Then C5", 13);
+                m_sourceStartChooser.addOption("C4 Pathfind Then C5", 14);
+                m_sourceStartChooser.addOption("C4 Vision Then C5", 15);
+                maxsourceauto = 15;
                 minampauto = 21;
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("Shoot C2 then C1", 21);
-                m_ampStartChooser.addOption("Shoot Moving C2 the C1", 22);
+                m_ampStartChooser.addOption("Shoot C1 then C2", 22);                
+            //    m_ampStartChooser.addOption("Shoot Moving C2 then C1", 23);
                 maxampauto = 22;
                 m_subwfrStartChooser = AutoBuilder.buildAutoChooser();
 

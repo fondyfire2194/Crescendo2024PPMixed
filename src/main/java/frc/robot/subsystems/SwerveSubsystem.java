@@ -206,7 +206,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     AutoBuilder.configureHolonomic(
         this::getPose,
         this::resetPoseEstimator,
-        this::getSpeeds,
+        this::getChassisSpeeds,
         this::driveRobotRelative,
         Constants.SwerveConstants.pathFollowerConfig,
         () -> {
@@ -505,8 +505,14 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   }
 
   @Log.NT(key = "chassisspeeds")
-  public ChassisSpeeds getSpeeds() {
+  public ChassisSpeeds getChassisSpeeds() {
     return Constants.SwerveConstants.swerveKinematics.toChassisSpeeds(getStates());
+  }
+
+  @Log.NT(key = "Field Relative Speeds")
+  public ChassisSpeeds getFieldRelativeSpeeds() {
+    return ChassisSpeeds.fromRobotRelativeSpeeds(
+        getChassisSpeeds(), getHeading().plus(AllianceUtil.getZeroRotation()));
   }
 
   public void setLookForNote() {
