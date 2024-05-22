@@ -827,6 +827,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public Pose2d virtualPose = new Pose2d();
   @Log.NT(key = "stagepose")
   public Pose2d stagePose = new Pose2d();
+  @Log.NT(key = "shootingpose")
+  public Pose2d poseWhenShooting = new Pose2d();
 
   public void setPathRunning() {
     pathRunning = true;

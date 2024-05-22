@@ -14,20 +14,14 @@ import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
-import frc.robot.Factories.PathFactory.amppaths;
-import frc.robot.Factories.PathFactory.sourcepaths;
-import frc.robot.commands.Autos.AmpStart.AutoAmpShootMovingThenCenter;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenterPathfind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
@@ -72,9 +66,6 @@ public class CommandFactory implements Logged {
         @Log.NT(key = "startpose")
         Pose2d tempPose2d = new Pose2d();
 
-        private Trigger runShooterTrigger;
-        @Log.NT(key = "startontheflyshoot")
-        public boolean startShoot;
         public boolean innerNoteFirst;
 
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
@@ -90,10 +81,6 @@ public class CommandFactory implements Logged {
                 m_af = af;
                 m_pf = pf;
                 m_sd = sd;
-
-                runShooterTrigger = new Trigger(() -> startShoot);
-
-                runShooterTrigger.onTrue(transferNoteToShooterCommand());
 
         }
 
@@ -176,9 +163,11 @@ public class CommandFactory implements Logged {
         }
 
         public Command transferNoteToShooterCommand() {
-                return Commands.parallel(
-                                m_transfer.transferToShooterCommand(),
-                                Commands.runOnce(() -> startShoot = false));
+                return
+
+                Commands.sequence(Commands.none(),
+                                Commands.runOnce(() -> m_swerve.poseWhenShooting = m_swerve.getPose()),
+                                m_transfer.transferToShooterCommand());
         }
 
         public Command alignShootCommand() {
@@ -207,10 +196,6 @@ public class CommandFactory implements Logged {
                 return Commands.parallel(
                                 m_arm.setGoalCommand(Units.degreesToRadians(armAngle)),
                                 m_shooter.startShooterCommand(shooterRPM));
-        }
-
-        public Command setAutoShootMoving(boolean on) {
-                return Commands.runOnce(() -> m_transfer.autoShootmoving = on);
         }
 
         public double getArmAngleFromTarget(double height, double distance) {
@@ -257,8 +242,8 @@ public class CommandFactory implements Logged {
                                 return new AutoSourceShootMovingThenCenter(this, m_pf,
                                                 m_swerve, true);
                         case 14:
-                                return new AutoSourceShootCenterPathfind(this, m_pf,                                                
-                                                m_swerve,true);
+                                return new AutoSourceShootCenterPathfind(this, m_pf,
+                                                m_swerve, true);
                         case 15:
                                 return new AutoSourceThenCenterVision(this, m_pf,
                                                 m_swerve, m_llv, m_intake, m_transfer, true);

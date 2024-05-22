@@ -8,24 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5956289546288556,
-        "y": 2.811273499116104
+        "x": 0.9861162090369815,
+        "y": 2.705203242075528
       },
       "isLocked": false,
       "linkedName": "Bottom Starting Point"
     },
     {
       "anchor": {
-        "x": 5.281273361735364,
-        "y": 1.6651716873413482
+        "x": 3.820138653116107,
+        "y": 1.955709703145511
       },
       "prevControl": {
-        "x": 3.853184617219533,
-        "y": 1.5021805627063387
+        "x": 3.763597811545776,
+        "y": 1.9709322374144467
       },
       "nextControl": {
-        "x": 6.595606914466325,
-        "y": 1.8151796645961344
+        "x": 5.038065653877382,
+        "y": 1.6278062798636295
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.623607481166459,
+        "y": 1.8386013376876962
+      },
+      "prevControl": {
+        "x": 4.5579213555003415,
+        "y": 1.639517116409411
+      },
+      "nextControl": {
+        "x": 6.923977397407184,
+        "y": 2.0815275857766222
       },
       "isLocked": false,
       "linkedName": null
@@ -44,23 +60,23 @@
       "linkedName": "Center 4"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 1.0,
-      "rotationDegrees": -170.53767779197426,
-      "rotateFast": false
-    },
-    {
-      "waypointRelativePos": 0.4,
-      "rotationDegrees": 125.47328898790217,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "New Constraints Zone",
-      "minWaypointRelativePos": 1.7,
-      "maxWaypointRelativePos": 2.0,
+      "minWaypointRelativePos": 2.7,
+      "maxWaypointRelativePos": 3.0,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 360.0,
+        "maxAngularAcceleration": 180.0
+      }
+    },
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.35,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 3.0,
@@ -72,7 +88,7 @@
   "eventMarkers": [
     {
       "name": "CheckNote",
-      "waypointRelativePos": 1.35,
+      "waypointRelativePos": 2.35,
       "command": {
         "type": "sequential",
         "data": {
@@ -89,7 +105,7 @@
     },
     {
       "name": "Shoot Here",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.4,
       "command": {
         "type": "sequential",
         "data": {

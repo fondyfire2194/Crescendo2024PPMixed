@@ -34,11 +34,13 @@ public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
 
                                 // path auto shoots on the fly
                                 // move to center note , pick up if there and move to shoot position then shoot
-                
-                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                                cf.setArmShooterValues(Constants.autoShootArmAngle, Constants.autoShootRPM),
-                              //  cf.setAutoShootMoving(true),
+
+                                // cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                // cf.setArmShooterValues(Constants.autoShootArmAngle, Constants.autoShootRPM),
+                                // cf.setAutoShootMoving(true),
+
                                 Commands.deadline(
+
                                                 Commands.either(
                                                                 new RunPPath(swerve,
                                                                                 pf.pathMaps.get(
@@ -46,18 +48,17 @@ public class AutoSourceShootMovingThenCenter extends SequentialCommandGroup {
                                                                                                                 .name())),
                                                                 new RunPPath(swerve,
                                                                                 pf.pathMaps.get(
-                                                                                                sourcepaths.SourceShootToCenter5
+                                                                                                sourcepaths.SourceToCenter5
                                                                                                                 .name())),
                                                                 () -> innerNoteFirst),
-
-                                                new CheckAlignedToSpeaker(swerve, 2)),
+                                                cf.positionArmRunShooterByDistance(
+                                                                false, false)),
                                 Commands.sequence(
                                                 new WaitCommand(2),
-                                             //   cf.setAutoShootMoving(false),
                                                 cf.doIntake()),
-                                                Commands.parallel(
-                                                        Commands.runOnce(() -> swerve.autostep = 1),
-                                                        Commands.runOnce(() -> cf.innerNoteFirst = innerNoteFirst)));
+                                Commands.parallel(
+                                                Commands.runOnce(() -> swerve.autostep = 1),
+                                                Commands.runOnce(() -> cf.innerNoteFirst = innerNoteFirst)));
         }
 
 }

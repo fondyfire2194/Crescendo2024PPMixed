@@ -97,7 +97,6 @@ public class RobotContainer implements Logged {
 
         private Trigger doLobShot;
         private Trigger doMovingShot;
-        private Trigger doAutoMovingShot;
 
         EventLoop checkAutoSelectLoop;
 
@@ -157,7 +156,7 @@ public class RobotContainer implements Logged {
                                 && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
                                 && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
 
-                doLobShot.onTrue(m_transfer.transferToShooterCommand());
+                doLobShot.onTrue(m_cf.transferNoteToShooterCommand());
 
                 doMovingShot = new Trigger(() -> m_transfer.shootmoving
                                 && m_transfer.OKShootMoving
@@ -168,15 +167,8 @@ public class RobotContainer implements Logged {
                                 && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
                                 && m_swerve.getDistanceFromSpeaker() < SwerveConstants.maxMovingShotDistance);
 
-                doMovingShot.onTrue(m_transfer.transferToShooterCommand());
+                doMovingShot.onTrue(m_cf.transferNoteToShooterCommand());
 
-                doAutoMovingShot = new Trigger(() -> m_transfer.autoShootmoving
-                                && m_transfer.noteAtIntake()
-                                && m_shooter.bothAtSpeed(1)
-                                && m_arm.getAtSetpoint()
-                                && m_swerve.alignedToTarget);
-
-                doAutoMovingShot.onTrue(m_transfer.transferToShooterCommand());
 
                 m_tcf.createCommonTriggers();
 
@@ -278,7 +270,7 @@ public class RobotContainer implements Logged {
                 driver.rightTrigger().onTrue(
                                 Commands.sequence(
                                                 Commands.waitUntil(() -> m_arm.getAtSetpoint()),
-                                                m_transfer.transferToShooterCommand(),
+                                                m_cf.transferNoteToShooterCommand(),
                                                 m_shooter.stopShooterCommand(),
                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
                                                 m_intake.stopIntakeCommand()));
@@ -458,7 +450,7 @@ public class RobotContainer implements Logged {
                 // NamedCommands.registerCommand("Shooter Low Speed",
                 // m_shooter.setRPMCommand(1000, false));
 
-                NamedCommands.registerCommand("Shoot", m_transfer.transferToShooterCommand().asProxy()
+                NamedCommands.registerCommand("Shoot", m_cf.transferNoteToShooterCommand()
                                 .withName("Shoot"));
 
                 NamedCommands.registerCommand("Align Then Shoot", m_cf.alignShootCommand().asProxy());
@@ -511,9 +503,6 @@ public class RobotContainer implements Logged {
                 NamedCommands.registerCommand("Pathfind to Pickup C5",
                                 m_cf.autopickup(FieldConstants.centerNote5PickupBlue)
                                                 .withName("Pathfind to Pickup C5"));
-
-                NamedCommands.registerCommand("ShootSet",
-                                Commands.runOnce(() -> m_cf.startShoot = true));
 
                 NamedCommands.registerCommand("CheckForNote",
                                 Commands.runOnce(() -> m_swerve.checkNote = true));

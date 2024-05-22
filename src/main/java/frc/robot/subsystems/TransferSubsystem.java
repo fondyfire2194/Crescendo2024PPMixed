@@ -50,8 +50,6 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean lobbing;
   @Log.NT(key = "shootmoving")
   public boolean shootmoving;
-  @Log.NT(key = "autoshootmoving")
-  public boolean autoShootmoving;
   public boolean transferMotorConnected;
   @Log.NT(key = "okshootmoving")
   public boolean OKShootMoving;
