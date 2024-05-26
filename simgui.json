@@ -31,9 +31,12 @@
       "/SmartDashboard/DelayChooser": "String Chooser",
       "/SmartDashboard/FrontCameraChooser": "String Chooser",
       "/SmartDashboard/GetRPMAnglea": "Command",
+      "/SmartDashboard/ShootMovingCalcs": "Command",
+      "/SmartDashboard/ShootMovingTest": "Command",
       "/SmartDashboard/Source Start": "String Chooser",
       "/SmartDashboard/SubwfrStart": "String Chooser",
       "/SmartDashboard/TestCan": "Command",
+      "/SmartDashboard/VectroSWM": "Command",
       "/SmartDashboard/ViewRPMAngles": "Command"
     },
     "windows": {
@@ -53,6 +56,11 @@
         }
       },
       "/SmartDashboard/SubwfrStart": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/VectroSWM": {
         "window": {
           "visible": true
         }

@@ -107,7 +107,7 @@ public class CommandFactory implements Logged {
                                                                                 m_swerve.getDistanceFromStage()));
                                                 m_arm.setTolerance(ArmConstants.angleTolerance);
                                                 m_arm.setTarget(Units.degreesToRadians(
-                                                                getArmAngleFromTarget(FieldConstants.stageHeight,
+                                                                getLobArmAngleFromTarget(
                                                                                 m_swerve.getDistanceFromStage())));
                                         } else {
                                                 m_shooter.startShooter(
@@ -119,16 +119,15 @@ public class CommandFactory implements Logged {
 
                                                 if (calcAngles)
                                                         m_arm.setTarget(Units.degreesToRadians(
-                                                                        m_sd.armAngleMap.get(m_swerve
+                                                                        m_sd.armCalcDistMap.get(m_swerve
                                                                                         .getDistanceFromTarget(
                                                                                                         false))));
 
                                                 else
-                                                        m_arm.setTarget(Units.degreesToRadians(
-                                                                        getArmAngleFromTarget(
-                                                                                        FieldConstants.speakerSlotHeight,
-                                                                                        m_swerve.getDistanceFromTarget(
-                                                                                                        false))));
+                                                        Units.degreesToRadians(
+                                                                        m_sd.armAngleMap.get(m_swerve
+                                                                                        .getDistanceFromTarget(
+                                                                                                        false)));
                                         }
                                 },
 
@@ -163,11 +162,8 @@ public class CommandFactory implements Logged {
         }
 
         public Command transferNoteToShooterCommand() {
-                return
+                return m_transfer.transferToShooterCommand();
 
-                Commands.sequence(Commands.none(),
-                                Commands.runOnce(() -> m_swerve.poseWhenShooting = m_swerve.getPose()),
-                                m_transfer.transferToShooterCommand());
         }
 
         public Command alignShootCommand() {
@@ -198,8 +194,8 @@ public class CommandFactory implements Logged {
                                 m_shooter.startShooterCommand(shooterRPM));
         }
 
-        public double getArmAngleFromTarget(double height, double distance) {
-                double opp = height - ArmConstants.armPivotZ;
+        public double getLobArmAngleFromTarget(double distance) {
+                double opp = FieldConstants.stageHeight - ArmConstants.armPivotZ;
                 double rads = Math.atan(opp / distance);
                 return Units.radiansToDegrees(rads);
         }

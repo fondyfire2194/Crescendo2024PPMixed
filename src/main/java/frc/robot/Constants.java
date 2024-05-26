@@ -457,11 +457,11 @@ public final class Constants {
         public static final InterpolatingDoubleTreeMap shotTimeMap = new InterpolatingDoubleTreeMap();
         // arm angle, time
         static {
-                shotTimeMap.put(Units.inchesToMeters(80.), 0.078);
-                shotTimeMap.put(Units.inchesToMeters(130.), 0.080);
-                shotTimeMap.put(Units.inchesToMeters(190.), 0.081);
-                shotTimeMap.put(Units.inchesToMeters(240.), 0.082);
-                shotTimeMap.put(Units.inchesToMeters(280.), 0.083);
+                shotTimeMap.put(Units.inchesToMeters(60.), 0.2);
+                shotTimeMap.put(Units.inchesToMeters(120.), 0.4);
+                shotTimeMap.put(Units.inchesToMeters(180.), 0.6);
+                shotTimeMap.put(Units.inchesToMeters(240.), 0.75);
+                shotTimeMap.put(Units.inchesToMeters(300.), 0.95);
         }
 
 
@@ -563,6 +563,7 @@ public final class Constants {
 
                 public static final double armPivotZ = Units.inchesToMeters(10.3);// 10.3
                 public static final double armPivotX = Units.inchesToMeters(-7.5);
+                public static final double armPivotOffset = Units.inchesToMeters(3);
 
                 public static final double reverseMovementLimitAngle = Units.degreesToRadians(18);
                 public static final double forwardMovementLimitAngle = Units.degreesToRadians(100.53);

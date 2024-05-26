@@ -98,6 +98,8 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     @Log.NT(key = "simanglerads")
     private double simAngleRads;
+    @Log.NT(key = "shootingangle")
+    public double angleDegWhenShooting;
 
     private boolean cancoderconnected;
 

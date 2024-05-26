@@ -39,6 +39,7 @@ import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
 import frc.robot.commands.Shooter.ShootWhileMoving;
+import frc.robot.commands.Shooter.ShootWhileMovingQuadratic;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -98,6 +99,8 @@ public class RobotContainer implements Logged {
         private Trigger doLobShot;
         private Trigger doMovingShot;
 
+        private Trigger logShotTrigger;
+
         EventLoop checkAutoSelectLoop;
 
         private BooleanEvent doAutoSetup;
@@ -127,7 +130,8 @@ public class RobotContainer implements Logged {
 
                 SmartDashboard.putData("ClearStickyFaults", this.clearAllStickyFaultsCommand().ignoringDisable(true));
 
-                SmartDashboard.putData("ViewRPMAngles", new ViewArmShooterByDistance(m_cf, m_sd).ignoringDisable(true));
+                SmartDashboard.putData("ViewRPMAngles",
+                                new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
 
                 configureDriverBindings();
 
@@ -169,6 +173,17 @@ public class RobotContainer implements Logged {
 
                 doMovingShot.onTrue(m_cf.transferNoteToShooterCommand());
 
+                logShotTrigger = new Trigger(() -> m_transfer.logShot == true);
+
+                logShotTrigger.onTrue(
+                                Commands.sequence(
+
+                                                Commands.runOnce(() -> m_swerve.poseWhenShooting = m_swerve.getPose()),
+                                                Commands.runOnce(() -> m_arm.angleDegWhenShooting = m_arm
+                                                                .getAngleDegrees()),
+                                                Commands.runOnce(() -> m_shooter.rpmWhenShooting = m_shooter
+                                                                .getRPMTop()),
+                                                Commands.runOnce(() -> m_transfer.logShot = false)));
 
                 m_tcf.createCommonTriggers();
 
@@ -223,7 +238,8 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), false),
-                                                new ShootWhileMoving(m_arm, m_transfer, m_shooter, m_swerve, m_sd)));
+                                                                new ShootWhileMovingQuadratic(m_arm, m_transfer, m_shooter, m_swerve, m_sd)));
+                                              //  new ShootWhileMoving(m_arm, m_transfer, m_shooter, m_swerve, m_sd)));
 
                 driver.rightBumper().and(driver.a().negate()).onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),

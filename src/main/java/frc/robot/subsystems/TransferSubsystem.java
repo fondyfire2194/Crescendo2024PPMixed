@@ -53,6 +53,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean transferMotorConnected;
   @Log.NT(key = "okshootmoving")
   public boolean OKShootMoving;
+  public boolean logShot;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {
@@ -82,14 +83,12 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
     // motor.setClosedLoopRampRate(1);
     motor.burnFlash();
     encoder.setPosition(0.0);
-
   }
 
   public void stopMotor() {
     runAtVelocity(0);
     transferMotor.stopMotor();
     commandrpm = 0;
-
   }
 
   public Command stopTransferCommand() {
@@ -122,9 +121,10 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   public void transferToShooter() {
     enableLimitSwitch(false);
+    logShot = true;
+    SmartDashboard.putBoolean("LOGSHOT",logShot);
     commandrpm = Pref.getPref("TransferToShootSpeed");
     simnoteatintake = false;
-
     runAtVelocity(commandrpm);
   }
 

@@ -61,12 +61,12 @@ public class ShootWhileMoving extends Command implements Logged {
       SwerveSubsystem swerve,
       ShootingData sd) {
 
-    m_arm = arm;
+   
+ m_arm = arm;
     m_transfer = transfer;
     m_shooter = shooter;
     m_swerve = swerve;
     m_sd = sd;
-
     // Use addRequirements() here to declare subsystem dependencies.
 
   }

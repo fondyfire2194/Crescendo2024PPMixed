@@ -8,6 +8,9 @@ import java.util.*;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants.ArmConstants;
+import frc.robot.Constants.FieldConstants;
 
 /** Add your docs here. */
 public class ShootingData {
@@ -17,11 +20,13 @@ public class ShootingData {
     public InterpolatingDoubleTreeMap armAngleMap = new InterpolatingDoubleTreeMap();
     /** Shooter look up table key: feet, values: rpm */
     public InterpolatingDoubleTreeMap shooterRPMMap = new InterpolatingDoubleTreeMap();
+    // arm look uu table from calcualted distance using arm pivot height variatiom
+    public InterpolatingDoubleTreeMap armCalcDistMap = new InterpolatingDoubleTreeMap();
 
     public ShootingData() {
         {
             si.clear();
-            
+
             si.add(new ShotInfo(4.25, 60, 3000));
 
             si.add(new ShotInfo(5.25, 51, 3000));
@@ -53,7 +58,6 @@ public class ShootingData {
             si.add(new ShotInfo(18.25, 23.5, 4500));
 
             si.add(new ShotInfo(19.25, 22, 4500));
-
         }
 
         /** Arm angle look up table key: meters, values: degrees */
@@ -64,6 +68,19 @@ public class ShootingData {
         }
         for (int i = 0; i < si.size(); i++) {
             shooterRPMMap.put(si.get(i).getDistance(), si.get(i).getSpeed());
+        }
+
+        for (double deg = 60; deg >= Units.radiansToDegrees(ArmConstants.armMinRadians); deg -= .5) {
+
+            double irad = Units.degreesToRadians(deg);
+
+            double baseHeightDiff = FieldConstants.speakerSlotHeight - ArmConstants.armPivotZ;
+
+            double calcHeightDiff = baseHeightDiff - (ArmConstants.armPivotOffset * Math.cos(irad));
+
+            double dist = calcHeightDiff / Math.tan(irad);
+
+            armCalcDistMap.put(dist, deg);
         }
     }
 

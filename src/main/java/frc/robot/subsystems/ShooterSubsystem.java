@@ -16,7 +16,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,7 +26,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
-import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.Pref;
 import monologue.Annotations.Log;
@@ -55,13 +53,14 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   @Log.NT(key = "shtrrunatvel")
   private boolean runShooterVel;
+  @Log.NT(key = "rpmwhenshooting")
+  public double rpmWhenShooting;
 
   private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(2500);
   private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(2500);
   private int loopctr;
   public boolean topMotorConnected;
   public boolean bottomMotorConnected;
-  
 
   /** Creates a new Shooter. */
   public ShooterSubsystem() {
