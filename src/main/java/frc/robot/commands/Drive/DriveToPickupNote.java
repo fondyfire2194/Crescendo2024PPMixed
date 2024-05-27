@@ -75,6 +75,7 @@ public class DriveToPickupNote extends Command {
     double rotationVal = m_swerve.m_alignNotePID.calculate(angleError, 0);
 
     SmartDashboard.putNumber("DtoPuN/DistErr", distError);
+    SmartDashboard.putNumber("DtoPuN/AngleErr", angleError);
 
     /*
      * Drive
@@ -104,6 +105,6 @@ public class DriveToPickupNote extends Command {
   @Override
   public boolean isFinished() {
     return m_moveDirectionX && m_swerve.getX() > endPosition && !m_moveDirectionX && m_swerve.getY() > endPosition
-        || RobotBase.isReal() && m_transfer.noteAtIntake();
+        || m_transfer.noteAtIntake();
   }
 }
