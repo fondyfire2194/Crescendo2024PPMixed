@@ -38,7 +38,8 @@ import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
-import frc.robot.commands.Shooter.ShootByDistance;
+import frc.robot.commands.Shooter.ShootByDistanceAndVelocity;
+import frc.robot.commands.Test.MovePickupShoot;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -127,9 +128,14 @@ public class RobotContainer implements Logged {
 
                 SmartDashboard.putData("TestCan", this.testAllCan().ignoringDisable(true));
 
-                SmartDashboard.putData("ClearStickyFaults", this.clearAllStickyFaultsCommand().ignoringDisable(true));             
-      
-                SmartDashboard.putData("ViewArmShooterData", new ViewArmShooterByDistance(m_cf,m_sd,m_arm).ignoringDisable(true));             
+                SmartDashboard.putData("ClearStickyFaults", this.clearAllStickyFaultsCommand().ignoringDisable(true));
+
+                SmartDashboard.putData("ViewArmShooterData",
+                                new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
+
+                SmartDashboard.putData("RunTestPickupandShoot",
+                                new MovePickupShoot(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd, 2,
+                                                4));
 
                 configureDriverBindings();
 
@@ -221,14 +227,14 @@ public class RobotContainer implements Logged {
                 keepAngle = () -> false;
                 // align for speaker shots
                 // driver.leftTrigger().and(driver.a().negate()).whileTrue(
-                //                 Commands.parallel(
-                //                                 new AlignTargetOdometry(
-                //                                                 m_swerve,
-                //                                                 () -> -driver.getLeftY(),
-                //                                                 () -> driver.getLeftX(),
-                //                                                 () -> driver.getRightX(), false),
+                // Commands.parallel(
+                // new AlignTargetOdometry(
+                // m_swerve,
+                // () -> -driver.getLeftY(),
+                // () -> driver.getLeftX(),
+                // () -> driver.getRightX(), false),
 
-                //                                 m_cf.positionArmRunShooterByDistance(false, false)));
+                // m_cf.positionArmRunShooterByDistance(false, false)));
 
                 driver.leftTrigger().whileTrue(
                                 Commands.parallel(
@@ -237,8 +243,9 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), false),
-                                                                new ShootByDistance(m_arm, m_transfer, m_shooter, m_swerve, m_sd)));
-                                              
+                                                new ShootByDistanceAndVelocity(m_arm, m_transfer, m_shooter, m_swerve,
+                                                                m_sd)));
+
                 driver.rightBumper().and(driver.a().negate()).onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),
                                 new TransferIntakeToSensor(m_transfer, m_intake, 120),
@@ -273,7 +280,7 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), true),
-                                                m_cf.positionArmRunShooterByDistance(true, false)))
+                                                m_cf.positionArmRunShooterByDistance(true, false, false)))
 
                                 .onFalse(
                                                 Commands.parallel(

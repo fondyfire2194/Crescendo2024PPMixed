@@ -56,9 +56,8 @@ public class AutoSourceThenCenterVision extends SequentialCommandGroup {
                                                                                                 () -> targetNoteNumber = 5)),
                                                                 () -> innerNoteFirst)),
 
-                                new DriveToPickupNote(swerve, transfer, intake,
-                                                CameraConstants.rearCamera.camname, llv,
-                                                targetNoteNumber),
+                                new DriveToPickupNote(swerve, transfer, intake, CameraConstants.rearCamera.camname,
+                                                innerNoteFirst, targetNoteNumber),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> swerve.autostep = 1),
                                                 Commands.runOnce(() -> cf.innerNoteFirst = innerNoteFirst)));

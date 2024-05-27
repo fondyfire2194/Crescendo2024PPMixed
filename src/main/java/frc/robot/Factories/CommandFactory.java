@@ -24,7 +24,6 @@ import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenterPathfind;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootMovingThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenterVision;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
@@ -68,6 +67,8 @@ public class CommandFactory implements Logged {
 
         public boolean innerNoteFirst;
 
+        public int testNotesRun;
+
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer, ClimberSubsystem climber,
                         LimelightVision llv, AutoFactory af, PathFactory pf, ShootingData sd) {
@@ -94,7 +95,7 @@ public class CommandFactory implements Logged {
                                 0);
         }
 
-        public Command positionArmRunShooterByDistance(boolean lob, boolean calcAngles) {
+        public Command positionArmRunShooterByDistance(boolean lob, boolean calcAngles, boolean endAtTargets) {
 
                 return new FunctionalCommand(
 
@@ -131,7 +132,7 @@ public class CommandFactory implements Logged {
 
                                 (interrupted) -> Commands.none(),
 
-                                () -> false);
+                                () -> endAtTargets && m_arm.getAtSetpoint() && m_shooter.bothAtSpeed(2));
         }
 
         public Command armFollowTargetDistance() {
@@ -233,12 +234,9 @@ public class CommandFactory implements Logged {
                                                 m_swerve, false);
 
                         case 13:
-                                return new AutoSourceShootMovingThenCenter(this, m_pf,
-                                                m_swerve, true);
-                        case 14:
                                 return new AutoSourceShootCenterPathfind(this, m_pf,
                                                 m_swerve, true);
-                        case 15:
+                        case 14:
                                 return new AutoSourceThenCenterVision(this, m_pf,
                                                 m_swerve, m_llv, m_intake, m_transfer, true);
 

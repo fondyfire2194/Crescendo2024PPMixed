@@ -21,7 +21,7 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.ShootingData;
 
-public class ShootByDistance extends Command {
+public class ShootByDistanceAndVelocity extends Command {
   /** Creates a new VectorSWM. */
   private final ArmSubsystem m_arm;
   private final TransferSubsystem m_transfer;
@@ -46,7 +46,8 @@ public class ShootByDistance extends Command {
   private double shotTime;
   private double distance;
 
-  public ShootByDistance(ArmSubsystem arm,
+  public ShootByDistanceAndVelocity(
+      ArmSubsystem arm,
       TransferSubsystem transfer,
       ShooterSubsystem shooter,
       SwerveSubsystem swerve,
@@ -159,7 +160,7 @@ public class ShootByDistance extends Command {
 
       shotTime = m_sd.shotTimeMap.get(distance);
       noteVelocity = distance / shotTime;
-      m_arm.setGoal(m_sd.armAngleMap.get(distance));
+      m_arm.setGoal(m_sd.armAngleMap.get(distance) + m_arm.getAngleErrorRadians());
       m_arm.setTolerance(m_sd.armToleranceMap.get(distance));
       m_shooter.startShooter(m_sd.shooterRPMMap.get(distance));
       previousSpeeds = fieldSpeeds;
