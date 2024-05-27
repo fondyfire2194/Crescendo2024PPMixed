@@ -85,7 +85,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     private double pidout;
 
-    public double angleTolerance = ArmConstants.angleTolerance;
+    public double angleToleranceRads = ArmConstants.angleTolerance;
 
     @Log.NT(key = "armenamble")
     public boolean enableArm;
@@ -301,12 +301,8 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         getController().reset(getAngleRadians());
     }
 
-    public void setTolerance(double tolerance) {
-        angleTolerance = tolerance;
-    }
-
-    public void setToleranceByDistance(double distance) {
-        angleTolerance = ArmConstants.angleTolerance;
+    public void setTolerance(double toleranceRads) {
+        angleToleranceRads = toleranceRads;
     }
 
     public void setTarget(double anglerads) {
@@ -323,14 +319,13 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                 runOnce(() -> setTolerance(ArmConstants.angleTolerance)),
                 runOnce(() -> resetController()),
                 runOnce(() -> enable()));
-
     }
 
-    public Command setGoalCommand(double angleRads, double tolerance) {
+    public Command setGoalCommand(double angleRads, double toleranceRads) {
         return Commands.sequence(
                 runOnce(() -> currentGoalRads = angleRads),
                 runOnce(() -> setGoal(currentGoalRads)),
-                runOnce(() -> angleTolerance = Units.degreesToRadians(tolerance)),
+                runOnce(() -> angleToleranceRads = toleranceRads),
                 runOnce(() -> resetController()),
                 runOnce(() -> enable()));
     }
@@ -401,7 +396,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     @Log.NT(key = "armatsetpoint")
     public boolean getAtSetpoint() {
-        return Math.abs(currentGoalRads - getAngleRadians()) < angleTolerance;
+        return Math.abs(currentGoalRads - getAngleRadians()) < angleToleranceRads;
     }
 
     public double getVoltsPerRadPerSec() {

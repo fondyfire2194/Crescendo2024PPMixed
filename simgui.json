@@ -37,6 +37,7 @@
       "/SmartDashboard/SubwfrStart": "String Chooser",
       "/SmartDashboard/TestCan": "Command",
       "/SmartDashboard/VectroSWM": "Command",
+      "/SmartDashboard/ViewArmShooterData": "Command",
       "/SmartDashboard/ViewRPMAngles": "Command"
     },
     "windows": {
@@ -60,12 +61,7 @@
           "visible": true
         }
       },
-      "/SmartDashboard/VectroSWM": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/ViewRPMAngles": {
+      "/SmartDashboard/ViewArmShooterData": {
         "window": {
           "visible": true
         }

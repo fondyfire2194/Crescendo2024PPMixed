@@ -454,16 +454,6 @@ public final class Constants {
 
         }
 
-        public static final InterpolatingDoubleTreeMap shotTimeMap = new InterpolatingDoubleTreeMap();
-        // arm angle, time
-        static {
-                shotTimeMap.put(Units.inchesToMeters(60.), 0.2);
-                shotTimeMap.put(Units.inchesToMeters(120.), 0.4);
-                shotTimeMap.put(Units.inchesToMeters(180.), 0.6);
-                shotTimeMap.put(Units.inchesToMeters(240.), 0.75);
-                shotTimeMap.put(Units.inchesToMeters(300.), 0.95);
-        }
-
 
         /** Shooter look up table key: meters, values: rpm */
         public static final InterpolatingDoubleTreeMap shooterLobRPMMap = new InterpolatingDoubleTreeMap();

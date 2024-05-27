@@ -2,16 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.utils;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.utils.ShootingData;
 
 public class ViewArmShooterByDistance extends Command {
   /** Creates a new ArmShooterByDistance. */
@@ -47,21 +44,24 @@ public class ViewArmShooterByDistance extends Command {
 
     loopctr++;
     if (loopctr == 5 && distance <= 7) {
-
       double rpm = m_sd.shooterRPMMap.get(distance);
-      double angle = m_sd.armAngleMap.get(distance);
+      double angleDeg = Units.radiansToDegrees(m_sd.armAngleMap.get(distance));
+      double shotTimeMs = m_sd.shotTimeMap.get(distance) * 1000;
+      double toleranceDeg = Units.radiansToDegrees(m_sd.armToleranceMap.get(distance));
 
       double calcAngle = m_sd.armCalcDistMap.get(distance);
 
       double stageAngle = m_cf.getLobArmAngleFromTarget(distance);
 
-      double angleTan = Math.tan(Units.degreesToRadians(angle));
+      double angleTan = Math.tan(Units.degreesToRadians(angleDeg));
       double angleCalcTan = Math.tan(Units.degreesToRadians(calcAngle));
 
       double aimHeightFromTable = angleTan * distance;
 
       SmartDashboard.putNumber("ArmCalc/DistRPM", rpm);
-      SmartDashboard.putNumber("ArmCalc/DistAngle", angle);
+      SmartDashboard.putNumber("ArmCalc/DistAngle", angleDeg);
+      SmartDashboard.putNumber("ArmCalc/ShotTime", shotTimeMs);
+      SmartDashboard.putNumber("ArmCalc/ToleranceAngle", toleranceDeg);
 
       SmartDashboard.putNumber("ArmCalc/CalcAngle", calcAngle);
 
@@ -73,6 +73,8 @@ public class ViewArmShooterByDistance extends Command {
       loopctr = 0;
       distance += .1;
     }
+
+    endit = distance >= 7;
 
   }
 

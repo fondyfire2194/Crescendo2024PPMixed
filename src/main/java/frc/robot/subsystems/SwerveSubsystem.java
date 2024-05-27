@@ -572,7 +572,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   @Log.NT(key = "targetPose")
   public void setTargetPose(Pose2d pose) {
-      targetPose = pose;
+    targetPose = pose;
   }
 
   @Log.NT(key = "stagepose")
@@ -598,14 +598,19 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         .getDistance(getPose().getTranslation()), 2);
   }
 
-  public double getDistanceFromTarget(boolean lob) {
-    if (lob)
-      return round2dp(AllianceUtil.getLobPose().getTranslation()
-          .getDistance(getPose().getTranslation()), 2);
-    else
-      return round2dp(AllianceUtil.getSpeakerPose().getTranslation()
-          .getDistance(getPose().getTranslation()), 2);
+  public double getDistanceFromTarget(boolean lob, boolean virtual) {
+    if (!virtual) {
+      if (lob)
+        return round2dp(AllianceUtil.getLobPose().getTranslation()
+            .getDistance(getPose().getTranslation()), 2);
+      else
+        return round2dp(AllianceUtil.getSpeakerPose().getTranslation()
+            .getDistance(getPose().getTranslation()), 2);
+            
+    } else
 
+      return round2dp(virtualPose.getTranslation()
+          .getDistance(getPose().getTranslation()), 2);
   }
 
   public double getAngleRadsToTarget() {

@@ -106,28 +106,26 @@ public class CommandFactory implements Logged {
                                                                 Constants.shooterLobRPMMap.get(
                                                                                 m_swerve.getDistanceFromStage()));
                                                 m_arm.setTolerance(ArmConstants.angleTolerance);
-                                                m_arm.setTarget(Units.degreesToRadians(
-                                                                getLobArmAngleFromTarget(
-                                                                                m_swerve.getDistanceFromStage())));
+                                                m_arm.setTarget(getLobArmAngleFromTarget(
+                                                                m_swerve.getDistanceFromStage()));
                                         } else {
                                                 m_shooter.startShooter(
                                                                 m_sd.shooterRPMMap.get(
-                                                                                m_swerve.getDistanceFromTarget(false)));
-                                                m_arm.setToleranceByDistance(Units
-                                                                .degreesToRadians(m_swerve
-                                                                                .getDistanceFromTarget(false)));
+                                                                                m_swerve.getDistanceFromTarget(false,
+                                                                                                false)));
+                                                m_arm.setTolerance(m_sd.armToleranceMap.get(m_swerve
+                                                                .getDistanceFromTarget(false, false)));
 
                                                 if (calcAngles)
                                                         m_arm.setTarget(Units.degreesToRadians(
                                                                         m_sd.armCalcDistMap.get(m_swerve
                                                                                         .getDistanceFromTarget(
+                                                                                                        false,
                                                                                                         false))));
-
                                                 else
-                                                        Units.degreesToRadians(
-                                                                        m_sd.armAngleMap.get(m_swerve
-                                                                                        .getDistanceFromTarget(
-                                                                                                        false)));
+                                                        m_arm.setTarget(m_sd.armAngleMap.get(m_swerve
+                                                                        .getDistanceFromTarget(false,
+                                                                                        false)));
                                         }
                                 },
 
@@ -140,8 +138,8 @@ public class CommandFactory implements Logged {
                 return Commands.parallel(
                                 m_arm.setGoalCommand(m_sd.armAngleMap
                                                 .get(m_swerve.targetPose.getTranslation().getNorm())),
-                                Commands.runOnce(() -> m_arm.setToleranceByDistance(
-                                                m_swerve.targetPose.getTranslation().getNorm())));
+                                Commands.runOnce(() -> m_arm.setTolerance(m_sd.armAngleMap.get(
+                                                m_swerve.targetPose.getTranslation().getNorm()))));
 
         }
 
