@@ -4,18 +4,11 @@
 
 package frc.robot.commands.Drive;
 
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
-import frc.robot.Constants.CameraConstants.CameraValues;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.LimelightVision;
-
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TransferSubsystem;
 
 public class FindNote extends Command {
   /** Creates a new AlignToTagSetShootSpeed. */

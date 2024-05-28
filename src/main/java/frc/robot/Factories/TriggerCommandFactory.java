@@ -213,28 +213,28 @@ public class TriggerCommandFactory implements Logged {
                                                                 Commands.runOnce(() -> trig2 = true),
                                                                 Commands.runOnce(() -> stepRunning = false))));
 
-                // firstNoteToSecondNoteSource.onTrue(
-                // Commands.sequence(
-                // Commands.runOnce(() -> stepRunning = true),
-                // new FindNote(m_swerve, true, m_llv, CameraConstants.rearCamera.camname),
-                // m_intake.startIntakeCommand(),
-                // Commands.parallel(
-                // new TransferIntakeToSensor(m_transfer, m_intake, .6),
-                // new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
-                // CameraConstants.rearCamera.camname,
-                // m_llv,
-                // 5)),
-                // Commands.either(
-                // m_cf.autopickup(FieldConstants.sourceShootBlue),
-                // m_cf.autopickup(GeometryUtil
-                // .flipFieldPose(FieldConstants.sourceShootBlue)),
-                // () -> DriverStation.getAlliance().isPresent()
-                // && DriverStation.getAlliance()
-                // .get() == Alliance.Blue),
-                // Commands.parallel(
-                // Commands.runOnce(() -> m_swerve.autostep = endit),
-                // Commands.runOnce(() -> trig4 = true),
-                // Commands.runOnce(() -> stepRunning = false))));
+                firstNoteToSecondNoteSource.onTrue(
+                                Commands.sequence(
+                                                Commands.runOnce(() -> stepRunning = true),
+                                                new FindNote(m_swerve, true, m_llv, CameraConstants.rearCamera.camname),
+                                                m_intake.startIntakeCommand(),
+                                                Commands.parallel(
+                                                                new TransferIntakeToSensor(m_transfer, m_intake, .6),
+                                                                new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
+                                                                                CameraConstants.rearCamera.camname,
+                                                                                m_llv,
+                                                                                5)),
+                                                Commands.either(
+                                                                m_cf.autopickup(FieldConstants.sourceShootBlue),
+                                                                m_cf.autopickup(GeometryUtil
+                                                                                .flipFieldPose(FieldConstants.sourceShootBlue)),
+                                                                () -> DriverStation.getAlliance().isPresent()
+                                                                                && DriverStation.getAlliance()
+                                                                                                .get() == Alliance.Blue),
+                                                Commands.parallel(
+                                                                Commands.runOnce(() -> m_swerve.autostep = endit),
+                                                                Commands.runOnce(() -> trig4 = true),
+                                                                Commands.runOnce(() -> stepRunning = false))));
 
         }
 
