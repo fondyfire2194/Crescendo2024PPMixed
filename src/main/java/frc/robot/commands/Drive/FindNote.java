@@ -4,11 +4,16 @@
 
 package frc.robot.commands.Drive;
 
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.AllianceUtil;
 
 public class FindNote extends Command {
   /** Creates a new AlignToTagSetShootSpeed. */
@@ -16,23 +21,26 @@ public class FindNote extends Command {
   private final SwerveSubsystem m_swerve;
   private final LimelightVision m_llv;
   private final String m_camname;
-  private final boolean m_directionCW;
+  private final double m_maxTravel;
 
   private double rotationVal;
-  private int angleError;
   private boolean noteInRange;
-  private double startAngle;
+  private double startDegrees;
+  private double endDegrees;
+  private double travelLimit;
+  private Timer simNoteTimer = new Timer();
+  private double angleError;
 
   public FindNote(
       SwerveSubsystem swerve,
-      boolean directionCW,
+      double maxTravel,
       LimelightVision llv,
       String camname)
 
   {
     m_swerve = swerve;
     m_llv = llv;
-    m_directionCW = directionCW;
+    m_maxTravel = maxTravel;
     m_camname = camname;
     addRequirements(m_swerve);
   }
@@ -40,42 +48,55 @@ public class FindNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
+    simNoteTimer.reset();
+    simNoteTimer.start();
+    travelLimit = m_maxTravel;
+    if (AllianceUtil.isRedAlliance())
+      travelLimit = -travelLimit;
     m_llv.setRearNoteDetectorPipeline();
-    startAngle = m_swerve.getPose().getRotation().getDegrees();
+    startDegrees = m_swerve.getYaw().getDegrees();
+    SmartDashboard.putNumber("FindNote/ROTSStart", startDegrees);
+    endDegrees = (startDegrees + travelLimit) % 360;
+    if (endDegrees > 180)
+      endDegrees -= 360;
+    if (endDegrees < -180)
+      endDegrees += 360;
+    SmartDashboard.putNumber("FindNote/ROTSEnd", endDegrees);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    SmartDashboard.putNumber("FindNote/RotsAct", m_swerve.getYaw().getDegrees());
     /* Get Values, Deadband */
 
     // get horizontal angle
 
-    boolean noteSeen = LimelightHelpers.getTV(m_camname);
-    angleError = 10;
+    boolean noteSeen = LimelightHelpers.getTV(m_camname) || RobotBase.isSimulation() && simNoteTimer.hasElapsed(2);
+    double simAngle = m_swerve.getYaw().getDegrees();
+  
     noteInRange = false;
+
+    SmartDashboard.putBoolean("FindNote/NoteSeen", noteSeen);
 
     if (noteSeen) {
 
-      double distanceApprox = LimelightHelpers.getTY(m_camname);
+      double distanceApprox = 1;
+      if (RobotBase.isReal())
+        LimelightHelpers.getTY(m_camname);
 
       noteInRange = Math.abs(distanceApprox) < 5;
-
+      SmartDashboard.putBoolean("FindNote/InRange", noteInRange);
       if (noteInRange) {
-
-        double angleError = LimelightHelpers.getTX(m_camname);
+      angleError = LimelightHelpers.getTX(m_camname);
 
         rotationVal = m_swerve.m_alignNotePID.calculate(angleError, 0);
-
       }
-
-    }
-
-    else
+    } else {
       rotationVal = .25;
-    if (!m_directionCW)
-      rotationVal -= 0;
+      if (travelLimit < 0)
+        rotationVal *= -1;
+    }
     /* Drive */
     m_swerve.drive(
         0, 0,
@@ -83,16 +104,21 @@ public class FindNote extends Command {
         false,
         true,
         false);
+    if (RobotBase.isSimulation())
+      angleError = 0;
+    SmartDashboard.putNumber("FindNote/angleError", angleError);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    SmartDashboard.putNumber("FindNote/Ended", 1);
+    m_swerve.drive(0, 0, 0, false, false, false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return noteInRange && Math.abs(angleError) < 1;
+    return noteInRange && Math.abs(angleError) < 1 || Math.abs(m_swerve.getYaw().getDegrees() - endDegrees) < 1;
   }
 }

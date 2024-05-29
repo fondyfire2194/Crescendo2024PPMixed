@@ -10,6 +10,7 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -36,6 +37,7 @@ import frc.robot.commands.JogClimber;
 import frc.robot.utils.ViewArmShooterByDistance;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
+import frc.robot.commands.Drive.FindNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
 import frc.robot.commands.Shooter.ShootByDistanceAndVelocity;
@@ -136,6 +138,9 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putData("RunTestPickupandShoot",
                                 new MovePickupShoot(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd, 2,
                                                 4));
+
+                SmartDashboard.putData("Find Note",
+                                new FindNote(m_swerve, -270, m_llv, CameraConstants.rearCamera.camname));
 
                 configureDriverBindings();
 

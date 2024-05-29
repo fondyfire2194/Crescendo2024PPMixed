@@ -7,7 +7,6 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
 
-
 import java.util.Optional;
 
 public class AllianceUtil {
@@ -49,5 +48,10 @@ public class AllianceUtil {
 
   public static Pose2d getStagePose() {
     return isRedAlliance() ? FieldConstants.stageRedAlliance : FieldConstants.stageBlueAlliance;
+  }
+
+  public static Pose2d getSourceShootPose() {
+    return isRedAlliance() ? GeometryUtil
+        .flipFieldPose(FieldConstants.sourceShootBlue) : FieldConstants.sourceShootBlue;
   }
 }

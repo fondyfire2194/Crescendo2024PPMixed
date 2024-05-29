@@ -48,7 +48,7 @@ public class CenterToShoot extends SequentialCommandGroup {
                                                                 Constants.sourceShootAngle,
                                                                 Constants.sourceShootSpeed)),
 
-                                new AutoAlignSpeaker(swerve).withTimeout(5),
+                                new AutoAlignSpeaker(swerve, true),
 
                                 cf.transferNoteToShooterCommand());
 

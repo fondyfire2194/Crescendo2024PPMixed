@@ -4,12 +4,9 @@
 
 package frc.robot.Factories;
 
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
@@ -26,6 +23,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.GeometryUtil;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -216,26 +214,22 @@ public class TriggerCommandFactory implements Logged {
                 firstNoteToSecondNoteSource.onTrue(
                                 Commands.sequence(
                                                 Commands.runOnce(() -> stepRunning = true),
-                                                new FindNote(m_swerve, true, m_llv, CameraConstants.rearCamera.camname),
+                                                // +max = ccw -max = cw motion
+                                                new FindNote(m_swerve, 180, m_llv,
+                                                                CameraConstants.rearCamera.camname),
                                                 m_intake.startIntakeCommand(),
                                                 Commands.parallel(
                                                                 new TransferIntakeToSensor(m_transfer, m_intake, .6),
                                                                 new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
-                                                                                CameraConstants.rearCamera.camname,
-                                                                                m_llv,
-                                                                                5)),
-                                                Commands.either(
-                                                                m_cf.autopickup(FieldConstants.sourceShootBlue),
-                                                                m_cf.autopickup(GeometryUtil
-                                                                                .flipFieldPose(FieldConstants.sourceShootBlue)),
-                                                                () -> DriverStation.getAlliance().isPresent()
-                                                                                && DriverStation.getAlliance()
-                                                                                                .get() == Alliance.Blue),
+                                                                                CameraConstants.rearCamera.camname
+                                                                                )),
+
+                                                m_cf.autopickup(AllianceUtil.getSourceShootPose()),
+
                                                 Commands.parallel(
                                                                 Commands.runOnce(() -> m_swerve.autostep = endit),
                                                                 Commands.runOnce(() -> trig4 = true),
                                                                 Commands.runOnce(() -> stepRunning = false))));
-
         }
 
         public void createAmpTriggers() {
@@ -325,8 +319,7 @@ public class TriggerCommandFactory implements Logged {
                                 Commands.parallel(
                                                 new TransferIntakeToSensor(m_transfer, m_intake, .6),
                                                 new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
-                                                                CameraConstants.rearCamera.camname, m_llv,
-                                                                1)),
+                                                                CameraConstants.rearCamera.camname)),
                                 Commands.either(
                                                 m_cf.autopickup(FieldConstants.ampShootBlue),
                                                 m_cf.autopickup(GeometryUtil

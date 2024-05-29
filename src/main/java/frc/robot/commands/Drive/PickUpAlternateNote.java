@@ -28,8 +28,6 @@ public class PickUpAlternateNote extends Command {
   private final TransferSubsystem m_transfer;
   private final IntakeSubsystem m_intake;
   private final String m_camname;
-  private final LimelightVision m_llv;
-  private final int m_noteNumber;
   boolean directionPlus;
   double angleError = 0;
   private Timer elapsedTime = new Timer();
@@ -43,15 +41,13 @@ public class PickUpAlternateNote extends Command {
       SwerveSubsystem swerve,
       TransferSubsystem transfer,
       IntakeSubsystem intake,
-      String camname,
-      LimelightVision llv,
-      int noteNumber) {
+      String camname
+      ) {
     m_swerve = swerve;
     m_transfer = transfer;
     m_intake = intake;
     m_camname = camname;
-    m_llv = llv;
-    m_noteNumber = noteNumber;
+
     addRequirements(m_swerve);
   }
 
@@ -64,13 +60,11 @@ public class PickUpAlternateNote extends Command {
     elapsedTime.reset();
     elapsedTime.start();
 
-    activeNotePose = AllianceUtil.flipFieldAngle(Constants.getActiveNotePickup(m_noteNumber));
 
     double yStartPositionY = m_swerve.getY();
 
-    double ystartError = activeNotePose.getY() - yStartPositionY;
 
-    directionPlus = ystartError >= 0;
+    directionPlus = AllianceUtil.isRedAlliance();
 
     SmartDashboard.putBoolean("DIRECT", directionPlus);
 
@@ -82,7 +76,7 @@ public class PickUpAlternateNote extends Command {
   @Override
   public void execute() {
 
-    noteSeen = LimelightHelpers.getTV(m_camname);
+    noteSeen = LimelightHelpers.getTV(m_camname)||RobotBase.isSimulation();
 
     if (RobotBase.isReal() && noteSeen) {
 

@@ -29,6 +29,7 @@
       "/SmartDashboard/ClearStickyFaults": "Command",
       "/SmartDashboard/CommSchd": "Scheduler",
       "/SmartDashboard/DelayChooser": "String Chooser",
+      "/SmartDashboard/Find Note": "Command",
       "/SmartDashboard/FrontCameraChooser": "String Chooser",
       "/SmartDashboard/GetRPMAnglea": "Command",
       "/SmartDashboard/RunTestPickupandShoot": "Command",
@@ -52,6 +53,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/Find Note": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/RunTestPickupandShoot": {
         "window": {
           "visible": true
@@ -63,11 +69,6 @@
         }
       },
       "/SmartDashboard/SubwfrStart": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/ViewArmShooterData": {
         "window": {
           "visible": true
         }

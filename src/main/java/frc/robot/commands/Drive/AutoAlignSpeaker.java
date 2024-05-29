@@ -10,21 +10,21 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.AllianceUtil;
 
 public class AutoAlignSpeaker extends Command {
- 
 
   private final SwerveSubsystem m_swerve;
+  private final boolean m_endAtTargets;
   public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
 
   private double rotationVal;
 
-
   public AutoAlignSpeaker(
-      SwerveSubsystem swerve) {
+      SwerveSubsystem swerve, boolean endAtTargets) {
 
     m_swerve = swerve;
-
+    m_endAtTargets = endAtTargets;
     addRequirements(m_swerve);
   }
 
@@ -33,6 +33,7 @@ public class AutoAlignSpeaker extends Command {
   public void initialize() {
     m_alignTargetPID.enableContinuousInput(-180, 180);
     m_alignTargetPID.setTolerance(0.2);
+    m_swerve.targetPose = AllianceUtil.getSpeakerPose();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -66,6 +67,6 @@ public class AutoAlignSpeaker extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_swerve.alignedToTarget;
+    return m_endAtTargets && m_swerve.alignedToTarget;
   }
 }
