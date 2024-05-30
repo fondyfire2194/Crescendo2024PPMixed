@@ -109,12 +109,13 @@ public class Robot extends TimedRobot implements Logged {
     double startupTimeSeconds = Timer.getFPGATimestamp() - startTime;
     DataLogManager.log("Startup Time (ms): " + startupTimeSeconds * 1000.0);
 
-   
-
   }
 
   @Override
   public void robotPeriodic() {
+
+    SmartDashboard.putNumber("RRRPPPMMM", m_robotContainer.m_sd.shooterRPMMap.get(3.));
+    SmartDashboard.putNumber("RRARM", m_robotContainer.m_sd.armAngleMap.get(3.));
 
     CommandScheduler.getInstance().run();
 
@@ -208,7 +209,7 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-     m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    m_robotContainer.m_transfer.skipFirstNoteInSim = true;
     // m_robotContainer.m_transfer.skipSecondNoteInSim = true;
 
     if (m_robotContainer.m_af.finalChoice == 0 && m_robotContainer.m_af.validChoice)

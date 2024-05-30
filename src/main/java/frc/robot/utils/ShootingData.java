@@ -24,9 +24,6 @@ public class ShootingData {
 
     public InterpolatingDoubleTreeMap shooterRPMMap = new InterpolatingDoubleTreeMap();
 
-    // arm look uu table from calcualted distance using arm pivot height variatiom
-    public InterpolatingDoubleTreeMap armCalcDistMap = new InterpolatingDoubleTreeMap();
-
     public ShootingData() {
         {
             si.clear();
@@ -63,7 +60,7 @@ public class ShootingData {
             si.add(new ShotInfo(18.25, 23.5, 4500, 300, 2));
 
             si.add(new ShotInfo(19.25, 22, 4500, 300, 2));
- 
+
         }
 
         /** Arm angle look up table key: meters, values: degrees */
@@ -83,18 +80,6 @@ public class ShootingData {
             shotTimeMap.put(si.get(i).getDistanceMeters(), si.get(i).getTimeSec());
         }
 
-        for (double deg = 60; deg >= Units.radiansToDegrees(ArmConstants.armMinRadians); deg -= .5) {
-
-            double irad = Units.degreesToRadians(deg);
-
-            double baseHeightDiff = FieldConstants.speakerSlotHeight - ArmConstants.armPivotZ;
-
-            double calcHeightDiff = baseHeightDiff - (ArmConstants.armPivotOffset * Math.cos(irad));
-
-            double dist = calcHeightDiff / Math.tan(irad);
-
-            armCalcDistMap.put(dist, deg);
-        }
     }
 
     public class ShotInfo {
@@ -125,6 +110,7 @@ public class ShootingData {
         public double getDistanceMeters() {
             return Units.feetToMeters(distanceFeet);
         }
+
         public double getArmRads() {
             return Units.degreesToRadians(armDegrees);
         }
@@ -138,7 +124,7 @@ public class ShootingData {
         }
 
         public double getTimeSec() {
-            return timeMs/1000;
+            return timeMs / 1000;
         }
 
     }

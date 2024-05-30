@@ -45,7 +45,7 @@ public class MovePickupShoot extends SequentialCommandGroup {
                                         true, maxDistance)),
 
                         Commands.deadline(
-                                cf.positionArmRunShooterByDistance(false, true, true),
+                                cf.positionArmRunShooterByDistance(false,  true),
                                 new AutoAlignSpeaker(swerve, false)),
 
                         Commands.either(

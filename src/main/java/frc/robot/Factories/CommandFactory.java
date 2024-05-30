@@ -95,7 +95,7 @@ public class CommandFactory implements Logged {
                                 0);
         }
 
-        public Command positionArmRunShooterByDistance(boolean lob, boolean calcAngles, boolean endAtTargets) {
+        public Command positionArmRunShooterByDistance(boolean lob,  boolean endAtTargets) {
 
                 return new FunctionalCommand(
 
@@ -117,13 +117,7 @@ public class CommandFactory implements Logged {
                                                 m_arm.setTolerance(m_sd.armToleranceMap.get(m_swerve
                                                                 .getDistanceFromTarget(false, false)));
 
-                                                if (calcAngles)
-                                                        m_arm.setTarget(Units.degreesToRadians(
-                                                                        m_sd.armCalcDistMap.get(m_swerve
-                                                                                        .getDistanceFromTarget(
-                                                                                                        false,
-                                                                                                        false))));
-                                                else
+                                               
                                                         m_arm.setTarget(m_sd.armAngleMap.get(m_swerve
                                                                         .getDistanceFromTarget(false,
                                                                                         false)));

@@ -49,12 +49,10 @@ public class ViewArmShooterByDistance extends Command {
       double shotTimeMs = m_sd.shotTimeMap.get(distance) * 1000;
       double toleranceDeg = Units.radiansToDegrees(m_sd.armToleranceMap.get(distance));
 
-      double calcAngle = m_sd.armCalcDistMap.get(distance);
 
       double stageAngle = m_cf.getLobArmAngleFromTarget(distance);
 
       double angleTan = Math.tan(Units.degreesToRadians(angleDeg));
-      double angleCalcTan = Math.tan(Units.degreesToRadians(calcAngle));
 
       double aimHeightFromTable = angleTan * distance;
 
@@ -63,7 +61,6 @@ public class ViewArmShooterByDistance extends Command {
       SmartDashboard.putNumber("ArmCalc/ShotTime", shotTimeMs);
       SmartDashboard.putNumber("ArmCalc/ToleranceAngle", toleranceDeg);
 
-      SmartDashboard.putNumber("ArmCalc/CalcAngle", calcAngle);
 
       SmartDashboard.putNumber("ArmCalc/StageAngle", stageAngle);
 

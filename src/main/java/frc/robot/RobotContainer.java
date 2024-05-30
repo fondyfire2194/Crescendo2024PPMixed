@@ -285,7 +285,7 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), true),
-                                                m_cf.positionArmRunShooterByDistance(true, false, false)))
+                                                m_cf.positionArmRunShooterByDistance(true,  false)))
 
                                 .onFalse(
                                                 Commands.parallel(
