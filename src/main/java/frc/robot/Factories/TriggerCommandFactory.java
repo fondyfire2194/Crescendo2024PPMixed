@@ -15,8 +15,8 @@ import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.AmpStart.AmpShootToCenterPickup;
 import frc.robot.commands.Autos.SourceStart.CenterToShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
+import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Drive.FindNote;
-import frc.robot.commands.Drive.PickUpAlternateNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -220,10 +220,11 @@ public class TriggerCommandFactory implements Logged {
                                                 m_intake.startIntakeCommand(),
                                                 Commands.parallel(
                                                                 new TransferIntakeToSensor(m_transfer, m_intake, .6),
-                                                                new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
-                                                                                CameraConstants.rearCamera.camname
-                                                                                )),
+                                                                new DriveToPickupNote(m_swerve, m_transfer, m_intake,
+                                                                                CameraConstants.rearCamera.camname,
+                                                                                false, 3)),
 
+                                                m_cf.autopickup(AllianceUtil.getSourceClearStagePose()),
                                                 m_cf.autopickup(AllianceUtil.getSourceShootPose()),
 
                                                 Commands.parallel(
@@ -318,15 +319,11 @@ public class TriggerCommandFactory implements Logged {
                                 m_intake.startIntakeCommand(),
                                 Commands.parallel(
                                                 new TransferIntakeToSensor(m_transfer, m_intake, .6),
-                                                new PickUpAlternateNote(m_swerve, m_transfer, m_intake,
-                                                                CameraConstants.rearCamera.camname)),
-                                Commands.either(
-                                                m_cf.autopickup(FieldConstants.ampShootBlue),
-                                                m_cf.autopickup(GeometryUtil
-                                                                .flipFieldPose(FieldConstants.ampShootBlue)),
-                                                () -> DriverStation.getAlliance().isPresent()
-                                                                && DriverStation.getAlliance()
-                                                                                .get() == Alliance.Blue),
+                                                new DriveToPickupNote(m_swerve, m_transfer, m_intake,
+                                                                CameraConstants.rearCamera.camname,
+                                                                false, 3)),
+                                 m_cf.autopickup(AllianceUtil.getAmpClearStagePose()),
+                                                m_cf.autopickup(AllianceUtil.getAmpShootPose()),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.autostep = endit),
                                                 Commands.runOnce(() -> trig4 = true),

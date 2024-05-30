@@ -8,8 +8,6 @@ import java.util.*;
 
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.util.Units;
-import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.FieldConstants;
 
 /** Add your docs here. */
 public class ShootingData {

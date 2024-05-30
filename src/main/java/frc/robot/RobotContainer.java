@@ -9,8 +9,6 @@ import java.util.function.BooleanSupplier;
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.auto.NamedCommands;
-
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -522,14 +520,7 @@ public class RobotContainer implements Logged {
                 NamedCommands.registerCommand("Stop Shooter", m_shooter.stopShooterCommand().asProxy()
                                 .withName("Stop Shooter"));
 
-                NamedCommands.registerCommand("Pathfind to Pickup C4",
-                                m_cf.autopickup(FieldConstants.centerNote4PickupBlue)
-                                                .withName("Pathfind to Pickup C4"));
-
-                NamedCommands.registerCommand("Pathfind to Pickup C5",
-                                m_cf.autopickup(FieldConstants.centerNote5PickupBlue)
-                                                .withName("Pathfind to Pickup C5"));
-
+ 
                 NamedCommands.registerCommand("CheckForNote",
                                 Commands.runOnce(() -> m_swerve.checkNote = true));
 

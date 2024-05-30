@@ -250,35 +250,38 @@ public final class Constants {
                 public static Pose2d driverStationBlueAlliance = new Pose2d();
                 public static Pose2d driverStationRedAlliance = new Pose2d();
 
-                public static final Pose2d blueNote1 = new Pose2d(2.89, 6.99, new Rotation2d());
-                public static final Pose2d blueNote2 = new Pose2d(2.89, 5.54, new Rotation2d());
-                public static final Pose2d blueNote3 = new Pose2d(2.89, 4.09, new Rotation2d());
+                // public static final Pose2d blueNote1 = new Pose2d(2.89, 6.99, new Rotation2d());
+                // public static final Pose2d blueNote2 = new Pose2d(2.89, 5.54, new Rotation2d());
+                // public static final Pose2d blueNote3 = new Pose2d(2.89, 4.09, new Rotation2d());
 
-                public static final Pose2d centerNote1Blue = new Pose2d(8.28, 7.45, new Rotation2d());
-                public static final Pose2d centerNote2Blue = new Pose2d(8.28, 5.77, new Rotation2d());
-                public static final Pose2d centerNote3Blue = new Pose2d(8.28, 4.10, new Rotation2d());
-                public static final Pose2d centerNote4Blue = new Pose2d(8.28, 2.44, new Rotation2d());
-                public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new Rotation2d());
+                // public static final Pose2d centerNote1Blue = new Pose2d(8.28, 7.45, new Rotation2d());
+                // public static final Pose2d centerNote2Blue = new Pose2d(8.28, 5.77, new Rotation2d());
+                // public static final Pose2d centerNote3Blue = new Pose2d(8.28, 4.10, new Rotation2d());
+                // public static final Pose2d centerNote4Blue = new Pose2d(8.28, 2.44, new Rotation2d());
+                // public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new Rotation2d());
 
-                public static final Pose2d centerNote1PickupBlue = new Pose2d(8.48, 7.44,
-                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                // public static final Pose2d centerNote1PickupBlue = new Pose2d(8.48, 7.44,
+                //                 new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
-                public static final Pose2d centerNote2PickupBlue = new Pose2d(8.48, 5.76,
-                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                // public static final Pose2d centerNote2PickupBlue = new Pose2d(8.48, 5.76,
+                //                 new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
-                public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
-                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                // public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
+                //                 new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
-                public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
-                                new Rotation2d(Units.degreesToRadians(23.2)));
+                // public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
+                //                 new Rotation2d(Units.degreesToRadians(23.2)));
 
-                public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
-                                new Rotation2d(Units.degreesToRadians(-176.09)));
+                // public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
+                //                 new Rotation2d(Units.degreesToRadians(-176.09)));
 
                 public static final Pose2d sourceShootBlue = new Pose2d(4.12, 2.18,
                                 new Rotation2d(Units.degreesToRadians(150)));
 
                 public static final Pose2d sourceStartPose = new Pose2d(.72, 4.4,
+                                new Rotation2d(Units.degreesToRadians(150)));
+
+                public static final Pose2d sourceClearStagePoseBlue = new Pose2d(7, 1.5,
                                 new Rotation2d(Units.degreesToRadians(120)));
 
                 public static final Pose2d ampStartPose = new Pose2d(.8, 6.68,
@@ -286,40 +289,10 @@ public final class Constants {
 
                 public static final Pose2d ampShootBlue = new Pose2d(2.84, 5.52,
                                 new Rotation2d(Units.degreesToRadians(-144)));
-        }
 
-        public static Pose2d getActiveNotePickup(final int note) {
-                switch (note) {
-                        case 1:
-                                return FieldConstants.centerNote1PickupBlue;
-                        case 2:
-                                return FieldConstants.centerNote2PickupBlue;
-                        case 3:
-                                return FieldConstants.centerNote3PickupBlue;
-                        case 4:
-                                return FieldConstants.centerNote4PickupBlue;
-                        case 5:
-                                return FieldConstants.centerNote5PickupBlue;
-                        default:
-                                return new Pose2d();
-                }
-        }
+                public static final Pose2d ampClearStagePoseBlue = new Pose2d(7, 6.8,
+                                new Rotation2d(Units.degreesToRadians(120)));
 
-        public static Pose2d getActiveAlternateNote(final int note) {
-                switch (note) {
-                        case 1:
-                                return FieldConstants.centerNote1Blue;
-                        case 2:
-                                return FieldConstants.centerNote2Blue;
-                        case 3:
-                                return FieldConstants.centerNote3Blue;
-                        case 4:
-                                return FieldConstants.centerNote4Blue;
-                        case 5:
-                                return FieldConstants.centerNote5Blue;
-                        default:
-                                return new Pose2d();
-                }
         }
 
         public static final class AprilTagConstants {
@@ -453,7 +426,6 @@ public final class Constants {
                 public static double kAccelCompFactor = 0.100; // in units of seconds
 
         }
-
 
         /** Shooter look up table key: meters, values: rpm */
         public static final InterpolatingDoubleTreeMap shooterLobRPMMap = new InterpolatingDoubleTreeMap();

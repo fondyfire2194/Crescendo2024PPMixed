@@ -95,7 +95,7 @@ public class CommandFactory implements Logged {
                                 0);
         }
 
-        public Command positionArmRunShooterByDistance(boolean lob,  boolean endAtTargets) {
+        public Command positionArmRunShooterByDistance(boolean lob, boolean endAtTargets) {
 
                 return new FunctionalCommand(
 
@@ -117,10 +117,9 @@ public class CommandFactory implements Logged {
                                                 m_arm.setTolerance(m_sd.armToleranceMap.get(m_swerve
                                                                 .getDistanceFromTarget(false, false)));
 
-                                               
-                                                        m_arm.setTarget(m_sd.armAngleMap.get(m_swerve
-                                                                        .getDistanceFromTarget(false,
-                                                                                        false)));
+                                                m_arm.setTarget(m_sd.armAngleMap.get(m_swerve
+                                                                .getDistanceFromTarget(false,
+                                                                                false)));
                                         }
                                 },
 
@@ -189,8 +188,7 @@ public class CommandFactory implements Logged {
 
         public double getLobArmAngleFromTarget(double distance) {
                 double opp = FieldConstants.stageHeight - ArmConstants.armPivotZ;
-                double rads = Math.atan(opp / distance);
-                return Units.radiansToDegrees(rads);
+                return Math.atan(opp / distance);
         }
 
         public Command rumbleCommand(CommandXboxController controller) {
@@ -276,7 +274,7 @@ public class CommandFactory implements Logged {
                                                 Pref.getPref("AmpTopRPM"), Pref.getPref("AmpBottomRPM")),
                                 m_arm.setGoalCommand(ArmConstants.armMinRadians),
                                 Commands.waitUntil(() -> m_arm.getAtSetpoint()),
-                                // Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
+                                Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
                                 m_arm.setGoalCommand(Units.degreesToRadians(90)),
                                 Commands.waitUntil(() -> m_arm.getAtSetpoint()),
                                 m_arm.setGoalCommand(Units.degreesToRadians(Pref.getPref("AmpArmDegrees"))),

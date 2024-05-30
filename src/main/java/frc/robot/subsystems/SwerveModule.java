@@ -27,11 +27,9 @@ import frc.lib.config.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
-import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.GlobalConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Pref;
-import frc.robot.RobotContainer;
 
 public class SwerveModule extends SubsystemBase {
   public int moduleNumber;

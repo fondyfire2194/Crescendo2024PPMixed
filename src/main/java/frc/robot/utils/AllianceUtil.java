@@ -54,4 +54,19 @@ public class AllianceUtil {
     return isRedAlliance() ? GeometryUtil
         .flipFieldPose(FieldConstants.sourceShootBlue) : FieldConstants.sourceShootBlue;
   }
+
+  public static Pose2d getSourceClearStagePose() {
+    return isRedAlliance() ? GeometryUtil
+        .flipFieldPose(FieldConstants.sourceClearStagePoseBlue) : FieldConstants.sourceClearStagePoseBlue;
+  }
+
+  public static Pose2d getAmpClearStagePose() {
+    return isRedAlliance() ? GeometryUtil
+        .flipFieldPose(FieldConstants.ampClearStagePoseBlue) : FieldConstants.ampClearStagePoseBlue;
+  }
+
+   public static Pose2d getAmpShootPose() {
+    return isRedAlliance() ? GeometryUtil
+        .flipFieldPose(FieldConstants.ampShootBlue) : FieldConstants.ampShootBlue;
+  }
 }

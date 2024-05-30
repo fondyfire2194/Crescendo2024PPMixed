@@ -27,7 +27,7 @@ public class DriveToPickupNote extends Command {
   private final double m_maxDistance;
   double angleError = 0;
   private Timer elapsedTime = new Timer();
-  double endPosition;
+  double startPosition;
   private double distError;
 
   public DriveToPickupNote(
@@ -56,9 +56,9 @@ public class DriveToPickupNote extends Command {
     elapsedTime.start();
 
     if (m_moveDirectionX)
-      endPosition = m_swerve.getX() + m_maxDistance;
+      startPosition = m_swerve.getX();
     else
-      endPosition = m_swerve.getY() + m_maxDistance;
+      startPosition = m_swerve.getY();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -104,7 +104,8 @@ public class DriveToPickupNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_moveDirectionX && m_swerve.getX() > endPosition && !m_moveDirectionX && m_swerve.getY() > endPosition
+    return m_moveDirectionX && Math.abs(m_swerve.getX() - startPosition) >= m_maxDistance
+        || !m_moveDirectionX && Math.abs(m_swerve.getY() - startPosition) > m_maxDistance
         || m_transfer.noteAtIntake();
   }
 }
