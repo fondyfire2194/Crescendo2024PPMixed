@@ -87,17 +87,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   private boolean onTarget;
 
-  private int loopctr;
-
   double xlim = Units.inchesToMeters(12);
   double ylim = Units.inchesToMeters(12);
   double deglim = Units.degreesToRadians(5);
 
-  private Pose2d llpose = new Pose2d();
-  private Pose2d llposefl = new Pose2d();
-  private Pose2d llposefr = new Pose2d();
-  private double latencyfl = 0;
-  private double latencyfr = 0;
 
   @Log.NT(key = "yerror")
   double yerror = 0;
@@ -125,11 +118,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   double areafr = 0;
 
   int numberTargets = 0;
-  private double timestampSeconds;
-
-  private double tagDistance;
-  private double tagDistancefl;
-  private double tagDistancefr;
 
   private boolean firstTime = true;
 
@@ -530,7 +518,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("AUSEp", autostep);
-    loopctr++;
+  
 
     if (!mod0connected) {
       mod0connected = checkMod0CansOK();

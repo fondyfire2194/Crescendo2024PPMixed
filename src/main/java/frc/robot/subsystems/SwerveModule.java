@@ -34,7 +34,7 @@ import frc.robot.Pref;
 public class SwerveModule extends SubsystemBase {
   public int moduleNumber;
   private Rotation2d lastAngle;
-  private Rotation2d angleOffset;
+
 
   private CANSparkMax angleMotor;
   CANSparkMax driveMotor;
@@ -54,14 +54,12 @@ public class SwerveModule extends SubsystemBase {
   private double m_simDrivePosition;
   private double m_simRotatePosition;
   private boolean driveReversed;
-  private int loopctr;
   private double characterizationVolts;
   private boolean characterizing;
   private SwerveModuleState previousState = new SwerveModuleState();
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
-    angleOffset = moduleConstants.angleOffset;
     driveReversed = moduleConstants.driveReversed;
     /* Angle Motor Config */
     angleMotor = new CANSparkMax(moduleConstants.angleMotorID, MotorType.kBrushless);

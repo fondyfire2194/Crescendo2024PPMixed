@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import java.util.Map;
-
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
@@ -14,7 +12,6 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -23,11 +20,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
-import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.Pref;
 import monologue.Annotations.Log;
 import monologue.Logged;
-import frc.robot.Pref;
 
 public class IntakeSubsystem extends SubsystemBase implements Logged {
 
@@ -35,12 +31,11 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   RelativeEncoder intakeEncoder;
   public SparkPIDController intakeController;
 
-  private int loopctr;
 
   @Log.NT(key = "intakerun")
   private boolean runIntake;
   public boolean jogging;
-  private SlewRateLimiter intakeLimiter = new SlewRateLimiter(1500);
+
   @Log.NT(key = "intakecommandrpm")
   private double commandrpm;
   public boolean noteMissed;
@@ -104,10 +99,8 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    loopctr++;
-
+  
     if (runIntake) {
-      // double rpm = intakeLimiter.calculate(Pref.getPref("IntakeSpeed"));
       commandrpm = Pref.getPref("IntakeSpeed");
       runAtVelocity(commandrpm);
     }

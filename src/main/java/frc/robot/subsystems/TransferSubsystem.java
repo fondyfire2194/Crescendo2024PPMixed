@@ -34,7 +34,6 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   public boolean m_showScreens;
 
-  private int loopctr;
 
   @Log.NT(key = "transfercommandrpm")
   private double commandrpm;
@@ -145,7 +144,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-    loopctr++;
+    
     // This method will be called once per scheduler run
 
     if (!transferMotorConnected) {
