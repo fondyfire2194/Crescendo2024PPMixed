@@ -606,7 +606,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
       else
         return round2dp(AllianceUtil.getSpeakerPose().getTranslation()
             .getDistance(getPose().getTranslation()), 2);
-            
+
     } else
 
       return round2dp(virtualPose.getTranslation()
@@ -669,28 +669,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   }
 
   private void resetAll() {
-
-    // gyro.reset();
     resetModuleEncoders();
-    // swervePoseEstimator.resetPosition(getYaw(), getPositions(), new Pose2d());
     swervePoseEstimator.resetPosition(new Rotation2d(Math.PI), getPositions(), new Pose2d());
-
     simOdometryPose = new Pose2d();
     updateKeepAngle();
-
-  }
-
-  public void alignToAngle(double angle) {
-    double angleComp = getAngleComp();
-    drive(0, 0, m_alignPID.calculate(angle, angleComp), false, false, false);
-  }
-
-  public double getAngleComp() {
-    double temp = 0;
-    Pose2d rel = getPose().relativeTo(AllianceUtil.getSpeakerPose());
-    double angle = rel.getRotation().getRadians();
-    temp = Math.sin(angle) * .001;
-    return temp;
   }
 
   public Command setPoseToX0Y0() {
@@ -715,8 +697,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void simulationPeriodic() {
-
-  
 
     SwerveModuleState[] measuredStates
 

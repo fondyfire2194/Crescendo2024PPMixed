@@ -10,6 +10,7 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.DriveToPickupNote;
+import frc.robot.commands.Drive.FindNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -19,41 +20,44 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.ShootingData;
 
 public class MovePickupShoot extends SequentialCommandGroup {
-    /** Creates a new MovePickupShoot. */
-    public MovePickupShoot(
-            CommandFactory cf,
-            SwerveSubsystem swerve,
-            ArmSubsystem arm,
-            TransferSubsystem transfer,
-            IntakeSubsystem intake,
-            ShooterSubsystem shooter,
-            ShootingData sd,
-            double maxDistance,
-            int n) {
+        /** Creates a new MovePickupShoot. */
+        public MovePickupShoot(
+                        CommandFactory cf,
+                        SwerveSubsystem swerve,
+                        ArmSubsystem arm,
+                        TransferSubsystem transfer,
+                        IntakeSubsystem intake,
+                        ShooterSubsystem shooter,
+                        ShootingData sd,
+                        String camname,
+                        int n) {
 
-        // Add your commands in the addCommands() call, e.g.
-        // addCommands(new FooCommand(), new BarCommand());
-        addCommands(
+                // Add your commands in the addCommands() call, e.g.
+                // addCommands(new FooCommand(), new BarCommand());
+                addCommands(
 
-                Commands.runOnce(() -> cf.testNotesRun = 0),
+                                Commands.runOnce(() -> cf.testNotesRun = 0),
 
-                Commands.repeatingSequence(
+                                Commands.repeatingSequence(
 
-                        Commands.parallel(
-                                cf.doIntake(),
-                                new DriveToPickupNote(swerve, transfer, intake, CameraConstants.rearCamera.camname,
-                                        true, maxDistance)),
+                                                new FindNote(swerve, 90, camname),
 
-                        Commands.deadline(
-                                cf.positionArmRunShooterByDistance(false,  true),
-                                new AutoAlignSpeaker(swerve, false)),
+                                                Commands.parallel(
+                                                                cf.doIntake(),
+                                                                new DriveToPickupNote(swerve, transfer, intake, camname,
+                                                                                true,2)),
 
-                        Commands.either(
-                                transfer.transferToShooterCommand(), Commands.runOnce(() -> cf.testNotesRun = n + 1),
-                                () -> transfer.noteAtIntake()),
-                        new RotateToAngle(swerve, 180),
+                                                Commands.deadline(
+                                                                cf.positionArmRunShooterByDistance(false, true),
+                                                                new AutoAlignSpeaker(swerve, false)),
 
-                        Commands.runOnce(() -> cf.testNotesRun++))
-                        .until(() -> cf.testNotesRun >= n));
-    }
+                                                Commands.either(
+                                                                transfer.transferToShooterCommand(),
+                                                                Commands.runOnce(() -> cf.testNotesRun = n + 1),
+                                                                () -> transfer.noteAtIntake()),
+                                                new RotateToAngle(swerve, 180),
+
+                                                Commands.runOnce(() -> cf.testNotesRun++))
+                                                .until(() -> cf.testNotesRun >= n));
+        }
 }

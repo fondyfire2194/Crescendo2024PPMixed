@@ -30,7 +30,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Subwfr Shoot to Wing 2"
+                  "pathName": "Subwfr To Wing 2"
                 }
               },
               {
@@ -51,45 +51,14 @@
                 "data": {
                   "name": "Arm Shooter Wing 2"
                 }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Subwfr Shoot to Wing 2"
-                }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "DoIntake"
+                  "name": "Shoot"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Arm Shooter Wing 2"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Shoot"
           }
         },
         {
@@ -125,6 +94,57 @@
                 "type": "named",
                 "data": {
                   "name": "Arm Shooter Wing 2"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "sequential",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Shoot"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Quick Sub To Note 1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DoIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Wing 1 to Subwfr Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm Shooter SubWfr"
                 }
               }
             ]

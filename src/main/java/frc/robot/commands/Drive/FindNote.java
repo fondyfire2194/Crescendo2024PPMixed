@@ -10,15 +10,15 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.subsystems.LimelightVision;
+import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.AllianceUtil;
+import frc.robot.utils.LLPipelines.pipelines;
 
 public class FindNote extends Command {
   /** Creates a new AlignToTagSetShootSpeed. */
 
   private final SwerveSubsystem m_swerve;
-  private final LimelightVision m_llv;
   private final String m_camname;
   private final double m_maxTravel;
 
@@ -33,12 +33,10 @@ public class FindNote extends Command {
   public FindNote(
       SwerveSubsystem swerve,
       double maxTravel,
-      LimelightVision llv,
       String camname)
 
   {
     m_swerve = swerve;
-    m_llv = llv;
     m_maxTravel = maxTravel;
     m_camname = camname;
     addRequirements(m_swerve);
@@ -52,7 +50,7 @@ public class FindNote extends Command {
     travelLimit = m_maxTravel;
     if (AllianceUtil.isRedAlliance())
       travelLimit = -travelLimit;
-    m_llv.setRearNoteDetectorPipeline();
+    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTE_DETECT8.ordinal());
     startDegrees = m_swerve.getYaw().getDegrees();
     SmartDashboard.putNumber("FindNote/ROTSStart", startDegrees);
     endDegrees = (startDegrees + travelLimit) % 360;
@@ -73,7 +71,7 @@ public class FindNote extends Command {
 
     boolean noteSeen = LimelightHelpers.getTV(m_camname) || RobotBase.isSimulation() && simNoteTimer.hasElapsed(2);
     double simAngle = m_swerve.getYaw().getDegrees();
-  
+
     noteInRange = false;
 
     SmartDashboard.putBoolean("FindNote/NoteSeen", noteSeen);
@@ -87,7 +85,7 @@ public class FindNote extends Command {
       noteInRange = Math.abs(distanceApprox) < 5;
       SmartDashboard.putBoolean("FindNote/InRange", noteInRange);
       if (noteInRange) {
-      angleError = LimelightHelpers.getTX(m_camname);
+        angleError = LimelightHelpers.getTX(m_camname);
 
         rotationVal = m_swerve.m_alignNotePID.calculate(angleError, 0);
       }

@@ -215,7 +215,7 @@ public class TriggerCommandFactory implements Logged {
                                 Commands.sequence(
                                                 Commands.runOnce(() -> stepRunning = true),
                                                 // +max = ccw -max = cw motion
-                                                new FindNote(m_swerve, 180, m_llv,
+                                                new FindNote(m_swerve, 180,
                                                                 CameraConstants.rearCamera.camname),
                                                 m_intake.startIntakeCommand(),
                                                 Commands.parallel(

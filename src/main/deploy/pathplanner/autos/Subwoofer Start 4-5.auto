@@ -113,6 +113,50 @@
           }
         },
         {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Quick To Note 3"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DoIntake"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Quick Note 3 Shoot"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Arm Shooter SubWfr"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "ResetAll"

@@ -134,11 +134,12 @@ public class RobotContainer implements Logged {
                                 new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
 
                 SmartDashboard.putData("RunTestPickupandShoot",
-                                new MovePickupShoot(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd, 2,
+                                new MovePickupShoot(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
+                                                CameraConstants.rearCamera.camname,
                                                 4));
 
                 SmartDashboard.putData("Find Note",
-                                new FindNote(m_swerve, -270, m_llv, CameraConstants.rearCamera.camname));
+                                new FindNote(m_swerve, -270, CameraConstants.rearCamera.camname));
 
                 configureDriverBindings();
 
@@ -271,9 +272,8 @@ public class RobotContainer implements Logged {
                                                                                 CameraConstants.rearCamera.camname,
                                                                                 () -> -driver.getLeftY(),
                                                                                 () -> driver.getLeftX(),
-                                                                                () -> driver.getRightX())),
-
-                                                m_cf.rumbleCommand(driver)));
+                                                                                () -> driver.getRightX()),
+                                                                m_cf.rumbleCommand(driver))));
 
                 // align with amp corner for lob shots
                 driver.leftBumper().whileTrue(
@@ -283,8 +283,7 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), true),
-                                                m_cf.positionArmRunShooterByDistance(true,  false)))
-
+                                                m_cf.positionArmRunShooterByDistance(true, false)))
                                 .onFalse(
                                                 Commands.parallel(
                                                                 m_shooter.stopShooterCommand(),
@@ -477,8 +476,6 @@ public class RobotContainer implements Logged {
                 NamedCommands.registerCommand("Shoot", m_cf.transferNoteToShooterCommand()
                                 .withName("Shoot"));
 
-                NamedCommands.registerCommand("Align Then Shoot", m_cf.alignShootCommand().asProxy());
-
                 NamedCommands.registerCommand("Arm Shooter SubWfr",
                                 m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed).asProxy()
@@ -520,7 +517,6 @@ public class RobotContainer implements Logged {
                 NamedCommands.registerCommand("Stop Shooter", m_shooter.stopShooterCommand().asProxy()
                                 .withName("Stop Shooter"));
 
- 
                 NamedCommands.registerCommand("CheckForNote",
                                 Commands.runOnce(() -> m_swerve.checkNote = true));
 

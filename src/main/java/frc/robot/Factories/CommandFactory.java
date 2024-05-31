@@ -18,9 +18,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
-import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.LimelightHelpers;
 import frc.robot.Pref;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenterPathfind;
@@ -155,30 +153,8 @@ public class CommandFactory implements Logged {
 
         public Command transferNoteToShooterCommand() {
                 return m_transfer.transferToShooterCommand();
-
         }
 
-        public Command alignShootCommand() {
-                return Commands.sequence(alignToTag(),
-                                m_transfer.transferToShooterCommand());
-        }
-
-        public Command alignToTag() {
-                return new FunctionalCommand(
-                                () -> m_llv.setAlignSpeakerPipeline(),
-                                () -> m_swerve.alignToAngle(
-                                                LimelightHelpers.getTX(CameraConstants.frontLeftCamera.camname)),
-                                (interrupted) -> m_llv.setAprilTag_ALL_Pipeline(),
-                                () -> Math.abs(LimelightHelpers.getTX(CameraConstants.frontLeftCamera.camname)) < 1,
-                                m_swerve);
-        }
-
-        public Command alignShootCommand(double meters) {
-                return Commands.parallel(
-                                alignToTag(),
-                                m_arm.setGoalCommand(m_sd.armAngleMap.get(meters)),
-                                m_shooter.startShooterCommand(m_sd.shooterRPMMap.get(meters)));
-        }
 
         public Command setArmShooterValues(double armAngle, double shooterRPM) {
                 return Commands.parallel(
