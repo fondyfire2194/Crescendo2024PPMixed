@@ -6,7 +6,6 @@ package frc.robot.commands.Test;
 
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.CameraConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.DriveToPickupNote;
