@@ -62,7 +62,7 @@ public class ShootByDistanceAndVelocity extends Command {
   @Override
   public void initialize() {
     firstPass = true;
-    m_transfer.shootmoving = true;
+    m_transfer.shootmoving = false;
     speakerPose = AllianceUtil.getSpeakerPose();
     speakerTranslation = speakerPose.getTranslation();
     robotPose = m_swerve.getPose();
@@ -100,7 +100,8 @@ public class ShootByDistanceAndVelocity extends Command {
       SmartDashboard.putNumber("SWM/NoteVel", noteVelocity);
       m_shooter.startShooter(m_sd.shooterRPMMap.get(distance));
       m_arm.setGoal(m_sd.armAngleMap.get(distance));
-    //  m_arm.setTolerance(m_sd.armToleranceMap.get(distance));
+      m_arm.setTolerance(m_sd.armToleranceMap.get(distance));
+      m_transfer.shootmoving = false;
     }
 
     else {
@@ -111,7 +112,7 @@ public class ShootByDistanceAndVelocity extends Command {
         noteVelocity = distance / shotTime;
         firstPass = false;
       }
-
+      m_transfer.shootmoving = true;
       // https://stackoverflow.com/questions/2248876/2d-game-fire-at-a-moving-target-by-predicting-intersection-of-projectile-and-u
       // a := sqr(target.velocityX) + sqr(target.velocityY) - sqr(projectile_speed)
       double a = Math.pow(robotVelocity.getX(), 2) + Math.pow(robotVelocity.getY(), 2) - Math.pow(noteVelocity, 2);

@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Constants.SwerveConstants.Mod0;
 import frc.robot.Pref;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
@@ -150,6 +151,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     xLockStates[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
     xLockStates[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(-45));
     xLockStates[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(45));
+
+    wheelsAlignedStates[0] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+    wheelsAlignedStates[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+    wheelsAlignedStates[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
+    wheelsAlignedStates[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
 
     if (RobotBase.isSimulation()) {
 
@@ -274,6 +280,24 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
    */
   public void xLock() {
     setStates(xLockStates);
+  }
+
+  /**
+   * Sets the wheels into an X formation to prevent movement.
+   */
+  public void wheelsAlign() {
+    mSwerveMods[0].wheelAligning = true;
+    mSwerveMods[1].wheelAligning = true;
+    mSwerveMods[2].wheelAligning = true;
+    mSwerveMods[3].wheelAligning = true;
+    mSwerveMods[0].setDesiredState(wheelsAlignedStates[0], false);
+    mSwerveMods[1].setDesiredState(wheelsAlignedStates[0], false);
+    mSwerveMods[2].setDesiredState(wheelsAlignedStates[0], false);
+    mSwerveMods[3].setDesiredState(wheelsAlignedStates[0], false);
+    mSwerveMods[0].wheelAligning = false;
+    mSwerveMods[1].wheelAligning = false;
+    mSwerveMods[2].wheelAligning = false;
+    mSwerveMods[3].wheelAligning = false;
   }
 
   public Command xLockCommand() {

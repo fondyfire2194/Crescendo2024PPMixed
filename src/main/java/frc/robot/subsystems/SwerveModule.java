@@ -35,7 +35,6 @@ public class SwerveModule extends SubsystemBase {
   public int moduleNumber;
   private Rotation2d lastAngle;
 
-
   private CANSparkMax angleMotor;
   CANSparkMax driveMotor;
 
@@ -50,13 +49,13 @@ public class SwerveModule extends SubsystemBase {
   private SimpleMotorFeedforward driveFeedforward;
 
   private SwerveModuleState currentDesiredState = new SwerveModuleState();
-  private double angleDegrees;
   private double m_simDrivePosition;
   private double m_simRotatePosition;
   private boolean driveReversed;
   private double characterizationVolts;
   private boolean characterizing;
   private SwerveModuleState previousState = new SwerveModuleState();
+  public boolean wheelAligning;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -95,10 +94,7 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
-    // Custom optimize command, since default WPILib optimize assumes continuous
-    // controller which
-    // REV and CTRE are not
-    // desiredState = OnboardModuleState.optimize(desiredState, getState().angle);
+
     desiredState = SwerveModuleState.optimize(desiredState, getAngle());
 
     currentDesiredState = desiredState;
@@ -111,7 +107,9 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void resetAngleToAbsolute() {
-    double angle = (m_turnCancoder.getAbsolutePosition().getValueAsDouble() * 360);
+    double angle = 0;
+    if (RobotBase.isReal())
+      angle = (m_turnCancoder.getAbsolutePosition().getValueAsDouble() * 360);
     integratedAngleEncoder.setPosition(angle);
   }
 
@@ -229,13 +227,13 @@ public class SwerveModule extends SubsystemBase {
 
   private void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
-    Rotation2d angle = (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.SwerveConstants.kmaxSpeed * 0.01))
-        ? lastAngle
-        : desiredState.angle;
+    Rotation2d angle = !wheelAligning
+        && (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.SwerveConstants.kmaxSpeed * 0.01))
+            ? lastAngle
+            : desiredState.angle;
 
     angleController.setReference(angle.getDegrees(), ControlType.kPosition);
     lastAngle = angle;
-    angleDegrees = angle.getDegrees();
     if (RobotBase.isSimulation())
       m_simRotatePosition = angle.getDegrees();
   }

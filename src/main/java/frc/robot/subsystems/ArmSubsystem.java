@@ -58,49 +58,29 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     public double appliedOutput;
 
     private boolean useSoftwareLimit;
-
     public boolean inIZone;
-
     public double armVolts;
-
     private double feedforward;
-
     private double acceleration;
-
     private double lastTime;
-
     private double lastSpeed;
-
     private double lastPosition;
-
     public double appliedVolts;
-
     public double armAngleRads;
-
-    private PIDController pid = new PIDController(.1, 0.0, 0);
-
     private double pidout;
-
+    private PIDController pid = new PIDController(.1, 0.0, 0);
     public double angleToleranceRads = ArmConstants.angleTolerance;
-
     @Log.NT(key = "armenamble")
     public boolean enableArm;
-    @Log.NT(key = "armpidenambled")
+    @Log.NT(key = "armpidenabled")
     public boolean armpidenabled;
-
     private double activeKv;
-
-    private double lastGoal;
-
     @Log.NT(key = "simanglerads")
     private double simAngleRads;
     @Log.NT(key = "shootingangle")
     public double angleDegWhenShooting;
-
     private boolean cancoderconnected;
-
     private int checkCancoderCounter;
-
     private final DCMotor m_armGearbox = DCMotor.getNEO(1);
 
     private final SingleJointedArmSim m_armSim = new SingleJointedArmSim(
