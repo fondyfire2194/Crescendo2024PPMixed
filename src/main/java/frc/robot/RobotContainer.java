@@ -246,8 +246,9 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), false),
-                                                new ShootByDistanceAndVelocity(m_arm, m_transfer, m_shooter, m_swerve,
-                                                                m_sd)));
+                                                m_cf.positionArmRunShooterByDistance(false, false)));
+                // new ShootByDistanceAndVelocity(m_arm, m_transfer, m_shooter, m_swerve,
+                // m_sd)));
 
                 driver.rightBumper().and(driver.a().negate()).onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),
@@ -349,13 +350,14 @@ public class RobotContainer implements Logged {
                 codriver.a().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                 Constants.subwfrShooterSpeed));
 
-                 codriver.b().onTrue(new JogIntake(m_intake, codriver));
+                codriver.b().onTrue(new JogIntake(m_intake, codriver));
                 // Constants.safeStageShooterSpeed));
 
                 codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,
                                 Constants.tapeLineShooterSpeed));
 
-                // codriver.y().whileTrue(
+                codriver.y().onTrue(
+                                Commands.runOnce(() -> m_swerve.setStates(m_swerve.wheelsAlignedStates)));
 
                 codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
 

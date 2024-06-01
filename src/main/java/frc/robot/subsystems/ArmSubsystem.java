@@ -302,24 +302,36 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     }
 
     public void setTarget(double anglerads) {
+        if (anglerads > ArmConstants.armMaxRadians)
+            anglerads = ArmConstants.armMaxRadians;
+        if (anglerads < ArmConstants.armMinRadians)
+            anglerads = ArmConstants.armMinRadians;
         currentGoalRads = anglerads;
         setGoal(currentGoalRads);
-        resetController();
-        enable();
     }
 
-    public Command setGoalCommand(double angleRads) {
+    public Command setGoalCommand(double anglerads) {
+        double temp = anglerads;
+        if (anglerads > ArmConstants.armMaxRadians)
+            temp = ArmConstants.armMaxRadians;
+        if (anglerads < ArmConstants.armMinRadians)
+            temp = ArmConstants.armMinRadians;
+        currentGoalRads = temp;
         return Commands.sequence(
-                runOnce(() -> currentGoalRads = angleRads),
                 runOnce(() -> setGoal(currentGoalRads)),
                 runOnce(() -> setTolerance(ArmConstants.angleTolerance)),
                 runOnce(() -> resetController()),
                 runOnce(() -> enable()));
     }
 
-    public Command setGoalCommand(double angleRads, double toleranceRads) {
+    public Command setGoalCommand(double anglerads, double toleranceRads) {
+        double temp = anglerads;
+        if (anglerads > ArmConstants.armMaxRadians)
+            temp = ArmConstants.armMaxRadians;
+        if (anglerads < ArmConstants.armMinRadians)
+            temp = ArmConstants.armMinRadians;
+        currentGoalRads = temp;
         return Commands.sequence(
-                runOnce(() -> currentGoalRads = angleRads),
                 runOnce(() -> setGoal(currentGoalRads)),
                 runOnce(() -> angleToleranceRads = toleranceRads),
                 runOnce(() -> resetController()),
@@ -331,6 +343,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         temp += Units.degreesToRadians(valdeg);
         if (temp > ArmConstants.armMaxRadians)
             temp = ArmConstants.armMaxRadians;
+        currentGoalRads = temp;
         setGoal(temp);
     }
 
@@ -339,6 +352,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         temp -= Units.degreesToRadians(valdeg);
         if (temp < ArmConstants.armMinRadians)
             temp = ArmConstants.armMinRadians;
+        currentGoalRads = temp;
         setGoal(temp);
     }
 

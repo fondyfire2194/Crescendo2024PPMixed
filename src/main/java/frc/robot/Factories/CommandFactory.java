@@ -97,7 +97,10 @@ public class CommandFactory implements Logged {
 
                 return new FunctionalCommand(
 
-                                () -> Commands.runOnce(() -> m_transfer.lobbing = lob),
+                                () -> Commands.sequence(
+                                Commands.runOnce(() -> m_transfer.lobbing = lob),
+                                Commands.runOnce(() -> m_arm.resetController()),
+                                Commands.runOnce(() -> m_arm.enable())),
 
                                 () -> {
                                         if (lob) {
@@ -112,8 +115,7 @@ public class CommandFactory implements Logged {
                                                                 m_sd.shooterRPMMap.get(
                                                                                 m_swerve.getDistanceFromTarget(false,
                                                                                                 false)));
-                                                m_arm.setTolerance(m_sd.armToleranceMap.get(m_swerve
-                                                                .getDistanceFromTarget(false, false)));
+                                                m_arm.setTolerance(ArmConstants.angleTolerance);
 
                                                 m_arm.setTarget(m_sd.armAngleMap.get(m_swerve
                                                                 .getDistanceFromTarget(false,

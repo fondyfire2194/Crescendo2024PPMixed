@@ -74,7 +74,7 @@ public class PathFactory {
         SourceToNearCenter5,
         SourceToNearCenter4_5,
         NearCenter4toCenter4,
-        NearCenter5toCenter5,
+        NearCenter5ToCenter5,
         SourceShootToCenter4,
         SourceShootToCenter5,
         Center4ToSourceShoot,

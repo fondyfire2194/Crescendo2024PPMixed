@@ -279,7 +279,7 @@ public final class Constants {
                                 new Rotation2d(Units.degreesToRadians(150)));
 
                 public static final Pose2d sourceStartPose = new Pose2d(.72, 4.4,
-                                new Rotation2d(Units.degreesToRadians(150)));
+                                new Rotation2d(Units.degreesToRadians(120)));
 
                 public static final Pose2d sourceClearStagePoseBlue = new Pose2d(7, 1.5,
                                 new Rotation2d(Units.degreesToRadians(120)));

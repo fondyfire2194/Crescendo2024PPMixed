@@ -82,6 +82,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   double poseDifferencefr = 0;
   double poseDifference = 0;
   SwerveModuleState[] xLockStates = new SwerveModuleState[4];
+  public SwerveModuleState[] wheelsAlignedStates = new SwerveModuleState[4];
 
   private boolean onTarget;
 

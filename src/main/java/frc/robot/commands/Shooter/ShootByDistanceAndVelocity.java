@@ -100,7 +100,7 @@ public class ShootByDistanceAndVelocity extends Command {
       SmartDashboard.putNumber("SWM/NoteVel", noteVelocity);
       m_shooter.startShooter(m_sd.shooterRPMMap.get(distance));
       m_arm.setGoal(m_sd.armAngleMap.get(distance));
-      m_arm.setTolerance(m_sd.armToleranceMap.get(distance));
+    //  m_arm.setTolerance(m_sd.armToleranceMap.get(distance));
     }
 
     else {
