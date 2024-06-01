@@ -38,6 +38,7 @@ import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.FindNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
+import frc.robot.commands.Intake.JogIntake;
 import frc.robot.commands.Shooter.ShootByDistanceAndVelocity;
 import frc.robot.commands.Test.MovePickupShoot;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
@@ -161,7 +162,7 @@ public class RobotContainer implements Logged {
 
                 doLobShot = new Trigger(() -> m_transfer.lobbing
                                 && m_transfer.noteAtIntake()
-                                && m_shooter.bothAtSpeed(1)
+                                && m_shooter.bothAtSpeed(5)
                                 && m_arm.getAtSetpoint()
                                 && m_swerve.alignedToTarget
                                 && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
@@ -173,7 +174,7 @@ public class RobotContainer implements Logged {
                 doMovingShot = new Trigger(() -> m_transfer.shootmoving
                                 && m_transfer.OKShootMoving
                                 && m_transfer.noteAtIntake()
-                                && m_shooter.bothAtSpeed(1)
+                                && m_shooter.bothAtSpeed(5)
                                 && m_arm.getAtSetpoint()
                                 && m_swerve.alignedToTarget
                                 && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
@@ -189,8 +190,6 @@ public class RobotContainer implements Logged {
                                                 Commands.runOnce(() -> m_swerve.poseWhenShooting = m_swerve.getPose()),
                                                 Commands.runOnce(() -> m_arm.angleDegWhenShooting = m_arm
                                                                 .getAngleDegrees()),
-                                                Commands.runOnce(() -> m_shooter.rpmWhenShooting = m_shooter
-                                                                .getRPMTop()),
                                                 Commands.runOnce(() -> m_transfer.logShot = false)));
 
                 m_tcf.createCommonTriggers();
@@ -344,12 +343,13 @@ public class RobotContainer implements Logged {
                 codriver.rightTrigger().whileTrue(m_climber.lowerClimberArmsCommand(0.6))
                                 .onFalse(m_climber.stopClimberCommand());
 
-                // codriver.rightBumper().onTrue(
+                codriver.rightBumper().and(codriver.a())
+                                .onTrue(Commands.runOnce(() -> m_arm.useMotorEncoder = !m_arm.useMotorEncoder));
 
                 codriver.a().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                 Constants.subwfrShooterSpeed));
 
-                // codriver.b().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.safeStageArmAngle,
+                 codriver.b().onTrue(new JogIntake(m_intake, codriver));
                 // Constants.safeStageShooterSpeed));
 
                 codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,

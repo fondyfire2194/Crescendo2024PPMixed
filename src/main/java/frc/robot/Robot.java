@@ -114,9 +114,6 @@ public class Robot extends TimedRobot implements Logged {
   @Override
   public void robotPeriodic() {
 
-    SmartDashboard.putNumber("RRRPPPMMM", m_robotContainer.m_sd.shooterRPMMap.get(3.));
-    SmartDashboard.putNumber("RRARM", m_robotContainer.m_sd.armAngleMap.get(3.));
-
     CommandScheduler.getInstance().run();
 
     m_robotContainer.m_arm.periodicRobot();

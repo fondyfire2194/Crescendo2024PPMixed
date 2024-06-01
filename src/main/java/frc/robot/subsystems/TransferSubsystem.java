@@ -32,9 +32,6 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public SparkPIDController transferController;
   RelativeEncoder transferEncoder;
 
-  public boolean m_showScreens;
-
-
   @Log.NT(key = "transfercommandrpm")
   private double commandrpm;
 

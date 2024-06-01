@@ -83,14 +83,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   double poseDifference = 0;
   SwerveModuleState[] xLockStates = new SwerveModuleState[4];
 
-  public boolean m_showScreens;
-
   private boolean onTarget;
 
   double xlim = Units.inchesToMeters(12);
   double ylim = Units.inchesToMeters(12);
   double deglim = Units.degreesToRadians(5);
-
 
   @Log.NT(key = "yerror")
   double yerror = 0;
@@ -517,8 +514,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("AUSEp", autostep);
-  
+    SmartDashboard.putNumber("Drive/AUSEp", autostep);
 
     if (!mod0connected) {
       mod0connected = checkMod0CansOK();
@@ -537,25 +533,30 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
       SmartDashboard.putBoolean("Drive//Ok3ModCan", mod3connected);
     }
 
-    swervePoseEstimator.update(getYaw(), getPositions());
+    if (mod0connected && mod1connected && mod2connected && mod3connected) {
 
-    getPose();
+      swervePoseEstimator.update(getYaw(), getPositions());
 
-    putStates();
+      getPose();
 
-    flUpdate.execute();
+      putStates();
 
-    frUpdate.execute();
+      flUpdate.execute();
 
-    if (getPathRunning() && isStopped())
-      resetPathRunning();
+      frUpdate.execute();
 
-    if (getPathStarted() && !isStopped()) {
-      setPathRunning();
-      resetPathStarted();
+      if (getPathRunning() && isStopped())
+        resetPathRunning();
+
+      if (getPathStarted() && !isStopped()) {
+        setPathRunning();
+        resetPathStarted();
+      }
+
+      SmartDashboard.putNumber("Drive//GyroYaw", getYaw().getDegrees());
+
+      SmartDashboard.putNumber("Drive/SpeakerFeet", getDistanceFromSpeakerFt());
     }
-
-    SmartDashboard.putNumber("Drive//GyroYaw", getYaw().getDegrees());
   }
 
   @Log.NT(key = "targetPose")
@@ -568,19 +569,23 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return AllianceUtil.getStagePose();
   }
 
-  @Log.NT(key = "speakerDistance")
+  @Log.NT(key = "spkrDistMtrs")
   public double getDistanceFromSpeaker() {
     return round2dp(AllianceUtil.getSpeakerPose().getTranslation()
         .getDistance(getPose().getTranslation()), 2);
   }
 
-  @Log.NT(key = "lobDistance")
+  public double getDistanceFromSpeakerFt() {
+    return round2dp(Units.metersToFeet(getDistanceFromSpeaker()), 1);
+  }
+
+  @Log.NT(key = "lobDistMtrs")
   public double getDistanceFromLobTarget() {
     return round2dp(AllianceUtil.getLobPose().getTranslation()
         .getDistance(getPose().getTranslation()), 2);
   }
 
-  @Log.NT(key = "stageDistance")
+  @Log.NT(key = "stageDistMtrs")
   public double getDistanceFromStage() {
     return round2dp(AllianceUtil.getStagePose().getTranslation()
         .getDistance(getPose().getTranslation()), 2);

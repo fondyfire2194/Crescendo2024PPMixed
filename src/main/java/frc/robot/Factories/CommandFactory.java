@@ -123,7 +123,7 @@ public class CommandFactory implements Logged {
 
                                 (interrupted) -> Commands.none(),
 
-                                () -> endAtTargets && m_arm.getAtSetpoint() && m_shooter.bothAtSpeed(2));
+                                () -> endAtTargets && m_arm.getAtSetpoint() && m_shooter.bothAtSpeed(5));
         }
 
         public Command armFollowTargetDistance() {

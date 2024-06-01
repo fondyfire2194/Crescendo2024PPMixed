@@ -61,8 +61,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     public boolean inIZone;
 
-    private boolean m_showScreens;
-
     public double armVolts;
 
     private double feedforward;
@@ -136,7 +134,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                     6,
                     new Color8Bit(Color.kRed)));
     @Log.NT(key = "usemotorencoder")
-    private boolean useMotorEncoder;
+    public boolean useMotorEncoder;
 
     Trigger setMotorEncoderToCancoder;
 
@@ -351,7 +349,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     @Log.NT(key = "armgoaldeg")
     public double getCurrentGoalDeg() {
-        return Units.radiansToDegrees(getCurrentGoalRads());
+        return round2dp(Units.radiansToDegrees(getCurrentGoalRads()), 2);
     }
 
     @Log.NT(key = "armrads")
@@ -377,7 +375,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     @Log.NT(key = "armdegs")
     public double getAngleDegrees() {
-        return Units.radiansToDegrees(getAngleRadians());
+        return round2dp(Units.radiansToDegrees(getAngleRadians()), 2);
     }
 
     public void setUseMotorEncoder(boolean on) {
@@ -487,10 +485,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                 runOnce(() -> armCancoder.clearStickyFaults()));
     }
 
-    public double round2dp(double number) {
-        number = Math.round(number * 100);
-        number /= 100;
-        return number;
+    public static double round2dp(double number, int dp) {
+        double temp = Math.pow(10, dp);
+        double temp1 = Math.round(number * temp);
+        return temp1 / temp;
     }
 
     public double getCanCoderDeg() {

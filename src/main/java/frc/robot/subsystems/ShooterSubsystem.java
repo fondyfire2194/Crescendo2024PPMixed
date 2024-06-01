@@ -49,16 +49,12 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   private double bottomSimRPM = 0;
   @Log.NT(key = "shtratspeed;")
   private boolean shootersatspeed;
-  public boolean m_showScreens;
 
   @Log.NT(key = "shtrrunatvel")
   private boolean runShooterVel;
-  @Log.NT(key = "rpmwhenshooting")
-  public double rpmWhenShooting;
-
+  
   private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(2500);
   private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(2500);
-  private int loopctr;
   public boolean topMotorConnected;
   public boolean bottomMotorConnected;
 
@@ -122,12 +118,12 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   public Command startShooterCommand(double rpm) {
     return Commands.run(() -> startShooter(rpm))
-        .until(() -> bothAtSpeed(.2));
+        .until(() -> bothAtSpeed(5));
   }
 
   public Command startShooterCommand(double toprpm, double bottomrpm) {
     return Commands.run(() -> startShooter(toprpm, bottomrpm))
-        .until(() -> bothAtSpeed(.2));
+        .until(() -> bothAtSpeed(5));
   }
 
   public void startShooter(double rpm) {
@@ -200,11 +196,21 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   }
 
   public boolean topAtSpeed(double pct) {
-    return topCommandRPM != 0 && Math.abs(topCommandRPM - getRPMTop()) < topCommandRPM / 4;
+    return topCommandRPM != 0 && Math.abs(topCommandRPM - getRPMTop()) < topCommandRPM * pct / 100;
   }
 
   public boolean bottomAtSpeed(double pct) {
-    return bottomCommandRPM != 0 && Math.abs(bottomCommandRPM - getRPMBottom()) < bottomCommandRPM * pct;
+    return bottomCommandRPM != 0 && Math.abs(bottomCommandRPM - getRPMBottom()) < bottomCommandRPM * pct / 100;
+  }
+
+  @Log.NT(key = "rpmerrortop")
+  public double getTopRPMError() {
+    return topCommandRPM - getRPMTop();
+  }
+
+  @Log.NT(key = "rpmerrorbottom")
+  public double getBottomRPMError() {
+    return bottomCommandRPM - getRPMBottom();
   }
 
   public boolean bothAtSpeed(double pct) {
@@ -258,7 +264,6 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-    loopctr++;
 
     var st = topRoller.getMotorTemperature();
 

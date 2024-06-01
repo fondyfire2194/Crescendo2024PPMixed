@@ -45,7 +45,6 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     intakeController = intakeMotor.getPIDController();
     intakeEncoder = intakeMotor.getEncoder();
     configMotor(intakeMotor, intakeEncoder, false);
-
   }
 
   private void configMotor(CANSparkMax motor, RelativeEncoder encoder, boolean reverse) {
