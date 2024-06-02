@@ -52,11 +52,6 @@ public class CommandFactory implements Logged {
 
         private final LimelightVision m_llv;
 
-        private final ClimberSubsystem m_climber;
-
-        private final AutoFactory m_af;
-
-        private final PathFactory m_pf;
 
         private final ShootingData m_sd;
 
@@ -68,17 +63,16 @@ public class CommandFactory implements Logged {
         public int testNotesRun;
 
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
-                        IntakeSubsystem intake, TransferSubsystem transfer, ClimberSubsystem climber,
-                        LimelightVision llv, AutoFactory af, PathFactory pf, ShootingData sd) {
+                        IntakeSubsystem intake, TransferSubsystem transfer,
+                        LimelightVision llv, ShootingData sd) {
                 m_swerve = swerve;
                 m_shooter = shooter;
                 m_arm = arm;
                 m_intake = intake;
                 m_transfer = transfer;
-                m_climber = climber;
                 m_llv = llv;
-                m_af = af;
-                m_pf = pf;
+
+           
                 m_sd = sd;
 
         }
@@ -98,9 +92,9 @@ public class CommandFactory implements Logged {
                 return new FunctionalCommand(
 
                                 () -> Commands.sequence(
-                                Commands.runOnce(() -> m_transfer.lobbing = lob),
-                                Commands.runOnce(() -> m_arm.resetController()),
-                                Commands.runOnce(() -> m_arm.enable())),
+                                                Commands.runOnce(() -> m_transfer.lobbing = lob),
+                                                Commands.runOnce(() -> m_arm.resetController()),
+                                                Commands.runOnce(() -> m_arm.enable())),
 
                                 () -> {
                                         if (lob) {
@@ -137,7 +131,7 @@ public class CommandFactory implements Logged {
 
         }
 
-        // @Log.NT(key = "posarmrunshootercommand")
+        @Log.NT(key = "posarmrunshootercommand")
         public Command positionArmRunShooterSpecialCase(double armAngleDeg, double shooterSpeed) {
                 return Commands.parallel(
                                 m_arm.setGoalCommand(Units.degreesToRadians(armAngleDeg)),
@@ -156,7 +150,6 @@ public class CommandFactory implements Logged {
         public Command transferNoteToShooterCommand() {
                 return m_transfer.transferToShooterCommand();
         }
-
 
         public Command setArmShooterValues(double armAngle, double shooterRPM) {
                 return Commands.parallel(
@@ -189,51 +182,6 @@ public class CommandFactory implements Logged {
                 if (AllianceUtil.isRedAlliance())
                         tempPose2d = GeometryUtil.flipFieldPose(startPose);
                 return Commands.runOnce(() -> m_swerve.resetPoseEstimator(tempPose2d));
-        }
-
-        public Command finalCommand(int choice) {
-
-                switch ((choice)) {
-
-                        case 11:
-                                return new AutoSourceShootThenCenter(this, m_pf,
-                                                m_swerve, true);
-
-                        case 12:
-                                return new AutoSourceShootThenCenter(this, m_pf,
-                                                m_swerve, false);
-
-                        case 13:
-                                return new AutoSourceShootCenterPathfind(this, m_pf,
-                                                m_swerve, true);
-                        case 14:
-                                return new AutoSourceThenCenterVision(this, m_pf,
-                                                m_swerve, m_llv, m_intake, m_transfer, true);
-
-                        case 21:
-                                return new AutoAmpShootThenCenter(this, m_pf,
-                                                m_swerve, true);
-                        case 22:
-                                return new AutoAmpShootThenCenter(this, m_pf,
-                                                m_swerve, false);
-                        // case 23:
-                        // return new AutoAmpShootThenCenter(this, m_pf,
-                        // m_swerve, true);
-
-                        // case 24:
-                        // return new AutoAmpShootMovingThenCenter(this,
-                        // m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
-                        // m_swerve);
-
-                        default:
-                                return Commands.none();
-
-                }
-
-        }
-
-        public Command getAutonomousCommand() {
-                return finalCommand(m_af.finalChoice);
         }
 
         public Command resetAll() {

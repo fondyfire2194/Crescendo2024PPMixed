@@ -150,31 +150,6 @@ public class LimelightVision extends SubsystemBase implements Logged {
         LLPipelines.pipelines.APRILTAGALIGN5.ordinal());
   }
 
-  public int getNumberTagsSeen(CameraConstants.CameraValues cam) {
-    return (int) LimelightHelpers
-        .getLatestResults(cam.camname).targetingResults.targets_Fiducials.length;
-  }
-
-  public String getTagsSeen(CameraConstants.CameraValues cam) {
-    var temp = LimelightHelpers.getLatestResults(cam.camname).targetingResults;
-
-    var temp1 = temp.targets_Fiducials;
-    int l = temp1.length;
-    if (l <= 0)
-      return String.valueOf(0);
-    if (l == 1)
-      return String.valueOf((int) temp1[0].fiducialID);
-    if (l >= 2)
-      return String.valueOf((int) temp1[0].fiducialID) + " , " + String.valueOf((int) temp1[1].fiducialID);
-    else
-      return "Problem";
-  }
-  @Log.NT(key = "notesseenqty")
-  public int getNumberNotesSeen() {
-    return (int) LimelightHelpers
-        .getLatestResults(CameraConstants.rearCamera.camname).targetingResults.targets_Detector.length;
-  }
-
   @Log.NT(key = "noteseen")
   public boolean getNoteSeen() {
     return LimelightHelpers.getTV(CameraConstants.rearCamera.camname);

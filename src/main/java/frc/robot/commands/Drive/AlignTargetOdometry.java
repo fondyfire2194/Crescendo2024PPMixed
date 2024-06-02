@@ -73,7 +73,7 @@ public class AlignTargetOdometry extends Command {
 
     // get horizontal angle
 
-    double currentAngleToTarget = m_swerve.getAngleRadsToTarget();
+    double currentAngleToTarget = m_swerve.getAngleDegreesToTarget();
 
     rotationVal = m_alignTargetPID.calculate(m_swerve.getAngleDegrees(), currentAngleToTarget);
 

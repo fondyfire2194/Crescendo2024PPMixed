@@ -212,7 +212,7 @@ public class Robot extends TimedRobot implements Logged {
     if (m_robotContainer.m_af.finalChoice == 0 && m_robotContainer.m_af.validChoice)
       m_autonomousCommand = m_robotContainer.m_af.m_subwfrStartChooser.getSelected();
     else
-      m_autonomousCommand = m_robotContainer.m_cf.getAutonomousCommand();
+      m_autonomousCommand = m_robotContainer.m_af.getAutonomousCommand();
 
     SmartDashboard.putString("Auto//AUTOCMS", m_autonomousCommand.toString());
     SmartDashboard.putBoolean("Auto//AutoHasRun", autoHasRun);

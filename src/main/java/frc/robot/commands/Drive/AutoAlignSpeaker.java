@@ -4,9 +4,10 @@
 
 package frc.robot.commands.Drive;
 
+import org.opencv.dnn.Image2BlobParams;
+
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -19,6 +20,7 @@ public class AutoAlignSpeaker extends Command {
   public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
 
   private double rotationVal;
+  private Timer elapsedTime;
 
   public AutoAlignSpeaker(
       SwerveSubsystem swerve, boolean endAtTargets) {
@@ -32,22 +34,18 @@ public class AutoAlignSpeaker extends Command {
   @Override
   public void initialize() {
     m_alignTargetPID.enableContinuousInput(-180, 180);
-    m_alignTargetPID.setTolerance(0.2);
+    m_alignTargetPID.setTolerance(0.5);
     m_swerve.targetPose = AllianceUtil.getSpeakerPose();
+    elapsedTime=new Timer();
+    elapsedTime.reset();
+    elapsedTime.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // get horizontal angle
 
-    Pose2d robotPose = m_swerve.getPose();
-    double XDiff = m_swerve.targetPose.getX() - robotPose.getX();
-    double YDiff = m_swerve.targetPose.getY() - robotPose.getY();
-    double angleRad = Math.atan2(YDiff, XDiff);
-    double currentAngleToSpeaker = Units.radiansToDegrees(angleRad);
-
-    rotationVal = m_alignTargetPID.calculate(robotPose.getRotation().getDegrees(), currentAngleToSpeaker);
+    rotationVal = m_alignTargetPID.calculate(m_swerve.getAngleDegrees(), m_swerve.getAngleDegreesToTarget());
 
     m_swerve.alignedToTarget = m_alignTargetPID.atSetpoint();
 
@@ -67,6 +65,6 @@ public class AutoAlignSpeaker extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_endAtTargets && m_swerve.alignedToTarget;
+    return m_endAtTargets && (m_swerve.alignedToTarget || elapsedTime.hasElapsed(2));
   }
 }

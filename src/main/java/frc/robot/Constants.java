@@ -21,10 +21,51 @@ import edu.wpi.first.units.Measure;
 import frc.lib.config.SwerveModuleConstants;
 import monologue.Annotations.Log;
 
+/**
+ * Field setup important dimensions
+ * 
+ * *******************WIDTH******************************
+ * 
+ * Width 26ft 11-1/4 inches - half width 13ft 5-5/8 inches = 161-5/8 inches
+ * 
+ * Speaker center is offset 57 inches = 4ft 9 inches from center line
+ * 
+ * Speaker center from source side is 18ft 2-5/8 inches or 218-5/8 inches
+ * 
+ * Speaker center from amp side is 8ft 8-5/8 inches or 104-5/8 inches
+ * 
+ * Math check 18ft 2-5/8 + 8ft 8-5/8 = 26ft 11-1/4 = field width
+ * 
+ * 
+ *  *******************LENGTH******************************
+ * 
+ * Length 54ft 3-1/4 inches - center line is 27ft 1-5/8 inches = 325-5/8 inches
+ * 
+ * Start line is 6ft 4-1/8 inches from speaker face = 76-1/8 inches
+ * 
+ * 
+ * *******************NOTES******************************
+ * 
+ * The 3 start line notes are centered on speaker and 4ft 9 inches = 57 inches either side of that
+ * 
+ * Field center line notes are 27ft 1-5/8 inches = 325-5/8 inches from speaker face
+ * 
+ * One is on the field center line, others are 5ft 6 inches = 66 inches apart from there
+ *
+ * Outside notes are 2ft 5-5/8 inches = 29-5/8 inches from field edge
+ * 
+ * 
+ * 
+ * Math check 4 x 5ft 6 = 22 ft + 2 x 2ft 5-5/8 = 4ft 11-1/4 = 26ft 11-1/4 = field width
+ * 
+ * 
+ */
+
 public final class Constants {
 
         public static final class CANIDConstants {
                 // can ids 4 through 15 are used for swerve modules see SwerveConstants
+                public static final int pdpID = 1;
                 public static final int topShooterID = 17;
                 public static final int bottomShooterID = 16;
 

@@ -83,15 +83,17 @@ public class RobotContainer implements Logged {
 
         ShootingData m_sd = new ShootingData();
 
-        public final PathFactory m_pf = new PathFactory(m_swerve);
+        public final PathFactory m_pf;// = new PathFactory(m_swerve);
 
-        public final AutoFactory m_af = new AutoFactory(m_pf);
+        public final CommandFactory m_cf;// = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
+        // m_llv, m_sd);
 
-        public final CommandFactory m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
-                        m_climber, m_llv, m_af, m_pf, m_sd);
+        public final AutoFactory m_af;// = new AutoFactory(m_pf, m_cf, m_swerve, m_shooter, m_arm, m_intake,
+                                      // m_transfer,
+        // m_llv);
 
-        public final TriggerCommandFactory m_tcf = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
-                        m_llv, m_pf, m_cf);
+        public final TriggerCommandFactory m_tcf;// = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
+        // m_llv, m_pf, m_cf);
 
         BooleanSupplier keepAngle;
 
@@ -113,9 +115,15 @@ public class RobotContainer implements Logged {
         public float busUtil;
 
         public RobotContainer() {
-
+                m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
+                                m_llv, m_sd);
                 registerNamedCommands();
+                m_pf = new PathFactory(m_swerve);
+                m_af = new AutoFactory(m_pf, m_cf, m_swerve, m_shooter, m_arm, m_intake, m_transfer,
+                                m_llv);
 
+                m_tcf = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
+                                m_llv, m_pf, m_cf);
                 if (RobotBase.isReal()) {
                         // Pref.deleteUnused();
                         Pref.addMissing();
@@ -441,83 +449,30 @@ public class RobotContainer implements Logged {
 
                 NamedCommands.registerCommand("ResetAll", m_cf.resetAll());
 
+                boolean gotit = NamedCommands.hasCommand("ResetAll");
+
+                SmartDashboard.putBoolean("GOTIT", gotit);
+
                 NamedCommands.registerCommand("Arm Shooter Pre Wing 2", m_cf.positionArmRunShooterSpecialCase(44,
-                                3000).asProxy()
+                                3000)
                                 .withName("Arm Shooter Pre Wing 2"));
 
                 NamedCommands.registerCommand("Arm Shooter Wing 2", m_cf.positionArmRunShooterSpecialCase(35,
                                 3200).asProxy()
                                 .withName("Arm Shooter Wing 2"));
 
-                NamedCommands.registerCommand("Prestart Shooter Wheels",
-                                m_shooter.startShooterCommand(4000).asProxy()
-                                                .withName("Prestart Shooter Wheels"));
-
-                NamedCommands.registerCommand("Stop Intake", m_intake.stopIntakeCommand().asProxy()
-                                .withName("Stop Intake"));
-
                 NamedCommands.registerCommand(
-                                "Start Intake", m_intake.startIntakeCommand().asProxy()
-                                                .withName("Start Intake"));
-
-                NamedCommands.registerCommand(
-                                "DoIntake", m_cf.doIntake().asProxy()
-                                                .withName("Do Intake"));
-
-                NamedCommands.registerCommand(
-                                "Transfer Stop", m_transfer.stopTransferCommand().asProxy()
-                                                .withName("Transfer Stop"));
-
-                NamedCommands.registerCommand("Arm To Intake",
-                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians).asProxy()
-                                                .withName("ArmToIntake"));
-
-                // NamedCommands.registerCommand("Shooter Low Speed",
-                // m_shooter.setRPMCommand(1000, false));
+                                "DoIntake", m_cf.doIntake()
+                                                .withName("DoIntake"));
 
                 NamedCommands.registerCommand("Shoot", m_cf.transferNoteToShooterCommand()
                                 .withName("Shoot"));
 
                 NamedCommands.registerCommand("Arm Shooter SubWfr",
                                 m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed).asProxy()
-                                                .withName("Arm Shooter SubWfr")); // Constants.subwfrShooterSpeed
-                                                                                  // lower speed to decrease
-                                                                                  // time
-                NamedCommands.registerCommand("Arm Shooter While Moving",
-                                m_cf.positionArmRunShooterSpecialCase(Constants.autoShootArmAngle,
-                                                Constants.autoShootRPM).asProxy()
-                                                .withName("Arm Shooter While Moving")); // Constants.subwfrShooterSpeed
-                                                                                        // lower speed to decrease
-                                                                                        // time
-
-                NamedCommands.registerCommand("Arm Shooter Wing 1",
-                                m_cf.positionArmRunShooterSpecialCase(Constants.wing1ArmAngle,
-                                                Constants.wing1ShooterSpeed).asProxy()
-                                                .withName("Arm Shooter Wing 1"));
-
-                NamedCommands.registerCommand("Arm Shooter Wing 2",
-                                m_cf.positionArmRunShooterSpecialCase(Constants.wing2ArmAngle,
-                                                Constants.wing2ShooterSpeed).asProxy()
-                                                .withName("Arm Shooter Wing 2"));
-
-                NamedCommands.registerCommand("Arm Shooter Wing 3",
-                                m_cf.positionArmRunShooterSpecialCase(Constants.wing3ArmAngle,
-                                                Constants.wing3ShooterSpeed).asProxy()
-                                                .withName("Arm Shooter Wing 3"));
-
-                NamedCommands.registerCommand("Arm Shooter Amp Shoot",
-                                m_cf.positionArmRunShooterSpecialCase(Constants.ampStartArmAngle,
-                                                Constants.ampStartShooterSpeed).asProxy()
-                                                .withName("Arm Shooter Amp Shoot"));
-
-                NamedCommands.registerCommand("Arm Shooter Source",
-                                m_cf.positionArmRunShooterSpecialCase(Constants.sourceShootAngle,
-                                                Constants.sourceShootSpeed).asProxy()
-                                                .withName("Arm Shooter Source"));
-
-                NamedCommands.registerCommand("Stop Shooter", m_shooter.stopShooterCommand().asProxy()
-                                .withName("Stop Shooter"));
+                                                Constants.subwfrShooterSpeed)
+                                                .withName("Arm Shooter SubWfr")); 
+            
 
                 NamedCommands.registerCommand("CheckForNote",
                                 Commands.runOnce(() -> m_swerve.checkNote = true));

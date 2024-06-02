@@ -52,7 +52,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   @Log.NT(key = "shtrrunatvel")
   private boolean runShooterVel;
-  
+
   private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(2500);
   private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(2500);
   public boolean topMotorConnected;
@@ -264,10 +264,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-
-    var st = topRoller.getMotorTemperature();
-
-    SmartDashboard.putNumber("TRFW", st);
+    SmartDashboard.putNumber("Shooter/RPM", topCommandRPM);
 
     if (runShooterVel) {
       double toprpm = getTopCommandRPM();

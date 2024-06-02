@@ -55,7 +55,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   private SwerveModule[] mSwerveMods;
 
-  private Field2d field;
+  private Field2d m_field;
 
   private Pose2d simOdometryPose = new Pose2d();
 
@@ -190,7 +190,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
     simOdometryPose = swervePoseEstimator.getEstimatedPosition();
 
-    field = new Field2d();
+    m_field = new Field2d();
+
+    SmartDashboard.putData("Field", m_field);
 
     resetModuleEncoders();
 
@@ -216,7 +218,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         this);
 
     // Set up custom logging to add the current path to a field 2d widget
-    PathPlannerLogging.setLogActivePathCallback((poses) -> field.getObject("path").setPoses(poses));
+    PathPlannerLogging.setLogActivePathCallback((poses) -> m_field.getObject("path").setPoses(poses));
 
     zeroGyro();
 
@@ -336,6 +338,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "robdegrees")
   public double getAngleDegrees() {
     return getPose().getRotation().getDegrees();
+  }
+
+  @Log.NT(key = "robrads")
+  public double getAngleRadians() {
+    return getPose().getRotation().getRadians();
   }
 
   public double getModuleStickyFaults() {
@@ -511,7 +518,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   }
 
   public Field2d getField() {
-    return field;
+    return m_field;
   }
 
   @Log.NT(key = "chassisspeeds")
@@ -540,6 +547,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Drive/AUSEp", autostep);
+
+    m_field.setRobotPose(getPose());
 
     if (!mod0connected) {
       mod0connected = checkMod0CansOK();
@@ -634,9 +643,16 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public double getAngleRadsToTarget() {
     double XDiff = targetPose.getX() - getX();
     double YDiff = targetPose.getY() - getY();
-    double angleRad = Math.atan2(YDiff, XDiff);
-    double currentRadsToTarget = Units.radiansToDegrees(angleRad);
-    return currentRadsToTarget;
+    return Math.atan2(YDiff, XDiff);
+
+  }
+
+  @Log.NT(key = "currentangletotarget")
+  public double getAngleDegreesToTarget() {
+    double XDiff = targetPose.getX() - getX();
+    double YDiff = targetPose.getY() - getY();
+    return Units.radiansToDegrees(Math.atan2(YDiff, XDiff));
+
   }
 
   /**

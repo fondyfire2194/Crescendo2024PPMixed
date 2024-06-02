@@ -1,46 +1,20 @@
 {
-  "HALProvider": {
-    "Other Devices": {
-      "window": {
-        "visible": false
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/Autonomous/AmpStart": "String Chooser",
-      "/Shuffleboard/Autonomous/AutoSelection": "String Chooser",
-      "/Shuffleboard/Autonomous/BatteryChooser": "String Chooser",
-      "/Shuffleboard/Autonomous/DelayChooser": "String Chooser",
-      "/Shuffleboard/Autonomous/FrontCameraChooser": "String Chooser",
-      "/Shuffleboard/Autonomous/SourceStart": "String Chooser",
-      "/Shuffleboard/ShooterSubsystem/Arm to 15 Deg": "Command",
-      "/Shuffleboard/ShooterSubsystem/Arm to 25 Deg": "Command",
-      "/Shuffleboard/ShooterSubsystem/Arm to 45 Deg": "Command",
-      "/Shuffleboard/ShooterSubsystem/Arm to 60 Deg": "Command",
-      "/Shuffleboard/ShooterSubsystem/ArmSubsystem": "Subsystem",
-      "/Shuffleboard/ShooterSubsystem/ClearFault": "Command",
-      "/Shuffleboard/ShooterSubsystem/SetAllPID": "Command",
       "/SmartDashboard/Amp Start": "String Chooser",
-      "/SmartDashboard/Arm Sim": "Mechanism2d",
       "/SmartDashboard/Arm//Arm Sim": "Mechanism2d",
       "/SmartDashboard/BatteryChooser": "String Chooser",
       "/SmartDashboard/ClearStickyFaults": "Command",
       "/SmartDashboard/CommSchd": "Scheduler",
       "/SmartDashboard/DelayChooser": "String Chooser",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Find Note": "Command",
-      "/SmartDashboard/FrontCameraChooser": "String Chooser",
-      "/SmartDashboard/GetRPMAnglea": "Command",
       "/SmartDashboard/RunTestPickupandShoot": "Command",
-      "/SmartDashboard/ShootMovingCalcs": "Command",
-      "/SmartDashboard/ShootMovingTest": "Command",
       "/SmartDashboard/Source Start": "String Chooser",
       "/SmartDashboard/SubwfrStart": "String Chooser",
       "/SmartDashboard/TestCan": "Command",
-      "/SmartDashboard/VectroSWM": "Command",
-      "/SmartDashboard/ViewArmShooterData": "Command",
-      "/SmartDashboard/ViewRPMAngles": "Command"
+      "/SmartDashboard/ViewArmShooterData": "Command"
     },
     "windows": {
       "/SmartDashboard/Amp Start": {
@@ -53,12 +27,18 @@
           "visible": true
         }
       },
-      "/SmartDashboard/Find Note": {
+      "/SmartDashboard/DelayChooser": {
         "window": {
           "visible": true
         }
       },
-      "/SmartDashboard/RunTestPickupandShoot": {
+      "/SmartDashboard/Field": {
+        "bottom": 1476,
+        "height": 8.210550308227539,
+        "left": 150,
+        "right": 2961,
+        "top": 79,
+        "width": 16.541748046875,
         "window": {
           "visible": true
         }
@@ -72,36 +52,16 @@
         "window": {
           "visible": true
         }
-      },
-      "/SmartDashboard/ViewArmShooterData": {
-        "window": {
-          "visible": true
-        }
       }
     }
   },
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
-    "Transitory Values": {
-      "open": false
-    },
-    "persistent": {
-      "Preferences": {
+    "retained": {
+      "SmartDashboard": {
         "open": true
       }
     },
     "transitory": {
-      "Monologue": {
-        "m_shooter": {
-          "open": true
-        },
-        "m_transfer": {
-          "open": true
-        },
-        "open": true
-      },
       "SmartDashboard": {
         "open": true
       }

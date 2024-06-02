@@ -55,7 +55,7 @@ public class AutoSourceShootCenterPathfind extends SequentialCommandGroup {
                                                                 Commands.either(
                                                                                 new RunPPath(swerve,
                                                                                                 pf.pathMaps.get(
-                                                                                                                sourcepaths.NearCenter4toCenter4
+                                                                                                                sourcepaths.NearCenter4ToCenter4
                                                                                                                                 .name())),
                                                                                 new RunPPath(swerve,
                                                                                                 pf.pathMaps.get(
