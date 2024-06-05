@@ -99,6 +99,34 @@ public class PathFactory {
         }
     }
 
+
+    public enum sbwfrpaths {
+        SubwfrShootToWing1,
+        SubwfrShootToWing2,
+        SubwfrShootToWing3,
+        Wing1ToSubwfrShoot,
+        Wing2ToSubwfrShoot,
+        Wing3ToSubwfrShoot,
+        Wing2ToCenter3,
+        Center3ToWing2
+    }
+
+    public boolean checkSbwfrFilesExist() {
+        int valid = 0;
+        for (sbwfrpaths a : sbwfrpaths.values()) {
+            if (new File(Filesystem.getDeployDirectory(), "pathplanner/paths/" + a.toString() + ".path").isFile())
+                valid++;
+        }
+        return valid == sbwfrpaths.values().length;
+    }
+
+    public void linkSbwfrPaths() {
+        pathMaps.clear();
+        for (sbwfrpaths s : sbwfrpaths.values()) {
+            pathMaps.put(s.toString(), getPath(s.toString()));
+        }
+    }
+
     public PathPlannerPath getPath(String pathname) {
         return PathPlannerPath.fromPathFile(pathname);
     }

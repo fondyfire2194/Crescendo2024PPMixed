@@ -3,41 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.26,
-        "y": 4.11
+        "x": 8.235124030875737,
+        "y": 4.122214464115091
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.26,
-        "y": 4.11
+        "x": 7.274835434121652,
+        "y": 4.239322829572906
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.682966437022921,
-        "y": 4.11
+        "x": 4.991222307694258,
+        "y": 4.578937089400569
       },
       "prevControl": {
-        "x": 7.239614224070775,
-        "y": 4.11
+        "x": 5.792851847191648,
+        "y": 4.381815071491375
       },
       "nextControl": {
-        "x": 4.682966437022924,
-        "y": 4.11
+        "x": 4.276861278401586,
+        "y": 4.754599637587292
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.8914165885203804,
-        "y": 5.524739769858686
+        "x": 2.8715608929078047,
+        "y": 5.597779868883561
       },
       "prevControl": {
-        "x": 4.330961458131448,
-        "y": 5.515013115334288
+        "x": 3.539078576017351,
+        "y": 5.211322262872772
       },
       "nextControl": null,
       "isLocked": false,
@@ -59,7 +59,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Amp Start",
+  "folder": null,
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

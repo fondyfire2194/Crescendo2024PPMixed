@@ -37,7 +37,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Quick Sub To Note 1"
+                  "pathName": "QuickSubToNote 1"
                 }
               },
               {
@@ -56,7 +56,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Quick Note 1 to Before Note 2"
+                  "pathName": "SubwfrShootToWing3"
                 }
               },
               {
@@ -81,7 +81,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Quick To Note 2"
+                  "pathName": "QuickNote1ToNote"
                 }
               },
               {
@@ -112,7 +112,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Quick To Note 3"
+                  "pathName": "QuickToNote3"
                 }
               },
               {
@@ -131,7 +131,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Quick Note 3 Shoot"
+                  "pathName": "QuickNote3Shoot"
                 }
               },
               {

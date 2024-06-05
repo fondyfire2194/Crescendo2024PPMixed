@@ -4,11 +4,13 @@
 
 package frc.robot;
 
+import java.net.PortUnreachableException;
 import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -32,7 +34,6 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.TriggerCommandFactory;
 import frc.robot.commands.JogClimber;
-import frc.robot.utils.ViewArmShooterByDistance;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.FindNote;
@@ -50,6 +51,7 @@ import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.ShootingData;
+import frc.robot.utils.ViewArmShooterByDistance;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -115,10 +117,13 @@ public class RobotContainer implements Logged {
         public float busUtil;
 
         public RobotContainer() {
+
+                m_pf = new PathFactory(m_swerve);
+
                 m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
                                 m_llv, m_sd);
+
                 registerNamedCommands();
-                m_pf = new PathFactory(m_swerve);
                 m_af = new AutoFactory(m_pf, m_cf, m_swerve, m_shooter, m_arm, m_intake, m_transfer,
                                 m_llv);
 
@@ -268,9 +273,10 @@ public class RobotContainer implements Logged {
                 // pick up notes with vision align
                 driver.rightBumper().and(driver.a()).onTrue(
                                 Commands.sequence(
-                                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
-                                                Commands.none().until(() -> m_arm.getAtSetpoint()),
-                                                m_intake.startIntakeCommand(),
+                                             //   m_cf.doIntake(),
+                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
+                                                 Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                                // m_intake.startIntakeCommand(),
                                                 Commands.deadline(
                                                                 new TransferIntakeToSensor(m_transfer,
                                                                                 m_intake, 120),
@@ -388,9 +394,9 @@ public class RobotContainer implements Logged {
                 // KEEP IN BUTTON ORDER
                 // jogs are in case note gets stuck
 
-                // setup.leftTrigger().whileTrue(new JogIntake(m_intake, setup));
+                 setup.leftTrigger().whileTrue(m_cf.doIntake());
 
-                // setup.leftBumper().whileTrue(new JogArm(m_arm, setup));
+                 setup.leftBumper().whileTrue(m_arm.setGoalCommand(1));
 
                 // setup.rightTrigger().whileTrue(new JogTransfer(m_transfer, setup));
 
@@ -471,8 +477,7 @@ public class RobotContainer implements Logged {
                 NamedCommands.registerCommand("Arm Shooter SubWfr",
                                 m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed)
-                                                .withName("Arm Shooter SubWfr")); 
-            
+                                                .withName("Arm Shooter SubWfr"));
 
                 NamedCommands.registerCommand("CheckForNote",
                                 Commands.runOnce(() -> m_swerve.checkNote = true));
@@ -503,6 +508,11 @@ public class RobotContainer implements Logged {
 
         void setAutoData() {
                 m_af.validStartChoice = m_af.selectAndLoadPathFiles();
+                SmartDashboard.putNumber("VSCH", m_af.validStartChoice);
+                SmartDashboard.putNumber("AFSB", m_af.validStartChoice);
+                if (m_af.validStartChoice >= m_af.minsbwfrauto && m_af.validStartChoice <= m_af.maxsbwfrauto) {
+
+                }
 
                 if (m_af.validStartChoice >= m_af.minsourceauto && m_af.validStartChoice <= m_af.maxsourceauto) {
                         m_tcf.createSourceTriggers();

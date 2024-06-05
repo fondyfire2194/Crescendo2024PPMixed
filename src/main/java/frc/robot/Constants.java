@@ -37,7 +37,7 @@ import monologue.Annotations.Log;
  * Math check 18ft 2-5/8 + 8ft 8-5/8 = 26ft 11-1/4 = field width
  * 
  * 
- *  *******************LENGTH******************************
+ * *******************LENGTH******************************
  * 
  * Length 54ft 3-1/4 inches - center line is 27ft 1-5/8 inches = 325-5/8 inches
  * 
@@ -46,17 +46,21 @@ import monologue.Annotations.Log;
  * 
  * *******************NOTES******************************
  * 
- * The 3 start line notes are centered on speaker and 4ft 9 inches = 57 inches either side of that
+ * The 3 start line notes are centered on speaker and 4ft 9 inches = 57 inches
+ * either side of that
  * 
- * Field center line notes are 27ft 1-5/8 inches = 325-5/8 inches from speaker face
+ * Field center line notes are 27ft 1-5/8 inches = 325-5/8 inches from speaker
+ * face
  * 
- * One is on the field center line, others are 5ft 6 inches = 66 inches apart from there
+ * One is on the field center line, others are 5ft 6 inches = 66 inches apart
+ * from there
  *
  * Outside notes are 2ft 5-5/8 inches = 29-5/8 inches from field edge
  * 
  * 
  * 
- * Math check 4 x 5ft 6 = 22 ft + 2 x 2ft 5-5/8 = 4ft 11-1/4 = 26ft 11-1/4 = field width
+ * Math check 4 x 5ft 6 = 22 ft + 2 x 2ft 5-5/8 = 4ft 11-1/4 = 26ft 11-1/4 =
+ * field width
  * 
  * 
  */
@@ -291,30 +295,38 @@ public final class Constants {
                 public static Pose2d driverStationBlueAlliance = new Pose2d();
                 public static Pose2d driverStationRedAlliance = new Pose2d();
 
-                // public static final Pose2d blueNote1 = new Pose2d(2.89, 6.99, new Rotation2d());
-                // public static final Pose2d blueNote2 = new Pose2d(2.89, 5.54, new Rotation2d());
-                // public static final Pose2d blueNote3 = new Pose2d(2.89, 4.09, new Rotation2d());
+                // public static final Pose2d blueNote1 = new Pose2d(2.89, 6.99, new
+                // Rotation2d());
+                // public static final Pose2d blueNote2 = new Pose2d(2.89, 5.54, new
+                // Rotation2d());
+                // public static final Pose2d blueNote3 = new Pose2d(2.89, 4.09, new
+                // Rotation2d());
 
-                // public static final Pose2d centerNote1Blue = new Pose2d(8.28, 7.45, new Rotation2d());
-                // public static final Pose2d centerNote2Blue = new Pose2d(8.28, 5.77, new Rotation2d());
-                // public static final Pose2d centerNote3Blue = new Pose2d(8.28, 4.10, new Rotation2d());
-                // public static final Pose2d centerNote4Blue = new Pose2d(8.28, 2.44, new Rotation2d());
-                // public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new Rotation2d());
+                // public static final Pose2d centerNote1Blue = new Pose2d(8.28, 7.45, new
+                // Rotation2d());
+                // public static final Pose2d centerNote2Blue = new Pose2d(8.28, 5.77, new
+                // Rotation2d());
+                // public static final Pose2d centerNote3Blue = new Pose2d(8.28, 4.10, new
+                // Rotation2d());
+                // public static final Pose2d centerNote4Blue = new Pose2d(8.28, 2.44, new
+                // Rotation2d());
+                // public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new
+                // Rotation2d());
 
                 // public static final Pose2d centerNote1PickupBlue = new Pose2d(8.48, 7.44,
-                //                 new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                // new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
                 // public static final Pose2d centerNote2PickupBlue = new Pose2d(8.48, 5.76,
-                //                 new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                // new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
                 // public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
-                //                 new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                // new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
                 // public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
-                //                 new Rotation2d(Units.degreesToRadians(23.2)));
+                // new Rotation2d(Units.degreesToRadians(23.2)));
 
                 // public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
-                //                 new Rotation2d(Units.degreesToRadians(-176.09)));
+                // new Rotation2d(Units.degreesToRadians(-176.09)));
 
                 public static final Pose2d sourceShootBlue = new Pose2d(4.12, 2.18,
                                 new Rotation2d(Units.degreesToRadians(150)));
@@ -333,6 +345,9 @@ public final class Constants {
 
                 public static final Pose2d ampClearStagePoseBlue = new Pose2d(7, 6.8,
                                 new Rotation2d(Units.degreesToRadians(120)));
+
+                public static final Pose2d sbwfrStartPose = new Pose2d(1.34, 5.55,
+                                new Rotation2d(Units.degreesToRadians(180)));
 
         }
 

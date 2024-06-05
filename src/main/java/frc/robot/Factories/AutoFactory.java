@@ -10,17 +10,19 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenterPathfind;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenterVision;
+import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
-import frc.robot.utils.ShootingData;
+
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -29,24 +31,27 @@ public class AutoFactory implements Logged {
 
         private final PathFactory m_pf;
 
+        public SendableChooser<Integer> m_subwfrStartChooser = new SendableChooser<Integer>();
+
         public final SendableChooser<Integer> m_ampStartChooser = new SendableChooser<Integer>();
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
-
-        public SendableChooser<Command> m_subwfrStartChooser;
 
         @Log.NT(key = "finalchoice")
         public int finalChoice = 0;
 
         int ampChoice;
         int ampChoiceLast;
-        String subwfrcchoicelasst;
+        int subwfrchoice;
+        int subwfrchoicelast;
         int sourceChoice;
         int sourceChoiceLast;
-        String subwfrcchoice;
+
         @Log.NT(key = "validstartchoice")
         public int validStartChoice = 0;
-        String subwfrdefnam;
+
+        public int minsbwfrauto;
+        public int maxsbwfrauto;
         public int minsourceauto;
         public int maxsourceauto;
         public int minampauto;
@@ -58,28 +63,33 @@ public class AutoFactory implements Logged {
 
         private final TransferSubsystem m_transfer;
 
-        private final ShooterSubsystem m_shooter;
-
-        private final ArmSubsystem m_arm;
-
         private final LimelightVision m_llv;
 
         private CommandFactory m_cf;
 
         public boolean validChoice;
 
-        public AutoFactory(PathFactory pf,CommandFactory cf,SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
+        public AutoFactory(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve, ShooterSubsystem shooter,
+                        ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer,
                         LimelightVision llv) {
                 m_pf = pf;
-                m_cf=cf;
-                m_llv=llv;
-                m_swerve=swerve;
-                m_shooter=shooter;
-                m_transfer=transfer;
-                m_intake=intake;
-                m_arm=arm;
+                m_cf = cf;
+                m_llv = llv;
+                m_swerve = swerve;
 
+                m_transfer = transfer;
+                m_intake = intake;
+
+                minsbwfrauto = 1;
+                m_subwfrStartChooser.setDefaultOption("Not Used", 0);
+                m_subwfrStartChooser.addOption("2-1-3", 1);
+                m_subwfrStartChooser.addOption("2-3-1", 2);
+                m_subwfrStartChooser.addOption("2-3", 3);
+                m_subwfrStartChooser.addOption("2-1", 4);
+                m_subwfrStartChooser.addOption("2-C3-1", 5);
+
+                maxsbwfrauto = 4;
 
                 minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
@@ -92,15 +102,12 @@ public class AutoFactory implements Logged {
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("Shoot C2 then C1", 21);
                 m_ampStartChooser.addOption("Shoot C1 then C2", 22);
-                // m_ampStartChooser.addOption("Shoot Moving C2 then C1", 23);
+
                 maxampauto = 22;
-                m_subwfrStartChooser = AutoBuilder.buildAutoChooser();
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
                 SmartDashboard.putData("Amp Start", m_ampStartChooser);
                 SmartDashboard.putData("SubwfrStart", m_subwfrStartChooser);
-
-                subwfrdefnam = m_subwfrStartChooser.getSelected().getName();
 
         }
 
@@ -109,24 +116,23 @@ public class AutoFactory implements Logged {
 
                 ampChoice = m_ampStartChooser.getSelected();// 20 start
                 sourceChoice = m_sourceStartChooser.getSelected();// 10 start
-                subwfrcchoice = m_subwfrStartChooser.getSelected().getName();
-                SmartDashboard.putNumber("SWLGTH", subwfrcchoice.length());
+                subwfrchoice = m_subwfrStartChooser.getSelected();// 0 start
+
                 boolean temp = ampChoice != ampChoiceLast || sourceChoice != sourceChoiceLast
-                                || subwfrcchoice != subwfrcchoicelasst;
+                                || subwfrchoice != subwfrchoicelast;
 
                 ampChoiceLast = ampChoice;
                 sourceChoiceLast = sourceChoice;
-                subwfrcchoicelasst = subwfrcchoice;
+                subwfrchoicelast = subwfrchoice;
                 return temp;
         }
 
         public int selectAndLoadPathFiles() {
                 finalChoice = 0;
                 validChoice = false;
-
-                boolean validAmpChoice = ampChoice != 20;
+                boolean validSubwfrChoice = subwfrchoice != 0;
                 boolean validSourceChoice = sourceChoice != 10;
-                boolean validSubwfrChoice = subwfrcchoice != subwfrdefnam;
+                boolean validAmpChoice = ampChoice != 20;
 
                 if (validAmpChoice && !validSourceChoice && !validSubwfrChoice) {
                         m_pf.linkAmpPaths();
@@ -142,7 +148,9 @@ public class AutoFactory implements Logged {
                 }
 
                 if (!validAmpChoice && !validSourceChoice && validSubwfrChoice) {
+                        m_pf.linkSbwfrPaths();
                         validChoice = true;
+                        finalChoice = subwfrchoice;
                 }
 
                 SmartDashboard.putBoolean("Auto//Valid Auto Start Choice", validChoice);
@@ -153,6 +161,33 @@ public class AutoFactory implements Logged {
         public Command finalCommand(int choice) {
 
                 switch ((choice)) {
+
+                        case 1:
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
+                                                sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot);
+                        case 2:
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
+                                                sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot);
+
+                        case 3:
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
+                                                sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot);
+
+                        case 4:
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
+                                                sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot);
+
+                        case 5:
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
+                                                sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToCenter3,
+                                                sbwfrpaths.Center3ToWing2, sbwfrpaths.Wing3ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot);
 
                         case 11:
                                 return new AutoSourceShootThenCenter(m_cf, m_pf,

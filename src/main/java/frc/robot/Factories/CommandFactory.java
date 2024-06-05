@@ -11,6 +11,7 @@ import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -20,13 +21,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Pref;
-import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenterPathfind;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenterVision;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -52,7 +48,6 @@ public class CommandFactory implements Logged {
 
         private final LimelightVision m_llv;
 
-
         private final ShootingData m_sd;
 
         @Log.NT(key = "startpose")
@@ -61,6 +56,8 @@ public class CommandFactory implements Logged {
         public boolean innerNoteFirst;
 
         public int testNotesRun;
+
+        private int testIn;
 
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer,
@@ -72,7 +69,6 @@ public class CommandFactory implements Logged {
                 m_transfer = transfer;
                 m_llv = llv;
 
-           
                 m_sd = sd;
 
         }
@@ -141,9 +137,14 @@ public class CommandFactory implements Logged {
 
         // @Log.NT(key = "dointakecommand")
         public Command doIntake() {
-                return Commands.parallel(
-                                m_intake.startIntakeCommand(),
+                SmartDashboard.putNumber("IntakeCt", testIn++);
+                return Commands.sequence(
+                        
                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
+
+
+                                m_intake.startIntakeCommand(),
+
                                 new TransferIntakeToSensor(m_transfer, m_intake, 3));
         }
 

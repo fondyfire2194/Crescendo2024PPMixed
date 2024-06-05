@@ -54,8 +54,11 @@ public class Robot extends TimedRobot implements Logged {
 
   private int canivorectr;
 
+  private double startupTimeSeconds;
+
   @Override
   public void robotInit() {
+    startTime = Timer.getFPGATimestamp();
 
     if (RobotBase.isReal()) {
       DriverStation.startDataLog(DataLogManager.getLog());
@@ -106,7 +109,7 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_pf.sourceFilesOK = m_robotContainer.m_pf.checkSourceFilesExist();
 
-    double startupTimeSeconds = Timer.getFPGATimestamp() - startTime;
+    startupTimeSeconds = Timer.getFPGATimestamp() - startTime;
     DataLogManager.log("Startup Time (ms): " + startupTimeSeconds * 1000.0);
 
   }
@@ -173,8 +176,8 @@ public class Robot extends TimedRobot implements Logged {
         + brakeOffTime) {
       m_robotContainer.m_swerve.setIdleMode(false);
     }
-
-    m_robotContainer.checkAutoSelectLoop.poll();
+    if (Timer.getFPGATimestamp() > startupTimeSeconds + 5)
+      m_robotContainer.checkAutoSelectLoop.poll();
 
   }
 
@@ -206,20 +209,20 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-   // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+    // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
     // m_robotContainer.m_transfer.skipSecondNoteInSim = true;
 
-    if (m_robotContainer.m_af.finalChoice == 0 && m_robotContainer.m_af.validChoice)
-      m_autonomousCommand = m_robotContainer.m_af.m_subwfrStartChooser.getSelected();
-    else
+    if (m_robotContainer.m_af.validChoice) {
+
       m_autonomousCommand = m_robotContainer.m_af.getAutonomousCommand();
 
-    SmartDashboard.putString("Auto//AUTOCMS", m_autonomousCommand.toString());
-    SmartDashboard.putBoolean("Auto//AutoHasRun", autoHasRun);
-    if (!autoHasRun && Timer.getFPGATimestamp() > startTime + m_startDelay
-        && m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-      autoHasRun = true;
+      SmartDashboard.putString("Auto//AUTOCMS", m_autonomousCommand.toString());
+      SmartDashboard.putBoolean("Auto//AutoHasRun", autoHasRun);
+      if (!autoHasRun && Timer.getFPGATimestamp() > startTime + m_startDelay
+          && m_autonomousCommand != null) {
+        m_autonomousCommand.schedule();
+        autoHasRun = true;
+      }
     }
   }
 

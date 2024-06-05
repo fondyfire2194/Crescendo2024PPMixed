@@ -122,6 +122,8 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     @Log.NT(key = "currentgoalrads")
     private double currentGoalRads;
 
+    private int testIn;
+
     public ArmSubsystem() {
         super(
                 new ProfiledPIDController(
@@ -291,32 +293,23 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     }
 
     public Command setGoalCommand(double anglerads) {
-        double temp = anglerads;
-        if (anglerads > ArmConstants.armMaxRadians)
-            temp = ArmConstants.armMaxRadians;
-        if (anglerads < ArmConstants.armMinRadians)
-            temp = ArmConstants.armMinRadians;
-        currentGoalRads = temp;
-        return Commands.sequence(
-                runOnce(() -> setGoal(currentGoalRads)),
-                runOnce(() -> setTolerance(ArmConstants.angleTolerance)),
-                runOnce(() -> resetController()),
-                runOnce(() -> enable()));
+
+        return Commands.runOnce(() -> setTarget(anglerads));
     }
 
-    public Command setGoalCommand(double anglerads, double toleranceRads) {
-        double temp = anglerads;
-        if (anglerads > ArmConstants.armMaxRadians)
-            temp = ArmConstants.armMaxRadians;
-        if (anglerads < ArmConstants.armMinRadians)
-            temp = ArmConstants.armMinRadians;
-        currentGoalRads = temp;
-        return Commands.sequence(
-                runOnce(() -> setGoal(currentGoalRads)),
-                runOnce(() -> angleToleranceRads = toleranceRads),
-                runOnce(() -> resetController()),
-                runOnce(() -> enable()));
-    }
+    // public Command setGoalCommand(double anglerads, double toleranceRads) {
+    // double temp = anglerads;
+    // // if (anglerads > ArmConstants.armMaxRadians)
+    // // temp = ArmConstants.armMaxRadians;
+    // // if (anglerads < ArmConstants.armMinRadians)
+    // // temp = ArmConstants.armMinRadians;
+    // currentGoalRads = temp;
+    // return Commands.sequence(
+    // runOnce(() -> setGoal(currentGoalRads)),
+    // runOnce(() -> angleToleranceRads = toleranceRads),
+    // runOnce(() -> resetController()),
+    // runOnce(() -> enable()));
+    // }
 
     public void incrementArmAngle(double valdeg) {
         double temp = getCurrentGoalRads();
