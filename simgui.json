@@ -56,18 +56,26 @@
     }
   },
   "NetworkTables": {
-    "retained": {
-      "SmartDashboard": {
-        "open": true
-      }
-    },
     "transitory": {
-      "SmartDashboard": {
+      "Monologue": {
+        "m_shooter": {
+          "open": true
+        },
         "open": true
+      },
+      "SmartDashboard": {
+        "Shooter": {
+          "open": true
+        }
       }
     }
   },
   "NetworkTables Info": {
+    "Server": {
+      "Publishers": {
+        "open": true
+      }
+    },
     "visible": true
   }
 }

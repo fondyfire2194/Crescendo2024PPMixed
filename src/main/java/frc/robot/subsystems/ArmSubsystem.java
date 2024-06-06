@@ -161,7 +161,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             setGoal(currentGoalRads);
             simAngleRads = currentGoalRads;
         }
-
+        resetController();
         pid.reset();
         setKp();
 
@@ -200,6 +200,8 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             SmartDashboard.putBoolean("Arm//OKArmMotor", armMotorConnected);
         }
 
+        SmartDashboard.putNumber("Arm/CanCdrRads", getCanCoderRad());
+        SmartDashboard.putBoolean("Arm/isenab", isEnabled());
     }
 
     private boolean checkCancoderCanOK() {

@@ -4,12 +4,11 @@
 
 package frc.robot.commands.Autos.SubwfrStart;
 
-import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -38,19 +37,22 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
 
                                 cf.setStartPosebyAlliance(FieldConstants.sbwfrStartPose),
 
-                                shoot(cf),
+                                shoot(cf, Constants.subwfrArmAngle, Constants.subwfrShooterSpeed),
 
                                 moveAndPickup(swerve, path1, cf, pf),
 
-                                moveandshoot(swerve, path2, cf, pf),
+                                moveandshoot(swerve, path2, cf, pf, Constants.subwfrArmAngle,
+                                                Constants.subwfrShooterSpeed),
 
                                 moveAndPickup(swerve, path3, cf, pf),
 
-                                moveandshoot(swerve, path4, cf, pf),
+                                moveandshoot(swerve, path4, cf, pf, Constants.subwfrArmAngle,
+                                                Constants.subwfrShooterSpeed),
 
                                 moveAndPickup(swerve, path5, cf, pf),
 
-                                moveandshoot(swerve, path6, cf, pf),
+                                moveandshoot(swerve, path6, cf, pf, Constants.subwfrArmAngle,
+                                                Constants.subwfrShooterSpeed),
 
                                 cf.resetAll());
 
@@ -71,24 +73,62 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
 
                                 cf.setStartPosebyAlliance(FieldConstants.sbwfrStartPose),
 
-                                shoot(cf),
+                                shoot(cf, Constants.subwfrArmAngle, Constants.subwfrShooterSpeed),
 
                                 moveAndPickup(swerve, path1, cf, pf),
 
-                                moveandshoot(swerve, path2, cf, pf),
+                                moveandshoot(swerve, path2, cf, pf, Constants.subwfrArmAngle,
+                                                Constants.subwfrShooterSpeed),
 
                                 moveAndPickup(swerve, path3, cf, pf),
 
-                                moveandshoot(swerve, path4, cf, pf),
+                                moveandshoot(swerve, path4, cf, pf, Constants.subwfrArmAngle,
+                                                Constants.subwfrShooterSpeed),
 
                                 cf.resetAll());
 
         }
 
-        private Command shoot(CommandFactory cf) {
+        public AutoSbwfrShootThenSequence(
+                        CommandFactory cf,
+                        PathFactory pf, SwerveSubsystem swerve,
+                        sbwfrpaths path1,
+                        sbwfrpaths path2,
+                        sbwfrpaths path3,
+                        sbwfrpaths path4,
+                        sbwfrpaths path5) {
+
+                addCommands(
+                                // shoot first note
+                                Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
+
+                                cf.setStartPosebyAlliance(FieldConstants.sbwfrStartPose),
+
+                                shoot(cf, Constants.subwfrArmAngle, Constants.subwfrShooterSpeed),
+
+                                moveAndPickup(swerve, path1, cf, pf),
+
+                                shoot(cf, Constants.wing2ArmAngle, Constants.wing2ShooterSpeed),
+
+                                moveAndPickup(swerve, path2, cf, pf),
+
+                                moveandshoot(swerve, path3, cf, pf, Constants.wing2ArmAngle,
+                                                Constants.wing2ShooterSpeed),
+
+                                moveAndPickup(swerve, path4, cf, pf),
+
+                                shoot(cf, Constants.wing3ArmAngle, Constants.wing3ShooterSpeed),
+
+                                moveAndPickup(swerve, path5, cf, pf),
+
+                                shoot(cf, Constants.wing1ArmAngle, Constants.wing1ShooterSpeed),
+
+                                cf.resetAll());
+        }
+
+        private Command shoot(CommandFactory cf, double angle, double rpm) {
                 return Commands.sequence(
-                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed),
+                                cf.positionArmRunShooterSpecialCase(angle, rpm),
                                 cf.transferNoteToShooterCommand());
         }
 
@@ -98,19 +138,19 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
                                 new RunPPath(swerve,
                                                 pf.pathMaps.get(path.name())),
                                 Commands.sequence(
-                                                Commands.waitSeconds(1),
+                                                Commands.waitSeconds(.25),
                                                 cf.doIntake()));
 
         }
 
-        private Command moveandshoot(SwerveSubsystem swerve, sbwfrpaths path, CommandFactory cf, PathFactory pf) {
+        private Command moveandshoot(SwerveSubsystem swerve, sbwfrpaths path, CommandFactory cf, PathFactory pf,
+                        double angle, double rpm) {
 
                 return Commands.sequence(
                                 Commands.parallel(
                                                 new RunPPath(swerve, pf.pathMaps.get(path.name())),
                                                 cf.positionArmRunShooterSpecialCase(
-                                                                Constants.subwfrArmAngle,
-                                                                Constants.subwfrShooterSpeed)),
+                                                                angle, rpm)),
                                 cf.transferNoteToShooterCommand());
         }
 

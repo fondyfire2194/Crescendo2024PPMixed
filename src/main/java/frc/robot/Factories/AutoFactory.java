@@ -186,8 +186,8 @@ public class AutoFactory implements Logged {
                         case 5:
                                 return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
                                                 sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToCenter3,
-                                                sbwfrpaths.Center3ToWing2, sbwfrpaths.Wing3ToSubwfrShoot,
-                                                sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot);
+                                                sbwfrpaths.Center3ToWing2, sbwfrpaths.QuickToNote3,
+                                                 sbwfrpaths.Quick3ToNote1);
 
                         case 11:
                                 return new AutoSourceShootThenCenter(m_cf, m_pf,

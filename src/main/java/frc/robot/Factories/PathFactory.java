@@ -108,6 +108,8 @@ public class PathFactory {
         Wing2ToSubwfrShoot,
         Wing3ToSubwfrShoot,
         Wing2ToCenter3,
+        QuickToNote3,
+        Quick3ToNote1,
         Center3ToWing2
     }
 

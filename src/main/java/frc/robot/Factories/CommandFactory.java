@@ -89,7 +89,7 @@ public class CommandFactory implements Logged {
 
                                 () -> Commands.sequence(
                                                 Commands.runOnce(() -> m_transfer.lobbing = lob),
-                                                Commands.runOnce(() -> m_arm.resetController()),
+                                                // Commands.runOnce(() -> m_arm.resetController()),
                                                 Commands.runOnce(() -> m_arm.enable())),
 
                                 () -> {
@@ -139,9 +139,8 @@ public class CommandFactory implements Logged {
         public Command doIntake() {
                 SmartDashboard.putNumber("IntakeCt", testIn++);
                 return Commands.sequence(
-                        
-                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
 
+                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
 
                                 m_intake.startIntakeCommand(),
 
@@ -197,12 +196,9 @@ public class CommandFactory implements Logged {
 
         public Command doAmpShot() {
                 return Commands.sequence(
+                                m_arm.setGoalCommand(Units.degreesToRadians(90)),
                                 m_shooter.startShooterCommand(
                                                 Pref.getPref("AmpTopRPM"), Pref.getPref("AmpBottomRPM")),
-                                m_arm.setGoalCommand(ArmConstants.armMinRadians),
-                                Commands.waitUntil(() -> m_arm.getAtSetpoint()),
-                                Commands.runOnce(() -> m_arm.setUseMotorEncoder(true)),
-                                m_arm.setGoalCommand(Units.degreesToRadians(90)),
                                 Commands.waitUntil(() -> m_arm.getAtSetpoint()),
                                 m_arm.setGoalCommand(Units.degreesToRadians(Pref.getPref("AmpArmDegrees"))),
                                 Commands.waitUntil(() -> m_arm.getAtSetpoint()),
@@ -214,12 +210,12 @@ public class CommandFactory implements Logged {
                                                                                 Units.degreesToRadians(Pref.getPref(
                                                                                                 "AmpArmDegrees"))
                                                                                                 + Units.degreesToRadians(
-                                                                                                                Pref.getPref("AmpDegreeIncrement")))),
-                                                new WaitCommand(1)),
+                                                                                                                Pref.getPref("AmpDegreeIncrement"))),
+                                                                new WaitCommand(2))),
+
                                 Commands.parallel(
                                                 m_shooter.stopShooterCommand(),
-                                                m_arm.setGoalCommand(ArmConstants.armMinRadians),
-                                                Commands.none().until(() -> m_arm.getAtSetpoint())),
-                                Commands.runOnce(() -> m_arm.setUseMotorEncoder(false)));
+                                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians)));
+
         }
 }
