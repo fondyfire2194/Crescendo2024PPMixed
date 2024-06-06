@@ -10,9 +10,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.CameraConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.LLPipelines;
 
 public class AlignToNote extends Command {
   /** Creates a new AlignToTagSetShootSpeed. */
@@ -28,13 +30,12 @@ public class AlignToNote extends Command {
 
   private final SwerveSubsystem m_swerve;
   private final String m_camname;
-  private final LimelightVision m_llv;
+
 
   private double rotationVal;
 
   public AlignToNote(
       SwerveSubsystem swerve,
-      LimelightVision llv,
       String camname,
       DoubleSupplier translationSup,
       DoubleSupplier strafeSup,
@@ -42,7 +43,6 @@ public class AlignToNote extends Command {
 
   {
     m_swerve = swerve;
-    m_llv = llv;
     m_camname = camname;
     this.translationSup = translationSup;
     this.strafeSup = strafeSup;
@@ -53,8 +53,7 @@ public class AlignToNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-
-    m_llv.setRearNoteDetectorPipeline();
+   LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, LLPipelines.pipelines.NOTEDETECT1.ordinal());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

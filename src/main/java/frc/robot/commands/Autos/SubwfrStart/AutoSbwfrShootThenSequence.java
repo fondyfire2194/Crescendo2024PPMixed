@@ -6,6 +6,7 @@ package frc.robot.commands.Autos.SubwfrStart;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
@@ -13,6 +14,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
+import frc.robot.commands.Drive.CheckOKSwitchToDrive;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.AllianceUtil;
@@ -22,7 +24,8 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
 
         public AutoSbwfrShootThenSequence(
                         CommandFactory cf,
-                        PathFactory pf, SwerveSubsystem swerve,
+                        PathFactory pf,
+                        SwerveSubsystem swerve,
                         sbwfrpaths path1,
                         sbwfrpaths path2,
                         sbwfrpaths path3,
@@ -60,7 +63,8 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
 
         public AutoSbwfrShootThenSequence(
                         CommandFactory cf,
-                        PathFactory pf, SwerveSubsystem swerve,
+                        PathFactory pf,
+                        SwerveSubsystem swerve,
                         sbwfrpaths path1,
                         sbwfrpaths path2,
                         sbwfrpaths path3,
@@ -91,7 +95,8 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
 
         public AutoSbwfrShootThenSequence(
                         CommandFactory cf,
-                        PathFactory pf, SwerveSubsystem swerve,
+                        PathFactory pf,
+                        SwerveSubsystem swerve,
                         sbwfrpaths path1,
                         sbwfrpaths path2,
                         sbwfrpaths path3,
@@ -110,7 +115,7 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
 
                                 shoot(cf, Constants.wing2ArmAngle, Constants.wing2ShooterSpeed),
 
-                                moveAndPickup(swerve, path2, cf, pf),
+                                moveAndPickupWithVision(swerve, path2, cf, pf),
 
                                 moveandshoot(swerve, path3, cf, pf, Constants.wing2ArmAngle,
                                                 Constants.wing2ShooterSpeed),
@@ -133,19 +138,27 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
         }
 
         private Command moveAndPickup(SwerveSubsystem swerve, sbwfrpaths path, CommandFactory cf, PathFactory pf) {
-
                 return Commands.parallel(
                                 new RunPPath(swerve,
                                                 pf.pathMaps.get(path.name())),
                                 Commands.sequence(
                                                 Commands.waitSeconds(.25),
                                                 cf.doIntake()));
+        }
 
+        private Command moveAndPickupWithVision(SwerveSubsystem swerve, sbwfrpaths path, CommandFactory cf,
+                        PathFactory pf) {
+                return new ParallelRaceGroup(
+                                new CheckOKSwitchToDrive(swerve, 1.1),
+                                new RunPPath(swerve,
+                                                pf.pathMaps.get(path.name())),
+                                Commands.sequence(
+                                                Commands.waitSeconds(.25),
+                                                cf.doIntake()));
         }
 
         private Command moveandshoot(SwerveSubsystem swerve, sbwfrpaths path, CommandFactory cf, PathFactory pf,
                         double angle, double rpm) {
-
                 return Commands.sequence(
                                 Commands.parallel(
                                                 new RunPPath(swerve, pf.pathMaps.get(path.name())),
@@ -153,5 +166,4 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
                                                                 angle, rpm)),
                                 cf.transferNoteToShooterCommand());
         }
-
 }

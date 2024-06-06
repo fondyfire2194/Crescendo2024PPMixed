@@ -46,8 +46,6 @@ public class CommandFactory implements Logged {
 
         private final ArmSubsystem m_arm;
 
-        private final LimelightVision m_llv;
-
         private final ShootingData m_sd;
 
         @Log.NT(key = "startpose")
@@ -61,16 +59,13 @@ public class CommandFactory implements Logged {
 
         public CommandFactory(SwerveSubsystem swerve, ShooterSubsystem shooter, ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer,
-                        LimelightVision llv, ShootingData sd) {
+                        ShootingData sd) {
                 m_swerve = swerve;
                 m_shooter = shooter;
                 m_arm = arm;
                 m_intake = intake;
                 m_transfer = transfer;
-                m_llv = llv;
-
                 m_sd = sd;
-
         }
 
         public Command autopickup(Pose2d targetPose) {

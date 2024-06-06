@@ -87,15 +87,11 @@ public class RobotContainer implements Logged {
 
         public final PathFactory m_pf;// = new PathFactory(m_swerve);
 
-        public final CommandFactory m_cf;// = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
-        // m_llv, m_sd);
+        public final CommandFactory m_cf;
 
-        public final AutoFactory m_af;// = new AutoFactory(m_pf, m_cf, m_swerve, m_shooter, m_arm, m_intake,
-                                      // m_transfer,
-        // m_llv);
+        public final AutoFactory m_af;
 
-        public final TriggerCommandFactory m_tcf;// = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
-        // m_llv, m_pf, m_cf);
+        public final TriggerCommandFactory m_tcf;
 
         BooleanSupplier keepAngle;
 
@@ -120,15 +116,13 @@ public class RobotContainer implements Logged {
 
                 m_pf = new PathFactory(m_swerve);
 
-                m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer,
-                                m_llv, m_sd);
+                m_cf = new CommandFactory(m_swerve, m_shooter, m_arm, m_intake, m_transfer, m_sd);
 
                 registerNamedCommands();
-                m_af = new AutoFactory(m_pf, m_cf, m_swerve, m_shooter, m_arm, m_intake, m_transfer,
-                                m_llv);
+                m_af = new AutoFactory(m_pf, m_cf, m_swerve, m_shooter, m_arm, m_intake, m_transfer);
 
                 m_tcf = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
-                                m_llv, m_pf, m_cf);
+                                m_pf, m_cf);
                 if (RobotBase.isReal()) {
                         // Pref.deleteUnused();
                         Pref.addMissing();
@@ -273,16 +267,15 @@ public class RobotContainer implements Logged {
                 // pick up notes with vision align
                 driver.rightBumper().and(driver.a()).onTrue(
                                 Commands.sequence(
-                                             //   m_cf.doIntake(),
-                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
-                                                 Commands.none().until(() -> m_arm.getAtSetpoint()),
+                                                // m_cf.doIntake(),
+                                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
+                                                Commands.none().until(() -> m_arm.getAtSetpoint()),
                                                 // m_intake.startIntakeCommand(),
                                                 Commands.deadline(
                                                                 new TransferIntakeToSensor(m_transfer,
                                                                                 m_intake, 120),
                                                                 new AlignToNote(
                                                                                 m_swerve,
-                                                                                m_llv,
                                                                                 CameraConstants.rearCamera.camname,
                                                                                 () -> -driver.getLeftY(),
                                                                                 () -> driver.getLeftX(),
@@ -394,9 +387,9 @@ public class RobotContainer implements Logged {
                 // KEEP IN BUTTON ORDER
                 // jogs are in case note gets stuck
 
-                 setup.leftTrigger().whileTrue(m_cf.doIntake());
+                setup.leftTrigger().whileTrue(m_cf.doIntake());
 
-                 setup.leftBumper().whileTrue(m_arm.setGoalCommand(1));
+                setup.leftBumper().whileTrue(m_arm.setGoalCommand(1));
 
                 // setup.rightTrigger().whileTrue(new JogTransfer(m_transfer, setup));
 

@@ -13,6 +13,7 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.LLPipelines;
 
 public class CheckOKSwitchToDrive extends Command {
   /**
@@ -22,7 +23,7 @@ public class CheckOKSwitchToDrive extends Command {
    * Otherwise let paralle path run out and try to pickup note
    */
   private final SwerveSubsystem m_swerve;
-  private final LimelightVision m_llv;
+
   private final double m_switchoverDistance;
 
   private boolean noteSeen;
@@ -31,10 +32,9 @@ public class CheckOKSwitchToDrive extends Command {
 
   public CheckOKSwitchToDrive(
       SwerveSubsystem swerve,
-      LimelightVision llv,
       double switchOverDistance) {
     m_swerve = swerve;
-    m_llv = llv;
+
     m_switchoverDistance = switchOverDistance;
   }
 
@@ -42,7 +42,7 @@ public class CheckOKSwitchToDrive extends Command {
   @Override
   public void initialize() {
 
-    m_llv.setRearNoteDetectorPipeline();
+    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, LLPipelines.pipelines.NOTEDETECT1.ordinal());
 
     redAlliance = DriverStation.getAlliance().isPresent() &&
         DriverStation.getAlliance().get() == Alliance.Red;

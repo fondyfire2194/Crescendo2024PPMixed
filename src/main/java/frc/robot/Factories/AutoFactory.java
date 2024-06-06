@@ -16,7 +16,6 @@ import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenterVision;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
@@ -61,19 +60,15 @@ public class AutoFactory implements Logged {
 
         private final TransferSubsystem m_transfer;
 
-        private final LimelightVision m_llv;
-
         private CommandFactory m_cf;
 
         public boolean validChoice;
 
         public AutoFactory(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve, ShooterSubsystem shooter,
                         ArmSubsystem arm,
-                        IntakeSubsystem intake, TransferSubsystem transfer,
-                        LimelightVision llv) {
+                        IntakeSubsystem intake, TransferSubsystem transfer) {
                 m_pf = pf;
                 m_cf = cf;
-                m_llv = llv;
                 m_swerve = swerve;
                 m_transfer = transfer;
                 m_intake = intake;
@@ -183,7 +178,7 @@ public class AutoFactory implements Logged {
                                 return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
                                                 sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToCenter3,
                                                 sbwfrpaths.Center3ToWing2, sbwfrpaths.QuickToNote3,
-                                                 sbwfrpaths.Quick3ToNote1);
+                                                sbwfrpaths.Quick3ToNote1);
 
                         case 11:
                                 return new AutoSourceShootThenCenter(m_cf, m_pf,
@@ -198,7 +193,7 @@ public class AutoFactory implements Logged {
                                                 m_swerve, true);
                         case 14:
                                 return new AutoSourceThenCenterVision(m_cf, m_pf,
-                                                m_swerve, m_llv, m_intake, m_transfer, true);
+                                                m_swerve, m_intake, m_transfer, true);
 
                         case 21:
                                 return new AutoAmpShootThenCenter(m_cf, m_pf,

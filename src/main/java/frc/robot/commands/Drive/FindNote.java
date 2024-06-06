@@ -50,7 +50,7 @@ public class FindNote extends Command {
     travelLimit = m_maxTravel;
     if (AllianceUtil.isRedAlliance())
       travelLimit = -travelLimit;
-    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTE_DETECT8.ordinal());
+    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTEDETECT1.ordinal());
     startDegrees = m_swerve.getYaw().getDegrees();
     SmartDashboard.putNumber("FindNote/ROTSStart", startDegrees);
     endDegrees = (startDegrees + travelLimit) % 360;

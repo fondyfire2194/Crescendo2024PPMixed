@@ -18,7 +18,6 @@ import frc.robot.commands.Drive.FindNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
@@ -31,7 +30,6 @@ public class TriggerCommandFactory implements Logged {
         private final SwerveSubsystem m_swerve;
         private final IntakeSubsystem m_intake;
         private final TransferSubsystem m_transfer;
-        private final LimelightVision m_llv;
         private final PathFactory m_pf;
         private final CommandFactory m_cf;
 
@@ -64,11 +62,10 @@ public class TriggerCommandFactory implements Logged {
         public boolean ampActive = false;
 
         public TriggerCommandFactory(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,
-                        LimelightVision llv, PathFactory pf, CommandFactory cf) {
+                        PathFactory pf, CommandFactory cf) {
                 m_swerve = swerve;
                 m_intake = intake;
                 m_transfer = transfer;
-                m_llv = llv;
                 m_pf = pf;
                 m_cf = cf;
         }
@@ -319,8 +316,8 @@ public class TriggerCommandFactory implements Logged {
                                                 new DriveToPickupNote(m_swerve, m_transfer, m_intake,
                                                                 CameraConstants.rearCamera.camname,
                                                                 false, 3)),
-                                 m_cf.autopickup(AllianceUtil.getAmpClearStagePose()),
-                                                m_cf.autopickup(AllianceUtil.getAmpShootPose()),
+                                m_cf.autopickup(AllianceUtil.getAmpClearStagePose()),
+                                m_cf.autopickup(AllianceUtil.getAmpShootPose()),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.autostep = endit),
                                                 Commands.runOnce(() -> trig4 = true),

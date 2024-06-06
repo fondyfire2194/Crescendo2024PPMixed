@@ -50,7 +50,7 @@ public class DriveToPickupNote extends Command {
   @Override
   public void initialize() {
 
-    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTE_DETECT8.ordinal());
+    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTEDETECT1.ordinal());
 
     elapsedTime.reset();
     elapsedTime.start();

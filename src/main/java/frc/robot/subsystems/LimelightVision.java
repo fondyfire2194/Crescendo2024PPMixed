@@ -6,17 +6,13 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.LimelightHelpers;
-import frc.robot.utils.LLPipelines;
+import frc.robot.utils.LLPipelines.pipelines;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -51,7 +47,7 @@ public class LimelightVision extends SubsystemBase implements Logged {
   public LimelightVision() {
 
     if (CameraConstants.rearCamera.isUsed)
-      setRearNoteDetectorPipeline();
+      LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTEDETECT1.ordinal());
 
     if (CameraConstants.frontLeftCamera.isUsed)
       setCamToRobotOffset(CameraConstants.frontLeftCamera);
@@ -126,156 +122,11 @@ public class LimelightVision extends SubsystemBase implements Logged {
     SmartDashboard.putBoolean("LL//CamsOK", allcamsok);
   }
 
-  public void setAprilTag_ALL_Pipeline() {
-    LimelightHelpers.setPipelineIndex(CameraConstants.frontLeftCamera.camname,
-        LLPipelines.pipelines.APRILTAGALL0.ordinal());
-    LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,
-        LLPipelines.pipelines.APRILTAGALL0.ordinal());
-  }
-
-  public void setAprilTagStartPipeline() {
-    LimelightHelpers.setPipelineIndex(CameraConstants.frontLeftCamera.camname,
-        LLPipelines.pipelines.APRILTAGSTART1.ordinal());
-    LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,
-        LLPipelines.pipelines.APRILTAGSTART1.ordinal());
-  }
-
-  public void setRearNoteDetectorPipeline() {
-    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname,
-        LLPipelines.pipelines.NOTE_DETECT8.ordinal());
-  }
-
-  public void setAlignSpeakerPipeline() {
-    LimelightHelpers.setPipelineIndex(CameraConstants.frontLeftCamera.camname,
-        LLPipelines.pipelines.APRILTAGALIGN5.ordinal());
-  }
-
-  @Log.NT(key = "noteseen")
-  public boolean getNoteSeen() {
-    return LimelightHelpers.getTV(CameraConstants.rearCamera.camname);
-  }
-  @Log.NT(key = "noteseenangle")
-  public double getNoteSeenTx() {
-    return LimelightHelpers.getTX(CameraConstants.rearCamera.camname);
-  }
-
-  public int getTagId(CameraConstants.CameraValues cam) {
-    return (int) LimelightHelpers.getFiducialID(cam.camname);
-  }
-
-  public boolean getTV(CameraConstants.CameraValues cam) {
-    return LimelightHelpers.getTV(cam.camname);
-  }
-
-  public Pose3d getTagPose3d(CameraConstants.CameraValues cam) {
-    int tagID = (int) LimelightHelpers.getFiducialID(cam.camname);
-    Optional<Pose3d> aprilTagPose = Constants.AprilTagConstants.layout.getTagPose(tagID);
-    if (aprilTagPose.isPresent())
-      return aprilTagPose.get();
-    else
-      return new Pose3d();
-  }
-
-  public Pose3d getAnyTagPose3d(int tagID) {
-    Optional<Pose3d> aprilTagPose = Constants.AprilTagConstants.layout.getTagPose(tagID);
-    if (aprilTagPose.isPresent())
-      return aprilTagPose.get();
-    else
-      return new Pose3d();
-  }
-
-  public double getDistanceFromTag(CameraConstants.CameraValues cam) {
-    int tagID = (int) LimelightHelpers.getFiducialID(cam.camname);
-    return getTranslationFromTag(cam, tagID).getNorm();
-  }
-
-  public double getDistanceFromSpeakerTag(CameraConstants.CameraValues cam) {
-    int tagID = (int) LimelightHelpers.getFiducialID(cam.camname);
-    return getTranslationFromTag(cam, tagID).getNorm();
-  }
-
-  public boolean hasTarget(CameraConstants.CameraValues cam) {
-    return LimelightHelpers.getTV(cam.camname);
-  }
-
-  public double[] getTargetPoseRobotSpaceAsDoubles(CameraConstants.CameraValues cam, int id) {
-    double[] temp = new double[6];
-    if (LimelightHelpers.getTV(cam.camname) && LimelightHelpers.getFiducialID(cam.camname) == id)
-      return LimelightHelpers.getTargetPose_RobotSpace(cam.camname);
-    else
-      return temp;
-  }
-
-  public double[] getCameraPoseTargetSpaceasDoubles(CameraConstants.CameraValues cam, int id) {
-    double[] temp = new double[6];
-    if (LimelightHelpers.getTV(cam.camname) && LimelightHelpers.getFiducialID(cam.camname) == id)
-      return LimelightHelpers.getCameraPose_TargetSpace(cam.camname);
-    else
-      return temp;
-  }
-
-  public double[] getTargetPoseCameraSpace(CameraConstants.CameraValues cam, int id) {
-    double[] temp = new double[6];
-    if (LimelightHelpers.getTV(cam.camname) && LimelightHelpers.getFiducialID(cam.camname) == id)
-      return LimelightHelpers.getTargetPose_CameraSpace(cam.camname);
-    else
-      return temp;
-  }
-
-  public Pose3d getCameraPoseTargetSpace3d(CameraConstants.CameraValues cam) {
-    return LimelightHelpers.getCameraPose3d_RobotSpace(cam.camname);
-  }
-
-  public double[] getBotPoseWPI_BlueAsDoubles(CameraConstants.CameraValues cam) {
-    return LimelightHelpers.getBotPose_wpiBlue(cam.camname);
-  }
-
-  public double[] getBotPoseWPI_RedAsDoubles(CameraConstants.CameraValues cam) {
-    return LimelightHelpers.getBotPose_wpiRed(cam.camname);
-  }
-
-  public Pose3d getBotPose3d(CameraConstants.CameraValues cam) {
-    return LimelightHelpers.getBotPose3d(cam.camname);
-  }
-
-  public Pose3d getBotPose3dTargetSpace(CameraConstants.CameraValues cam) {
-    return LimelightHelpers.getBotPose3d_TargetSpace(cam.camname);
-  }
-
-  public Pose3d getTagPose(CameraConstants.CameraValues cam) {
-    int tagID = (int) LimelightHelpers.getFiducialID(cam.camname);
-    // SmartDashboard.putNumber("SHID", tagID);
-    Optional<Pose3d> aprilTagPose = Constants.AprilTagConstants.layout.getTagPose(tagID);
-    if (aprilTagPose.isPresent())
-      return aprilTagPose.get();
-    else
-      return new Pose3d();
-  }
-
+ 
   public void setCamToRobotOffset(CameraConstants.CameraValues cam) {
     LimelightHelpers.setCameraPose_RobotSpace(cam.camname, cam.forward, cam.side, cam.up, cam.roll, cam.pitch, cam.yaw);
   }
 
-  public Translation2d getTranslationFromTag(CameraConstants.CameraValues cam, int tagid) {
-
-    Optional<Pose3d> aprilTagPose = Constants.AprilTagConstants.layout.getTagPose(tagid);
-
-    if (aprilTagPose.isPresent()) {
-
-      Pose2d tagPose2d = aprilTagPose.get().toPose2d();
-
-      // // get botpose from limelight networktables
-
-      Pose2d botPose2d = LimelightHelpers.getBotPose2d_wpiBlue(cam.camname);
-
-      Translation2d botToTagTranslation2d = botPose2d.getTranslation().minus(tagPose2d.getTranslation());
-
-      return botToTagTranslation2d;
-
-    } else
-
-      return new Translation2d();
-  }
 
   public static double round2dp(double number, int dp) {
     double temp = Math.pow(10, dp);
@@ -283,13 +134,4 @@ public class LimelightVision extends SubsystemBase implements Logged {
     return temp1 / temp;
   }
 
-  public Translation2d getAllianceSpeakerTranslation() {
-    int tagid = 3;
-    var alliance = DriverStation.getAlliance();
-    if (alliance.isPresent() &&
-        alliance.get() == DriverStation.Alliance.Blue)
-      tagid = 7;
-    return getAnyTagPose3d(tagid).toPose2d().getTranslation();
-
-  }
 }

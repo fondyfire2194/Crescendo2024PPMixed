@@ -17,7 +17,6 @@ import frc.robot.commands.Drive.CheckOKSwitchToDrive;
 import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 
@@ -30,7 +29,6 @@ public class AutoSourceThenCenterVision extends SequentialCommandGroup {
                         CommandFactory cf,
                         PathFactory pf,
                         SwerveSubsystem swerve,
-                        LimelightVision llv,
                         IntakeSubsystem intake,
                         TransferSubsystem transfer,
                         boolean innerNoteFirst) {
@@ -39,7 +37,7 @@ public class AutoSourceThenCenterVision extends SequentialCommandGroup {
                                 // shoot first note
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                 new ParallelRaceGroup(
-                                                new CheckOKSwitchToDrive(swerve, llv, 1.1),
+                                                new CheckOKSwitchToDrive(swerve, 1.1),
                                                 Commands.either(
                                                                 new RunPPath(swerve,
                                                                                 pf.pathMaps.get(
