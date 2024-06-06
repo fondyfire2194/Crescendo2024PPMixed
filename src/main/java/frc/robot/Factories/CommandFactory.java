@@ -84,14 +84,10 @@ public class CommandFactory implements Logged {
         }
 
         public Command positionArmRunShooterByDistance(boolean lob, boolean endAtTargets) {
-
                 return new FunctionalCommand(
-
                                 () -> Commands.sequence(
                                                 Commands.runOnce(() -> m_transfer.lobbing = lob),
-                                                // Commands.runOnce(() -> m_arm.resetController()),
                                                 Commands.runOnce(() -> m_arm.enable())),
-
                                 () -> {
                                         if (lob) {
                                                 m_shooter.startShooter(

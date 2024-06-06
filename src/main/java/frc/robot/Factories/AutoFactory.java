@@ -4,8 +4,6 @@
 
 package frc.robot.Factories;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -77,19 +75,17 @@ public class AutoFactory implements Logged {
                 m_cf = cf;
                 m_llv = llv;
                 m_swerve = swerve;
-
                 m_transfer = transfer;
                 m_intake = intake;
 
                 minsbwfrauto = 1;
                 m_subwfrStartChooser.setDefaultOption("Not Used", 0);
-                m_subwfrStartChooser.addOption("2-1-3", 1);
-                m_subwfrStartChooser.addOption("2-3-1", 2);
-                m_subwfrStartChooser.addOption("2-3", 3);
-                m_subwfrStartChooser.addOption("2-1", 4);
-                m_subwfrStartChooser.addOption("2-C3-1", 5);
-
-                maxsbwfrauto = 4;
+                m_subwfrStartChooser.addOption("        W2-W1-W3", 1);
+                m_subwfrStartChooser.addOption("W2-W3-W1", 2);
+                m_subwfrStartChooser.addOption("W2-W3", 3);
+                m_subwfrStartChooser.addOption("W2-W1", 4);
+                m_subwfrStartChooser.addOption("W2-C3-W1", 5);
+                maxsbwfrauto = 5;
 
                 minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
@@ -98,11 +94,11 @@ public class AutoFactory implements Logged {
                 m_sourceStartChooser.addOption("C4 Pathfind Then C5", 13);
                 m_sourceStartChooser.addOption("C4 Vision Then C5", 14);
                 maxsourceauto = 14;
+
                 minampauto = 21;
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("Shoot C2 then C1", 21);
                 m_ampStartChooser.addOption("Shoot C1 then C2", 22);
-
                 maxampauto = 22;
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);

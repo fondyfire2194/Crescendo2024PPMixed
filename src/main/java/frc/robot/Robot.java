@@ -148,7 +148,6 @@ public class Robot extends TimedRobot implements Logged {
     CommandScheduler.getInstance().cancelAll();
     autoHasRun = false;
     m_robotContainer.m_arm.disable();
-    m_robotContainer.m_arm.enableArm = false;
     if (m_robotContainer.m_arm.getCanCoderDeg() < 26)
       m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kCoast);
 
@@ -190,8 +189,7 @@ public class Robot extends TimedRobot implements Logged {
   public void autonomousInit() {
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
     m_robotContainer.m_arm.enable();
-    m_robotContainer.m_arm.enableArm = true;
-
+  
     LimelightHelpers.setPipelineIndex(CameraConstants.frontLeftCamera.camname,
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,
@@ -257,7 +255,7 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_swerve.setIdleMode(true);
     m_robotContainer.m_arm.enable();
-    m_robotContainer.m_arm.enableArm = true;
+
 
     m_robotContainer.m_shooter.stopMotors();
     m_robotContainer.m_intake.stopMotor();

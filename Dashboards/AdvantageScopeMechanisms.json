@@ -4,7 +4,7 @@
       "x": -21,
       "y": -28,
       "width": 1063,
-      "height": 567,
+      "height": 600,
       "state": {
         "sidebar": {
           "width": 319,
@@ -65,11 +65,12 @@
             "/Monologue/m_transfer",
             "/Monologue/m_llv",
             "/SmartDashboard/Climber",
-            "/Monologue/m_swerve"
+            "/Monologue/m_swerve",
+            "/SmartDashboard/Arm"
           ]
         },
         "tabs": {
-          "selected": 2,
+          "selected": 1,
           "tabs": [
             {
               "type": 0,
@@ -94,10 +95,10 @@
                     {
                       "key": "NT:/Monologue/m_arm/armrads",
                       "color": "#e5b31b",
-                      "show": true
+                      "show": false
                     },
                     {
-                      "key": "NT:/Monologue/m_arm/currentgoalrads",
+                      "key": "NT:/Monologue/m_arm/armerrorrads",
                       "color": "#af2437",
                       "show": true
                     }
@@ -132,7 +133,7 @@
                     {
                       "key": "NT:/Monologue/m_arm/armamps",
                       "color": "#c0b487",
-                      "show": true
+                      "show": false
                     }
                   ]
                 }

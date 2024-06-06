@@ -27,7 +27,6 @@ public class JogArm extends Command {
   @Override
   public void initialize() {
     m_arm.disable();
-    m_arm.enableArm=false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -55,9 +54,9 @@ public class JogArm extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-     m_arm.setGoal(m_arm.getAngleRadians());
-     m_arm.enable();
-     m_arm.enableArm=false;
+    m_arm.setGoal(m_arm.getAngleRadians());
+    m_arm.resetController();
+    m_arm.enable();
   }
 
   // Returns true when the command should end.
