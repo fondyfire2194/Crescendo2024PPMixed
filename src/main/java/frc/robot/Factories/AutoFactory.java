@@ -79,7 +79,7 @@ public class AutoFactory implements Logged {
                 m_subwfrStartChooser.addOption("W2-W3-W1", 2);
                 m_subwfrStartChooser.addOption("W2-W3", 3);
                 m_subwfrStartChooser.addOption("W2-W1", 4);
-                m_subwfrStartChooser.addOption("W2-C3-W1", 5);
+                m_subwfrStartChooser.addOption("W2-C3-W3-W1", 5);
                 maxsbwfrauto = 5;
 
                 minsourceauto = 11;
