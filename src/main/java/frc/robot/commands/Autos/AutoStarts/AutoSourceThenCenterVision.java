@@ -4,11 +4,10 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
-
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -23,8 +22,6 @@ import frc.robot.subsystems.TransferSubsystem;
 /** Add your docs here. */
 public class AutoSourceThenCenterVision extends SequentialCommandGroup {
 
-        private int targetNoteNumber = 4;
-
         public AutoSourceThenCenterVision(
                         CommandFactory cf,
                         PathFactory pf,
@@ -36,24 +33,27 @@ public class AutoSourceThenCenterVision extends SequentialCommandGroup {
                 addCommands(
                                 // shoot first note
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+
+                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle - 5,
+                                                Constants.subwfrShooterSpeed),
+                                cf.transferNoteToShooterCommand(),
+                                cf.armToIntake(),
                                 new ParallelRaceGroup(
-                                                new CheckOKSwitchToDrive(swerve, 1.1),
+                                                new CheckOKSwitchToDrive(swerve, 2),
                                                 Commands.either(
                                                                 new RunPPath(swerve,
                                                                                 pf.pathMaps.get(
                                                                                                 sourcepaths.SourceToCenter4
                                                                                                                 .name())),
-                                                                Commands.parallel(
-                                                                                new RunPPath(swerve,
-                                                                                                pf.pathMaps.get(
-                                                                                                                sourcepaths.SourceShootToCenter5
-                                                                                                                                .name())),
-                                                                                Commands.runOnce(
-                                                                                                () -> targetNoteNumber = 5)),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(
+                                                                                                sourcepaths.SourceShootToCenter5
+                                                                                                                .name())),
                                                                 () -> innerNoteFirst)),
 
-                                new DriveToPickupNote(swerve, transfer, intake, CameraConstants.rearCamera.camname,
-                                                innerNoteFirst, targetNoteNumber),
+                                Commands.parallel(
+                                                new DriveToPickupNote(swerve, transfer, intake, null, true, 1),
+                                                cf.doIntake()),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> swerve.autostep = 1),
                                                 Commands.runOnce(() -> cf.innerNoteFirst = innerNoteFirst)));

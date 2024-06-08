@@ -14,6 +14,7 @@ import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
+import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
@@ -144,6 +145,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public boolean mod1connected;
   public boolean mod2connected;
   public boolean mod3connected;
+
+  // Average will be taken over the last 5 samples
+  LinearFilter distanceFilter = LinearFilter.movingAverage(5);
 
   public SwerveSubsystem() {
 
@@ -628,14 +632,13 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public double getDistanceFromTarget(boolean lob, boolean virtual) {
     if (!virtual) {
       if (lob)
-        return round2dp(AllianceUtil.getLobPose().getTranslation()
-            .getDistance(getPose().getTranslation()), 2);
+        return round2dp(distanceFilter.calculate(AllianceUtil.getLobPose().getTranslation()
+            .getDistance(getPose().getTranslation())), 2);
       else
-        return round2dp(AllianceUtil.getSpeakerPose().getTranslation()
-            .getDistance(getPose().getTranslation()), 2);
+        return round2dp(distanceFilter.calculate(AllianceUtil.getSpeakerPose().getTranslation()
+            .getDistance(getPose().getTranslation())), 2);
 
     } else
-
       return round2dp(virtualPose.getTranslation()
           .getDistance(getPose().getTranslation()), 2);
   }
@@ -850,6 +853,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public Pose2d stagePose = new Pose2d();
   @Log.NT(key = "shootingpose")
   public Pose2d poseWhenShooting = new Pose2d();
+
+  public double remainingdistance;
 
   public void setPathRunning() {
     pathRunning = true;

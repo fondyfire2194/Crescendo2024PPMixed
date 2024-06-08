@@ -64,7 +64,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     private double acceleration;
     private double lastTime;
     private double lastSpeed;
-    private double lastPosition;
+    private double lastPosition = 0;
     public double appliedVolts;
     public double armAngleRads;
     private double pidout;
@@ -182,6 +182,11 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             setGoal(armAngleRads);
         }
 
+        if (getCurrentGoalRads() > ArmConstants.armMaxRadians)
+            setGoalCommand(ArmConstants.armMaxRadians);
+        if (getCurrentGoalRads() < ArmConstants.armMinRadians)
+            setGoalCommand(ArmConstants.armMinRadians);
+
         checkCancoderCounter++;
         if (checkCancoderCounter == 10) {
             cancoderconnected = RobotBase.isSimulation() || checkCancoderCanOK();
@@ -199,10 +204,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     }
 
     private boolean checkCancoderCanOK() {
-        SmartDashboard.putNumber("CCCTR", cancdrokctr);
+        SmartDashboard.putNumber("CCC/Ctr", cancdrokctr);
         double currentPosition = getAngleDegrees();
-        SmartDashboard.putNumber("CCCp", currentPosition);
-        SmartDashboard.putNumber("CCLp", lastPosition);
+        SmartDashboard.putNumber("CCC/Cp", currentPosition);
+        SmartDashboard.putNumber("CCC/Lp", lastPosition);
         if (lastPosition == 0)
             lastPosition = currentPosition;
         if (currentPosition == lastPosition) {

@@ -31,7 +31,7 @@ public class ViewArmShooterByDistance extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    distance = 1;
+    distance = -1;
     loopctr = 0;
     endit = false;
     deg = 60;

@@ -236,15 +236,7 @@ public class RobotContainer implements Logged {
 
                 keepAngle = () -> false;
                 // align for speaker shots
-                // driver.leftTrigger().and(driver.a().negate()).whileTrue(
-                // Commands.parallel(
-                // new AlignTargetOdometry(
-                // m_swerve,
-                // () -> -driver.getLeftY(),
-                // () -> driver.getLeftX(),
-                // () -> driver.getRightX(), false),
-
-                // m_cf.positionArmRunShooterByDistance(false, false)));
+        
 
                 driver.leftTrigger().whileTrue(
                                 Commands.parallel(
@@ -253,9 +245,9 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), false),
-                                                // m_cf.positionArmRunShooterByDistance(false, false)));
-                                                new ShootByDistanceAndVelocity(m_arm, m_transfer, m_shooter, m_swerve,
-                                                                m_sd)));
+                                                 m_cf.positionArmRunShooterByDistance(false, false)));
+                                                // new ShootByDistanceAndVelocity(m_arm, m_transfer, m_shooter, m_swerve,
+                                                //                 m_sd)));
 
                 driver.rightBumper().and(driver.a().negate()).onTrue(Commands.parallel(
                                 m_intake.startIntakeCommand(),
@@ -387,25 +379,25 @@ public class RobotContainer implements Logged {
                 // KEEP IN BUTTON ORDER
                 // jogs are in case note gets stuck
 
-                setup.leftTrigger().whileTrue(m_cf.doIntake());
+                // setup.leftTrigger().whileTrue(m_cf.doIntake());
 
-                setup.leftBumper().whileTrue(m_arm.setGoalCommand(1));
+                // setup.leftBumper().whileTrue(m_arm.setGoalCommand(1));
 
                 // setup.rightTrigger().whileTrue(new JogTransfer(m_transfer, setup));
 
-                setup.rightBumper().whileTrue(new JogClimber(m_climber, setup));
+        //        setup.rightBumper().whileTrue(new JogClimber(m_climber, setup));
 
                 setup.a().onTrue(m_climber.lockClimberCommand());
 
                 setup.b().onTrue(m_climber.unlockClimberCommand());
 
-                // setup.leftBumper().whileTrue(m_swerve.quasistaticForward());
+                setup.leftBumper().whileTrue(m_swerve.quasistaticForward());
 
-                // setup.leftTrigger().whileTrue(m_swerve.quasistaticBackward());
+                setup.leftTrigger().whileTrue(m_swerve.quasistaticBackward());
 
-                // setup.rightBumper().whileTrue(m_swerve.dynamicForward());
+                setup.rightBumper().whileTrue(m_swerve.dynamicForward());
 
-                // setup.rightTrigger().whileTrue(m_swerve.dynamicBackward());
+                setup.rightTrigger().whileTrue(m_swerve.dynamicBackward());
 
                 // setup.a().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(25)));
 

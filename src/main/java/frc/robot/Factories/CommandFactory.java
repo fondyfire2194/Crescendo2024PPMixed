@@ -131,11 +131,15 @@ public class CommandFactory implements Logged {
                 SmartDashboard.putNumber("IntakeCt", testIn++);
                 return Commands.sequence(
 
-                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
+                                armToIntake(),
 
                                 m_intake.startIntakeCommand(),
 
                                 new TransferIntakeToSensor(m_transfer, m_intake, 3));
+        }
+
+        public Command armToIntake() {
+                return m_arm.setGoalCommand(ArmConstants.pickupAngleRadians);
         }
 
         public Command transferNoteToShooterCommand() {

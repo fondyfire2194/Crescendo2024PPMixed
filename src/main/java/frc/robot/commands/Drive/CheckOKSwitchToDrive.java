@@ -4,15 +4,13 @@
 
 package frc.robot.commands.Drive;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.LimelightHelpers;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.subsystems.LimelightVision;
+import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LLPipelines;
 
 public class CheckOKSwitchToDrive extends Command {
@@ -27,8 +25,6 @@ public class CheckOKSwitchToDrive extends Command {
   private final double m_switchoverDistance;
 
   private boolean noteSeen;
-  private boolean redAlliance;
-  private double remainingdistance;
 
   public CheckOKSwitchToDrive(
       SwerveSubsystem swerve,
@@ -44,9 +40,6 @@ public class CheckOKSwitchToDrive extends Command {
 
     LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, LLPipelines.pipelines.NOTEDETECT1.ordinal());
 
-    redAlliance = DriverStation.getAlliance().isPresent() &&
-        DriverStation.getAlliance().get() == Alliance.Red;
-
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -58,10 +51,10 @@ public class CheckOKSwitchToDrive extends Command {
 
     noteSeen = LimelightHelpers.getTV(CameraConstants.rearCamera.camname);
 
-    if (redAlliance)
-      remainingdistance = m_swerve.getX() - FieldConstants.FIELD_LENGTH / 2;
+    if (AllianceUtil.isRedAlliance())
+      m_swerve.remainingdistance = m_swerve.getX() - FieldConstants.FIELD_LENGTH / 2;
     else
-      remainingdistance = FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX();
+      m_swerve.remainingdistance = FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX();
 
   }
 
@@ -73,6 +66,6 @@ public class CheckOKSwitchToDrive extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return remainingdistance <= m_switchoverDistance && (RobotBase.isSimulation() || noteSeen);
+    return m_swerve.remainingdistance <= m_switchoverDistance && (RobotBase.isSimulation() || noteSeen);
   }
 }

@@ -1,3 +1,4 @@
+
 package frc.robot;
 
 import static edu.wpi.first.units.Units.Inches;
@@ -47,7 +48,7 @@ import monologue.Annotations.Log;
  * *******************NOTES******************************
  * 
  * The 3 start line notes are centered on speaker and 4ft 9 inches = 57 inches
- * either side of that
+ * either side of that 109.5" from speaker face
  * 
  * Field center line notes are 27ft 1-5/8 inches = 325-5/8 inches from speaker
  * face
@@ -254,7 +255,7 @@ public final class Constants {
 
                 public static double odometryUpdateFrequency = 100;
 
-                public static double notePickupSpeed = 1;
+                public static double notePickupSpeed = 0.75;
 
                 public static double wheelRadius = Units.inchesToMeters(4) / 2;
 
@@ -265,7 +266,6 @@ public final class Constants {
                 public static double rangeLobDistance = maxLobDistance - minLobDistance;
 
                 public static double maxMovingShotDistance = Units.feetToMeters(30);
-
         }
 
         public static final class KeepAngle {

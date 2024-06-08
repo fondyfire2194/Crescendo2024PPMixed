@@ -34,9 +34,10 @@ public class AutoSourceShootThenCenter extends SequentialCommandGroup {
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
 
-                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
+                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle - 5,
                                                 Constants.subwfrShooterSpeed),
                                 cf.transferNoteToShooterCommand(),
+                                cf.armToIntake(),
                                 // move to center note , pick up if there and move to shoot position then shoot
 
                                 Commands.parallel(

@@ -156,9 +156,6 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
     m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
 
-    if (RobotBase.isSimulation())
-      m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(0, 0, new Rotation2d(Math.PI)));
-
   }
 
   @Override
@@ -189,7 +186,7 @@ public class Robot extends TimedRobot implements Logged {
   public void autonomousInit() {
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
     m_robotContainer.m_arm.enable();
-  
+
     LimelightHelpers.setPipelineIndex(CameraConstants.frontLeftCamera.camname,
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,
@@ -247,6 +244,8 @@ public class Robot extends TimedRobot implements Logged {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    if (RobotBase.isSimulation() || !autoHasRun)
+      m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(0, 0, new Rotation2d(Math.PI)));
 
     m_robotContainer.m_transfer.simnoteatintake = false;
 
@@ -255,7 +254,6 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_swerve.setIdleMode(true);
     m_robotContainer.m_arm.enable();
-
 
     m_robotContainer.m_shooter.stopMotors();
     m_robotContainer.m_intake.stopMotor();
