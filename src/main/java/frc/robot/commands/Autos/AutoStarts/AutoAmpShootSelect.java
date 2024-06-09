@@ -19,7 +19,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
-import frc.robot.Factories.PathFactory.sourcepaths;
+import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.commands.Drive.CheckOKSwitchToDrive;
 import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Pathplanner.RunPPath;
@@ -29,14 +29,14 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
-public class AutoSourceShootSelect extends SequentialCommandGroup {
+public class AutoAmpShootSelect extends SequentialCommandGroup {
 
         Supplier<Object> i = () -> "";
 
-        public AutoSourceShootSelect(
+        public AutoAmpShootSelect(
                         CommandFactory cf,
                         PathFactory pf,
-                      AutoFactory af,
+                        AutoFactory af,
                         SwerveSubsystem swerve,
                         IntakeSubsystem intake,
                         TransferSubsystem transfer,
@@ -64,7 +64,7 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
 
                                 // Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle - 5,
                                                 Constants.subwfrShooterSpeed),
@@ -87,11 +87,11 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
                                 Commands.either(
                                                 new RunPPath(swerve,
                                                                 pf.pathMaps.get(
-                                                                                sourcepaths.SourceToCenter4
+                                                                                amppaths.AmpToCenter2
                                                                                                 .name())),
                                                 new RunPPath(swerve,
                                                                 pf.pathMaps.get(
-                                                                                sourcepaths.SourceShootToCenter5
+                                                                                amppaths.AmpToCenter1
                                                                                                 .name())),
                                                 () -> innerNoteFirst),
                                 Commands.sequence(
@@ -108,11 +108,11 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
                                 Commands.either(
                                                 new RunPPath(swerve,
                                                                 pf.pathMaps.get(
-                                                                                sourcepaths.SourceToNearCenter4
+                                                                                amppaths.AmpToNearCenter2
                                                                                                 .name())),
                                                 new RunPPath(swerve,
                                                                 pf.pathMaps.get(
-                                                                                sourcepaths.SourceToNearCenter5
+                                                                                amppaths.AmpToNearCenter1
                                                                                                 .name())),
                                                 () -> innerNoteFirst),
                                 new WaitCommand(1),
@@ -120,11 +120,11 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
                                                 Commands.either(
                                                                 new RunPPath(swerve,
                                                                                 pf.pathMaps.get(
-                                                                                                sourcepaths.NearCenter4ToCenter4
+                                                                                                amppaths.NearCenter2ToCenter2
                                                                                                                 .name())),
                                                                 new RunPPath(swerve,
                                                                                 pf.pathMaps.get(
-                                                                                                sourcepaths.NearCenter5ToCenter5
+                                                                                                amppaths.NearCenter1ToCenter1
                                                                                                                 .name())),
                                                                 () -> innerNoteFirst),
 
@@ -142,11 +142,11 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
                                                 Commands.either(
                                                                 new RunPPath(swerve,
                                                                                 pf.pathMaps.get(
-                                                                                                sourcepaths.SourceToCenter4
+                                                                                                amppaths.AmpToCenter2
                                                                                                                 .name())),
                                                                 new RunPPath(swerve,
                                                                                 pf.pathMaps.get(
-                                                                                                sourcepaths.SourceShootToCenter5
+                                                                                                amppaths.AmpToCenter1
                                                                                                                 .name())),
                                                                 () -> innerNoteFirst)),
 

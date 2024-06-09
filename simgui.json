@@ -5,6 +5,7 @@
       "/SmartDashboard/Amp Start": "String Chooser",
       "/SmartDashboard/Arm//Arm Sim": "Mechanism2d",
       "/SmartDashboard/BatteryChooser": "String Chooser",
+      "/SmartDashboard/CenterMethod": "String Chooser",
       "/SmartDashboard/ClearStickyFaults": "Command",
       "/SmartDashboard/CommSchd": "Scheduler",
       "/SmartDashboard/DelayChooser": "String Chooser",
@@ -23,6 +24,11 @@
         }
       },
       "/SmartDashboard/Arm//Arm Sim": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/CenterMethod": {
         "window": {
           "visible": true
         }

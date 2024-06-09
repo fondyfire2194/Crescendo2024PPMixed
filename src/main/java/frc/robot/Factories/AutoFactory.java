@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
-import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
+import frc.robot.commands.Autos.AutoStarts.AutoAmpShootSelect;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceShootSelect;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.subsystems.ArmSubsystem;
@@ -31,6 +31,7 @@ public class AutoFactory implements Logged {
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
 
+        public final SendableChooser<String> m_methodChooser = new SendableChooser<String>();
 
         @Log.NT(key = "finalchoice")
         public int finalChoice = 0;
@@ -84,19 +85,22 @@ public class AutoFactory implements Logged {
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5", 11);
                 m_sourceStartChooser.addOption("C5 Then C4", 12);
-                m_sourceStartChooser.addOption("C4 Pathfind Then C5", 13);
-                m_sourceStartChooser.addOption("C4 Vision Then C5", 14);
-                maxsourceauto = 14;
+                maxsourceauto = 12;
 
                 minampauto = 21;
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
-                m_ampStartChooser.addOption("Shoot C2 then C1", 21);
-                m_ampStartChooser.addOption("Shoot C1 then C2", 22);
+                m_ampStartChooser.addOption("C2 then C1", 21);
+                m_ampStartChooser.addOption("C1 then C2", 22);
                 maxampauto = 22;
+
+                m_methodChooser.setDefaultOption("Vision", "VISION");
+                m_methodChooser.addOption("Pathfind", "PATHFIND");
+                m_methodChooser.addOption("Path", "PATH");
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
                 SmartDashboard.putData("Amp Start", m_ampStartChooser);
                 SmartDashboard.putData("SubwfrStart", m_subwfrStartChooser);
+                SmartDashboard.putData("CenterMethod", m_methodChooser);
 
         }
 
@@ -179,34 +183,19 @@ public class AutoFactory implements Logged {
                                                 sbwfrpaths.Quick3ToNote1);
 
                         case 11:
-                                return new AutoSourceShootSelect(m_cf, m_pf,
-                                                "PATH", m_swerve, m_intake, m_transfer, true);
-
+                                return new AutoSourceShootSelect(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, true);
                         case 12:
-                                return new AutoSourceShootSelect(m_cf, m_pf,
-                                                "PATH", m_swerve, m_intake, m_transfer, false);
-
-                        case 13:
-                                return new AutoSourceShootSelect(m_cf, m_pf,
-                                                "PATHFIND", m_swerve, m_intake, m_transfer, true);
-                        case 14:
-                                return new AutoSourceShootSelect(m_cf, m_pf,
-                                                "VISION", m_swerve, m_intake, m_transfer, true);
+                                return new AutoSourceShootSelect(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, false);
 
                         case 21:
-                                return new AutoAmpShootThenCenter(m_cf, m_pf,
-                                                m_swerve, true);
-                        case 22:
-                                return new AutoAmpShootThenCenter(m_cf, m_pf,
-                                                m_swerve, false);
-                        // case 23:
-                        // return new AutoAmpShootThenCenter(this, m_pf,
-                        // m_swerve, true);
+                                return new AutoAmpShootSelect(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, false);
 
-                        // case 24:
-                        // return new AutoAmpShootMovingThenCenter(this,
-                        // m_pf.pathMaps.get(amppaths.AmpToCenter2.name()),
-                        // m_swerve);
+                        case 22:
+                                return new AutoAmpShootSelect(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, false);
 
                         default:
                                 return Commands.none();

@@ -43,6 +43,10 @@ public class PathFactory {
         AmpShootToCenter2,
         AmpToCenter1,
         AmpToCenter2,
+        AmpToNearCenter1,
+        AmpToNearCenter2,
+        NearCenter2ToCenter2,
+        NearCenter1ToCenter1,
         AmpToWing1,
         Center1ToAmpShoot,
         Center2ToAmpShoot,
@@ -98,7 +102,6 @@ public class PathFactory {
             pathMaps.put(s.toString(), getPath(s.toString()));
         }
     }
-
 
     public enum sbwfrpaths {
         SubwfrShootToWing1,

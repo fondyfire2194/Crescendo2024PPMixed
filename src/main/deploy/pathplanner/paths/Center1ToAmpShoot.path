@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.2,
-        "y": 7.41
+        "x": 8.288614490658505,
+        "y": 7.42743718561799
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.5685156601135475,
-        "y": 7.152728602260445
+        "x": 7.657130150772053,
+        "y": 7.170165787878434
       },
       "isLocked": false,
       "linkedName": "Center 1"
     },
     {
       "anchor": {
-        "x": 2.843437994568298,
-        "y": 5.515621031242063
+        "x": 3.6899479792300327,
+        "y": 6.142380675438377
       },
       "prevControl": {
-        "x": 3.5191799546252365,
-        "y": 6.004740301216868
+        "x": 4.497697785628645,
+        "y": 6.344318127038031
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp side shooting point"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
