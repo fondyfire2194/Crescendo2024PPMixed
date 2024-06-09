@@ -10,16 +10,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.commands.Autos.AmpStart.AutoAmpShootThenCenter;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootCenterPathfind;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceShootThenCenter;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceThenCenterVision;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceShootSelect;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
-
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -33,6 +30,7 @@ public class AutoFactory implements Logged {
         public final SendableChooser<Integer> m_ampStartChooser = new SendableChooser<Integer>();
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
+
 
         @Log.NT(key = "finalchoice")
         public int finalChoice = 0;
@@ -181,19 +179,19 @@ public class AutoFactory implements Logged {
                                                 sbwfrpaths.Quick3ToNote1);
 
                         case 11:
-                                return new AutoSourceShootThenCenter(m_cf, m_pf,
-                                                m_swerve, true);
+                                return new AutoSourceShootSelect(m_cf, m_pf,
+                                                "PATH", m_swerve, m_intake, m_transfer, true);
 
                         case 12:
-                                return new AutoSourceShootThenCenter(m_cf, m_pf,
-                                                m_swerve, false);
+                                return new AutoSourceShootSelect(m_cf, m_pf,
+                                                "PATH", m_swerve, m_intake, m_transfer, false);
 
                         case 13:
-                                return new AutoSourceShootCenterPathfind(m_cf, m_pf,
-                                                m_swerve, true);
+                                return new AutoSourceShootSelect(m_cf, m_pf,
+                                                "PATHFIND", m_swerve, m_intake, m_transfer, true);
                         case 14:
-                                return new AutoSourceThenCenterVision(m_cf, m_pf,
-                                                m_swerve, m_intake, m_transfer, true);
+                                return new AutoSourceShootSelect(m_cf, m_pf,
+                                                "VISION", m_swerve, m_intake, m_transfer, true);
 
                         case 21:
                                 return new AutoAmpShootThenCenter(m_cf, m_pf,
