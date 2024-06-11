@@ -62,7 +62,6 @@ public class AutoAmpShootSelect extends SequentialCommandGroup {
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
 
-                                // Commands.runOnce(() -> swerve.currentPlannerPath = path),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
                                 cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
 

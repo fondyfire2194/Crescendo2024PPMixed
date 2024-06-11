@@ -40,7 +40,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Constants.SwerveConstants.Mod0;
 import frc.robot.Pref;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
@@ -474,7 +473,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public Command testAllCan() {
     return Commands.sequence(
-        Commands.runOnce(() -> mod0connected = false),
+        Commands.
+        runOnce(() -> mod0connected = false),
         runOnce(() -> mod1connected = false),
         runOnce(() -> mod2connected = false),
         runOnce(() -> mod3connected = false));

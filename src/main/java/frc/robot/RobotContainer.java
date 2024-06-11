@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-import java.net.PortUnreachableException;
 import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.CANBus;
@@ -39,6 +38,7 @@ import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.FindNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
+import frc.robot.commands.Drive.WheelRadiusCharacterization;
 import frc.robot.commands.Intake.JogIntake;
 import frc.robot.commands.Shooter.ShootByDistanceAndVelocity;
 import frc.robot.commands.Test.MovePickupShoot;
@@ -379,13 +379,7 @@ public class RobotContainer implements Logged {
                 // KEEP IN BUTTON ORDER
                 // jogs are in case note gets stuck
 
-                // setup.leftTrigger().whileTrue(m_cf.doIntake());
-
-                // setup.leftBumper().whileTrue(m_arm.setGoalCommand(1));
-
-                // setup.rightTrigger().whileTrue(new JogTransfer(m_transfer, setup));
-
-        //        setup.rightBumper().whileTrue(new JogClimber(m_climber, setup));
+           
 
                 setup.a().onTrue(m_climber.lockClimberCommand());
 
@@ -399,7 +393,7 @@ public class RobotContainer implements Logged {
 
                 setup.rightTrigger().whileTrue(m_swerve.dynamicBackward());
 
-                // setup.a().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(25)));
+                 setup.a().whileTrue(new WheelRadiusCharacterization(m_swerve));
 
                 // setup.b().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(40)));
 

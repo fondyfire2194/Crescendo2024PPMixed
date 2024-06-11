@@ -208,14 +208,12 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         double currentPosition = getAngleDegrees();
         SmartDashboard.putNumber("CCC/Cp", currentPosition);
         SmartDashboard.putNumber("CCC/Lp", lastPosition);
-        if (lastPosition == 0)
-            lastPosition = currentPosition;
         if (currentPosition == lastPosition) {
             cancdrokctr++;
-            lastPosition = currentPosition;
         } else {
             cancdrokctr = 0;
         }
+        lastPosition = currentPosition;
         return RobotBase.isSimulation() || cancdrokctr < 3;
     }
 

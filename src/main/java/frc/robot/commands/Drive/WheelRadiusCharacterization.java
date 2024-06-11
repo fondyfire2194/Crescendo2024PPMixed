@@ -71,6 +71,8 @@ public class WheelRadiusCharacterization extends Command {
   @Override
   public void end(boolean interrupted) {
     angularRateLimiter.reset(0.0);
+    this.swerve.drive(0, 0.0, 0, false, false, false);
+
   }
 
   // Returns true when the command should end.
