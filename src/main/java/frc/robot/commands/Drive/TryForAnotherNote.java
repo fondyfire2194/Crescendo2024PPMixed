@@ -15,11 +15,10 @@ import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
-import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LLPipelines.pipelines;
 
-public class DriveToPickupNote extends Command {
-  /** Creates a new AlignToTagSetShootSpeed. */
+public class TryForAnotherNote extends Command {
+ 
 
   private final SwerveSubsystem m_swerve;
   private final TransferSubsystem m_transfer;
@@ -31,7 +30,7 @@ public class DriveToPickupNote extends Command {
   private double distError;
   private double distBeyondMidField = .25;
 
-  public DriveToPickupNote(
+  public TryForAnotherNote(
       SwerveSubsystem swerve,
       TransferSubsystem transfer,
       IntakeSubsystem intake,
@@ -80,10 +79,11 @@ public class DriveToPickupNote extends Command {
         true,
         false);
 
-    if (AllianceUtil.isRedAlliance())
-      m_swerve.remainingdistance = m_swerve.getX() - FieldConstants.FIELD_LENGTH / 2;
-    else
-      m_swerve.remainingdistance = FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX();
+    if (m_swerve.ampActive)
+      m_swerve.remainingdistance = m_swerve.getY() - FieldConstants.FIELD_WIDTH / 2 - distBeyondMidField;
+
+    if(m_swerve.sourceActive)
+      m_swerve.remainingdistance = FieldConstants.FIELD_WIDTH / 2 - m_swerve.getY() + distBeyondMidField;
 
     SmartDashboard.putNumber("DtoPuN/RmngDist", distError);
 
@@ -102,6 +102,6 @@ public class DriveToPickupNote extends Command {
   @Override
   public boolean isFinished() {
     return m_transfer.noteAtIntake() ||
-        m_swerve.remainingdistance < -distBeyondMidField;
+        m_swerve.remainingdistance < 0;
   }
 }

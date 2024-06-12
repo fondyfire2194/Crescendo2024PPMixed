@@ -65,6 +65,15 @@ public class WheelRadiusCharacterization extends Command {
     SmartDashboard.putNumber("Measured Wheel Radius", Units.metersToInches(currentWheelRadius));
     SmartDashboard.putNumber(
         "Measured Wheel Diameter", Units.metersToInches(currentWheelRadius) * 2);
+
+        double averagePositionMeters = averagePosition*SwerveConstants.wheelRadius;
+
+        SmartDashboard.putNumber(
+          "Measured Distance Meters", averagePositionMeters);
+          SmartDashboard.putNumber(
+            "Measured Theorwtical Distance Meters", SwerveConstants.trackWidth.baseUnitMagnitude()*Math.PI);
+    
+
   }
 
   // Called once the command ends or is interrupted.

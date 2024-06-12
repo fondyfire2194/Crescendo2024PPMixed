@@ -69,18 +69,18 @@
   "NetworkTables": {
     "transitory": {
       "Monologue": {
-        "m_shooter": {
+        "m_swerve": {
           "open": true
-        },
-        "open": true
+        }
       },
       "SmartDashboard": {
-        "Arm": {
+        "DtoPuN": {
           "open": true
         },
         "Shooter": {
           "open": true
-        }
+        },
+        "open": true
       }
     }
   },
@@ -107,7 +107,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 332,
+          "height": 0,
           "series": [
             {
               "color": [
@@ -120,7 +120,26 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <1>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 332
+        }
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }

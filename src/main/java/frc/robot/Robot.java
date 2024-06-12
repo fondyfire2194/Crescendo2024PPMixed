@@ -204,8 +204,8 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-    // m_robotContainer.m_transfer.skipFirstNoteInSim = true;
-    // m_robotContainer.m_transfer.skipSecondNoteInSim = true;
+     m_robotContainer.m_transfer.skipFirstNoteInSim = true;
+     m_robotContainer.m_transfer.skipSecondNoteInSim = true;
 
     if (m_robotContainer.m_af.validChoice) {
 

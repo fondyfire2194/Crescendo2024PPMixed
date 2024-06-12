@@ -39,9 +39,10 @@ public class TransferIntakeToSensor extends Command {
   @Override
   public void execute() {
     m_transfer.runToSensor();
-    m_intake.noteMissed = endTimer.hasElapsed(m_noNoteTime);
+    m_intake.noteMissed = m_transfer.skipFirstNoteInSim || m_transfer.skipSecondNoteInSim ||
+        endTimer.hasElapsed(m_noNoteTime);
     m_transfer.simnoteatintake = RobotBase.isSimulation() && endTimer.hasElapsed(simmotetime)
-        && !m_transfer.skipFirstNoteInSim;
+        && !m_transfer.skipFirstNoteInSim && !m_transfer.skipSecondNoteInSim;
   }
 
   // Called once the command ends or is interrupted.
@@ -53,7 +54,7 @@ public class TransferIntakeToSensor extends Command {
     m_transfer.enableLimitSwitch(false);
     m_transfer.skipFirstNoteInSim = false;
     m_transfer.skipSecondNoteInSim = false;
-    
+
   }
 
   // Returns true when the command should end.

@@ -455,6 +455,15 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return positions;
   }
 
+  public double[] getDrivePositions() {
+    return new double[] {
+      mSwerveMods[0].getDrivePosition(),
+      mSwerveMods[0].getDrivePosition(),
+      mSwerveMods[0].getPositionRadians(),
+      mSwerveMods[0].getPositionRadians()
+  };
+  }
+
   private boolean checkMod0CansOK() {
     return mSwerveMods[0].checkDriveMotorCanOK() && mSwerveMods[0].checkAngleMotorCanOK();
   }
@@ -506,6 +515,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     if (RobotBase.isReal())
       return gyro.getRotation2d();
     else
+    
       return simOdometryPose.getRotation();
   }
 
@@ -856,6 +866,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public double remainingdistance;
 
+public boolean sourceActive;
+
+public boolean ampActive;
+
   public void setPathRunning() {
     pathRunning = true;
   }
@@ -963,9 +977,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public double[] getWheelRadiusCharacterizationPosition() {
     return new double[] {
         mSwerveMods[0].getPositionRadians(),
-        mSwerveMods[0].getPositionRadians(),
-        mSwerveMods[0].getPositionRadians(),
-        mSwerveMods[0].getPositionRadians()
+        mSwerveMods[1].getPositionRadians(),
+        mSwerveMods[2].getPositionRadians(),
+        mSwerveMods[3].getPositionRadians()
     };
   }
 

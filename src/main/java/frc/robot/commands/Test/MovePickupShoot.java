@@ -43,8 +43,7 @@ public class MovePickupShoot extends SequentialCommandGroup {
 
                                                 Commands.parallel(
                                                                 cf.doIntake(),
-                                                                new DriveToPickupNote(swerve, transfer, intake, camname,
-                                                                                true,2)),
+                                                                new DriveToPickupNote(swerve, transfer, intake, camname)),
 
                                                 Commands.deadline(
                                                                 cf.positionArmRunShooterByDistance(false, true),

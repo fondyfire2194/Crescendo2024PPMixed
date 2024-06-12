@@ -290,7 +290,7 @@ public class SwerveModule extends SubsystemBase {
     // characterizing);
     // SmartDashboard.putNumber(String.valueOf(moduleNumber) + " Characterization
     // Volts", characterizationVolts);
-    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosition", driveEncoder.getPosition());
+    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosition",getDrivePosition());
 
     if (characterizing) {
       driveMotor.setVoltage(characterizationVolts);
