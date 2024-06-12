@@ -28,7 +28,7 @@ public class TryForAnotherNote extends Command {
   private Timer elapsedTime = new Timer();
   double startPosition;
   private double distError;
-  private double distBeyondMidField = .25;
+  private double distBeyondMidField = .01;
 
   public TryForAnotherNote(
       SwerveSubsystem swerve,

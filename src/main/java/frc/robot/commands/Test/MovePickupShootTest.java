@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.DriveToPickupNote;
-import frc.robot.commands.Drive.FindNote;
+
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -18,9 +18,9 @@ import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.ShootingData;
 
-public class MovePickupShoot extends SequentialCommandGroup {
+public class MovePickupShootTest extends SequentialCommandGroup {
         /** Creates a new MovePickupShoot. */
-        public MovePickupShoot(
+        public MovePickupShootTest(
                         CommandFactory cf,
                         SwerveSubsystem swerve,
                         ArmSubsystem arm,
@@ -38,8 +38,6 @@ public class MovePickupShoot extends SequentialCommandGroup {
                                 Commands.runOnce(() -> cf.testNotesRun = 0),
 
                                 Commands.repeatingSequence(
-
-                                                new FindNote(swerve, 90, camname),
 
                                                 Commands.parallel(
                                                                 cf.doIntake(),

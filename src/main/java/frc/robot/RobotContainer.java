@@ -35,13 +35,11 @@ import frc.robot.Factories.TriggerCommandFactory;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
-import frc.robot.commands.Drive.FindNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TeleopSwerve;
 import frc.robot.commands.Drive.WheelRadiusCharacterization;
 import frc.robot.commands.Intake.JogIntake;
-import frc.robot.commands.Shooter.ShootByDistanceAndVelocity;
-import frc.robot.commands.Test.MovePickupShoot;
+import frc.robot.commands.Test.MovePickupShootTest;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -142,12 +140,11 @@ public class RobotContainer implements Logged {
                                 new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
 
                 SmartDashboard.putData("RunTestPickupandShoot",
-                                new MovePickupShoot(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
+                                new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
                                                 CameraConstants.rearCamera.camname,
                                                 4));
 
-                SmartDashboard.putData("Find Note",
-                                new FindNote(m_swerve, -270, CameraConstants.rearCamera.camname));
+        
 
                 configureDriverBindings();
 
