@@ -124,7 +124,6 @@ public class AutoFactory implements Logged {
                         m_pf.linkAmpPaths();
                         validChoice = true;
                         finalChoice = ampChoice;
-
                 }
 
                 if (validSourceChoice && !validAmpChoice && !validSubwfrChoice) {

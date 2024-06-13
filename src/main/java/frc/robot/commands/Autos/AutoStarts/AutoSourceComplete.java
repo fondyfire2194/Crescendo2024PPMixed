@@ -44,7 +44,8 @@ public class AutoSourceComplete extends SequentialCommandGroup {
 
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
-
+                                Commands.runOnce(() -> swerve.ampActive = false),
+                                Commands.runOnce(() -> swerve.sourceActive = true),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
 
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
@@ -118,8 +119,9 @@ public class AutoSourceComplete extends SequentialCommandGroup {
                                                                 cf.autopickup(AllianceUtil
                                                                                 .getSourceClearStagePose()),
                                                                 cf.autopickup(AllianceUtil
-                                                                                .getSourceShootPose())),
-                                                Commands.none(),
+                                                                                .getSourceShootPose()),
+                                                                Commands.runOnce(() -> this.cancel())),
+                                                Commands.runOnce(() -> this.cancel()),
                                                 () -> transfer.noteAtIntake()));
 
         }

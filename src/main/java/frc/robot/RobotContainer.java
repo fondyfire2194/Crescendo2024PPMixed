@@ -481,15 +481,11 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putNumber("VSCH", m_af.validStartChoice);
                 SmartDashboard.putNumber("AFSB", m_af.validStartChoice);
                 if (m_af.validStartChoice >= m_af.minsbwfrauto && m_af.validStartChoice <= m_af.maxsbwfrauto) {
-
                 }
-
-                if (m_af.validStartChoice >= m_af.minsourceauto && m_af.validStartChoice <= m_af.maxsourceauto) {
-                       
+                if (m_af.validStartChoice >= m_af.minsourceauto && m_af.validStartChoice <= m_af.maxsourceauto) {                       
                         m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose).runsWhenDisabled();
                 }
-                if (m_af.validStartChoice >= m_af.minampauto && m_af.validStartChoice <= m_af.maxampauto) {
-                      
+                if (m_af.validStartChoice >= m_af.minampauto && m_af.validStartChoice <= m_af.maxampauto) {                      
                         m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
                 }
         }

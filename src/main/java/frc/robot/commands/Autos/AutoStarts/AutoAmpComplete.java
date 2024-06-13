@@ -46,7 +46,8 @@ public class AutoAmpComplete extends SequentialCommandGroup {
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
 
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-
+                                Commands.runOnce(() -> swerve.sourceActive = false),
+                                Commands.runOnce(() -> swerve.ampActive = true),
                                 cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle - 5,
@@ -58,7 +59,7 @@ public class AutoAmpComplete extends SequentialCommandGroup {
                                 new PickupUsingVision(cf,
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
-                                                transfer, intake, swerve,innerNoteFirst,
+                                                transfer, intake, swerve, innerNoteFirst,
                                                 -1, 1, -1, 1),
 
                                 Commands.either(
@@ -82,7 +83,7 @@ public class AutoAmpComplete extends SequentialCommandGroup {
                                                 cf,
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
-                                                transfer, intake, swerve,innerNoteFirst,
+                                                transfer, intake, swerve, innerNoteFirst,
                                                 -1, 1, -1, 1),
 
                                 Commands.either(
@@ -118,8 +119,9 @@ public class AutoAmpComplete extends SequentialCommandGroup {
                                                                 cf.autopickup(AllianceUtil
                                                                                 .getAmpClearStagePose()),
                                                                 cf.autopickup(AllianceUtil
-                                                                                .getAmpShootPose())),
-                                                Commands.none(),
+                                                                                .getAmpShootPose()),
+                                                                Commands.runOnce(() -> this.cancel())),
+                                                Commands.runOnce(() -> this.cancel()),
                                                 () -> transfer.noteAtIntake()));
 
         }

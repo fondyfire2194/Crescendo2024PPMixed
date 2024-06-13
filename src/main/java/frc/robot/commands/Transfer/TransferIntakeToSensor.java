@@ -40,8 +40,9 @@ public class TransferIntakeToSensor extends Command {
   public void execute() {
     m_transfer.runToSensor();
     m_intake.noteMissed = RobotBase.isSimulation() && (m_transfer.skipFirstNoteInSim || m_transfer.skipSecondNoteInSim)
-        ||        endTimer.hasElapsed(m_noNoteTime);
-    m_transfer.simnoteatintake = RobotBase.isSimulation() && endTimer.hasElapsed(simmotetime)
+        || endTimer.hasElapsed(m_noNoteTime);
+    m_transfer.simnoteatintake = RobotBase.isSimulation() && !m_transfer.skipSecondNoteInSim
+        && endTimer.hasElapsed(simmotetime)
         && !m_transfer.skipFirstNoteInSim && !m_transfer.skipSecondNoteInSim;
   }
 
