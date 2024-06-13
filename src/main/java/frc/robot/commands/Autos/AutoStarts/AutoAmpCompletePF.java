@@ -14,9 +14,10 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
+import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
-import frc.robot.commands.Autos.Autos.PickupUsingVision;
+import frc.robot.commands.Autos.Autos.PickupUsingPathfind;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
@@ -26,9 +27,9 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
-public class AutoSourceComplete extends SequentialCommandGroup {
+public class AutoAmpCompletePF extends SequentialCommandGroup {
 
-        public AutoSourceComplete(
+        public AutoAmpCompletePF(
                         CommandFactory cf,
                         PathFactory pf,
                         AutoFactory af,
@@ -53,50 +54,49 @@ public class AutoSourceComplete extends SequentialCommandGroup {
                                 cf.armToIntake(),
                                 // move to center note , pick up if there and move to shoot position then shoot
 
-                                new PickupUsingVision(cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
-                                                transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1),
+                                new PickupUsingPathfind(cf,
+                                                pf.pathMaps.get(amppaths.AmpToNearCenter2.name()),
+                                                FieldConstants.centerNote2PickupBlue,
+                                                pf.pathMaps.get(amppaths.AmpToNearCenter2.name()),
+                                                FieldConstants.centerNote1PickupBlue,
+                                                intake, swerve, innerNoteFirst),
 
                                 Commands.either(
                                                 Commands.either(
                                                                 new CenterToShoot(cf, pf.pathMaps.get(
-                                                                                sourcepaths.Center4ToSourceShoot
+                                                                                amppaths.Center2ToAmpShoot
                                                                                                 .name()),
                                                                                 swerve, false),
                                                                 new CenterToShoot(cf, pf.pathMaps.get(
-                                                                                sourcepaths.Center5ToSourceShoot
+                                                                                amppaths.Center1ToAmpShoot
                                                                                                 .name()),
                                                                                 swerve, false),
                                                                 () -> innerNoteFirst),
                                                 getAnotherNote(swerve, transfer, intake, cf),
                                                 () -> transfer.noteAtIntake()),
 
-                                new PickupUsingVision(
-                                                cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
-                                                transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1),
+                                new PickupUsingPathfind(cf,
+                                                pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
+                                                FieldConstants.centerNote2PickupBlue,
+                                                pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
+                                                FieldConstants.centerNote1PickupBlue,
+                                                intake, swerve, innerNoteFirst),
 
                                 Commands.either(
                                                 Commands.either(
                                                                 new CenterToShoot(cf, pf.pathMaps
-                                                                                .get(sourcepaths.Center5ToSourceShoot
+                                                                                .get(amppaths.AmpShootToCenter1
                                                                                                 .name()),
                                                                                 swerve, false),
                                                                 new CenterToShoot(cf, pf.pathMaps
-                                                                                .get(sourcepaths.Center4ToSourceShoot
+                                                                                .get(amppaths.AmpShootToCenter2
                                                                                                 .name()),
                                                                                 swerve, true),
                                                                 () -> innerNoteFirst),
 
                                                 getAnotherNote(swerve, transfer, intake, cf),
 
-                                                () -> transfer.noteAtIntake())
-
-                );
+                                                () -> transfer.noteAtIntake()));
 
         }
 
@@ -104,7 +104,7 @@ public class AutoSourceComplete extends SequentialCommandGroup {
                         CommandFactory cf) {
 
                 return Commands.sequence(
-                                new RotateToAngle(swerve, -90),
+                                new RotateToAngle(swerve, 90),
                                 intake.startIntakeCommand(),
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,

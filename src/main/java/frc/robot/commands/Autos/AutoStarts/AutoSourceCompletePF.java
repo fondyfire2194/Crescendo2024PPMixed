@@ -16,7 +16,7 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
-import frc.robot.commands.Autos.Autos.PickupUsingVision;
+import frc.robot.commands.Autos.Autos.PickupUsingPathfind;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
@@ -26,9 +26,9 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
-public class AutoSourceComplete extends SequentialCommandGroup {
+public class AutoSourceCompletePF extends SequentialCommandGroup {
 
-        public AutoSourceComplete(
+        public AutoSourceCompletePF(
                         CommandFactory cf,
                         PathFactory pf,
                         AutoFactory af,
@@ -53,11 +53,12 @@ public class AutoSourceComplete extends SequentialCommandGroup {
                                 cf.armToIntake(),
                                 // move to center note , pick up if there and move to shoot position then shoot
 
-                                new PickupUsingVision(cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
-                                                transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1),
+                                new PickupUsingPathfind(cf,
+                                                pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
+                                                FieldConstants.centerNote4PickupBlue,
+                                                pf.pathMaps.get(sourcepaths.SourceToNearCenter5.name()),
+                                                FieldConstants.centerNote5PickupBlue,
+                                                intake, swerve, innerNoteFirst),
 
                                 Commands.either(
                                                 Commands.either(
@@ -73,12 +74,12 @@ public class AutoSourceComplete extends SequentialCommandGroup {
                                                 getAnotherNote(swerve, transfer, intake, cf),
                                                 () -> transfer.noteAtIntake()),
 
-                                new PickupUsingVision(
-                                                cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
+                                new PickupUsingPathfind(cf,
+                                                pf.pathMaps.get(sourcepaths.SourceToNearCenter5.name()),
+                                                FieldConstants.centerNote5PickupBlue,
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
-                                                transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1),
+                                                FieldConstants.centerNote4PickupBlue,
+                                                intake, swerve, innerNoteFirst),
 
                                 Commands.either(
                                                 Commands.either(
@@ -94,9 +95,7 @@ public class AutoSourceComplete extends SequentialCommandGroup {
 
                                                 getAnotherNote(swerve, transfer, intake, cf),
 
-                                                () -> transfer.noteAtIntake())
-
-                );
+                                                () -> transfer.noteAtIntake()));
 
         }
 

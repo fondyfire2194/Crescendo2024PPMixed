@@ -522,6 +522,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
       return simOdometryPose.getRotation();
   }
 
+  public double getR2dRads() {
+    return gyro.getRotation2d().getRadians();
+  }
+
   public float getPitch() {
     return gyro.getPitch();
   }
@@ -565,6 +569,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public void periodic() {
     SmartDashboard.putNumber("Drive/AUSEp", autostep);
     SmartDashboard.putNumber("Drive/GyroAngle", getAngle());
+    SmartDashboard.putNumber("Drive/GyroYawRads", getR2dRads());
 
     m_field.setRobotPose(getPose());
 
@@ -874,7 +879,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public boolean ampActive;
 
-public boolean noteSeen;
+  public boolean noteSeen;
 
   public void setPathRunning() {
     pathRunning = true;

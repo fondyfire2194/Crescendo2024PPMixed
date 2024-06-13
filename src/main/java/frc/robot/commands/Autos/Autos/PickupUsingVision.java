@@ -6,11 +6,10 @@ package frc.robot.commands.Autos.Autos;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import frc.robot.LimelightHelpers;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.LimelightHelpers;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Drive.CheckOKSwitchToDrive;
 import frc.robot.commands.Drive.DriveToPickupNote;

@@ -10,7 +10,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpComplete;
+import frc.robot.commands.Autos.AutoStarts.AutoAmpCompletePF;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceComplete;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceCompletePF;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -83,13 +85,19 @@ public class AutoFactory implements Logged {
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5", 11);
                 m_sourceStartChooser.addOption("C5 Then C4", 12);
-                maxsourceauto = 12;
+                m_sourceStartChooser.addOption("C4 Then C5 PF", 13);
+                m_sourceStartChooser.addOption("C5 Then C4 PF", 14);
+
+                maxsourceauto = 14;
 
                 minampauto = 21;
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("C2 then C1", 21);
                 m_ampStartChooser.addOption("C1 then C2", 22);
-                maxampauto = 22;
+                m_ampStartChooser.addOption("C2 then C1 PF", 23);
+                m_ampStartChooser.addOption("C1 then C2 PF", 24);
+
+                maxampauto = 24;
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
                 SmartDashboard.putData("Amp Start", m_ampStartChooser);
@@ -181,15 +189,26 @@ public class AutoFactory implements Logged {
                                 return new AutoSourceComplete(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, false);
 
-                        // case 21:
-                        // return new AutoAmpStep0(m_cf, m_pf, this,
-                        // m_swerve, m_intake, m_transfer, true);
+                        case 13:
+                                return new AutoSourceCompletePF(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, true);
+                        case 14:
+                                return new AutoSourceCompletePF(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, false);
+
                         case 21:
                                 return new AutoAmpComplete(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, true);
 
                         case 22:
                                 return new AutoAmpComplete(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, false);
+                        case 23:
+                                return new AutoAmpCompletePF(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, true);
+
+                        case 24:
+                                return new AutoAmpCompletePF(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, false);
 
                         default:

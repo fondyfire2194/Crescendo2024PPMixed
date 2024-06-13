@@ -6,13 +6,16 @@ package frc.robot.commands.Autos.Autos;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
 public class PickupUsingPathfind extends SequentialCommandGroup {
@@ -20,16 +23,32 @@ public class PickupUsingPathfind extends SequentialCommandGroup {
         public PickupUsingPathfind(
                         CommandFactory cf,
                         PathPlannerPath path,
+                        Pose2d pose,
                         PathPlannerPath path1,
+                        Pose2d pose1,
                         IntakeSubsystem intake,
-                        SwerveSubsystem swerve) {
+                        SwerveSubsystem swerve,
+                        boolean innerNoteFirst) {
 
                 addCommands(
-                                new RunPPath(swerve,
-                                                path),
-                                new WaitCommand(.1),
-                                Commands.parallel(
-                                                new RunPPath(swerve, path1),
-                                                cf.doIntake()));
+                                Commands.either(
+                                                Commands.sequence(
+                                                                new RunPPath(swerve,
+                                                                                path),
+                                                                new WaitCommand(.1),
+                                                                Commands.parallel(
+                                                                                cf.autopickup(AllianceUtil
+                                                                                                .getAlliancePose(pose)),
+                                                                                cf.doIntake())),
+                                                Commands.sequence(
+                                                                new RunPPath(swerve,
+                                                                                path1),
+                                                                new WaitCommand(.1),
+                                                                Commands.parallel(
+                                                                                cf.autopickup(AllianceUtil
+                                                                                                .getAlliancePose(
+                                                                                                                pose1)),
+                                                                                cf.doIntake())),
+                                                () -> innerNoteFirst));
         }
 }

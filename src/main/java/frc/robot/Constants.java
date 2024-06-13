@@ -313,20 +313,20 @@ public final class Constants {
                 // public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new
                 // Rotation2d());
 
-                // public static final Pose2d centerNote1PickupBlue = new Pose2d(8.48, 7.44,
-                // new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                public static final Pose2d centerNote1PickupBlue = new Pose2d(8.48, 7.44,
+                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
-                // public static final Pose2d centerNote2PickupBlue = new Pose2d(8.48, 5.76,
-                // new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                public static final Pose2d centerNote2PickupBlue = new Pose2d(8.48, 5.76,
+                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
-                // public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
-                // new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
+                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
-                // public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
-                // new Rotation2d(Units.degreesToRadians(23.2)));
+                public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
+                                new Rotation2d(Units.degreesToRadians(-170)));//23.2
 
-                // public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
-                // new Rotation2d(Units.degreesToRadians(-176.09)));
+                public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
+                                new Rotation2d(Units.degreesToRadians(-176.09)));
 
                 public static final Pose2d sourceShootBlue = new Pose2d(4.12, 2.18,
                                 new Rotation2d(Units.degreesToRadians(150)));
