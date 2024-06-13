@@ -140,12 +140,12 @@ public class TriggerCommandFactory implements Logged {
                                                                                 m_pf.pathMaps.get(
                                                                                                 sourcepaths.Center4ToSourceShoot
                                                                                                                 .name()),
-                                                                                m_swerve),
+                                                                                m_swerve, true),
                                                                 new CenterToShoot(m_cf,
                                                                                 m_pf.pathMaps.get(
                                                                                                 sourcepaths.Center5ToSourceShoot
                                                                                                                 .name()),
-                                                                                m_swerve),
+                                                                                m_swerve, true),
 
                                                                 () -> m_cf.innerNoteFirst),
                                                 Commands.parallel(
@@ -177,12 +177,12 @@ public class TriggerCommandFactory implements Logged {
                                                                                 m_pf.pathMaps.get(
                                                                                                 sourcepaths.Center5ToSourceShoot
                                                                                                                 .name()),
-                                                                                m_swerve),
+                                                                                m_swerve, true),
                                                                 new CenterToShoot(m_cf,
                                                                                 m_pf.pathMaps.get(
                                                                                                 sourcepaths.Center4ToSourceShoot
                                                                                                                 .name()),
-                                                                                m_swerve),
+                                                                                m_swerve, true),
                                                                 () -> m_cf.innerNoteFirst),
 
                                                 Commands.parallel(
@@ -238,7 +238,7 @@ public class TriggerCommandFactory implements Logged {
                 Trigger secondNoteToShootAmp = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
                                 m_swerve.ampActive && m_swerve.isStopped() && m_transfer.isStopped()
                                 && m_transfer.noteAtIntake()
-                                && !stepRunning && m_swerve.autostep == movefromshoottosecondnotepickup);
+                                && !stepRunning && m_swerve.autostep == movetoshootfromsecondpickup);
 
                 // // if note C4 isn't collected, go try C5
                 Trigger firstNoteToSecondNoteAmp = new Trigger(() -> DriverStation.isAutonomousEnabled()
@@ -254,11 +254,11 @@ public class TriggerCommandFactory implements Logged {
                                                                 new CenterToShoot(m_cf, m_pf.pathMaps.get(
                                                                                 amppaths.Center2ToAmpShoot
                                                                                                 .name()),
-                                                                                m_swerve),
+                                                                                m_swerve, false),
                                                                 new CenterToShoot(m_cf, m_pf.pathMaps.get(
                                                                                 amppaths.Center1ToAmpShoot
                                                                                                 .name()),
-                                                                                m_swerve),
+                                                                                m_swerve, false),
                                                                 () -> m_cf.innerNoteFirst),
 
                                                 Commands.parallel(
@@ -283,9 +283,9 @@ public class TriggerCommandFactory implements Logged {
                                 Commands.runOnce(() -> stepRunning = true),
                                 Commands.either(
                                                 new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
-                                                                .name()), m_swerve),
+                                                                .name()), m_swerve, false),
                                                 new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
-                                                                .name()), m_swerve),
+                                                                .name()), m_swerve, false),
                                                 () -> m_cf.innerNoteFirst),
 
                                 Commands.parallel(

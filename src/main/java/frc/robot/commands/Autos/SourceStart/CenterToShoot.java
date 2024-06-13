@@ -4,13 +4,8 @@
 
 package frc.robot.commands.Autos.SourceStart;
 
-import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -22,31 +17,24 @@ import frc.robot.subsystems.SwerveSubsystem;
 /** Add your docs here. */
 public class CenterToShoot extends SequentialCommandGroup {
 
-        public PathPlannerPath getPath(String pathname) {
-                return PathPlannerPath.fromPathFile(pathname);
-        }
-
-        PathConstraints pathConstraints = new PathConstraints(
-                        3.0, 4.0,
-                        Units.degreesToRadians(360),
-                        Units.degreesToRadians(540));
-
-        public Command getPathToPose(Pose2d pose, PathConstraints constraints) {
-                return AutoBuilder.pathfindToPose(pose, constraints, 0, 2);
-        }
-
         public CenterToShoot(
                         CommandFactory cf,
                         PathPlannerPath path,
-                        SwerveSubsystem swerve) {
+                        SwerveSubsystem swerve,
+                        boolean source) {
 
                 addCommands(
                                 Commands.parallel(
                                                 new RunPPath(swerve,
                                                                 path),
-                                                cf.positionArmRunShooterSpecialCase(
-                                                                Constants.sourceShootAngle,
-                                                                Constants.sourceShootSpeed)),
+                                                Commands.either(
+                                                                cf.positionArmRunShooterSpecialCase(
+                                                                                Constants.sourceShootAngle,
+                                                                                Constants.sourceShootSpeed),
+                                                                cf.positionArmRunShooterSpecialCase(
+                                                                                Constants.ampShootAngle,
+                                                                                Constants.ampShootSpeed),
+                                                                () -> source)),
 
                                 new AutoAlignSpeaker(swerve, true),
 

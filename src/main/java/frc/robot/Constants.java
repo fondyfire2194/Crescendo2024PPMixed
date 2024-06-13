@@ -491,7 +491,7 @@ public final class Constants {
                 shooterLobRPMMap.put(SwerveConstants.maxLobDistance, 2800.);
         }
 
-        public static double subwfrArmAngle = 55;//60;// degrees
+        public static double subwfrArmAngle = 55;// 60;// degrees
         public static double subwfrShooterSpeed = 3000;// rpm
 
         public static double autoShootArmAngle = 60;// degrees
@@ -499,6 +499,9 @@ public final class Constants {
 
         public static double sourceShootAngle = 20; // 26
         public static double sourceShootSpeed = 3800; // 4000
+
+        public static double ampShootAngle = 20; // 26
+        public static double ampShootSpeed = 3800; // 4000
 
         public static double wing1ArmAngle = 34;// degrees
         public static double wing1ShooterSpeed = 3500;// rpm
