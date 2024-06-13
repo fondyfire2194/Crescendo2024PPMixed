@@ -21,6 +21,7 @@ import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sourcepaths;
+import frc.robot.commands.Autos.SourceStart.SourceVisionPickup;
 import frc.robot.commands.Drive.CheckOKSwitchToDrive;
 import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Pathplanner.RunPPath;
@@ -37,26 +38,11 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
         public AutoSourceShootSelect(
                         CommandFactory cf,
                         PathFactory pf,
-                      AutoFactory af,
+                        AutoFactory af,
                         SwerveSubsystem swerve,
                         IntakeSubsystem intake,
                         TransferSubsystem transfer,
                         boolean innerNoteFirst) {
-
-                i = () -> af.m_methodChooser.getSelected();
-
-                Command m_exampleSelectCommand = new SelectCommand<>(
-                                // Maps selector values to commands
-                                Map.ofEntries(
-                                                Map.entry("PATH",
-                                                                this.pathMethodCommand(swerve, pf, cf, innerNoteFirst)),
-                                                Map.entry("PATHFIND",
-                                                                this.pathfindMethod(swerve, pf, cf, intake, transfer,
-                                                                                innerNoteFirst)),
-                                                Map.entry("VISION",
-                                                                this.visionMethod(swerve, pf, cf, intake, transfer,
-                                                                                innerNoteFirst))),
-                                i);
 
                 addCommands(
 
@@ -72,32 +58,17 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
                                 cf.transferNoteToShooterCommand(),
                                 cf.armToIntake(),
                                 // move to center note , pick up if there and move to shoot position then shoot
-                                m_exampleSelectCommand,
+                                // visionMethod(swerve, pf, cf, intake,
+                                // transfer, innerNoteFirst),
+                                new SourceVisionPickup(cf, pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
+                                                pf.pathMaps.get(sourcepaths.SourceToCenter5.name()), 
+                                                transfer, intake,
+                                                swerve, innerNoteFirst),
                                 Commands.parallel(
                                                 Commands.runOnce(() -> swerve.autostep = 1),
                                                 Commands.runOnce(() -> cf.innerNoteFirst = innerNoteFirst))
 
                 );
-
-        }
-
-        Command pathMethodCommand(SwerveSubsystem swerve, PathFactory pf, CommandFactory cf, boolean innerNoteFirst) {
-
-                return Commands.parallel(
-
-                                Commands.either(
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(
-                                                                                sourcepaths.SourceToCenter4
-                                                                                                .name())),
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(
-                                                                                sourcepaths.SourceShootToCenter5
-                                                                                                .name())),
-                                                () -> innerNoteFirst),
-                                Commands.sequence(
-                                                Commands.waitSeconds(1),
-                                                cf.doIntake()));
 
         }
 
@@ -138,7 +109,7 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
 
                 return Commands.sequence(
 
-                                new ParallelRaceGroup(
+                                Commands.race(
                                                 new CheckOKSwitchToDrive(swerve, 2),
                                                 Commands.either(
                                                                 new RunPPath(swerve,
@@ -150,10 +121,13 @@ public class AutoSourceShootSelect extends SequentialCommandGroup {
                                                                                                 sourcepaths.SourceShootToCenter5
                                                                                                                 .name())),
                                                                 () -> innerNoteFirst)),
-
-                                Commands.parallel(
-                                                new DriveToPickupNote(swerve, transfer, intake,CameraConstants.rearCamera.camname),
-                                                cf.doIntake()));
+                                Commands.either(
+                                                Commands.parallel(
+                                                                new DriveToPickupNote(swerve, transfer, intake,
+                                                                                CameraConstants.rearCamera.camname),
+                                                                cf.doIntake()),
+                                                Commands.none(),
+                                                () -> swerve.noteSeen));
 
         }
 

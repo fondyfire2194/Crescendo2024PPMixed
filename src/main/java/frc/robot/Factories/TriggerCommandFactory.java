@@ -14,6 +14,7 @@ import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.AmpStart.AmpShootToCenterPickup;
 import frc.robot.commands.Autos.SourceStart.CenterToShoot;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
+import frc.robot.commands.Autos.SourceStart.SourceVisionPickup;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.TryForAnotherNote;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
@@ -155,18 +156,15 @@ public class TriggerCommandFactory implements Logged {
                 shootToSecondNoteSource.onTrue(
                                 Commands.sequence(
                                                 Commands.runOnce(() -> stepRunning = true),
-                                                Commands.either(
-                                                                new SourceShootToCenterPickup(m_cf,
-                                                                                m_pf.pathMaps.get(
-                                                                                                sourcepaths.SourceShootToCenter5
-                                                                                                                .name()),
-                                                                                m_swerve),
-                                                                new SourceShootToCenterPickup(m_cf,
-                                                                                m_pf.pathMaps.get(
-                                                                                                sourcepaths.SourceShootToCenter4
-                                                                                                                .name()),
-                                                                                m_swerve),
-                                                                () -> m_cf.innerNoteFirst),
+                                                new SourceVisionPickup(
+                                                m_cf,
+                                                m_pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
+                                                m_pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
+                                                m_transfer,
+                                                m_intake,
+                                                m_swerve,
+                                                true),
+
                                                 Commands.parallel(
                                                                 Commands.runOnce(
                                                                                 () -> m_swerve.autostep = checkfornote2),
@@ -234,13 +232,14 @@ public class TriggerCommandFactory implements Logged {
                 // note
                 Trigger shootToSecondNoteAmp = new Trigger(() -> DriverStation.isAutonomousEnabled()
                                 && m_swerve.isStopped() && m_swerve.ampActive
-                                && m_transfer.isStopped() && !stepRunning && m_swerve.autostep == checkfornote2);
+                                && m_transfer.isStopped() && !stepRunning
+                                && m_swerve.autostep == movefromshoottosecondnotepickup);
 
                 // // if second note is picked up, go shoot it
                 Trigger secondNoteToShootAmp = new Trigger(() -> DriverStation.isAutonomousEnabled() &&
                                 m_swerve.ampActive && m_swerve.isStopped() && m_transfer.isStopped()
                                 && m_transfer.noteAtIntake()
-                                && !stepRunning && m_swerve.autostep == notemissingfindanother);
+                                && !stepRunning && m_swerve.autostep == movefromshoottosecondnotepickup);
 
                 // // if note C4 isn't collected, go try C5
                 Trigger firstNoteToSecondNoteAmp = new Trigger(() -> DriverStation.isAutonomousEnabled()
@@ -267,7 +266,7 @@ public class TriggerCommandFactory implements Logged {
                                                                 Commands.runOnce(
                                                                                 () -> m_swerve.autostep = movefromshoottosecondnotepickup),
                                                                 Commands.runOnce(() -> stepRunning = false))));
-                                                                
+
                 shootToSecondNoteAmp.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
                                 Commands.either(
@@ -304,23 +303,23 @@ public class TriggerCommandFactory implements Logged {
                                 new RotateToAngle(m_swerve, 90)
                                                 .unless(() -> LimelightHelpers
                                                                 .getTV(CameraConstants.rearCamera.camname)),
-                                                                m_intake.startIntakeCommand(),
-                                                                Commands.deadline(
-                                                                                new TryForAnotherNote(m_swerve, m_transfer, m_intake,
-                                                                                                CameraConstants.rearCamera.camname),
-                                                                                new TransferIntakeToSensor(m_transfer, m_intake, 6)),
-                
-                                                                Commands.either(
-                                                                                Commands.sequence(
-                                                                                                m_cf.autopickup(AllianceUtil
-                                                                                                                .getAmpClearStagePose()),
-                                                                                                m_cf.autopickup(AllianceUtil
-                                                                                                                .getAmpShootPose())),
-                                                                                Commands.none(),
-                                                                                () -> m_transfer.noteAtIntake()),
-                                                                Commands.parallel(
-                                                                                Commands.runOnce(() -> m_swerve.autostep = endit),
-                                                                                Commands.runOnce(() -> stepRunning = false))));
-                        }
+                                m_intake.startIntakeCommand(),
+                                Commands.deadline(
+                                                new TryForAnotherNote(m_swerve, m_transfer, m_intake,
+                                                                CameraConstants.rearCamera.camname),
+                                                new TransferIntakeToSensor(m_transfer, m_intake, 6)),
+
+                                Commands.either(
+                                                Commands.sequence(
+                                                                m_cf.autopickup(AllianceUtil
+                                                                                .getAmpClearStagePose()),
+                                                                m_cf.autopickup(AllianceUtil
+                                                                                .getAmpShootPose())),
+                                                Commands.none(),
+                                                () -> m_transfer.noteAtIntake()),
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.autostep = endit),
+                                                Commands.runOnce(() -> stepRunning = false))));
+        }
 
 }

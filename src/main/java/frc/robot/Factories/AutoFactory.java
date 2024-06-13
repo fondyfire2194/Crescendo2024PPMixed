@@ -31,8 +31,6 @@ public class AutoFactory implements Logged {
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
 
-        public final SendableChooser<String> m_methodChooser = new SendableChooser<String>();
-
         @Log.NT(key = "finalchoice")
         public int finalChoice = 0;
 
@@ -93,14 +91,9 @@ public class AutoFactory implements Logged {
                 m_ampStartChooser.addOption("C1 then C2", 22);
                 maxampauto = 22;
 
-                m_methodChooser.setDefaultOption("Vision", "VISION");
-                m_methodChooser.addOption("Pathfind", "PATHFIND");
-                m_methodChooser.addOption("Path", "PATH");
-
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
                 SmartDashboard.putData("Amp Start", m_ampStartChooser);
                 SmartDashboard.putData("SubwfrStart", m_subwfrStartChooser);
-                SmartDashboard.putData("CenterMethod", m_methodChooser);
 
         }
 
@@ -191,7 +184,7 @@ public class AutoFactory implements Logged {
 
                         case 21:
                                 return new AutoAmpShootSelect(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, false);
+                                                m_swerve, m_intake, m_transfer, true);
 
                         case 22:
                                 return new AutoAmpShootSelect(m_cf, m_pf, this,

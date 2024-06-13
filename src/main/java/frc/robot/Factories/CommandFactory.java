@@ -135,7 +135,7 @@ public class CommandFactory implements Logged {
 
                                 m_intake.startIntakeCommand(),
 
-                                new TransferIntakeToSensor(m_transfer, m_intake, 3));
+                                new TransferIntakeToSensor(m_transfer, m_intake, 10));
         }
 
         public Command armToIntake() {

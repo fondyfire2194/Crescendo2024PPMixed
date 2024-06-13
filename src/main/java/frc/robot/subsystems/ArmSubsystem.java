@@ -214,7 +214,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             cancdrokctr = 0;
         }
         lastPosition = currentPosition;
-        return RobotBase.isSimulation() || cancdrokctr < 3;
+        return RobotBase.isSimulation() || cancdrokctr < 10;
     }
 
     private boolean checkMotorCanOK(CANSparkMax motor) {

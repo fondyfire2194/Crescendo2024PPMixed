@@ -320,6 +320,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return Math.IEEEremainder((gyro.getAngle()), 360);
   }
 
+  public double getAngle() {
+    return gyro.getAngle();
+  }
+
   @Log.NT(key = "poseestimate")
   public Pose2d getPose() {
     if (RobotBase.isReal())
@@ -457,11 +461,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public double[] getDrivePositions() {
     return new double[] {
-      mSwerveMods[0].getDrivePosition(),
-      mSwerveMods[0].getDrivePosition(),
-      mSwerveMods[0].getPositionRadians(),
-      mSwerveMods[0].getPositionRadians()
-  };
+        mSwerveMods[0].getDrivePosition(),
+        mSwerveMods[0].getDrivePosition(),
+        mSwerveMods[0].getPositionRadians(),
+        mSwerveMods[0].getPositionRadians()
+    };
   }
 
   private boolean checkMod0CansOK() {
@@ -482,8 +486,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public Command testAllCan() {
     return Commands.sequence(
-        Commands.
-        runOnce(() -> mod0connected = false),
+        Commands.runOnce(() -> mod0connected = false),
         runOnce(() -> mod1connected = false),
         runOnce(() -> mod2connected = false),
         runOnce(() -> mod3connected = false));
@@ -515,7 +518,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     if (RobotBase.isReal())
       return gyro.getRotation2d();
     else
-    
+
       return simOdometryPose.getRotation();
   }
 
@@ -561,6 +564,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Drive/AUSEp", autostep);
+    SmartDashboard.putNumber("Drive/GyroAngle", getAngle());
 
     m_field.setRobotPose(getPose());
 
@@ -866,9 +870,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public double remainingdistance;
 
-public boolean sourceActive;
+  public boolean sourceActive;
 
-public boolean ampActive;
+  public boolean ampActive;
+
+public boolean noteSeen;
 
   public void setPathRunning() {
     pathRunning = true;
