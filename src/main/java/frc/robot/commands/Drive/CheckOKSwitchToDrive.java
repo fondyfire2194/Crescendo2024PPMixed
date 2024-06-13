@@ -5,6 +5,7 @@
 package frc.robot.commands.Drive;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
@@ -52,8 +53,12 @@ public class CheckOKSwitchToDrive extends Command {
     else
       m_swerve.remainingdistance = FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX();
 
+    SmartDashboard.putNumber("RMGDST", m_swerve.remainingdistance);
+
     m_swerve.noteSeen = LimelightHelpers.getTV(CameraConstants.rearCamera.camname)
         || m_swerve.remainingdistance <= m_switchoverDistance && RobotBase.isSimulation();
+
+        SmartDashboard.putBoolean("RMGns", m_swerve.noteSeen);
   }
 
   // Called once the command ends or is interrupted.
