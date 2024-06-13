@@ -31,7 +31,6 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
-import frc.robot.Factories.TriggerCommandFactory;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
@@ -89,8 +88,6 @@ public class RobotContainer implements Logged {
 
         public final AutoFactory m_af;
 
-        public final TriggerCommandFactory m_tcf;
-
         BooleanSupplier keepAngle;
 
         public BooleanSupplier fieldRelative;
@@ -119,8 +116,6 @@ public class RobotContainer implements Logged {
                 registerNamedCommands();
                 m_af = new AutoFactory(m_pf, m_cf, m_swerve, m_shooter, m_arm, m_intake, m_transfer);
 
-                m_tcf = new TriggerCommandFactory(m_swerve, m_transfer, m_intake,
-                                m_pf, m_cf);
                 if (RobotBase.isReal()) {
                         // Pref.deleteUnused();
                         Pref.addMissing();
@@ -196,7 +191,6 @@ public class RobotContainer implements Logged {
                                                                 .getAngleDegrees()),
                                                 Commands.runOnce(() -> m_transfer.logShot = false)));
 
-                m_tcf.createCommonTriggers();
 
                 checkAutoSelectLoop = new EventLoop();
 
@@ -491,11 +485,11 @@ public class RobotContainer implements Logged {
                 }
 
                 if (m_af.validStartChoice >= m_af.minsourceauto && m_af.validStartChoice <= m_af.maxsourceauto) {
-                        m_tcf.createSourceTriggers();
+                       
                         m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose).runsWhenDisabled();
                 }
                 if (m_af.validStartChoice >= m_af.minampauto && m_af.validStartChoice <= m_af.maxampauto) {
-                        m_tcf.createAmpTriggers();
+                      
                         m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
                 }
         }

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.Autos.SourceStart;
+package frc.robot.commands.Autos.Autos;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
@@ -29,15 +29,13 @@ public class PickupUsingVision extends SequentialCommandGroup {
                         TransferSubsystem transfer,
                         IntakeSubsystem intake,
                         SwerveSubsystem swerve,
+                        boolean innerNoteFirst,
                         double xcropmin,
                         double xcropmax,
                         double ycropmin,
                         double ycropmax) {
 
                 addCommands(
-
-                                Commands.runOnce(() -> SmartDashboard.putBoolean("CFFIRST1",
-                                                cf.innerNoteFirst)),
 
                                 Commands.runOnce(
                                                 () -> LimelightHelpers.setCropWindow(CameraConstants.rearCamera.camname,
@@ -48,7 +46,7 @@ public class PickupUsingVision extends SequentialCommandGroup {
                                                 Commands.either(
                                                                 new RunPPath(swerve, path),
                                                                 new RunPPath(swerve, path1),
-                                                                () -> cf.innerNoteFirst)),
+                                                                () -> innerNoteFirst)),
                                 Commands.either(
                                                 Commands.parallel(
                                                                 new DriveToPickupNote(swerve, transfer,

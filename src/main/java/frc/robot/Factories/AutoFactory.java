@@ -9,8 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
-import frc.robot.commands.Autos.AutoStarts.AutoAmpStep0;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceStep0;
+import frc.robot.commands.Autos.AutoStarts.AutoAmpComplete;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceComplete;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -176,18 +176,21 @@ public class AutoFactory implements Logged {
                                                 sbwfrpaths.Quick3ToNote1);
 
                         case 11:
-                                return new AutoSourceStep0(m_cf, m_pf, this,
+                                return new AutoSourceComplete(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, true);
                         case 12:
-                                return new AutoSourceStep0(m_cf, m_pf, this,
+                                return new AutoSourceComplete(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, false);
 
+                        // case 21:
+                        // return new AutoAmpStep0(m_cf, m_pf, this,
+                        // m_swerve, m_intake, m_transfer, true);
                         case 21:
-                                return new AutoAmpStep0(m_cf, m_pf, this,
+                                return new AutoAmpComplete(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, true);
 
                         case 22:
-                                return new AutoAmpStep0(m_cf, m_pf, this,
+                                return new AutoAmpComplete(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, false);
 
                         default:

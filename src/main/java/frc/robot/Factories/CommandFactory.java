@@ -51,7 +51,6 @@ public class CommandFactory implements Logged {
         @Log.NT(key = "startpose")
         Pose2d tempPose2d = new Pose2d();
 
-        public boolean innerNoteFirst;
 
         public int testNotesRun;
 
