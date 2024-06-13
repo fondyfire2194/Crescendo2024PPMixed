@@ -35,7 +35,7 @@ public class CheckOKSwitchToDrive extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-m_swerve.noteSeen=false;
+    m_swerve.noteSeen = false;
     LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, LLPipelines.pipelines.NOTEDETECT1.ordinal());
 
   }
@@ -47,13 +47,13 @@ m_swerve.noteSeen=false;
 
     // get horizontal angle
 
-   m_swerve. noteSeen = LimelightHelpers.getTV(CameraConstants.rearCamera.camname);
-
     if (AllianceUtil.isRedAlliance())
       m_swerve.remainingdistance = m_swerve.getX() - FieldConstants.FIELD_LENGTH / 2;
     else
       m_swerve.remainingdistance = FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX();
 
+    m_swerve.noteSeen = LimelightHelpers.getTV(CameraConstants.rearCamera.camname)
+        || m_swerve.remainingdistance <= m_switchoverDistance && RobotBase.isSimulation();
   }
 
   // Called once the command ends or is interrupted.
@@ -64,6 +64,6 @@ m_swerve.noteSeen=false;
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_swerve.remainingdistance <= m_switchoverDistance && (RobotBase.isSimulation() || m_swerve.noteSeen);
+    return m_swerve.noteSeen;
   }
 }

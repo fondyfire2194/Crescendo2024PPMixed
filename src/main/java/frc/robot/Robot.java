@@ -204,9 +204,11 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-     m_robotContainer.m_transfer.skipFirstNoteInSim = true;
-     m_robotContainer.m_transfer.skipSecondNoteInSim = true;
 
+    if(RobotBase.isSimulation()){
+     m_robotContainer.m_transfer.skipFirstNoteInSim = false;
+     m_robotContainer.m_transfer.skipSecondNoteInSim = false;
+    }
     if (m_robotContainer.m_af.validChoice) {
 
       m_autonomousCommand = m_robotContainer.m_af.getAutonomousCommand();

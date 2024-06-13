@@ -5,6 +5,7 @@
 package frc.robot.Factories;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.LimelightHelpers;
@@ -13,6 +14,7 @@ import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.AmpStart.AmpShootToCenterPickup;
 import frc.robot.commands.Autos.SourceStart.CenterToShoot;
+import frc.robot.commands.Autos.SourceStart.PickupUsingVision;
 import frc.robot.commands.Autos.SourceStart.SourceShootToCenterPickup;
 import frc.robot.commands.Autos.SourceStart.SourceVisionPickup;
 import frc.robot.commands.Drive.RotateToAngle;
@@ -133,7 +135,8 @@ public class TriggerCommandFactory implements Logged {
                 // set step 2 if note present or step 6 if not
 
                 firstNoteToShootSource.onTrue(
-                                Commands.sequence(
+                                Commands.sequence(Commands.runOnce(() -> SmartDashboard.putBoolean("CFFIRST",
+                                                m_cf.innerNoteFirst)),
                                                 Commands.runOnce(() -> stepRunning = true),
                                                 Commands.either(
                                                                 new CenterToShoot(m_cf,
@@ -155,15 +158,14 @@ public class TriggerCommandFactory implements Logged {
 
                 shootToSecondNoteSource.onTrue(
                                 Commands.sequence(
+
                                                 Commands.runOnce(() -> stepRunning = true),
-                                                new SourceVisionPickup(
-                                                m_cf,
-                                                m_pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
-                                                m_pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
-                                                m_transfer,
-                                                m_intake,
-                                                m_swerve,
-                                                true),
+                                                new PickupUsingVision(
+                                                                m_cf,
+                                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
+                                                                m_pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
+                                                                m_transfer, m_intake, m_swerve,
+                                                                -1, 1, -1, 1),
 
                                                 Commands.parallel(
                                                                 Commands.runOnce(
@@ -269,17 +271,12 @@ public class TriggerCommandFactory implements Logged {
 
                 shootToSecondNoteAmp.onTrue(Commands.sequence(
                                 Commands.runOnce(() -> stepRunning = true),
-                                Commands.either(
-                                                new AmpShootToCenterPickup(m_cf,
-                                                                m_pf.pathMaps.get(amppaths.AmpShootToCenter1
-                                                                                .name()),
-                                                                m_swerve),
-                                                new AmpShootToCenterPickup(m_cf,
-                                                                m_pf.pathMaps.get(amppaths.AmpShootToCenter2
-                                                                                .name()),
-                                                                m_swerve),
-
-                                                () -> m_cf.innerNoteFirst),
+                                new PickupUsingVision(
+                                                m_cf,
+                                                m_pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
+                                                m_pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
+                                                m_transfer, m_intake, m_swerve,
+                                                -1, 1, -1, 1),
 
                                 Commands.parallel(
                                                 Commands.runOnce(() -> m_swerve.autostep = checkfornote2),

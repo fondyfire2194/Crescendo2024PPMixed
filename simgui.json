@@ -28,11 +28,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/CenterMethod": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/DelayChooser": {
         "window": {
           "visible": true
@@ -67,6 +62,12 @@
     }
   },
   "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "Retained Values": {
+      "open": false
+    },
     "transitory": {
       "Monologue": {
         "m_swerve": {
