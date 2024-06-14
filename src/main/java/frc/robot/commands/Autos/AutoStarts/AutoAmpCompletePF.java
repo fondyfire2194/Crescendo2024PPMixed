@@ -42,11 +42,11 @@ public class AutoAmpCompletePF extends SequentialCommandGroup {
 
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
-                                Commands.runOnce(() -> swerve.ampActive = false),
-                                Commands.runOnce(() -> swerve.sourceActive = true),
+                                Commands.runOnce(() -> swerve.ampActive = true),
+                                Commands.runOnce(() -> swerve.sourceActive = false),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
 
-                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
@@ -57,7 +57,7 @@ public class AutoAmpCompletePF extends SequentialCommandGroup {
                                 new PickupUsingPathfind(cf,
                                                 pf.pathMaps.get(amppaths.AmpToNearCenter2.name()),
                                                 FieldConstants.centerNote2PickupBlue,
-                                                pf.pathMaps.get(amppaths.AmpToNearCenter2.name()),
+                                                pf.pathMaps.get(amppaths.AmpToNearCenter1.name()),
                                                 FieldConstants.centerNote1PickupBlue,
                                                 intake, swerve, innerNoteFirst),
 
@@ -76,22 +76,22 @@ public class AutoAmpCompletePF extends SequentialCommandGroup {
                                                 () -> transfer.noteAtIntake()),
 
                                 new PickupUsingPathfind(cf,
-                                                pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
-                                                FieldConstants.centerNote2PickupBlue,
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
                                                 FieldConstants.centerNote1PickupBlue,
+                                                pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
+                                                FieldConstants.centerNote2PickupBlue,
                                                 intake, swerve, innerNoteFirst),
 
                                 Commands.either(
                                                 Commands.either(
                                                                 new CenterToShoot(cf, pf.pathMaps
-                                                                                .get(amppaths.AmpShootToCenter1
+                                                                                .get(amppaths.Center1ToAmpShoot
                                                                                                 .name()),
                                                                                 swerve, false),
                                                                 new CenterToShoot(cf, pf.pathMaps
-                                                                                .get(amppaths.AmpShootToCenter2
+                                                                                .get(amppaths.Center2ToAmpShoot
                                                                                                 .name()),
-                                                                                swerve, true),
+                                                                                swerve, false),
                                                                 () -> innerNoteFirst),
 
                                                 getAnotherNote(swerve, transfer, intake, cf),
