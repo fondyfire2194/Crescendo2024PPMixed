@@ -8,40 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.748632311460974,
-        "y": 6.217578848494599
+        "x": 4.809782938100838,
+        "y": 6.454465827910569
       },
       "isLocked": false,
       "linkedName": "Amp side shooting point"
     },
     {
       "anchor": {
-        "x": 5.272282384793014,
-        "y": 6.722020177278586
+        "x": 8.26107756544037,
+        "y": 7.464153085908837
       },
       "prevControl": {
-        "x": 4.253370001053274,
-        "y": 6.276292656129857
-      },
-      "nextControl": {
-        "x": 6.291194768532754,
-        "y": 7.167747698427315
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 8.288614490658505,
-        "y": 7.42743718561799
-      },
-      "prevControl": {
-        "x": 7.667931674970476,
-        "y": 7.137625805453147
+        "x": 7.640394749752342,
+        "y": 7.174341705743994
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center 1"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -61,7 +45,7 @@
   "reversed": false,
   "folder": "Amp Start",
   "previewStartingState": {
-    "rotation": -163.0091767080139,
+    "rotation": -153.43494882292202,
     "velocity": 0
   },
   "useDefaultConstraints": true
