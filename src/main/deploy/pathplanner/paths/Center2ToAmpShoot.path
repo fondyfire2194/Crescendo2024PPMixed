@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.270256540513081,
-        "y": 5.793579622675338
+        "x": 8.25189859036766,
+        "y": 5.775221672529917
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.75409558102159,
-        "y": 5.977666633049554
+        "x": 7.7357376308761685,
+        "y": 5.959308682904133
       },
       "isLocked": false,
       "linkedName": "Center 2"
@@ -41,7 +41,7 @@
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Amp side shooting point"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],

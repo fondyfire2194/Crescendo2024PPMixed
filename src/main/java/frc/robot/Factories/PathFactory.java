@@ -45,8 +45,8 @@ public class PathFactory {
         AmpToCenter2,
         AmpToNearCenter1,
         AmpToNearCenter2,
-        NearCenter2ToCenter2,
-        NearCenter1ToCenter1,
+        AmpShootToNearCenter1,
+        AmpShootToNearCenter2,
         AmpToWing1,
         Center1ToAmpShoot,
         Center2ToAmpShoot,
@@ -76,15 +76,12 @@ public class PathFactory {
         SourceToCenter5,
         SourceToNearCenter4,
         SourceToNearCenter5,
-        SourceToNearCenter4_5,
-        NearCenter4ToCenter4,
-        NearCenter5ToCenter5,
         SourceShootToCenter4,
         SourceShootToCenter5,
+        SourceShootToNearCenter4,
+        SourceShootToNearCenter5,
         Center4ToSourceShoot,
-        Center5ToSourceShoot,
-        Center4ToCenter5,
-        Center5ToCenter4;
+        Center5ToSourceShoot;
     }
 
     public boolean checkSourceFilesExist() {

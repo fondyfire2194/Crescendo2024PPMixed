@@ -76,9 +76,9 @@ public class AutoAmpCompletePF extends SequentialCommandGroup {
                                                 () -> transfer.noteAtIntake()),
 
                                 new PickupUsingPathfind(cf,
-                                                pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
+                                                pf.pathMaps.get(amppaths.AmpShootToNearCenter1.name()),
                                                 FieldConstants.centerNote1PickupBlue,
-                                                pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
+                                                pf.pathMaps.get(amppaths.AmpShootToNearCenter2.name()),
                                                 FieldConstants.centerNote2PickupBlue,
                                                 intake, swerve, innerNoteFirst),
 

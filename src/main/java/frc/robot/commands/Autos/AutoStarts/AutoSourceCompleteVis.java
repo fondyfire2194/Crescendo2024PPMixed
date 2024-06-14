@@ -26,9 +26,9 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
-public class AutoSourceComplete extends SequentialCommandGroup {
+public class AutoSourceCompleteVis extends SequentialCommandGroup {
 
-        public AutoSourceComplete(
+        public AutoSourceCompleteVis(
                         CommandFactory cf,
                         PathFactory pf,
                         AutoFactory af,

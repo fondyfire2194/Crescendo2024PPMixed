@@ -16,38 +16,38 @@
     },
     {
       "anchor": {
-        "x": 4.224809988081516,
-        "y": 1.5195091928645403
+        "x": 3.0198827989220907,
+        "y": 1.9751259924273457
       },
       "prevControl": {
-        "x": 3.1793941321904775,
-        "y": 1.701320646062983
+        "x": 1.9744669430310524,
+        "y": 2.156937445625788
       },
       "nextControl": {
-        "x": 5.132568726675916,
-        "y": 1.3616381078916
+        "x": 3.9276415375164913,
+        "y": 1.8172549074544053
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.799270029353182,
-        "y": 1.5195091928645403
+        "x": 6.8,
+        "y": 1.9
       },
       "prevControl": {
-        "x": 5.819003914974801,
-        "y": 1.5392430784861568
+        "x": 6.819733885621619,
+        "y": 1.9197338856216164
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Near Center  4"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1.0,
-      "rotationDegrees": -170.53767779197426,
+      "rotationDegrees": 154.5366549381284,
       "rotateFast": false
     }
   ],
@@ -61,7 +61,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -150.42216131873877,
+    "rotation": -163.03385189146388,
     "rotateFast": false
   },
   "reversed": false,

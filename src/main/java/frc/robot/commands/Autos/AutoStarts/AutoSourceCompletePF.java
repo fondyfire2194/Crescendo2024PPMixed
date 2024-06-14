@@ -75,9 +75,9 @@ public class AutoSourceCompletePF extends SequentialCommandGroup {
                                                 () -> transfer.noteAtIntake()),
 
                                 new PickupUsingPathfind(cf,
-                                                pf.pathMaps.get(sourcepaths.SourceToNearCenter5.name()),
+                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5.name()),
                                                 FieldConstants.centerNote5PickupBlue,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
+                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4.name()),
                                                 FieldConstants.centerNote4PickupBlue,
                                                 intake, swerve, innerNoteFirst),
 

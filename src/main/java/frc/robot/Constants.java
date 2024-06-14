@@ -313,11 +313,11 @@ public final class Constants {
                 // public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new
                 // Rotation2d());
 
-                public static final Pose2d centerNote1PickupBlue = new Pose2d(8.48, 7.44,
-                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                public static final Pose2d centerNote1PickupBlue = new Pose2d(8.26, 7.44,
+                                new Rotation2d(Units.degreesToRadians(193)));// 23.2
 
-                public static final Pose2d centerNote2PickupBlue = new Pose2d(8.48, 5.76,
-                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                public static final Pose2d centerNote2PickupBlue = new Pose2d(8.28, 5.79,
+                                new Rotation2d(Units.degreesToRadians(165)));// 23.2
 
                 public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
                                 new Rotation2d(Units.degreesToRadians(-156)));// 23.2

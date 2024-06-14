@@ -29,9 +29,9 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
-public class AutoAmpComplete extends SequentialCommandGroup {
+public class AutoAmpCompleteVis extends SequentialCommandGroup {
 
-        public AutoAmpComplete(
+        public AutoAmpCompleteVis(
                         CommandFactory cf,
                         PathFactory pf,
                         AutoFactory af,
@@ -57,8 +57,8 @@ public class AutoAmpComplete extends SequentialCommandGroup {
                                 // move to center note , pick up if there and move to shoot position then shoot
 
                                 new PickupUsingVision(cf,
-                                                pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
-                                                pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
+                                                pf.pathMaps.get(amppaths.AmpToCenter2.name()),
+                                                pf.pathMaps.get(amppaths.AmpToCenter1.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
                                                 -1, 1, -1, 1),
 
