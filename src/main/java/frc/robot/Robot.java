@@ -63,33 +63,33 @@ public class Robot extends TimedRobot implements Logged {
     if (RobotBase.isReal()) {
       DriverStation.startDataLog(DataLogManager.getLog());
 
-      Map<Integer, String> motorNameMap = new HashMap<>();
+      // Map<Integer, String> motorNameMap = new HashMap<>();
 
-      motorNameMap.put(SwerveConstants.Mod0.driveMotorID, "Front Left Drive");
-      motorNameMap.put(SwerveConstants.Mod0.angleMotorID, "Front Left Turn");
+      // motorNameMap.put(SwerveConstants.Mod0.driveMotorID, "Front Left Drive");
+      // motorNameMap.put(SwerveConstants.Mod0.angleMotorID, "Front Left Turn");
 
-      motorNameMap.put(SwerveConstants.Mod1.driveMotorID, "Front Right Drive");
-      motorNameMap.put(SwerveConstants.Mod1.angleMotorID, "Front Right Turn");
+      // motorNameMap.put(SwerveConstants.Mod1.driveMotorID, "Front Right Drive");
+      // motorNameMap.put(SwerveConstants.Mod1.angleMotorID, "Front Right Turn");
 
-      motorNameMap.put(SwerveConstants.Mod2.driveMotorID, "Back Left Drive");
-      motorNameMap.put(SwerveConstants.Mod2.angleMotorID, "Back Left Turn");
+      // motorNameMap.put(SwerveConstants.Mod2.driveMotorID, "Back Left Drive");
+      // motorNameMap.put(SwerveConstants.Mod2.angleMotorID, "Back Left Turn");
 
-      motorNameMap.put(SwerveConstants.Mod3.driveMotorID, "Back Right Drive");
-      motorNameMap.put(SwerveConstants.Mod3.angleMotorID, "Back Right Turn");
+      // motorNameMap.put(SwerveConstants.Mod3.driveMotorID, "Back Right Drive");
+      // motorNameMap.put(SwerveConstants.Mod3.angleMotorID, "Back Right Turn");
 
-      motorNameMap.put(CANIDConstants.armID, "Arm");
+      // motorNameMap.put(CANIDConstants.armID, "Arm");
 
-      motorNameMap.put(CANIDConstants.transferID, "Transfer");
+      // motorNameMap.put(CANIDConstants.transferID, "Transfer");
 
-      motorNameMap.put(CANIDConstants.topShooterID, "Shooter Top");
-      motorNameMap.put(CANIDConstants.bottomShooterID, "Shooter Bottom");
+      // motorNameMap.put(CANIDConstants.topShooterID, "Shooter Top");
+      // motorNameMap.put(CANIDConstants.bottomShooterID, "Shooter Bottom");
 
-      motorNameMap.put(CANIDConstants.intakeID, "Intake");
+      // motorNameMap.put(CANIDConstants.intakeID, "Intake");
 
-      motorNameMap.put(CANIDConstants.climberIDLeft, "Climber Left");
-      motorNameMap.put(CANIDConstants.climberIDRight, "Climber Right");
+      // motorNameMap.put(CANIDConstants.climberIDLeft, "Climber Left");
+      // motorNameMap.put(CANIDConstants.climberIDRight, "Climber Right");
 
-      URCL.start(motorNameMap);
+      // URCL.start(motorNameMap);
     } else {
       DriverStation.silenceJoystickConnectionWarning(true);
     }
@@ -204,10 +204,9 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_transfer.simnoteatintake = RobotBase.isSimulation();
 
-
-    if(RobotBase.isSimulation()){
-     m_robotContainer.m_transfer.skipFirstNoteInSim = false;
-     m_robotContainer.m_transfer.skipSecondNoteInSim = false;
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.m_transfer.skipFirstNoteInSim = false;
+      m_robotContainer.m_transfer.skipSecondNoteInSim = false;
     }
     if (m_robotContainer.m_af.validChoice) {
 

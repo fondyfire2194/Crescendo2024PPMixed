@@ -24,17 +24,15 @@ import frc.robot.Pref;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.ShootingData;
-import monologue.Annotations.Log;
-import monologue.Logged;
+
 
 /** Add your docs here. */
-public class CommandFactory implements Logged {
+public class CommandFactory  {
 
         private final SwerveSubsystem m_swerve;
 
@@ -48,7 +46,6 @@ public class CommandFactory implements Logged {
 
         private final ShootingData m_sd;
 
-        @Log.NT(key = "startpose")
         Pose2d tempPose2d = new Pose2d();
 
 
@@ -117,7 +114,6 @@ public class CommandFactory implements Logged {
 
         }
 
-        @Log.NT(key = "posarmrunshootercommand")
         public Command positionArmRunShooterSpecialCase(double armAngleDeg, double shooterSpeed) {
                 return Commands.parallel(
                                 m_arm.setGoalCommand(Units.degreesToRadians(armAngleDeg)),
@@ -125,7 +121,6 @@ public class CommandFactory implements Logged {
 
         }
 
-        // @Log.NT(key = "dointakecommand")
         public Command doIntake() {
                 SmartDashboard.putNumber("IntakeCt", testIn++);
                 return Commands.sequence(

@@ -8,24 +8,28 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVis;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompletePF;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVis;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompletePF;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
+import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
-import monologue.Annotations.Log;
-import monologue.Logged;
+import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
-public class AutoFactory implements Logged {
+public class AutoFactory {
 
         private final PathFactory m_pf;
+
+        private final SubwooferAutoCommands m_sac;
 
         public SendableChooser<Integer> m_subwfrStartChooser = new SendableChooser<Integer>();
 
@@ -33,7 +37,6 @@ public class AutoFactory implements Logged {
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
 
-        @Log.NT(key = "finalchoice")
         public int finalChoice = 0;
 
         int ampChoice;
@@ -43,7 +46,6 @@ public class AutoFactory implements Logged {
         int sourceChoice;
         int sourceChoiceLast;
 
-        @Log.NT(key = "validstartchoice")
         public int validStartChoice = 0;
 
         public int minsbwfrauto;
@@ -63,22 +65,25 @@ public class AutoFactory implements Logged {
 
         public boolean validChoice;
 
-        public AutoFactory(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve, ShooterSubsystem shooter,
+        public AutoFactory(PathFactory pf, CommandFactory cf, SubwooferAutoCommands sac, SwerveSubsystem swerve,
+                        ShooterSubsystem shooter,
                         ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer) {
                 m_pf = pf;
                 m_cf = cf;
+                m_sac = sac;
                 m_swerve = swerve;
                 m_transfer = transfer;
                 m_intake = intake;
 
                 minsbwfrauto = 1;
                 m_subwfrStartChooser.setDefaultOption("Not Used", 0);
-                m_subwfrStartChooser.addOption("        W2-W1-W3", 1);
+                m_subwfrStartChooser.addOption("W2-W1-W3", 1);
                 m_subwfrStartChooser.addOption("W2-W3-W1", 2);
                 m_subwfrStartChooser.addOption("W2-W3", 3);
                 m_subwfrStartChooser.addOption("W2-W1", 4);
-                m_subwfrStartChooser.addOption("W2-C3-W3-W1", 5);
+
+                m_subwfrStartChooser.addOption("W2-C3-SBWFR-W3", 5);
                 maxsbwfrauto = 5;
 
                 minsourceauto = 11;
@@ -156,31 +161,39 @@ public class AutoFactory implements Logged {
                 switch ((choice)) {
 
                         case 1:
-                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_sac, m_swerve,
                                                 sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
                                                 sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot,
                                                 sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot);
                         case 2:
-                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_sac, m_swerve,
                                                 sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
                                                 sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot,
                                                 sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot);
 
                         case 3:
-                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
-                                                sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
-                                                sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot);
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_sac, m_swerve,
+                                                sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot);
 
                         case 4:
-                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
+                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_sac, m_swerve,
                                                 sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
                                                 sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot);
 
                         case 5:
-                                return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_swerve,
-                                                sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToCenter3,
-                                                sbwfrpaths.Center3ToWing2, sbwfrpaths.QuickToNote3,
-                                                sbwfrpaths.Quick3ToNote1);
+                                return Commands.sequence(
+                                                m_sac.setsbwrstart(m_swerve, m_cf),
+                                                m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing2, m_swerve, m_cf,
+                                                                m_pf),
+                                                m_sac.shootbydistance(m_cf),
+                                                m_sac.moveAndPickup(sbwfrpaths.Wing2ToCenter3, m_swerve, m_cf, m_pf),
+                                                m_sac.moveandshoot(sbwfrpaths.Center3ToSubwfrShoot, m_swerve, m_cf,
+                                                                m_pf,
+                                                                Constants.wing2ArmAngle, Constants.wing2ShooterSpeed),
+                                                m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing3Shoot, m_swerve, m_cf,
+                                                                m_pf),
+                                                m_sac.shootbydistance(m_cf));
 
                         case 11:
                                 return new AutoSourceCompleteVis(m_cf, m_pf, this,
@@ -216,6 +229,31 @@ public class AutoFactory implements Logged {
 
                 }
 
+        }
+
+        Command shoot(CommandFactory cf, double angle, double rpm) {
+                return Commands.sequence(
+                                cf.positionArmRunShooterSpecialCase(angle, rpm),
+                                cf.transferNoteToShooterCommand());
+        }
+
+        Command moveandshoot(SwerveSubsystem swerve, sbwfrpaths path, CommandFactory cf, PathFactory pf,
+                        double angle, double rpm) {
+                return Commands.sequence(
+                                Commands.parallel(
+                                                new RunPPath(swerve, pf.pathMaps.get(path.name())),
+                                                cf.positionArmRunShooterSpecialCase(
+                                                                angle, rpm)),
+                                cf.transferNoteToShooterCommand());
+        }
+
+        Command moveAndPickup(SwerveSubsystem swerve, sbwfrpaths path, CommandFactory cf, PathFactory pf) {
+                return Commands.parallel(
+                                new RunPPath(swerve,
+                                                pf.pathMaps.get(path.name())),
+                                Commands.sequence(
+                                                Commands.waitSeconds(.25),
+                                                cf.doIntake()));
         }
 
         public Command getAutonomousCommand() {

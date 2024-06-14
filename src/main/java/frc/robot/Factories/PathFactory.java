@@ -104,10 +104,13 @@ public class PathFactory {
         SubwfrShootToWing1,
         SubwfrShootToWing2,
         SubwfrShootToWing3,
+        SubwfrShootToWing1Shoot,
+        SubwfrShootToWing3Shoot,
         Wing1ToSubwfrShoot,
         Wing2ToSubwfrShoot,
         Wing3ToSubwfrShoot,
         Wing2ToCenter3,
+        Center3ToSubwfrShoot,
         QuickToNote3,
         Quick3ToNote1,
         Center3ToWing2
