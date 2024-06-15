@@ -10,6 +10,8 @@ import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.commands.Pathplanner.RunPPath;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.AllianceUtil;
 
@@ -43,12 +45,14 @@ public class SubwooferAutoCommands {
                 return Commands.sequence(
                                 setArmShooter(cf, Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
+                                cf.checkAtTargets(.3),
                                 shoot(cf));
         }
 
         public Command shootbydistance(CommandFactory cf) {
                 return Commands.sequence(
                                 cf.positionArmRunShooterByDistance(false, true),
+                                
                                 shoot(cf));
         }
 
@@ -57,11 +61,13 @@ public class SubwooferAutoCommands {
         }
 
         public Command moveandshoot(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf,
+                        ShooterSubsystem shooter, ArmSubsystem arm,
                         double angle, double rpm) {
                 return Commands.sequence(
                                 Commands.parallel(
                                                 new RunPPath(swerve, pf.pathMaps.get(path.name())),
                                                 setArmShooter(cf, angle, rpm)),
+                                Commands.waitUntil(() -> shooter.bothAtSpeed(.2) && arm.getAtSetpoint()),
                                 shoot(cf));
         }
 
@@ -82,7 +88,8 @@ public class SubwooferAutoCommands {
                                                 cf.doIntake()));
         }
 
-        public Command moveAndPickupUsingVision(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf) {
+        public Command moveAndPickupUsingVision(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf,
+                        PathFactory pf) {
                 return Commands.parallel(
                                 move(path, swerve, pf),
                                 Commands.sequence(

@@ -53,8 +53,8 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "shtrrunatvel")
   private boolean runShooterVel;
 
-  private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(2500);
-  private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(2500);
+  private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(10000);
+  private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(10000);
   public boolean topMotorConnected;
   public boolean bottomMotorConnected;
 

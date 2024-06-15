@@ -60,6 +60,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                 pf.pathMaps.get(amppaths.AmpToCenter2.name()),
                                                 pf.pathMaps.get(amppaths.AmpToCenter1.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
+                                                -1, 1, -1, 1,
                                                 -1, 1, -1, 1),
 
                                 Commands.either(
@@ -84,6 +85,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
+                                                -1, 1, -1, 1,
                                                 -1, 1, -1, 1),
 
                                 Commands.either(

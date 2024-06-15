@@ -32,16 +32,25 @@ public class PickupUsingVision extends SequentialCommandGroup {
                         double xcropmin,
                         double xcropmax,
                         double ycropmin,
-                        double ycropmax) {
+                        double ycropmax,
+                        double xcropmin1,
+                        double xcropmax1,
+                        double ycropmin1,
+                        double ycropmax1) {
 
                 addCommands(
-
-                                Commands.runOnce(
+                                Commands.either(Commands.runOnce(
                                                 () -> LimelightHelpers.setCropWindow(CameraConstants.rearCamera.camname,
                                                                 xcropmin, xcropmax, ycropmin, ycropmax)),
-
+                                                Commands.runOnce(
+                                                                () -> LimelightHelpers.setCropWindow(
+                                                                                CameraConstants.rearCamera.camname,
+                                                                                xcropmin1, 1, ycropmin1,
+                                                                                ycropmax1)),
+                                                () -> innerNoteFirst),
                                 Commands.race(
                                                 new CheckOKSwitchToDrive(swerve, 2),
+                                                // cf.doIntake(),
                                                 Commands.either(
                                                                 new RunPPath(swerve, path),
                                                                 new RunPPath(swerve, path1),

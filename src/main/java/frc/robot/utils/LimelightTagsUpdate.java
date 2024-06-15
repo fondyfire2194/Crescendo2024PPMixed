@@ -28,6 +28,7 @@ public class LimelightTagsUpdate {
     public void setLLRobotorientation() {
         LimelightHelpers.SetRobotOrientation(m_camname,
                 m_swerve.getPoseEstimator().getEstimatedPosition().getRotation().getDegrees(),
+              //m_swerve.getHeadingDegrees(),
                 0, 0, 0, 0, 0);
     }
 
@@ -42,7 +43,7 @@ public class LimelightTagsUpdate {
             rejectUpdate = mt2.tagCount == 0 || Math.abs(m_swerve.getGyroRate()) > 720;
 
             if (!rejectUpdate) {
-                m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 9999999));
+                m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(1.0, 1.0, 9999999));
                 m_swerve.getPoseEstimator().addVisionMeasurement(
                         mt2.pose,
                         mt2.timestampSeconds);
@@ -57,7 +58,7 @@ public class LimelightTagsUpdate {
                     || mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && mt1.rawFiducials[0].ambiguity >.7 && mt1.rawFiducials[0].distToCamera > 3;
 
             if (!rejectUpdate) {
-                m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(.5, .5, 9999));
+                m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 1));
                 m_swerve.getPoseEstimator().addVisionMeasurement(
                         mt1.pose,
                         mt1.timestampSeconds);

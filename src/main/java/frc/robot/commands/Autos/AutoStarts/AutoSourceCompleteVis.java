@@ -57,19 +57,21 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1),
+                                                -1, 0, -1, 1, -1, 0, -1, 1),
 
                                 Commands.either(
-                                                Commands.either(
-                                                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                                                sourcepaths.Center4ToSourceShoot
-                                                                                                .name()),
-                                                                                swerve, false),
-                                                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                                                sourcepaths.Center5ToSourceShoot
-                                                                                                .name()),
-                                                                                swerve, false),
-                                                                () -> innerNoteFirst),
+                                              
+                                                                Commands.either(
+                                                                                new CenterToShoot(cf, pf.pathMaps.get(
+                                                                                                sourcepaths.Center4ToSourceShoot
+                                                                                                                .name()),
+                                                                                                swerve, false),
+                                                                                new CenterToShoot(cf, pf.pathMaps.get(
+                                                                                                sourcepaths.Center5ToSourceShoot
+                                                                                                                .name()),
+                                                                                                swerve, false),
+                                                                                () -> innerNoteFirst),
+
                                                 getAnotherNote(swerve, transfer, intake, cf),
                                                 () -> transfer.noteAtIntake()),
 
@@ -78,7 +80,8 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1),
+                                                -1, 1, -1, 1,
+                                                 -1, 0, -1, 1),
 
                                 Commands.either(
                                                 Commands.either(

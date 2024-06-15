@@ -16,7 +16,7 @@ public class TransferIntakeToSensor extends Command {
   private final IntakeSubsystem m_intake;
   private final double m_noNoteTime;
   private Timer endTimer = new Timer();
-  private double simmotetime = 2.5;
+  private double simmotetime = 3.5;
 
   /** Creates a new TransferIntakeToSensor. */
   public TransferIntakeToSensor(TransferSubsystem transfer, IntakeSubsystem intake, double noNotetime) {

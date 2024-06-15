@@ -4,6 +4,8 @@
 
 package frc.robot.Factories;
 
+import java.util.function.BooleanSupplier;
+
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.GeometryUtil;
@@ -30,9 +32,8 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.ShootingData;
 
-
 /** Add your docs here. */
-public class CommandFactory  {
+public class CommandFactory {
 
         private final SwerveSubsystem m_swerve;
 
@@ -47,7 +48,6 @@ public class CommandFactory  {
         private final ShootingData m_sd;
 
         Pose2d tempPose2d = new Pose2d();
-
 
         public int testNotesRun;
 
@@ -144,6 +144,10 @@ public class CommandFactory  {
                 return Commands.parallel(
                                 m_arm.setGoalCommand(Units.degreesToRadians(armAngle)),
                                 m_shooter.startShooterCommand(shooterRPM));
+        }
+
+        public Command checkAtTargets(double pct) {
+                return Commands.waitUntil(() -> m_shooter.bothAtSpeed(pct) && m_arm.getAtSetpoint());
         }
 
         public double getLobArmAngleFromTarget(double distance) {

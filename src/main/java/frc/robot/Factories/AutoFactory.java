@@ -8,22 +8,20 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
-import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVis;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompletePF;
+import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVis;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceCompletePF;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVis;
 import frc.robot.commands.Autos.Autos.PickupUsingVision;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceCompletePF;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
+import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
-import frc.robot.utils.AllianceUtil;
 
 /** Add your docs here. */
 public class AutoFactory {
@@ -188,15 +186,17 @@ public class AutoFactory {
                         case 5:
                                 return Commands.sequence(
                                                 m_sac.setsbwrstart(m_swerve, m_cf),
+                                                m_sac.sbwfrShoot(m_cf),
                                                 m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing2, m_swerve, m_cf,
                                                                 m_pf),
                                                 m_sac.shootbydistance(m_cf),
                                                 m_sac.moveAndPickup(sbwfrpaths.Wing2ToCenter3, m_swerve, m_cf, m_pf),
-                                                m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
-                                                m_sac.sbwfrmoveandshoot(sbwfrpaths.Wing2ToSubwfrShoot, m_swerve, m_cf,
+                                                // m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
+                                                m_sac.sbwfrmoveandshoot(sbwfrpaths.Center3ToSubwfrShoot, m_swerve, m_cf,
                                                                 m_pf),
                                                 m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing3Shoot, m_swerve, m_cf,
                                                                 m_pf),
+                                                new AutoAlignSpeaker(m_swerve, true),
                                                 m_sac.shootbydistance(m_cf));
 
                         case 6:
@@ -211,6 +211,7 @@ public class AutoFactory {
                                                                 m_pf),
                                                 m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing1Shoot, m_swerve, m_cf,
                                                                 m_pf),
+                                                new AutoAlignSpeaker(m_swerve, true),
                                                 m_sac.shootbydistance(m_cf));
 
                         case 7:
@@ -223,7 +224,7 @@ public class AutoFactory {
                                                                 m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
                                                                 m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
                                                                 m_transfer, m_intake, m_swerve, true, -1,
-                                                                1, -1, 1),
+                                                                1, -1, 1, -1, 0, -1, 1),
                                                 m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
                                                 m_sac.sbwfrmoveandshoot(sbwfrpaths.Wing2ToSubwfrShoot, m_swerve, m_cf,
                                                                 m_pf),
@@ -240,8 +241,9 @@ public class AutoFactory {
                                                 new PickupUsingVision(m_cf,
                                                                 m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
                                                                 m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
-                                                                m_transfer, m_intake, m_swerve, true, -1,
-                                                                1, -1, 1),
+                                                                m_transfer, m_intake, m_swerve, true,
+                                                                -1, 1, -1, 1,
+                                                                -1, 0, -1, 1),
                                                 m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
                                                 m_sac.sbwfrmoveandshoot(sbwfrpaths.Wing2ToSubwfrShoot, m_swerve, m_cf,
                                                                 m_pf),

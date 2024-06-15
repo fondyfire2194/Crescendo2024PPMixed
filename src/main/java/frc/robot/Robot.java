@@ -153,8 +153,8 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_swerve.flUpdate.setLLRobotorientation();
     m_robotContainer.m_swerve.frUpdate.setLLRobotorientation();
-    m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
-    m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
+    m_robotContainer.m_swerve.flUpdate.setUseMegatag2(false);
+    m_robotContainer.m_swerve.frUpdate.setUseMegatag2(false);
 
   }
 
@@ -184,6 +184,8 @@ public class Robot extends TimedRobot implements Logged {
 
   @Override
   public void autonomousInit() {
+    m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
+    m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
     m_robotContainer.m_arm.enable();
 

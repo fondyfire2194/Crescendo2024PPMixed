@@ -27,6 +27,7 @@ import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
@@ -440,6 +441,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public void resetPoseEstimator(Pose2d pose) {
     zeroGyro();
     swervePoseEstimator.resetPosition(getYaw(), getPositions(), pose);
+    // gyro.setAngleAdjustment(pose.getRotation().getDegrees());
     simOdometryPose = pose;
   }
 
@@ -878,7 +880,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public boolean sourceActive;
 
   public boolean ampActive;
-
+  @Log.NT(key = "noteseen")
   public boolean noteSeen;
 
   public void setPathRunning() {

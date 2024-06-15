@@ -9,6 +9,8 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.Factories.SubwooferAutoCommands;
+import frc.robot.subsystems.ArmSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */
@@ -46,7 +48,7 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
                         CommandFactory cf,
                         PathFactory pf,
                         SubwooferAutoCommands sac,
-                        SwerveSubsystem swerve,
+                        SwerveSubsystem swerve, 
                         sbwfrpaths path1,
                         sbwfrpaths path2,
                         sbwfrpaths path3,
