@@ -46,6 +46,7 @@ import monologue.Annotations.Log;
  * 
  * 
  * *******************NOTES******************************
+ * https://www.firstinspires.org/robotics/frc/playing-field
  * 
  * The 3 start line notes are centered on speaker and 4ft 9 inches = 57 inches
  * either side of that 109.5" from speaker face
