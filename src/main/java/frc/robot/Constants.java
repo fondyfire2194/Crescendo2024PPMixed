@@ -292,6 +292,8 @@ public final class Constants {
                 public static final Pose2d lobBlueAlliance = new Pose2d(0.0, 7.1, Rotation2d.fromDegrees(0.0));
                 public static final Pose2d lobRedAlliance = new Pose2d(16.54, 7.1, Rotation2d.fromDegrees(180.0));
 
+                public static Pose2d speakerAimPointX = new Pose2d(.45,5.55,Rotation2d.fromDegrees(0.0));
+
                 public static Pose2d driverStationBlueAlliance = new Pose2d();
                 public static Pose2d driverStationRedAlliance = new Pose2d();
 

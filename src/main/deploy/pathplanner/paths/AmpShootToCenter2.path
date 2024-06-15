@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.029570056920359,
+        "x": 4.03,
         "y": 6.252528376310915
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.809782938100838,
+        "x": 4.81021288118048,
         "y": 6.436107877765147
       },
       "isLocked": false,
-      "linkedName": "Amp side shooting point"
+      "linkedName": null
     },
     {
       "anchor": {

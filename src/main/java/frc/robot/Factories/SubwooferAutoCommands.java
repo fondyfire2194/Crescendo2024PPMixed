@@ -16,60 +16,78 @@ import frc.robot.utils.AllianceUtil;
 /** Add your docs here. */
 public class SubwooferAutoCommands {
 
-    public SubwooferAutoCommands(SwerveSubsystem swerve, CommandFactory cf) {
-    }
+        public SubwooferAutoCommands(SwerveSubsystem swerve, CommandFactory cf) {
+        }
 
-    public Command setsbwrstart(SwerveSubsystem swerve, CommandFactory cf) {
-        return Commands.sequence(
-                Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
-                cf.setStartPosebyAlliance(FieldConstants.sbwfrStartPose));
-    }
+        public Command setsbwrstart(SwerveSubsystem swerve, CommandFactory cf) {
+                return Commands.sequence(
+                                Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
+                                cf.setStartPosebyAlliance(FieldConstants.sbwfrStartPose));
+        }
 
-    public Command shoot(CommandFactory cf, double angle, double rpm) {
-        return Commands.sequence(
-                cf.positionArmRunShooterSpecialCase(angle, rpm),
-                cf.transferNoteToShooterCommand());
-    }
+        public Command shoot(CommandFactory cf) {
+                return cf.transferNoteToShooterCommand();
+        }
 
-    public Command shootbydistance(CommandFactory cf) {
-        return Commands.sequence(
-                cf.positionArmRunShooterByDistance(false, true),
-                cf.transferNoteToShooterCommand());
-    }
+        public Command setArmShooter(CommandFactory cf, double angle, double rpm) {
+                return cf.positionArmRunShooterSpecialCase(angle, rpm);
+        }
 
-    public Command sbwfrShoot(CommandFactory cf) {
-        return Commands.sequence(
-                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                        Constants.subwfrShooterSpeed),
-                cf.transferNoteToShooterCommand());
-    }
+        public Command shoot(CommandFactory cf, double angle, double rpm) {
+                return Commands.sequence(
+                                setArmShooter(cf, angle, rpm),
+                                shoot(cf));
+        }
 
-    public Command moveandshoot(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf,
-            double angle, double rpm) {
-        return Commands.sequence(
-                Commands.parallel(
-                        new RunPPath(swerve, pf.pathMaps.get(path.name())),
-                        cf.positionArmRunShooterSpecialCase(
-                                angle, rpm)),
-                cf.transferNoteToShooterCommand());
-    }
+        public Command sbwfrShoot(CommandFactory cf) {
+                return Commands.sequence(
+                                setArmShooter(cf, Constants.subwfrArmAngle,
+                                                Constants.subwfrShooterSpeed),
+                                shoot(cf));
+        }
 
-    public Command sbwfrmoveandshoot(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf) {
-        return Commands.sequence(
-                Commands.parallel(
-                        new RunPPath(swerve, pf.pathMaps.get(path.name())),
-                        cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                Constants.subwfrShooterSpeed)),
-                cf.transferNoteToShooterCommand());
-    }
+        public Command shootbydistance(CommandFactory cf) {
+                return Commands.sequence(
+                                cf.positionArmRunShooterByDistance(false, true),
+                                shoot(cf));
+        }
 
-    public Command moveAndPickup(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf) {
-        return Commands.parallel(
-                new RunPPath(swerve,
-                        pf.pathMaps.get(path.name())),
-                Commands.sequence(
-                        Commands.waitSeconds(.25),
-                        cf.doIntake()));
-    }
+        public Command move(sbwfrpaths path, SwerveSubsystem swerve, PathFactory pf) {
+                return new RunPPath(swerve, pf.pathMaps.get(path.name()));
+        }
+
+        public Command moveandshoot(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf,
+                        double angle, double rpm) {
+                return Commands.sequence(
+                                Commands.parallel(
+                                                new RunPPath(swerve, pf.pathMaps.get(path.name())),
+                                                setArmShooter(cf, angle, rpm)),
+                                shoot(cf));
+        }
+
+        public Command sbwfrmoveandshoot(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf) {
+                return Commands.sequence(
+                                Commands.parallel(
+                                                move(path, swerve, pf),
+                                                setArmShooter(cf, Constants.subwfrArmAngle,
+                                                                Constants.subwfrShooterSpeed)),
+                                shoot(cf));
+        }
+
+        public Command moveAndPickup(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf) {
+                return Commands.parallel(
+                                move(path, swerve, pf),
+                                Commands.sequence(
+                                                Commands.waitSeconds(.25),
+                                                cf.doIntake()));
+        }
+
+        public Command moveAndPickupUsingVision(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf, PathFactory pf) {
+                return Commands.parallel(
+                                move(path, swerve, pf),
+                                Commands.sequence(
+                                                Commands.waitSeconds(.25),
+                                                cf.doIntake()));
+        }
 
 }

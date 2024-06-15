@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.2,
-        "y": 2.2
+        "x": 3.4,
+        "y": 2.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.716203223075818,
-        "y": 1.86696566253173
+        "x": 3.9162032230758186,
+        "y": 2.36696566253173
       },
       "isLocked": false,
-      "linkedName": "ShootingPoint"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -39,13 +39,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 173.5206022348332,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Source",
   "previewStartingState": {
-    "rotation": 145.0,
+    "rotation": 138.66414905214543,
     "velocity": 0
   },
   "useDefaultConstraints": true

@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.029570056920359,
+        "x": 4.0,
         "y": 6.252528376310915
       },
       "prevControl": null,
       "nextControl": {
-        "x": 4.809782938100838,
-        "y": 6.454465827910569
+        "x": 4.780216615227261,
+        "y": 6.454451400361721
       },
       "isLocked": false,
-      "linkedName": "Amp side shooting point"
+      "linkedName": null
     },
     {
       "anchor": {
@@ -45,7 +45,7 @@
   "reversed": false,
   "folder": "Amp Start",
   "previewStartingState": {
-    "rotation": -153.43494882292202,
+    "rotation": -168.0,
     "velocity": 0
   },
   "useDefaultConstraints": true
