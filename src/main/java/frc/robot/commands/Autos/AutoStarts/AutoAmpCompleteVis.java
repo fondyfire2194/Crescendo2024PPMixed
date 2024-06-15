@@ -27,6 +27,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
+import frc.robot.utils.LLPipelines;
 
 /** Add your docs here. */
 public class AutoAmpCompleteVis extends SequentialCommandGroup {
@@ -60,8 +61,8 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                 pf.pathMaps.get(amppaths.AmpToCenter2.name()),
                                                 pf.pathMaps.get(amppaths.AmpToCenter1.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1,
-                                                -1, 1, -1, 1),
+                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
+                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
 
                                 Commands.either(
 
@@ -85,8 +86,8 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1,
-                                                -1, 1, -1, 1),
+                                                LLPipelines.pipelines.NDRCROP3.ordinal(),
+                                                LLPipelines.pipelines.NDLCROP2.ordinal()),
 
                                 Commands.either(
 
@@ -115,7 +116,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
-                                                new TransferIntakeToSensor(transfer, intake, 6)),
+                                                new TransferIntakeToSensor(transfer, intake, 6,4)),
                                 Commands.either(
                                                 Commands.sequence(
                                                                 cf.autopickup(AllianceUtil

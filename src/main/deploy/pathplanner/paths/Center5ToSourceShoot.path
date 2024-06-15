@@ -9,7 +9,7 @@
       "prevControl": null,
       "nextControl": {
         "x": 7.520779123909923,
-        "y": 0.9645365509536966
+        "y": 0.9645365509536967
       },
       "isLocked": false,
       "linkedName": "Center 5"
@@ -48,5 +48,5 @@
     "rotation": 180.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

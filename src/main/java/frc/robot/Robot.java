@@ -194,7 +194,7 @@ public class Robot extends TimedRobot implements Logged {
     LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname,
-        LLPipelines.pipelines.NOTEDETECT1.ordinal());
+        LLPipelines.pipelines.ND0CROP1.ordinal());
 
     m_robotContainer.m_swerve.setIdleMode(true);
 
@@ -267,7 +267,7 @@ public class Robot extends TimedRobot implements Logged {
     LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname,
-        LLPipelines.pipelines.NOTEDETECT1.ordinal());
+        LLPipelines.pipelines.ND0CROP1.ordinal());
 
   }
 

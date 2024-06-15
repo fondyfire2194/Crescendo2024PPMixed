@@ -109,7 +109,7 @@ public class AutoAmpCompletePF extends SequentialCommandGroup {
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
-                                                new TransferIntakeToSensor(transfer, intake, 6)),
+                                                new TransferIntakeToSensor(transfer, intake, 6,3)),
 
                                 Commands.either(
                                                 Commands.sequence(

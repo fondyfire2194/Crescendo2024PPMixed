@@ -24,6 +24,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
+import frc.robot.utils.LLPipelines;
 
 /** Add your docs here. */
 public class AutoSourceCompleteVis extends SequentialCommandGroup {
@@ -57,20 +58,21 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
-                                                -1, 0, -1, 1, -1, 0, -1, 1),
+                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
+                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
 
                                 Commands.either(
-                                              
-                                                                Commands.either(
-                                                                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                                                                sourcepaths.Center4ToSourceShoot
-                                                                                                                .name()),
-                                                                                                swerve, false),
-                                                                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                                                                sourcepaths.Center5ToSourceShoot
-                                                                                                                .name()),
-                                                                                                swerve, false),
-                                                                                () -> innerNoteFirst),
+
+                                                Commands.either(
+                                                                new CenterToShoot(cf, pf.pathMaps.get(
+                                                                                sourcepaths.Center4ToSourceShoot
+                                                                                                .name()),
+                                                                                swerve, false),
+                                                                new CenterToShoot(cf, pf.pathMaps.get(
+                                                                                sourcepaths.Center5ToSourceShoot
+                                                                                                .name()),
+                                                                                swerve, false),
+                                                                () -> innerNoteFirst),
 
                                                 getAnotherNote(swerve, transfer, intake, cf),
                                                 () -> transfer.noteAtIntake()),
@@ -80,8 +82,8 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
                                                 transfer, intake, swerve, innerNoteFirst,
-                                                -1, 1, -1, 1,
-                                                 -1, 0, -1, 1),
+                                                LLPipelines.pipelines.NDRCROP3.ordinal(),
+                                                LLPipelines.pipelines.NDLCROP2.ordinal()),
 
                                 Commands.either(
                                                 Commands.either(
@@ -112,7 +114,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
-                                                new TransferIntakeToSensor(transfer, intake, 6)),
+                                                new TransferIntakeToSensor(transfer, intake, 6,2)),
 
                                 Commands.either(
                                                 Commands.sequence(

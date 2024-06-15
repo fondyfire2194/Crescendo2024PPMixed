@@ -39,7 +39,7 @@ public class PickupUsingPathfind extends SequentialCommandGroup {
                                                                 Commands.parallel(
                                                                                 cf.autopickup(AllianceUtil
                                                                                                 .getAlliancePose(pose)),
-                                                                                cf.doIntake())),
+                                                                                cf.doIntake(10, 5))),
                                                 Commands.sequence(
                                                                 new RunPPath(swerve,
                                                                                 path1),
@@ -48,7 +48,7 @@ public class PickupUsingPathfind extends SequentialCommandGroup {
                                                                                 cf.autopickup(AllianceUtil
                                                                                                 .getAlliancePose(
                                                                                                                 pose1)),
-                                                                                cf.doIntake())),
+                                                                                cf.doIntake(10, 5))),
                                                 () -> innerNoteFirst));
         }
 }

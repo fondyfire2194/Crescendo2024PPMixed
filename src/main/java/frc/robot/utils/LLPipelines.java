@@ -3,12 +3,16 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.utils;
+
 /** Add your docs here. */
 public class LLPipelines {
 
     public enum pipelines {
-         APRILTAGALL0(0, pipelinetype.fiducialmarkers),//all tage
-         NOTEDETECT1(1, pipelinetype.detector);
+        APRILTAGALL0(0, pipelinetype.fiducialmarkers), // all tage
+        ND0CROP1(1, pipelinetype.detector),
+        NDLCROP2(2, pipelinetype.detector),
+        NDRCROP3(3, pipelinetype.detector),
+        NDMCROP4(4, pipelinetype.detector);
 
         public static final pipelines values[] = values();
 
@@ -32,9 +36,8 @@ public class LLPipelines {
         fiducialmarkers,
         classifier,
         detector;
-    
-        public static final pipelinetype values[] = values();
-      }
 
+        public static final pipelinetype values[] = values();
+    }
 
 }

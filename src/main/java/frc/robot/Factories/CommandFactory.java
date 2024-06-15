@@ -121,15 +121,12 @@ public class CommandFactory {
 
         }
 
-        public Command doIntake() {
+        public Command doIntake(double noNotetime, double simNoteTime) {
                 SmartDashboard.putNumber("IntakeCt", testIn++);
                 return Commands.sequence(
-
                                 armToIntake(),
-
                                 m_intake.startIntakeCommand(),
-
-                                new TransferIntakeToSensor(m_transfer, m_intake, 10));
+                                new TransferIntakeToSensor(m_transfer, m_intake, noNotetime, simNoteTime));
         }
 
         public Command armToIntake() {

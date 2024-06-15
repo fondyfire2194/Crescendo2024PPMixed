@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.7121783474336195,
-        "y": 4.341454836755828
+        "x": 0.6976021055260757,
+        "y": 4.315764635968784
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.6950025580962881,
-        "y": 4.325375374397473
+        "x": 0.6804263161887443,
+        "y": 4.299685173610429
       },
       "isLocked": false,
       "linkedName": "Bottom Starting Point"
@@ -38,10 +38,10 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 360.0,
-    "maxAngularAcceleration": 225.0
+    "maxAngularAcceleration": 180.0
   },
   "goalEndState": {
     "velocity": 0,
@@ -54,5 +54,5 @@
     "rotation": 120.0,
     "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

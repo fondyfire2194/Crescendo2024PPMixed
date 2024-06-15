@@ -52,7 +52,7 @@ public class SubwooferAutoCommands {
         public Command shootbydistance(CommandFactory cf) {
                 return Commands.sequence(
                                 cf.positionArmRunShooterByDistance(false, true),
-                                
+
                                 shoot(cf));
         }
 
@@ -85,7 +85,7 @@ public class SubwooferAutoCommands {
                                 move(path, swerve, pf),
                                 Commands.sequence(
                                                 Commands.waitSeconds(.25),
-                                                cf.doIntake()));
+                                                cf.doIntake(10, 5)));
         }
 
         public Command moveAndPickupUsingVision(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf,
@@ -94,7 +94,7 @@ public class SubwooferAutoCommands {
                                 move(path, swerve, pf),
                                 Commands.sequence(
                                                 Commands.waitSeconds(.25),
-                                                cf.doIntake()));
+                                                cf.doIntake(10, 5)));
         }
 
 }

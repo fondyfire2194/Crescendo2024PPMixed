@@ -33,12 +33,12 @@ public class Pref {
   static {
 
     // drive tune
-    prefDict.put("DriveKp", .001);
-    prefDict.put("DriveFF", .5);
+    prefDict.put("DriveKp", .1);
+    prefDict.put("DriveFF", .95);
 
     // angle tune
 
-    prefDict.put("AngleKp", .01);
+    prefDict.put("AngleKp", .28);
 
     // align to tag
 
@@ -50,48 +50,48 @@ public class Pref {
 
     // shooter
 
-    prefDict.put("ShooterSpeedRatio", 0.5);
-    prefDict.put("ShooterTopKp", .0007);
-    prefDict.put("ShooterTopKd", .001);
-    prefDict.put("ShooterTopKi", .001);
+    prefDict.put("ShooterSpeedRatio", 1.);
+    prefDict.put("ShooterTopKp", .0004);
+    prefDict.put("ShooterTopKd", .01);
+    prefDict.put("ShooterTopKi", .00);
 
     prefDict.put("ShooterTopKpFF", .0007);
 
-    prefDict.put("ShooterBottomKp", .0007);
-    prefDict.put("ShooterBottomKd", .001);
+    prefDict.put("ShooterBottomKp", .0004);
+    prefDict.put("ShooterBottomKd", .0001);
     prefDict.put("ShooterBottomKi", .001);
 
     prefDict.put("ShooterBottomKpFF", .0007);
 
-    prefDict.put("IntakeSpeed", 3000.);
-    prefDict.put("IntakeKp", 0.001);
+    prefDict.put("IntakeSpeed", 4500.);
+    prefDict.put("IntakeKp", 0.00035);
 
-    prefDict.put("TransferToShootSpeed", 2000.);
-    prefDict.put("TransferIntakingSpeed", 3000.);
-    prefDict.put("SensorDistance", 3.);
+    prefDict.put("TransferToShootSpeed", 4000.);
+    prefDict.put("TransferIntakingSpeed", 5500.);
+    prefDict.put("SensorDistance", 6.);
 
     // arm
 
-    prefDict.put("armFFKs", 0.001);
-    prefDict.put("armFFKv", 2.01);
+    prefDict.put("armFFKs", 0.31);
+    prefDict.put("armFFKv", 2.0);
     prefDict.put("armUpFFKv", 2.75);
 
-    prefDict.put("armFFKa", .00001);
-    prefDict.put("armFFKg", .00001);
+    prefDict.put("armFFKa", 0.);
+    prefDict.put("armFFKg", .2);
 
-    prefDict.put("armKp", .00001);
-    prefDict.put("armKi", .00001);
-    prefDict.put("armKd", .00001);
+    prefDict.put("armKp", 30.);
+    prefDict.put("armKi", .5);
+    prefDict.put("armKd", .0000);
     prefDict.put("armKIZone", .00001);
 
     // amp shot
-    prefDict.put("AmpArmDegrees", 112.);
+    prefDict.put("AmpArmDegrees", 92.);
     prefDict.put("AmpTopRPM", 1000.);
     prefDict.put("AmpBottomRPM", 500.);
     prefDict.put("TransferToShootSpeedAmp", 4000.);
 
     prefDict.put("AmpArmIncrementDelay", .1);
-    prefDict.put("AmpDegreeIncrement", 23.);
+    prefDict.put("AmpDegreeIncrement", 10.);
 
     // climber
 

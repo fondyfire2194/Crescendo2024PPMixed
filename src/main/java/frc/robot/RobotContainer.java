@@ -88,10 +88,8 @@ public class RobotContainer implements Logged {
         public final CommandFactory m_cf;
 
         public final AutoFactory m_af;
-        
+
         private SubwooferAutoCommands m_sac;
-
-
 
         BooleanSupplier keepAngle;
 
@@ -120,7 +118,7 @@ public class RobotContainer implements Logged {
 
                 registerNamedCommands();
 
-                m_sac= new SubwooferAutoCommands(m_swerve, m_cf);
+                m_sac = new SubwooferAutoCommands(m_swerve, m_cf);
 
                 m_af = new AutoFactory(m_pf, m_cf, m_sac, m_swerve, m_shooter, m_arm, m_intake, m_transfer);
 
@@ -146,8 +144,6 @@ public class RobotContainer implements Logged {
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
                                                 CameraConstants.rearCamera.camname,
                                                 4));
-
-        
 
                 configureDriverBindings();
 
@@ -199,7 +195,6 @@ public class RobotContainer implements Logged {
                                                                 .getAngleDegrees()),
                                                 Commands.runOnce(() -> m_transfer.logShot = false)));
 
-
                 checkAutoSelectLoop = new EventLoop();
 
                 doAutoSetup = new BooleanEvent(checkAutoSelectLoop, m_af::checkChoiceChange);
@@ -235,7 +230,6 @@ public class RobotContainer implements Logged {
 
                 keepAngle = () -> false;
                 // align for speaker shots
-        
 
                 driver.leftTrigger().whileTrue(
                                 Commands.parallel(
@@ -244,27 +238,27 @@ public class RobotContainer implements Logged {
                                                                 () -> -driver.getLeftY(),
                                                                 () -> driver.getLeftX(),
                                                                 () -> driver.getRightX(), false),
-                                                 m_cf.positionArmRunShooterByDistance(false, false)));
-                                                // new ShootByDistanceAndVelocity(m_arm, m_transfer, m_shooter, m_swerve,
-                                                //                 m_sd)));
+                                                m_cf.positionArmRunShooterByDistance(false, false)));
+                // new ShootByDistanceAndVelocity(m_arm, m_transfer, m_shooter, m_swerve,
+                // m_sd)));
 
-                driver.rightBumper().and(driver.a().negate()).onTrue(Commands.parallel(
-                                m_intake.startIntakeCommand(),
-                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
-                                m_cf.rumbleCommand(driver),
-                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians))
-                                .withTimeout(10));
+                driver.rightBumper().and(driver.a().negate()).onTrue(
+                                Commands.parallel(
+                                                m_intake.startIntakeCommand(),
+                                                new TransferIntakeToSensor(m_transfer, m_intake, 120,120),
+                                                m_cf.rumbleCommand(driver),
+                                                m_arm.setGoalCommand(ArmConstants.pickupAngleRadians))
+                                                .withTimeout(10));
 
                 // pick up notes with vision align
                 driver.rightBumper().and(driver.a()).onTrue(
                                 Commands.sequence(
-                                                // m_cf.doIntake(),
                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians),
-                                                Commands.none().until(() -> m_arm.getAtSetpoint()),
-                                                // m_intake.startIntakeCommand(),
+                                                Commands.waitUntil(() -> m_arm.getAtSetpoint()),
+                                                m_intake.startIntakeCommand(),
                                                 Commands.deadline(
                                                                 new TransferIntakeToSensor(m_transfer,
-                                                                                m_intake, 120),
+                                                                                m_intake, 120,4),
                                                                 new AlignToNote(
                                                                                 m_swerve,
                                                                                 CameraConstants.rearCamera.camname,
@@ -378,8 +372,6 @@ public class RobotContainer implements Logged {
                 // KEEP IN BUTTON ORDER
                 // jogs are in case note gets stuck
 
-           
-
                 setup.a().onTrue(m_climber.lockClimberCommand());
 
                 setup.b().onTrue(m_climber.unlockClimberCommand());
@@ -392,7 +384,7 @@ public class RobotContainer implements Logged {
 
                 setup.rightTrigger().whileTrue(m_swerve.dynamicBackward());
 
-                 setup.a().whileTrue(new WheelRadiusCharacterization(m_swerve));
+                setup.a().whileTrue(new WheelRadiusCharacterization(m_swerve));
 
                 // setup.b().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(40)));
 
@@ -431,35 +423,6 @@ public class RobotContainer implements Logged {
 
         private void registerNamedCommands() {
 
-                NamedCommands.registerCommand("ResetAll", m_cf.resetAll());
-
-                boolean gotit = NamedCommands.hasCommand("ResetAll");
-
-                SmartDashboard.putBoolean("GOTIT", gotit);
-
-                NamedCommands.registerCommand("Arm Shooter Pre Wing 2", m_cf.positionArmRunShooterSpecialCase(44,
-                                3000)
-                                .withName("Arm Shooter Pre Wing 2"));
-
-                NamedCommands.registerCommand("Arm Shooter Wing 2", m_cf.positionArmRunShooterSpecialCase(35,
-                                3200).asProxy()
-                                .withName("Arm Shooter Wing 2"));
-
-                NamedCommands.registerCommand(
-                                "DoIntake", m_cf.doIntake()
-                                                .withName("DoIntake"));
-
-                NamedCommands.registerCommand("Shoot", m_cf.transferNoteToShooterCommand()
-                                .withName("Shoot"));
-
-                NamedCommands.registerCommand("Arm Shooter SubWfr",
-                                m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed)
-                                                .withName("Arm Shooter SubWfr"));
-
-                NamedCommands.registerCommand("CheckForNote",
-                                Commands.runOnce(() -> m_swerve.checkNote = true));
-
         }
 
         private void configureChoosers() {
@@ -490,10 +453,10 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putNumber("AFSB", m_af.validStartChoice);
                 if (m_af.validStartChoice >= m_af.minsbwfrauto && m_af.validStartChoice <= m_af.maxsbwfrauto) {
                 }
-                if (m_af.validStartChoice >= m_af.minsourceauto && m_af.validStartChoice <= m_af.maxsourceauto) {                       
+                if (m_af.validStartChoice >= m_af.minsourceauto && m_af.validStartChoice <= m_af.maxsourceauto) {
                         m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose).runsWhenDisabled();
                 }
-                if (m_af.validStartChoice >= m_af.minampauto && m_af.validStartChoice <= m_af.maxampauto) {                      
+                if (m_af.validStartChoice >= m_af.minampauto && m_af.validStartChoice <= m_af.maxampauto) {
                         m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose).runsWhenDisabled();
                 }
         }

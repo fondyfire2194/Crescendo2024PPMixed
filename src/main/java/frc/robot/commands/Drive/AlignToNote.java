@@ -52,7 +52,7 @@ public class AlignToNote extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-   LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, LLPipelines.pipelines.NOTEDETECT1.ordinal());
+   LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, LLPipelines.pipelines.ND0CROP1.ordinal());
   }
 
   // Called every time the scheduler runs while the command is scheduled.

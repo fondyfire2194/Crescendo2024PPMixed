@@ -126,7 +126,6 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
     enableLimitSwitch(true);
     commandrpm = Pref.getPref("TransferIntakingSpeed");
     runAtVelocity(commandrpm);
-
   }
 
   public void runAtVelocity(double rpm) {

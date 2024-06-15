@@ -16,15 +16,16 @@ public class TransferIntakeToSensor extends Command {
   private final IntakeSubsystem m_intake;
   private final double m_noNoteTime;
   private Timer endTimer = new Timer();
-  private double simmotetime = 3.5;
+  private final double m_simNoteTime;
 
   /** Creates a new TransferIntakeToSensor. */
-  public TransferIntakeToSensor(TransferSubsystem transfer, IntakeSubsystem intake, double noNotetime) {
+  public TransferIntakeToSensor(TransferSubsystem transfer, IntakeSubsystem intake, double noNotetime, double simNoteTime) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transfer = transfer;
     m_intake = intake;
     m_noNoteTime = noNotetime;
-  }
+    m_simNoteTime=simNoteTime;
+  };
 
   // Called when the command is initially scheduled.
   @Override
@@ -42,7 +43,7 @@ public class TransferIntakeToSensor extends Command {
     m_intake.noteMissed = RobotBase.isSimulation() && (m_transfer.skipFirstNoteInSim || m_transfer.skipSecondNoteInSim)
         || endTimer.hasElapsed(m_noNoteTime);
     m_transfer.simnoteatintake = RobotBase.isSimulation() && !m_transfer.skipSecondNoteInSim
-        && endTimer.hasElapsed(simmotetime)
+        && endTimer.hasElapsed(m_simNoteTime)
         && !m_transfer.skipFirstNoteInSim && !m_transfer.skipSecondNoteInSim;
   }
 

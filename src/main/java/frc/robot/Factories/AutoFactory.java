@@ -22,6 +22,7 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.LLPipelines;
 
 /** Add your docs here. */
 public class AutoFactory {
@@ -223,8 +224,9 @@ public class AutoFactory {
                                                 new PickupUsingVision(m_cf,
                                                                 m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
                                                                 m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
-                                                                m_transfer, m_intake, m_swerve, true, -1,
-                                                                1, -1, 1, -1, 0, -1, 1),
+                                                                m_transfer, m_intake, m_swerve, true,
+                                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
+                                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
                                                 m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
                                                 m_sac.sbwfrmoveandshoot(sbwfrpaths.Wing2ToSubwfrShoot, m_swerve, m_cf,
                                                                 m_pf),
@@ -242,8 +244,8 @@ public class AutoFactory {
                                                                 m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
                                                                 m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
                                                                 m_transfer, m_intake, m_swerve, true,
-                                                                -1, 1, -1, 1,
-                                                                -1, 0, -1, 1),
+                                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
+                                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
                                                 m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
                                                 m_sac.sbwfrmoveandshoot(sbwfrpaths.Wing2ToSubwfrShoot, m_swerve, m_cf,
                                                                 m_pf),
@@ -309,7 +311,7 @@ public class AutoFactory {
                                                 pf.pathMaps.get(path.name())),
                                 Commands.sequence(
                                                 Commands.waitSeconds(.25),
-                                                cf.doIntake()));
+                                                cf.doIntake(10,5)));
         }
 
         public Command getAutonomousCommand() {

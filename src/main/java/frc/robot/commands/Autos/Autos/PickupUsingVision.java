@@ -29,28 +29,19 @@ public class PickupUsingVision extends SequentialCommandGroup {
                         IntakeSubsystem intake,
                         SwerveSubsystem swerve,
                         boolean innerNoteFirst,
-                        double xcropmin,
-                        double xcropmax,
-                        double ycropmin,
-                        double ycropmax,
-                        double xcropmin1,
-                        double xcropmax1,
-                        double ycropmin1,
-                        double ycropmax1) {
+                        int pipelineIndex,
+                        int pipelineIndex1) {
 
                 addCommands(
-                                Commands.either(Commands.runOnce(
-                                                () -> LimelightHelpers.setCropWindow(CameraConstants.rearCamera.camname,
-                                                                xcropmin, xcropmax, ycropmin, ycropmax)),
-                                                Commands.runOnce(
-                                                                () -> LimelightHelpers.setCropWindow(
-                                                                                CameraConstants.rearCamera.camname,
-                                                                                xcropmin1, 1, ycropmin1,
-                                                                                ycropmax1)),
+                                Commands.either(
+                                                Commands.runOnce(() -> LimelightHelpers.setPipelineIndex(
+                                                                CameraConstants.rearCamera.camname, pipelineIndex)),
+                                                Commands.runOnce(() -> LimelightHelpers.setPipelineIndex(
+                                                                CameraConstants.rearCamera.camname, pipelineIndex1)),
                                                 () -> innerNoteFirst),
+                
                                 Commands.race(
-                                                new CheckOKSwitchToDrive(swerve, 2),
-                                                // cf.doIntake(),
+                                                new CheckOKSwitchToDrive(swerve,cf, 2),
                                                 Commands.either(
                                                                 new RunPPath(swerve, path),
                                                                 new RunPPath(swerve, path1),
@@ -60,8 +51,9 @@ public class PickupUsingVision extends SequentialCommandGroup {
                                                                 new DriveToPickupNote(swerve, transfer,
                                                                                 intake,
                                                                                 CameraConstants.rearCamera.camname),
-                                                                cf.doIntake()),
+                                                                cf.doIntake(10,5)),
                                                 Commands.none(),
+
                                                 () -> swerve.noteSeen));
 
         }
