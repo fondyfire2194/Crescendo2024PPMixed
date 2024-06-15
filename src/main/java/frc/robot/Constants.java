@@ -63,6 +63,17 @@ import monologue.Annotations.Log;
  * Math check 4 x 5ft 6 = 22 ft + 2 x 2ft 5-5/8 = 4ft 11-1/4 = 26ft 11-1/4 =
  * field width
  * 
+ * Stage layout
+ * 
+ * Stage center pillar plate begins 120.5" from speaker face and is on field
+ * widthcenter line
+ * Stage right and laft pillar plates field edge centers are 61-3/8 inches either
+ * side of field width center line and are 231.2 inches from speaker face.
+ * 
+ * 
+ * 
+ * 
+ * 
  * 
  */
 
@@ -292,7 +303,7 @@ public final class Constants {
                 public static final Pose2d lobBlueAlliance = new Pose2d(0.0, 7.1, Rotation2d.fromDegrees(0.0));
                 public static final Pose2d lobRedAlliance = new Pose2d(16.54, 7.1, Rotation2d.fromDegrees(180.0));
 
-                public static Pose2d speakerAimPointX = new Pose2d(.45,5.55,Rotation2d.fromDegrees(0.0));
+                public static Pose2d speakerAimPointX = new Pose2d(.45, 5.55, Rotation2d.fromDegrees(0.0));
 
                 public static Pose2d driverStationBlueAlliance = new Pose2d();
                 public static Pose2d driverStationRedAlliance = new Pose2d();
@@ -325,7 +336,7 @@ public final class Constants {
                                 new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
                 public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
-                                new Rotation2d(Units.degreesToRadians(-170)));//23.2
+                                new Rotation2d(Units.degreesToRadians(-170)));// 23.2
 
                 public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
                                 new Rotation2d(Units.degreesToRadians(-176.09)));
