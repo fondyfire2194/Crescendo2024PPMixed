@@ -16,32 +16,16 @@
     },
     {
       "anchor": {
-        "x": 2.258027867887035,
-        "y": 2.0485577930090377
+        "x": 4.651608047866594,
+        "y": 1.3935895489479986
       },
       "prevControl": {
-        "x": 1.9888079406786576,
-        "y": 2.262685282336976
+        "x": 3.5591167057891013,
+        "y": 1.3998138303414684
       },
       "nextControl": {
-        "x": 2.527247795095412,
-        "y": 1.8344303036810996
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 4.662583674943135,
-        "y": 1.159609135361769
-      },
-      "prevControl": {
-        "x": 3.579800278357494,
-        "y": 1.3050608121194045
-      },
-      "nextControl": {
-        "x": 6.611412898967035,
-        "y": 0.8978204163599829
+        "x": 6.748582999030725,
+        "y": 1.3816423950728172
       },
       "isLocked": false,
       "linkedName": null
@@ -52,20 +36,26 @@
         "y": 2.3698219205539415
       },
       "prevControl": {
-        "x": 7.526759559623449,
-        "y": 1.9659470173546338
+        "x": 7.4504979823083755,
+        "y": 1.979131376237074
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.1999999999999997,
+      "rotationDegrees": -151.7,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [
     {
       "name": "Slow To Pickup",
-      "minWaypointRelativePos": 2.55,
-      "maxWaypointRelativePos": 3.0,
+      "minWaypointRelativePos": 1.5499999999999998,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 2.5,

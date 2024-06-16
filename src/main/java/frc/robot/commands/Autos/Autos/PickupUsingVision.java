@@ -39,21 +39,18 @@ public class PickupUsingVision extends SequentialCommandGroup {
                                                 Commands.runOnce(() -> LimelightHelpers.setPipelineIndex(
                                                                 CameraConstants.rearCamera.camname, pipelineIndex1)),
                                                 () -> innerNoteFirst),
-                
+
                                 Commands.race(
-                                                new CheckOKSwitchToDrive(swerve,cf, 2),
+                                                new CheckOKSwitchToDrive(swerve, cf, 2),
                                                 Commands.either(
                                                                 new RunPPath(swerve, path),
                                                                 new RunPPath(swerve, path1),
                                                                 () -> innerNoteFirst)),
                                 Commands.either(
-                                                Commands.parallel(
-                                                                new DriveToPickupNote(swerve, transfer,
-                                                                                intake,
-                                                                                CameraConstants.rearCamera.camname),
-                                                                cf.doIntake(10,5)),
+                                                new DriveToPickupNote(swerve, transfer,
+                                                                intake,
+                                                                CameraConstants.rearCamera.camname),
                                                 Commands.none(),
-
                                                 () -> swerve.noteSeen));
 
         }

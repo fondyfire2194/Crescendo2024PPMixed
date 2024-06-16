@@ -16,24 +16,24 @@
     },
     {
       "anchor": {
-        "x": 8.106304828872139,
-        "y": 0.7143610292926715
+        "x": 7.9891964634143235,
+        "y": 0.8080477216589235
       },
       "prevControl": {
-        "x": 6.546287132459774,
-        "y": 0.7341549571626311
+        "x": 6.4082335297338195,
+        "y": 1.3818787124022183
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Center 5"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Slow To Shoot",
-      "minWaypointRelativePos": 0.75,
-      "maxWaypointRelativePos": 0.15,
+      "minWaypointRelativePos": 0.4,
+      "maxWaypointRelativePos": 0.1,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 2.5,
@@ -51,7 +51,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 173.5206022348332,
+    "rotation": 160.7099537808112,
     "rotateFast": false
   },
   "reversed": false,

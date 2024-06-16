@@ -39,7 +39,6 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                         boolean innerNoteFirst) {
 
                 addCommands(
-
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
                                 Commands.runOnce(() -> swerve.ampActive = false),
@@ -53,13 +52,14 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                 cf.transferNoteToShooterCommand(),
                                 cf.armToIntake(),
                                 // move to center note , pick up if there and move to shoot position then shoot
-
-                                new PickupUsingVision(cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
-                                                transfer, intake, swerve, innerNoteFirst,
-                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
-                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
+                                Commands.parallel(
+                                                new PickupUsingVision(cf,
+                                                                pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
+                                                                pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
+                                                                transfer, intake, swerve, innerNoteFirst,
+                                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
+                                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
+                                                cf.doIntake(10, 5)),
 
                                 Commands.either(
 
@@ -76,14 +76,18 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
 
                                                 getAnotherNote(swerve, transfer, intake, cf),
                                                 () -> transfer.noteAtIntake()),
-
-                                new PickupUsingVision(
-                                                cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5.name()),
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4.name()),
-                                                transfer, intake, swerve, innerNoteFirst,
-                                                LLPipelines.pipelines.NDRCROP3.ordinal(),
-                                                LLPipelines.pipelines.NDLCROP2.ordinal()),
+                                                
+                                Commands.parallel(
+                                                new PickupUsingVision(
+                                                                cf,
+                                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5
+                                                                                .name()),
+                                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4
+                                                                                .name()),
+                                                                transfer, intake, swerve, innerNoteFirst,
+                                                                LLPipelines.pipelines.NDRCROP3.ordinal(),
+                                                                LLPipelines.pipelines.NDLCROP2.ordinal()),
+                                                cf.doIntake(10, 5)),
 
                                 Commands.either(
                                                 Commands.either(
@@ -114,7 +118,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
-                                                new TransferIntakeToSensor(transfer, intake, 6,2)),
+                                                new TransferIntakeToSensor(transfer, intake, 6, 2)),
 
                                 Commands.either(
                                                 Commands.sequence(
