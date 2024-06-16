@@ -72,7 +72,8 @@
       "Monologue": {
         "m_swerve": {
           "open": true
-        }
+        },
+        "open": true
       },
       "SmartDashboard": {
         "DtoPuN": {

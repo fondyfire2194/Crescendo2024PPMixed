@@ -8,7 +8,6 @@ import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
-import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;

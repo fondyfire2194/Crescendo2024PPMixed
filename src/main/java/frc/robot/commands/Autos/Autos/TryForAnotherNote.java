@@ -15,11 +15,10 @@ import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LLPipelines.pipelines;
 
 public class TryForAnotherNote extends Command {
- 
-
   private final SwerveSubsystem m_swerve;
   private final TransferSubsystem m_transfer;
   private final IntakeSubsystem m_intake;
@@ -71,8 +70,10 @@ public class TryForAnotherNote extends Command {
 
     SmartDashboard.putNumber("DtoPuN/DistErr", distError);
 
+    double pickupspeed = -SwerveConstants.notePickupSpeed;
+    
     m_swerve.drive(
-        -SwerveConstants.notePickupSpeed,
+        pickupspeed,
         0,
         rotationVal,
         false,
@@ -82,7 +83,7 @@ public class TryForAnotherNote extends Command {
     if (m_swerve.ampActive)
       m_swerve.remainingdistance = m_swerve.getY() - FieldConstants.FIELD_WIDTH / 2 - distBeyondMidField;
 
-    if(m_swerve.sourceActive)
+    if (m_swerve.sourceActive)
       m_swerve.remainingdistance = FieldConstants.FIELD_WIDTH / 2 - m_swerve.getY() + distBeyondMidField;
 
     SmartDashboard.putNumber("DtoPuN/RmngDist", distError);

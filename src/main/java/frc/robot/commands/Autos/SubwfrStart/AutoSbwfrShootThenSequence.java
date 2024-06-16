@@ -9,8 +9,6 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.Factories.SubwooferAutoCommands;
-import frc.robot.subsystems.ArmSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */

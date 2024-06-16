@@ -10,7 +10,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -37,7 +36,7 @@ public class PickupUsingPathfind extends SequentialCommandGroup {
                                                                                 path),
                                                                 new WaitCommand(.1),
                                                                 Commands.parallel(
-                                                                                cf.autopickup(AllianceUtil
+                                                                                cf.autopathfind(AllianceUtil
                                                                                                 .getAlliancePose(pose)),
                                                                                 cf.doIntake(10, 5))),
                                                 Commands.sequence(
@@ -45,7 +44,7 @@ public class PickupUsingPathfind extends SequentialCommandGroup {
                                                                                 path1),
                                                                 new WaitCommand(.1),
                                                                 Commands.parallel(
-                                                                                cf.autopickup(AllianceUtil
+                                                                                cf.autopathfind(AllianceUtil
                                                                                                 .getAlliancePose(
                                                                                                                 pose1)),
                                                                                 cf.doIntake(10, 5))),

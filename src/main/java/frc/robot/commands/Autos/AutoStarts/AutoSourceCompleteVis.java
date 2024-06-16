@@ -20,7 +20,6 @@ import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.RotateToAngle;
-import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
@@ -119,13 +118,13 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
                                                 cf.doIntake(10, 2)),
-                                Commands.waitSeconds(1),
+                                Commands.waitSeconds(.25),
                                 Commands.either(
                                                 Commands.sequence(
-                                                                cf.autopickup(AllianceUtil
+                                                                cf.autopathfind(AllianceUtil
                                                                                 .getSourceClearStagePose()),
-                                                                Commands.waitSeconds(1),
-                                                                cf.autopickup(AllianceUtil
+                                                                Commands.waitSeconds(.25),
+                                                                cf.autopathfind(AllianceUtil
                                                                                 .getSourceShootPose()),
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(

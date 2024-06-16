@@ -342,23 +342,23 @@ public final class Constants {
                 public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
                                 new Rotation2d(Units.degreesToRadians(-176.09)));
 
-                public static final Pose2d sourceShootBlue = new Pose2d(4.12, 2.18,
+                public static final Pose2d sourceShootBlue = new Pose2d(3.4, 2.7,
                                 new Rotation2d(Units.degreesToRadians(150)));
 
                 public static final Pose2d sourceStartPose = new Pose2d(.72, 4.4,
                                 new Rotation2d(Units.degreesToRadians(120)));
 
-                public static final Pose2d sourceClearStagePoseBlue = new Pose2d(7, 1.5,
-                                new Rotation2d(Units.degreesToRadians(120)));
+                public static final Pose2d sourceClearStagePoseBlue = new Pose2d(7, 1.,
+                                new Rotation2d(Units.degreesToRadians(180)));
 
                 public static final Pose2d ampStartPose = new Pose2d(.8, 6.68,
                                 new Rotation2d(Units.degreesToRadians(-120)));
 
-                public static final Pose2d ampShootBlue = new Pose2d(2.84, 5.52,
-                                new Rotation2d(Units.degreesToRadians(-144)));
+                public static final Pose2d ampShootBlue = new Pose2d(4.0, 6.25,
+                                new Rotation2d(Units.degreesToRadians(-168)));
 
                 public static final Pose2d ampClearStagePoseBlue = new Pose2d(7, 6.8,
-                                new Rotation2d(Units.degreesToRadians(120)));
+                                new Rotation2d(Units.degreesToRadians(180)));
 
                 public static final Pose2d sbwfrStartPose = new Pose2d(1.34, 5.55,
                                 new Rotation2d(Units.degreesToRadians(180)));

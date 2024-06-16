@@ -4,8 +4,6 @@
 
 package frc.robot.Factories;
 
-import java.util.function.BooleanSupplier;
-
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.GeometryUtil;
@@ -64,7 +62,7 @@ public class CommandFactory {
                 m_sd = sd;
         }
 
-        public Command autopickup(Pose2d targetPose) {
+        public Command autopathfind(Pose2d targetPose) {
                 return AutoBuilder.pathfindToPose(
                                 targetPose,
                                 new PathConstraints(

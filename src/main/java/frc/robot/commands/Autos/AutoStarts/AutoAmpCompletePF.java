@@ -15,7 +15,6 @@ import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.amppaths;
-import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
 import frc.robot.commands.Autos.Autos.PickupUsingPathfind;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
@@ -113,9 +112,9 @@ public class AutoAmpCompletePF extends SequentialCommandGroup {
 
                                 Commands.either(
                                                 Commands.sequence(
-                                                                cf.autopickup(AllianceUtil
+                                                                cf.autopathfind(AllianceUtil
                                                                                 .getSourceClearStagePose()),
-                                                                cf.autopickup(AllianceUtil
+                                                                cf.autopathfind(AllianceUtil
                                                                                 .getSourceShootPose()),
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),

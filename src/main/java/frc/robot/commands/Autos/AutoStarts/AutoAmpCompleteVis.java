@@ -4,8 +4,6 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
-import java.util.function.Supplier;
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -13,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.LimelightHelpers;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -23,7 +20,6 @@ import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.RotateToAngle;
-import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
@@ -91,6 +87,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 LLPipelines.pipelines.NDRCROP3.ordinal(),
                                                                 LLPipelines.pipelines.NDLCROP2.ordinal()),
                                                 cf.doIntake(5, 5)),
+
                                 Commands.either(
 
                                                 Commands.either(
@@ -106,26 +103,24 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
 
                                                 getAnotherNote(swerve, transfer, intake, cf),
                                                 () -> transfer.noteAtIntake()));
-
         }
 
         Command getAnotherNote(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,
                         CommandFactory cf) {
-
                 return Commands.sequence(
-                                new RotateToAngle(swerve, -90),
+                                new RotateToAngle(swerve, 90),
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
                                                 cf.doIntake(10, 2)),
-                                Commands.waitSeconds(1),
+                                Commands.waitSeconds(.25),
                                 Commands.either(
                                                 Commands.sequence(
-                                                                cf.autopickup(AllianceUtil
-                                                                                .getSourceClearStagePose()),
-                                                                Commands.waitSeconds(1),
-                                                                cf.autopickup(AllianceUtil
-                                                                                .getSourceShootPose()),
+                                                                cf.autopathfind(AllianceUtil
+                                                                                .getAmpClearStagePose()),
+                                                                Commands.waitSeconds(.25),
+                                                                cf.autopathfind(AllianceUtil
+                                                                                .getAmpShootPose()),
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),
@@ -134,7 +129,6 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),
                                                 () -> transfer.noteAtIntake()));
-
         }
 
 }

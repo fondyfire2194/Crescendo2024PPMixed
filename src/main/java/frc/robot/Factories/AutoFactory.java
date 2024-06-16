@@ -13,7 +13,6 @@ import frc.robot.commands.Autos.AutoStarts.AutoAmpCompletePF;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVis;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompletePF;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVis;
-import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Pathplanner.RunPPath;
@@ -22,7 +21,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
-import frc.robot.utils.LLPipelines;
 
 /** Add your docs here. */
 public class AutoFactory {

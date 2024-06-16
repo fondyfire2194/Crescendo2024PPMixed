@@ -112,9 +112,9 @@ public class AutoSourceCompletePF extends SequentialCommandGroup {
 
                                 Commands.either(
                                                 Commands.sequence(
-                                                                cf.autopickup(AllianceUtil
+                                                                cf.autopathfind(AllianceUtil
                                                                                 .getSourceClearStagePose()),
-                                                                cf.autopickup(AllianceUtil
+                                                                cf.autopathfind(AllianceUtil
                                                                                 .getSourceShootPose()),
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),
