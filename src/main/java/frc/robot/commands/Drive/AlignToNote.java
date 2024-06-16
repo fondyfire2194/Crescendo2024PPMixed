@@ -72,8 +72,6 @@ public class AlignToNote extends Command {
 
       double angleError = LimelightHelpers.getTX(m_camname);
 
-      double distanceApprox = LimelightHelpers.getTY(m_camname);
-
       rotationVal = m_swerve.m_alignNotePID.calculate(angleError, 0);
 
     }

@@ -14,7 +14,7 @@ import frc.robot.subsystems.SwerveSubsystem;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class RotateToAngle extends PIDCommand {
   /** Creates a new RotateToAngle. */
-  private SwerveSubsystem m_drive;
+
 
   private static PIDController rotatePID = new PIDController(0.06, 0, 0);
 
@@ -31,14 +31,14 @@ public class RotateToAngle extends PIDCommand {
         output -> {
           drive.drive(0, 0, output, false, false, false);
         }, drive);
-    m_drive = drive;
+
     m_controller.enableContinuousInput(-180, 180);
     // this number could be changed
 
     addRequirements(drive);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
-    double tempp = Pref.getPref("rotkp");
+   
     getController().setP(Pref.getPref("rotkp"));
     m_controller.setI(Pref.getPref("rotki"));
     m_controller.setD(Pref.getPref("rotkd"));
