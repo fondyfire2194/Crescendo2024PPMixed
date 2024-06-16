@@ -84,10 +84,8 @@ public class AutoFactory {
                 m_subwfrStartChooser.addOption("W2-W1", 4);
                 m_subwfrStartChooser.addOption("W2-C3-SBWFR-W3", 5);
                 m_subwfrStartChooser.addOption("W2-C3-SBWFR-W1", 6);
-                m_subwfrStartChooser.addOption("W2-C3-SBWFR-W3-Vis", 7);
-                m_subwfrStartChooser.addOption("W2-C3-SBWFR-W1-Vis", 8);
-
-                maxsbwfrauto = 8;
+               
+                maxsbwfrauto = 6;
 
                 minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
@@ -207,52 +205,13 @@ public class AutoFactory {
                                                                 m_pf),
                                                 m_sac.shootbydistance(m_cf),
                                                 m_sac.moveAndPickup(sbwfrpaths.Wing2ToCenter3, m_swerve, m_cf, m_pf),
-                                                m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
-                                                m_sac.sbwfrmoveandshoot(sbwfrpaths.Wing2ToSubwfrShoot, m_swerve, m_cf,
-                                                                m_pf),
+                                                m_sac.move(sbwfrpaths.Center3ToSubwfrShoot, m_swerve, m_pf),                                               
                                                 m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing1Shoot, m_swerve, m_cf,
                                                                 m_pf),
                                                 new AutoAlignSpeaker(m_swerve, true),
                                                 m_sac.shootbydistance(m_cf));
 
-                        case 7:
-                                return Commands.sequence(
-                                                m_sac.setsbwrstart(m_swerve, m_cf),
-                                                m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing2, m_swerve, m_cf,
-                                                                m_pf),
-                                                m_sac.shootbydistance(m_cf),
-                                                new PickupUsingVision(m_cf,
-                                                                m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
-                                                                m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
-                                                                m_transfer, m_intake, m_swerve, true,
-                                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
-                                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
-                                                m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
-                                                m_sac.sbwfrmoveandshoot(sbwfrpaths.Wing2ToSubwfrShoot, m_swerve, m_cf,
-                                                                m_pf),
-                                                m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing3Shoot, m_swerve, m_cf,
-                                                                m_pf),
-                                                m_sac.shootbydistance(m_cf));
-
-                        case 8:
-                                return Commands.sequence(
-                                                m_sac.setsbwrstart(m_swerve, m_cf),
-                                                m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing2, m_swerve, m_cf,
-                                                                m_pf),
-                                                m_sac.shootbydistance(m_cf),
-                                                new PickupUsingVision(m_cf,
-                                                                m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
-                                                                m_pf.pathMaps.get(sbwfrpaths.Wing2ToCenter3.name()),
-                                                                m_transfer, m_intake, m_swerve, true,
-                                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
-                                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
-                                                m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
-                                                m_sac.sbwfrmoveandshoot(sbwfrpaths.Wing2ToSubwfrShoot, m_swerve, m_cf,
-                                                                m_pf),
-                                                m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing1Shoot, m_swerve, m_cf,
-                                                                m_pf),
-                                                m_sac.shootbydistance(m_cf));
-
+                       
                         case 11:
                                 return new AutoSourceCompleteVis(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, true);
