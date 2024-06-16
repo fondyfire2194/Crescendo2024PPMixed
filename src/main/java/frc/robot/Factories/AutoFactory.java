@@ -91,19 +91,19 @@ public class AutoFactory {
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5 Vis", 11);
                 m_sourceStartChooser.addOption("C5 Then C4 Vis", 12);
-                m_sourceStartChooser.addOption("C4 Then C5 PF", 13);
-                m_sourceStartChooser.addOption("C5 Then C4 PF", 14);
+                // m_sourceStartChooser.addOption("C4 Then C5 PF", 13);
+                // m_sourceStartChooser.addOption("C5 Then C4 PF", 14);
 
-                maxsourceauto = 14;
+                maxsourceauto = 12;
 
                 minampauto = 21;
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("C2 then C1 Vis", 21);
                 m_ampStartChooser.addOption("C1 then C2 Vis", 22);
-                m_ampStartChooser.addOption("C2 then C1 PF", 23);
-                m_ampStartChooser.addOption("C1 then C2 PF", 24);
+                // m_ampStartChooser.addOption("C2 then C1 PF", 23);
+                // m_ampStartChooser.addOption("C1 then C2 PF", 24);
 
-                maxampauto = 24;
+                maxampauto = 22;
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
                 SmartDashboard.putData("Amp Start", m_ampStartChooser);

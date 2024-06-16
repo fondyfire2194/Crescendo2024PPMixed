@@ -18,6 +18,7 @@ import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
 import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
+import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -76,7 +77,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
 
                                                 getAnotherNote(swerve, transfer, intake, cf),
                                                 () -> transfer.noteAtIntake()),
-                                                
+
                                 Commands.parallel(
                                                 new PickupUsingVision(
                                                                 cf,
@@ -114,18 +115,23 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
 
                 return Commands.sequence(
                                 new RotateToAngle(swerve, -90),
-                                intake.startIntakeCommand(),
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
-                                                new TransferIntakeToSensor(transfer, intake, 6, 2)),
-
+                                                cf.doIntake(10, 2)),
+                                Commands.waitSeconds(1),
                                 Commands.either(
                                                 Commands.sequence(
                                                                 cf.autopickup(AllianceUtil
                                                                                 .getSourceClearStagePose()),
+                                                                Commands.waitSeconds(1),
                                                                 cf.autopickup(AllianceUtil
                                                                                 .getSourceShootPose()),
+                                                                Commands.parallel(
+                                                                                cf.positionArmRunShooterByDistance(
+                                                                                                false, true),
+                                                                                new AutoAlignSpeaker(swerve, true)),
+                                                                cf.transferNoteToShooterCommand(),
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),
                                                 () -> transfer.noteAtIntake()));
