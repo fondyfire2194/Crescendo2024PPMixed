@@ -48,10 +48,11 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                 Commands.runOnce(() -> swerve.ampActive = true),
                                 cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
 
-                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle - 5,
-                                                Constants.subwfrShooterSpeed),
-                                cf.transferNoteToShooterCommand(),
-                                cf.armToIntake(),
+                                Commands.race(
+                                                Commands.waitSeconds(.75),
+                                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
+                                                                Constants.subwfrShooterSpeed, 10)),
+
                                 // move to center note , pick up if there and move to shoot position then shoot
                                 Commands.parallel(
                                                 new PickupUsingVision(cf,
@@ -60,10 +61,12 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 transfer, intake, swerve,
                                                                 2,
                                                                 innerNoteFirst,
-                                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
-                                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
-                                                cf.doIntake(6)),
-
+                                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                Commands.sequence(
+                                                                cf.transferNoteToShooterCommand(),
+                                                                cf.stopShooter(),
+                                                                Commands.waitSeconds(2),
+                                                                cf.doIntake(10))),
                                 Commands.either(
 
                                                 Commands.either(
@@ -88,8 +91,8 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 transfer, intake, swerve,
                                                                 2,
                                                                 innerNoteFirst,
-                                                                LLPipelines.pipelines.NDRCROP3.ordinal(),
-                                                                LLPipelines.pipelines.NDLCROP2.ordinal()),
+                                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+
                                                 cf.doIntake(5)),
 
                                 Commands.either(
@@ -128,7 +131,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),
-                                                                                new AutoAlignSpeaker(swerve, true)),
+                                                                                new AutoAlignSpeaker(swerve, 1, true)),
                                                                 cf.transferNoteToShooterCommand(),
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),

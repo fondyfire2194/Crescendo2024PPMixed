@@ -299,7 +299,7 @@ public class SwerveModule extends SubsystemBase {
 
   }
 
-  private double getCancoderDeg() {
+  public double getCancoderDeg() {
     return m_turnCancoder.getAbsolutePosition().getValueAsDouble() * 360;
   }
 

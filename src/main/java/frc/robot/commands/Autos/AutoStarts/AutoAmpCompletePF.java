@@ -48,7 +48,7 @@ public class AutoAmpCompletePF extends SequentialCommandGroup {
                                 cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed),
+                                                Constants.subwfrShooterSpeed, 25),
                                 cf.transferNoteToShooterCommand(),
                                 cf.armToIntake(),
                                 // move to center note , pick up if there and move to shoot position then shoot

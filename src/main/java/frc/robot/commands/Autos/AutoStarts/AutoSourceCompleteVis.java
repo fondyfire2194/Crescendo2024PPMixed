@@ -47,22 +47,24 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
 
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
 
-                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed),
-                                cf.transferNoteToShooterCommand(),
-                                cf.armToIntake(),
-                                // move to center note , pick up if there and move to shoot position then shoot
+                                Commands.race(
+                                                Commands.waitSeconds(.75),
+                                                cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
+                                                                Constants.subwfrShooterSpeed, 10)),
+
                                 Commands.parallel(
                                                 new PickupUsingVision(cf,
                                                                 pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                                 pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
                                                                 transfer, intake, swerve,
-                                                                2,
+                                                                1.75,
                                                                 innerNoteFirst,
-                                                                LLPipelines.pipelines.NDLCROP2.ordinal(),
-                                                                LLPipelines.pipelines.NDRCROP3.ordinal()),
-                                                cf.doIntake(10)),
-
+                                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                Commands.sequence(
+                                                                cf.transferNoteToShooterCommand(),
+                                                                cf.stopShooter(),
+                                                                Commands.waitSeconds(2),
+                                                                cf.doIntake(10))),
                                 Commands.either(
 
                                                 Commands.either(
@@ -87,10 +89,10 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4
                                                                                 .name()),
                                                                 transfer, intake, swerve,
-                                                                2,
+                                                                1.75,
                                                                 innerNoteFirst,
-                                                                LLPipelines.pipelines.NDRCROP3.ordinal(),
-                                                                LLPipelines.pipelines.NDLCROP2.ordinal()),
+                                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+
                                                 cf.doIntake(10)),
 
                                 Commands.either(
@@ -133,7 +135,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),
-                                                                                new AutoAlignSpeaker(swerve, true)),
+                                                                                new AutoAlignSpeaker(swerve,1, true)),
                                                                 cf.transferNoteToShooterCommand(),
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),

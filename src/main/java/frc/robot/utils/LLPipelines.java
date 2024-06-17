@@ -9,10 +9,8 @@ public class LLPipelines {
 
     public enum pipelines {
         APRILTAGALL0(0, pipelinetype.fiducialmarkers), // all tage
-        ND0CROP1(1, pipelinetype.detector),
-        NDLCROP2(2, pipelinetype.detector),
-        NDRCROP3(3, pipelinetype.detector),
-        NDMCROP4(4, pipelinetype.detector);
+        NOTEDET1(1, pipelinetype.detector);
+      
 
         public static final pipelines values[] = values();
 

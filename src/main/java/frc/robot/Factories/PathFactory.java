@@ -107,6 +107,7 @@ public class PathFactory {
         SubwfrShootToWing3,
         SubwfrShootToWing1Shoot,
         SubwfrShootToWing3Shoot,
+        SubwfrShootToCenter2,
         Wing1ToSubwfrShoot,
         Wing2ToSubwfrShoot,
         Wing3ToSubwfrShoot,
@@ -136,6 +137,7 @@ public class PathFactory {
     public PathPlannerPath getPath(String pathname) {
         return PathPlannerPath.fromPathFile(pathname);
     }
+
 
     public Command setStartPosebyAlliance(PathPlannerPath path) {
         Pose2d temp = path.getPreviewStartingHolonomicPose();

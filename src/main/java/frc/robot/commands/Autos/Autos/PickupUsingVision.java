@@ -30,16 +30,11 @@ public class PickupUsingVision extends SequentialCommandGroup {
                         SwerveSubsystem swerve,
                         double switchoverdistance,
                         boolean innerNoteFirst,
-                        int pipelineIndex,
-                        int pipelineIndex1) {
+                        int pipelineIndex) {
 
                 addCommands(
-                                Commands.either(
-                                                Commands.runOnce(() -> LimelightHelpers.setPipelineIndex(
-                                                                CameraConstants.rearCamera.camname, pipelineIndex)),
-                                                Commands.runOnce(() -> LimelightHelpers.setPipelineIndex(
-                                                                CameraConstants.rearCamera.camname, pipelineIndex1)),
-                                                () -> innerNoteFirst),
+                                Commands.runOnce(() -> LimelightHelpers.setPipelineIndex(
+                                                CameraConstants.rearCamera.camname, pipelineIndex)),
 
                                 Commands.race(
                                                 new CheckOKSwitchToDrive(swerve, cf, switchoverdistance),

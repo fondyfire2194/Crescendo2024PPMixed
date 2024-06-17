@@ -118,8 +118,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   int numberTargets = 0;
 
-  private boolean firstTime = true;
-
   @Log.NT(key = "noteseentime")
   private double noteSeenTime;
 
@@ -230,7 +228,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     setModuleDriveFF();
     setModuleDriveKp();
     setModuleAngleKp();
-    firstTime = true;
+
   }
 
   public void driveFieldRelative(ChassisSpeeds fieldRelativeSpeeds) {
@@ -571,6 +569,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     SmartDashboard.putNumber("Drive/AUSEp", autostep);
     SmartDashboard.putNumber("Drive/GyroAngle", getAngle());
     SmartDashboard.putNumber("Drive/GyroYawRads", getR2dRads());
+    SmartDashboard.putNumber("Drive/XMPS", getChassisSpeeds().vxMetersPerSecond);
 
     m_field.setRobotPose(getPose());
 
@@ -649,6 +648,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         .getDistance(getPose().getTranslation()), 2);
   }
 
+  
   public double getDistanceFromTarget(boolean lob, boolean virtual) {
     if (!virtual) {
       if (lob)
@@ -881,6 +881,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public boolean ampActive;
   @Log.NT(key = "noteseen")
   public boolean noteSeen;
+
+  @Log.NT(key = "tgtmtrs")
+  public double targetdistance;
 
   public void setPathRunning() {
     pathRunning = true;

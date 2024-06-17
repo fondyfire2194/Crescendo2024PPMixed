@@ -82,8 +82,9 @@ public class AutoFactory {
                 m_subwfrStartChooser.addOption("W2-W1", 4);
                 m_subwfrStartChooser.addOption("W2-C3-SBWFR-W3", 5);
                 m_subwfrStartChooser.addOption("W2-C3-SBWFR-W1", 6);
-               
-                maxsbwfrauto = 6;
+                m_subwfrStartChooser.addOption("W2-C3-W2-C3", 7);
+
+                maxsbwfrauto = 7;
 
                 minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
@@ -188,12 +189,11 @@ public class AutoFactory {
                                                                 m_pf),
                                                 m_sac.shootbydistance(m_cf),
                                                 m_sac.moveAndPickup(sbwfrpaths.Wing2ToCenter3, m_swerve, m_cf, m_pf),
-                                                // m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
                                                 m_sac.sbwfrmoveandshoot(sbwfrpaths.Center3ToSubwfrShoot, m_swerve, m_cf,
                                                                 m_pf),
                                                 m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing3Shoot, m_swerve, m_cf,
                                                                 m_pf),
-                                                new AutoAlignSpeaker(m_swerve, true),
+                                                new AutoAlignSpeaker(m_swerve, 1, true),
                                                 m_sac.shootbydistance(m_cf));
 
                         case 6:
@@ -203,13 +203,24 @@ public class AutoFactory {
                                                                 m_pf),
                                                 m_sac.shootbydistance(m_cf),
                                                 m_sac.moveAndPickup(sbwfrpaths.Wing2ToCenter3, m_swerve, m_cf, m_pf),
-                                                m_sac.move(sbwfrpaths.Center3ToSubwfrShoot, m_swerve, m_pf),                                               
+                                                m_sac.sbwfrmoveandshoot(sbwfrpaths.Center3ToSubwfrShoot, m_swerve, m_cf,
+                                                                m_pf),
                                                 m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing1Shoot, m_swerve, m_cf,
                                                                 m_pf),
-                                                new AutoAlignSpeaker(m_swerve, true),
+                                                new AutoAlignSpeaker(m_swerve, 1, true),
                                                 m_sac.shootbydistance(m_cf));
 
-                       
+                        case 7:
+                                return Commands.sequence(
+                                                m_sac.setsbwrstart(m_swerve, m_cf),
+                                                m_sac.moveAndPickup(sbwfrpaths.SubwfrShootToWing2, m_swerve, m_cf,
+                                                                m_pf),
+                                                m_sac.shootbydistance(m_cf),
+                                                m_sac.moveAndPickup(sbwfrpaths.Wing2ToCenter3, m_swerve, m_cf, m_pf),
+                                                m_sac.move(sbwfrpaths.Center3ToWing2, m_swerve, m_pf),
+                                                new AutoAlignSpeaker(m_swerve, 1, true),
+                                                m_sac.shootbydistance(m_cf),
+                                                m_sac.move(sbwfrpaths.Wing2ToCenter3, m_swerve, m_pf));
                         case 11:
                                 return new AutoSourceCompleteVis(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, true);
@@ -246,9 +257,9 @@ public class AutoFactory {
 
         }
 
-        Command shoot(CommandFactory cf, double angle, double rpm) {
+        Command shoot(CommandFactory cf, double angle, double rpm, double rpmpct) {
                 return Commands.sequence(
-                                cf.positionArmRunShooterSpecialCase(angle, rpm),
+                                cf.positionArmRunShooterSpecialCase(angle, rpm, rpmpct),
                                 cf.transferNoteToShooterCommand());
         }
 
@@ -258,7 +269,7 @@ public class AutoFactory {
                                 Commands.parallel(
                                                 new RunPPath(swerve, pf.pathMaps.get(path.name())),
                                                 cf.positionArmRunShooterSpecialCase(
-                                                                angle, rpm)),
+                                                                angle, rpm, 10)),
                                 cf.transferNoteToShooterCommand());
         }
 

@@ -74,27 +74,27 @@ public class CommandFactory {
 
         public Command positionArmRunShooterByDistance(boolean lob, boolean endAtTargets) {
                 return new FunctionalCommand(
-                                () -> Commands.sequence(
-                                                Commands.runOnce(() -> m_transfer.lobbing = lob),
-                                                Commands.runOnce(() -> m_arm.enable())),
+
+                                () -> Commands.runOnce(() -> m_transfer.lobbing = lob),
+
                                 () -> {
                                         if (lob) {
+
+                                                double distance = m_swerve.getDistanceFromStage();
                                                 m_shooter.startShooter(
                                                                 Constants.shooterLobRPMMap.get(
-                                                                                m_swerve.getDistanceFromStage()));
+                                                                                distance));
                                                 m_arm.setTolerance(ArmConstants.angleTolerance);
                                                 m_arm.setTarget(getLobArmAngleFromTarget(
-                                                                m_swerve.getDistanceFromStage()));
+                                                                distance));
                                         } else {
-                                                m_shooter.startShooter(
-                                                                m_sd.shooterRPMMap.get(
-                                                                                m_swerve.getDistanceFromTarget(false,
-                                                                                                false)));
-                                                m_arm.setTolerance(ArmConstants.angleTolerance);
 
-                                                m_arm.setTarget(m_sd.armAngleMap.get(m_swerve
-                                                                .getDistanceFromTarget(false,
-                                                                                false)));
+                                                m_swerve.targetdistance = m_swerve.getDistanceFromTarget(false,
+                                                                false);
+                                                m_shooter.startShooter(
+                                                                m_sd.shooterRPMMap.get(m_swerve.targetdistance));
+                                                m_arm.setTolerance(ArmConstants.angleTolerance);
+                                                m_arm.setTarget(m_sd.armAngleMap.get(m_swerve.targetdistance));
                                         }
                                 },
 
@@ -112,10 +112,10 @@ public class CommandFactory {
 
         }
 
-        public Command positionArmRunShooterSpecialCase(double armAngleDeg, double shooterSpeed) {
+        public Command positionArmRunShooterSpecialCase(double armAngleDeg, double shooterSpeed, double rpmpct) {
                 return Commands.parallel(
                                 m_arm.setGoalCommand(Units.degreesToRadians(armAngleDeg)),
-                                m_shooter.startShooterCommand(shooterSpeed));
+                                m_shooter.startShooterCommand(shooterSpeed, rpmpct));
 
         }
 
@@ -135,10 +135,14 @@ public class CommandFactory {
                 return m_transfer.transferToShooterCommand();
         }
 
+        public Command stopShooter() {
+                return m_shooter.stopShooterCommand();
+        }
+
         public Command setArmShooterValues(double armAngle, double shooterRPM) {
                 return Commands.parallel(
                                 m_arm.setGoalCommand(Units.degreesToRadians(armAngle)),
-                                m_shooter.startShooterCommand(shooterRPM));
+                                m_shooter.startShooterCommand(shooterRPM, 10));
         }
 
         public Command checkAtTargets(double pct) {

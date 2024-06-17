@@ -44,7 +44,7 @@ public class TryForAnotherNote extends Command {
   @Override
   public void initialize() {
 
-    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.ND0CROP1.ordinal());
+    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTEDET1.ordinal());
 
     elapsedTime.reset();
     elapsedTime.start();

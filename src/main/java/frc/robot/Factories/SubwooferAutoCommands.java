@@ -32,7 +32,7 @@ public class SubwooferAutoCommands {
         }
 
         public Command setArmShooter(CommandFactory cf, double angle, double rpm) {
-                return cf.positionArmRunShooterSpecialCase(angle, rpm);
+                return cf.positionArmRunShooterSpecialCase(angle, rpm, 25);
         }
 
         public Command shoot(CommandFactory cf, double angle, double rpm) {

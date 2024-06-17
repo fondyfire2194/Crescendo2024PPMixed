@@ -62,7 +62,7 @@ public class CheckOKSwitchToDrive extends Command {
 
     m_swerve.noteSeen = RobotBase.isReal() && LimelightHelpers.getTV(CameraConstants.rearCamera.camname)
         && m_swerve.remainingdistance <= m_switchoverDistance
-        || RobotBase.isSimulation() && m_swerve.remainingdistance < 1.5;
+        || RobotBase.isSimulation() && m_swerve.remainingdistance < m_switchoverDistance;
 
     SmartDashboard.putBoolean("RMGns", m_swerve.noteSeen);
   }

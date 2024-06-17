@@ -101,6 +101,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   public Command transferToShooterCommandAmp() {
     return Commands.run(() -> transferToShooterAmp())
+        .until(() -> !noteAtIntake())
         .withTimeout(TransferConstants.clearShooterTime)
         .andThen(stopTransferCommand());
 

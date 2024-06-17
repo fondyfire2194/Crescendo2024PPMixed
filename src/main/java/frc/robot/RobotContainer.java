@@ -205,7 +205,7 @@ public class RobotContainer implements Logged {
                 simNoteIntakenTrigger.onTrue(
                                 Commands.sequence(
                                                 Commands.runOnce(() -> m_transfer.simnoteatintake = true),
-                                                Commands.runOnce(() -> m_transfer.isIntaking=false)));
+                                                Commands.runOnce(() -> m_transfer.isIntaking = false)));
 
                 checkAutoSelectLoop = new EventLoop();
 
@@ -304,7 +304,7 @@ public class RobotContainer implements Logged {
 
                 driver.b().onTrue(m_shooter.stopShooterCommand());
 
-                driver.x().onTrue(m_shooter.startShooterCommand(3500));
+                driver.x().onTrue(m_shooter.startShooterCommand(3500, 5));
 
                 driver.a().and(driver.leftTrigger().negate()).and(driver.rightBumper().negate())
                                 .onTrue(m_cf.doAmpShot());
@@ -322,7 +322,7 @@ public class RobotContainer implements Logged {
                 driver.back().onTrue(
                                 Commands.sequence(
                                                 m_cf.positionArmRunShooterSpecialCase(45,
-                                                                4750),
+                                                                4750,10),
                                                 Commands.waitSeconds(2),
                                                 m_cf.transferNoteToShooterCommand(),
                                                 new WaitCommand(1))
@@ -352,13 +352,13 @@ public class RobotContainer implements Logged {
                                 .onTrue(Commands.runOnce(() -> m_arm.useMotorEncoder = !m_arm.useMotorEncoder));
 
                 codriver.a().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                Constants.subwfrShooterSpeed));
+                                Constants.subwfrShooterSpeed, 10));
 
                 codriver.b().onTrue(new JogIntake(m_intake, codriver));
                 // Constants.safeStageShooterSpeed));
 
                 codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,
-                                Constants.tapeLineShooterSpeed));
+                                Constants.tapeLineShooterSpeed, 10));
 
                 codriver.y().whileTrue(
                                 Commands.run(() -> m_swerve.wheelsAlign(), m_swerve));

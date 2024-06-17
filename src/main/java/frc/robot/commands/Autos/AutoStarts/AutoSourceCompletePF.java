@@ -48,7 +48,7 @@ public class AutoSourceCompletePF extends SequentialCommandGroup {
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed),
+                                                Constants.subwfrShooterSpeed,10),
                                 cf.transferNoteToShooterCommand(),
                                 cf.armToIntake(),
                                 // move to center note , pick up if there and move to shoot position then shoot

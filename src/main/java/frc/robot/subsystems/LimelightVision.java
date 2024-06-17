@@ -47,7 +47,7 @@ public class LimelightVision extends SubsystemBase implements Logged {
   public LimelightVision() {
 
     if (CameraConstants.rearCamera.isUsed)
-      LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.ND0CROP1.ordinal());
+      LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTEDET1.ordinal());
 
     if (CameraConstants.frontLeftCamera.isUsed)
       setCamToRobotOffset(CameraConstants.frontLeftCamera);

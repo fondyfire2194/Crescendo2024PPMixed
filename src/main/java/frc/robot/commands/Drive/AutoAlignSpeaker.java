@@ -15,16 +15,18 @@ public class AutoAlignSpeaker extends Command {
 
   private final SwerveSubsystem m_swerve;
   private final boolean m_endAtTargets;
+  private final double m_toleranceDegrees;
   public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
 
   private double rotationVal;
   private Timer elapsedTime;
 
   public AutoAlignSpeaker(
-      SwerveSubsystem swerve, boolean endAtTargets) {
+      SwerveSubsystem swerve, double toleranceDegrees, boolean endAtTargets) {
 
     m_swerve = swerve;
     m_endAtTargets = endAtTargets;
+    m_toleranceDegrees = toleranceDegrees;
     addRequirements(m_swerve);
   }
 
@@ -32,9 +34,9 @@ public class AutoAlignSpeaker extends Command {
   @Override
   public void initialize() {
     m_alignTargetPID.enableContinuousInput(-180, 180);
-    m_alignTargetPID.setTolerance(0.5);
+    m_alignTargetPID.setTolerance(m_toleranceDegrees);
     m_swerve.targetPose = AllianceUtil.getSpeakerPose();
-    elapsedTime=new Timer();
+    elapsedTime = new Timer();
     elapsedTime.reset();
     elapsedTime.start();
   }

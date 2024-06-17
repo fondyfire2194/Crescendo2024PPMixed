@@ -45,7 +45,7 @@ public class MovePickupShootTest extends SequentialCommandGroup {
 
                                                 Commands.deadline(
                                                                 cf.positionArmRunShooterByDistance(false, true),
-                                                                new AutoAlignSpeaker(swerve, false)),
+                                                                new AutoAlignSpeaker(swerve,1, false)),
 
                                                 Commands.either(
                                                                 transfer.transferToShooterCommand(),

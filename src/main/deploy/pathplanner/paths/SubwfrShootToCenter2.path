@@ -8,30 +8,30 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.77255875488231,
-        "y": 6.124022725297896
+        "x": 2.946450998340399,
+        "y": 7.280573584454606
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.65272379601363,
-        "y": 4.086290259150996
+        "x": 8.160108839640543,
+        "y": 5.8394744980388955
       },
       "prevControl": {
-        "x": 1.5237098620679856,
-        "y": 3.92106870784713
+        "x": 7.031094905694898,
+        "y": 5.674252946735029
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Wing 3"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 0.4,
-      "rotationDegrees": 161.66447513867132,
+      "rotationDegrees": 178.25838120312562,
       "rotateFast": false
     }
   ],

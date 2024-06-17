@@ -115,14 +115,14 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   }
 
-  public Command startShooterCommand(double rpm) {
+  public Command startShooterCommand(double rpm,double pct) {
     return Commands.run(() -> startShooter(rpm))
-        .until(() -> bothAtSpeed(5));
+        .until(() -> bothAtSpeed(pct));
   }
 
-  public Command startShooterCommand(double toprpm, double bottomrpm) {
+  public Command startShooterCommand(double toprpm, double bottomrpm,double pct) {
     return Commands.run(() -> startShooter(toprpm, bottomrpm))
-        .until(() -> bothAtSpeed(5));
+        .until(() -> bothAtSpeed(pct));
   }
 
   public void startShooter(double rpm) {
