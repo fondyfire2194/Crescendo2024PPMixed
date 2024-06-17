@@ -28,6 +28,7 @@ public class PickupUsingVision extends SequentialCommandGroup {
                         TransferSubsystem transfer,
                         IntakeSubsystem intake,
                         SwerveSubsystem swerve,
+                        double switchoverdistance,
                         boolean innerNoteFirst,
                         int pipelineIndex,
                         int pipelineIndex1) {
@@ -41,7 +42,7 @@ public class PickupUsingVision extends SequentialCommandGroup {
                                                 () -> innerNoteFirst),
 
                                 Commands.race(
-                                                new CheckOKSwitchToDrive(swerve, cf, 2),
+                                                new CheckOKSwitchToDrive(swerve, cf, switchoverdistance),
                                                 Commands.either(
                                                                 new RunPPath(swerve, path),
                                                                 new RunPPath(swerve, path1),

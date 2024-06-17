@@ -6,6 +6,8 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
+import javax.sound.midi.Sequence;
+
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 
@@ -95,6 +97,7 @@ public class RobotContainer implements Logged {
         public BooleanSupplier fieldRelative;
 
         private Trigger doLobShot;
+
         private Trigger doMovingShot;
 
         private Trigger logShotTrigger;
@@ -173,7 +176,7 @@ public class RobotContainer implements Logged {
                                 && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
                                 && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
 
-                doLobShot.onTrue(m_cf.transferNoteToShooterCommand());
+                // doLobShot.onTrue(m_cf.transferNoteToShooterCommand());
 
                 doMovingShot = new Trigger(() -> m_transfer.shootmoving
                                 && m_transfer.OKShootMoving
@@ -184,22 +187,25 @@ public class RobotContainer implements Logged {
                                 && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
                                 && m_swerve.getDistanceFromSpeaker() < SwerveConstants.maxMovingShotDistance);
 
-                doMovingShot.onTrue(m_cf.transferNoteToShooterCommand());
+                // doMovingShot.onTrue(m_cf.transferNoteToShooterCommand());
 
                 logShotTrigger = new Trigger(() -> m_transfer.logShot == true);
 
-                logShotTrigger.onTrue(
-                                Commands.sequence(
+                // logShotTrigger.onTrue(
+                // Commands.sequence(
 
-                                                Commands.runOnce(() -> m_swerve.poseWhenShooting = m_swerve.getPose()),
-                                                Commands.runOnce(() -> m_arm.angleDegWhenShooting = m_arm
-                                                                .getAngleDegrees()),
-                                                Commands.runOnce(() -> m_transfer.logShot = false)));
+                // Commands.runOnce(() -> m_swerve.poseWhenShooting = m_swerve.getPose()),
+                // Commands.runOnce(() -> m_arm.angleDegWhenShooting = m_arm
+                // .getAngleDegrees()),
+                // Commands.runOnce(() -> m_transfer.logShot = false)));
 
                 simNoteIntakenTrigger = new Trigger(
                                 () -> RobotBase.isSimulation() && m_transfer.isIntaking && m_swerve.isStopped());
 
-                simNoteIntakenTrigger.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
+                simNoteIntakenTrigger.onTrue(
+                                Commands.sequence(
+                                                Commands.runOnce(() -> m_transfer.simnoteatintake = true),
+                                                Commands.runOnce(() -> m_transfer.isIntaking=false)));
 
                 checkAutoSelectLoop = new EventLoop();
 
