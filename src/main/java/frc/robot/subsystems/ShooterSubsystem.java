@@ -27,7 +27,6 @@ import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.Pref;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -53,8 +52,8 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "shtrrunatvel")
   private boolean runShooterVel;
 
-  private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(10000);
-  private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(10000);
+  private SlewRateLimiter topSpeedLimiter = new SlewRateLimiter(15000);
+  private SlewRateLimiter bottomSpeedLimiter = new SlewRateLimiter(15000);
   public boolean topMotorConnected;
   public boolean bottomMotorConnected;
 

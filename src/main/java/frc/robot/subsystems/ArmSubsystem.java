@@ -60,6 +60,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     private boolean useSoftwareLimit;
     public boolean inIZone;
     public double armVolts;
+     @Log.NT(key = "armfeedforward")
     private double feedforward;
     private double acceleration;
     private double lastTime;
@@ -67,6 +68,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     private double lastPosition = 0;
     public double appliedVolts;
     public double armAngleRads;
+    @Log.NT(key = "armpidout")
     private double pidout;
     private PIDController pid = new PIDController(.1, 0.0, 0);
     public double angleToleranceRads = ArmConstants.angleTolerance;
@@ -150,18 +152,16 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             presetArmEncoderToCancoder();
             setGoalCommand(getCanCoderRad());
         } else {
-
             armEncoder.setPosition(ArmConstants.armMinRadians);
             setGoal(ArmConstants.armMinRadians);
             simAngleRads = ArmConstants.armMinRadians;
         }
         resetController();
         pid.reset();
-        setKp();
+        // setKp();
 
         SmartDashboard.putData("Arm//Arm Sim", m_mech2d);
         m_armTower.setColor(new Color8Bit(Color.kBlue));
-
     }
 
     private void configMotor(CANSparkMax motor, RelativeEncoder encoder, boolean reverse) {
@@ -459,7 +459,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     public double getCanCoderRad() {
         double temp = (armCancoder.getAbsolutePosition().getValueAsDouble()
-                * Math.PI) + ArmConstants.cancoderOffsetRadians;
+                * Math.PI) + ArmConstants.cancoderOffsetRadiansAtCalibration;
         if (temp > Math.PI)
             temp = temp - Math.PI;
         return temp;

@@ -540,8 +540,7 @@ public final class Constants {
 
         public static final class ArmConstants {
 
-                public static final double cancoderOffsetRadians = Units.degreesToRadians(17); // This measurement works
-                                                                                               // 18?
+                public static final double cancoderOffsetRadiansAtCalibration = Units.degreesToRadians(17);
 
                 public static final double maxarmMotorRPM = 5700;
 
@@ -600,8 +599,8 @@ public final class Constants {
                 public static final double armPivotX = Units.inchesToMeters(-7.5);
                 public static final double armPivotOffset = Units.inchesToMeters(3);
 
-                public static final double reverseMovementLimitAngle = Units.degreesToRadians(18);
-                public static final double forwardMovementLimitAngle = Units.degreesToRadians(100.53);
+                public static final double reverseMovementLimitAngle = ArmConstants.armMinRadians;
+                public static final double forwardMovementLimitAngle = ArmConstants.armMaxRadians;
 
         }
 
