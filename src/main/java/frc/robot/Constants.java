@@ -573,13 +573,13 @@ public final class Constants {
 
                 public static final double kTrapAccelerationRadPerSecSquared = Units.degreesToRadians(240);
 
-                public static final double armKg = 0.55;
-                public static final double armKs = 0.22;// 0.11941;
-                public static final double armKv = 2.5;// volts per deg per sec so 12/max = 12/5=2.4
-                public static final double armKa = .3;
+                public static final double armKg = 0.2;
+                public static final double armKs = 0.31;// 0.11941;
+                public static final double armKv = 2;// volts per deg per sec so 12/max = 12/5=2.4
+                public static final double armKa = 0;
 
-                public static final double armKp = 5;
-                public static final double armKi = 0.0;
+                public static final double armKp = 30;
+                public static final double armKi = 0.5;
                 public static final double armKd = 0.0;
 
                 public static final int currentLimit = 40;

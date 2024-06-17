@@ -51,7 +51,7 @@ public class CheckOKSwitchToDrive extends Command {
 
     // get horizontal angle
 
-    m_cf.doIntake(10, 5);
+    m_cf.doIntake(10);
 
     if (AllianceUtil.isRedAlliance())
       m_swerve.remainingdistance = m_swerve.getX() - FieldConstants.FIELD_LENGTH / 2;

@@ -40,7 +40,7 @@ public class MovePickupShootTest extends SequentialCommandGroup {
                                 Commands.repeatingSequence(
 
                                                 Commands.parallel(
-                                                                cf.doIntake(10,5),
+                                                                cf.doIntake(10),
                                                                 new DriveToPickupNote(swerve, transfer, intake, camname)),
 
                                                 Commands.deadline(

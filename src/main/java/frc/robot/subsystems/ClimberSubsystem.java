@@ -187,7 +187,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
   }
 
   public void lockClimber() {
-    climberLock.set(Pref.getPref("LockNumber"));
+    climberLock.set(1);// Pref.getPref("LockNumber"));
   }
 
   public Command lockClimberCommand() {
@@ -195,7 +195,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
   }
 
   public void unlockClimber() {
-    climberLock.set(Pref.getPref("UnlockNumber"));
+    climberLock.set(0);// Pref.getPref("UnlockNumber"));
   }
 
   public Command unlockClimberCommand() {

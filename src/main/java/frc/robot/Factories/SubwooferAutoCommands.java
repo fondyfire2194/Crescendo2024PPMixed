@@ -85,7 +85,7 @@ public class SubwooferAutoCommands {
                                 move(path, swerve, pf),
                                 Commands.sequence(
                                                 Commands.waitSeconds(.25),
-                                                cf.doIntake(10, 5)));
+                                                cf.doIntake(10)));
         }
 
         public Command moveAndPickupUsingVision(sbwfrpaths path, SwerveSubsystem swerve, CommandFactory cf,
@@ -94,7 +94,7 @@ public class SubwooferAutoCommands {
                                 move(path, swerve, pf),
                                 Commands.sequence(
                                                 Commands.waitSeconds(.25),
-                                                cf.doIntake(10, 5)));
+                                                cf.doIntake(10)));
         }
 
 }

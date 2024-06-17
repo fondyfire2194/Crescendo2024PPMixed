@@ -268,7 +268,7 @@ public class AutoFactory {
                                                 pf.pathMaps.get(path.name())),
                                 Commands.sequence(
                                                 Commands.waitSeconds(.25),
-                                                cf.doIntake(10,5)));
+                                                cf.doIntake(10)));
         }
 
         public Command getAutonomousCommand() {

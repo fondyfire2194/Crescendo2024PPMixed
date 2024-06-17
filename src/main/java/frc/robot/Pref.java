@@ -82,7 +82,6 @@ public class Pref {
     prefDict.put("armKp", 30.);
     prefDict.put("armKi", .5);
     prefDict.put("armKd", .0000);
-    prefDict.put("armKIZone", .00001);
 
     // amp shot
     prefDict.put("AmpArmDegrees", 92.);

@@ -29,7 +29,6 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   RelativeEncoder intakeEncoder;
   public SparkPIDController intakeController;
 
-
   @Log.NT(key = "intakerun")
   private boolean runIntake;
   public boolean jogging;
@@ -96,9 +95,8 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   public void periodic() {
     // This method will be called once per scheduler run
 
-  
     if (runIntake) {
-      commandrpm = Pref.getPref("IntakeSpeed");
+      commandrpm = 4500;// Pref.getPref("IntakeSpeed");
       runAtVelocity(commandrpm);
     }
     if (!runIntake && !jogging) {
@@ -134,11 +132,11 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   }
 
   public void setPID() {
-    intakeController.setP(Pref.getPref("IntakeKp"));
+    intakeController.setP(0.00035);// Pref.getPref("IntakeKp"));
     intakeController.setFF(IntakeConstants.intakeKFF);
   }
 
-   @Log.NT(key = "intakestickyfault")
+  @Log.NT(key = "intakestickyfault")
   public int getStickyFaults() {
     return intakeMotor.getStickyFaults();
   }

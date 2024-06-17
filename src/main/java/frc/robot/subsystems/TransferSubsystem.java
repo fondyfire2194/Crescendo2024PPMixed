@@ -48,6 +48,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "okshootmoving")
   public boolean OKShootMoving;
   public boolean logShot;
+  public boolean isIntaking;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {
@@ -116,15 +117,17 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public void transferToShooter() {
     enableLimitSwitch(false);
     logShot = true;
-    SmartDashboard.putBoolean("LOGSHOT",logShot);
-    commandrpm = Pref.getPref("TransferToShootSpeed");
+    SmartDashboard.putBoolean("LOGSHOT", logShot);
+    commandrpm = 4000;// Pref.getPref("TransferToShootSpeed");
     simnoteatintake = false;
     runAtVelocity(commandrpm);
   }
 
   public void runToSensor() {
     enableLimitSwitch(true);
-    commandrpm = Pref.getPref("TransferIntakingSpeed");
+    isIntaking = true;
+    // commandrpm=Pref.getPref("TransferIntakingSpeed");
+    commandrpm = 5500;
     runAtVelocity(commandrpm);
   }
 
@@ -140,7 +143,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   @Override
   public void periodic() {
-    
+
     // This method will be called once per scheduler run
 
     if (!transferMotorConnected) {

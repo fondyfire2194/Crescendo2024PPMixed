@@ -122,9 +122,9 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     public ArmSubsystem() {
         super(
                 new ProfiledPIDController(
-                        5,
-                        0,
-                        0,
+                        ArmConstants.armKp,
+                        ArmConstants.armKi,
+                        ArmConstants.armKd,
                         new TrapezoidProfile.Constraints(
                                 ArmConstants.kTrapVelocityRadPerSecond,
                                 ArmConstants.kTrapAccelerationRadPerSecSquared)),
@@ -240,19 +240,22 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         pidout = pid.calculate(armAngleRads, getController().getSetpoint().position);
         acceleration = (getController().getSetpoint().velocity - lastSpeed)
                 / (Timer.getFPGATimestamp() - lastTime);
+        boolean tuning = false;
+        if (!tuning) {
 
-        // feedforward =
-        // armfeedforward.calculate(getController().getSetpoint().position,
-        // getController().getSetpoint().velocity,
-        // acceleration);
+            feedforward = armfeedforward.calculate(getController().getSetpoint().position,
+                    getController().getSetpoint().velocity,
+                    acceleration);
+        } else {
+            feedforward = Pref.getPref("armFFKs") *
+                    Math.signum(getController().getSetpoint().velocity)
+                    + Pref.getPref("armFFKg") * Math.cos(getController().getSetpoint().position)
+                    + Pref.getPref("armFFKv") * getController().getSetpoint().velocity // this
+                    // was commented out for some reason?
+                    + activeKv * getController().getSetpoint().velocity
+                    + Pref.getPref("armFFKa") * acceleration;
+        }
 
-        feedforward = Pref.getPref("armFFKs") *
-                Math.signum(getController().getSetpoint().velocity)
-                + Pref.getPref("armFFKg") * Math.cos(getController().getSetpoint().position)
-                + Pref.getPref("armFFKv") * getController().getSetpoint().velocity // this was commented out for some
-                                                                                   // reason?
-                + activeKv * getController().getSetpoint().velocity
-                + Pref.getPref("armFFKa") * acceleration;
         // Add the feedforward to the PID output to get the motor output
 
         lastSpeed = getController().getSetpoint().velocity;
@@ -480,17 +483,15 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     }
 
     public void setKp() {
-        pid.setP(Pref.getPref("armKp"));
+        pid.setP(30);// (Pref.getPref("armKp"));
     }
 
     public void setKd() {
-        // getController().setP(Pref.getPref("armKd"));
-        pid.setD(Pref.getPref("armKd"));
+        pid.setD(0);// (Pref.getPref("armKd"));
     }
 
     public void setKi() {
-        // getController().setP(Pref.getPref("armKi"));
-        pid.setI(Pref.getPref("armKi"));
+        pid.setI(.5);// (Pref.getPref("armKi"));
     }
 
     public Command setPIDGainsCommand() {

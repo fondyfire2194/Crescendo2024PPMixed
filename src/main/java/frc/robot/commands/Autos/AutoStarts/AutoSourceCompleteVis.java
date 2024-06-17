@@ -59,7 +59,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                 transfer, intake, swerve, innerNoteFirst,
                                                                 LLPipelines.pipelines.NDLCROP2.ordinal(),
                                                                 LLPipelines.pipelines.NDRCROP3.ordinal()),
-                                                cf.doIntake(10, 5)),
+                                                cf.doIntake(10)),
 
                                 Commands.either(
 
@@ -87,7 +87,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                 transfer, intake, swerve, innerNoteFirst,
                                                                 LLPipelines.pipelines.NDRCROP3.ordinal(),
                                                                 LLPipelines.pipelines.NDLCROP2.ordinal()),
-                                                cf.doIntake(10, 5)),
+                                                cf.doIntake(10)),
 
                                 Commands.either(
                                                 Commands.either(
@@ -117,7 +117,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
-                                                cf.doIntake(10, 2)),
+                                                cf.doIntake(10)),
                                 Commands.waitSeconds(.25),
                                 Commands.either(
                                                 Commands.sequence(

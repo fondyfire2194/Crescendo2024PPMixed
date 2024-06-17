@@ -99,6 +99,8 @@ public class RobotContainer implements Logged {
 
         private Trigger logShotTrigger;
 
+        private Trigger simNoteIntakenTrigger;
+
         EventLoop checkAutoSelectLoop;
 
         private BooleanEvent doAutoSetup;
@@ -123,10 +125,10 @@ public class RobotContainer implements Logged {
 
                 if (RobotBase.isReal()) {
                         // Pref.deleteUnused();
-                        Pref.addMissing();
+                        // Pref.addMissing();
                 }
 
-                m_arm.setKPKIKD();
+                // m_arm.setKPKIKD();
 
                 m_pd.resetTotalEnergy();
 
@@ -194,6 +196,11 @@ public class RobotContainer implements Logged {
                                                                 .getAngleDegrees()),
                                                 Commands.runOnce(() -> m_transfer.logShot = false)));
 
+                simNoteIntakenTrigger = new Trigger(
+                                () -> RobotBase.isSimulation() && m_transfer.isIntaking && m_swerve.isStopped());
+
+                simNoteIntakenTrigger.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
+
                 checkAutoSelectLoop = new EventLoop();
 
                 doAutoSetup = new BooleanEvent(checkAutoSelectLoop, m_af::checkChoiceChange);
@@ -244,7 +251,7 @@ public class RobotContainer implements Logged {
                 driver.rightBumper().and(driver.a().negate()).onTrue(
                                 Commands.parallel(
                                                 m_intake.startIntakeCommand(),
-                                                new TransferIntakeToSensor(m_transfer, m_intake, 120,120),
+                                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
                                                 m_cf.rumbleCommand(driver),
                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians))
                                                 .withTimeout(10));
@@ -257,7 +264,7 @@ public class RobotContainer implements Logged {
                                                 m_intake.startIntakeCommand(),
                                                 Commands.deadline(
                                                                 new TransferIntakeToSensor(m_transfer,
-                                                                                m_intake, 120,4),
+                                                                                m_intake, 120),
                                                                 new AlignToNote(
                                                                                 m_swerve,
                                                                                 CameraConstants.rearCamera.camname,
