@@ -160,7 +160,7 @@ public final class Constants {
                 public static final double maxTranslationalSpeed = Units.feetToMeters(11.5);
 
                 /* Angle Motor PID Values */
-                public static final double angleKP = 0.28;
+                public static final double angleKP = 0.08;
                 public static final double angleKI = 0.0;
                 public static final double angleKD = 0.0;
                 public static final double angleKFF = 0.0;
@@ -295,7 +295,7 @@ public final class Constants {
                 public static final double stageHeight = Units.inchesToMeters(96);
                 public static final double speakerSlotHeight = Units.inchesToMeters(80.4375);
 
-                private static double speakerAimXOffset = Units.inchesToMeters(6);
+                private static double speakerAimXOffset = Units.inchesToMeters(0);
                 private static Transform2d speakerAimAdjustBlue = new Transform2d(speakerAimXOffset, 0.,
                                 new Rotation2d());
                 public static final Pose2d speakerBlueAlliance = new Pose2d(0., 5.5, Rotation2d.fromDegrees(0.0))

@@ -41,6 +41,8 @@ public class TransferIntakeToSensor extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    if (!m_swerve.isStopped())
+      endTimer.restart();
     m_transfer.runToSensor();
     m_intake.noteMissed = RobotBase.isSimulation() && (m_transfer.skipFirstNoteInSim || m_transfer.skipSecondNoteInSim)
         || m_swerve.isStopped() && endTimer.hasElapsed(m_noNoteTime);

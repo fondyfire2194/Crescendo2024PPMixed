@@ -67,7 +67,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 cf.transferNoteToShooterCommand(),
                                                                 cf.stopShooter(),
                                                                 Commands.waitSeconds(2),
-                                                                cf.doIntake(10))),
+                                                                cf.doIntake(2))),
                                 Commands.either(
 
                                                 Commands.either(

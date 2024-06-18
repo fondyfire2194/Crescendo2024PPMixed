@@ -9,6 +9,7 @@ import java.util.function.DoubleSupplier;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -53,8 +54,7 @@ public class AlignTargetOdometry extends Command {
     if (!lob) {
       m_swerve.setTargetPose(AllianceUtil.getSpeakerPose());
       m_alignTargetPID.setTolerance(0.2);
-    }
-    else {
+    } else {
       m_swerve.setTargetPose(AllianceUtil.getLobPose());
       m_alignTargetPID.setTolerance(1);
     }
@@ -76,7 +76,7 @@ public class AlignTargetOdometry extends Command {
     double currentAngleToTarget = m_swerve.getAngleDegreesToTarget();
 
     rotationVal = m_alignTargetPID.calculate(m_swerve.getAngleDegrees(), currentAngleToTarget);
-
+    SmartDashboard.putNumber("ALIGNROTVAL", rotationVal);
     m_swerve.drive(
         translationVal *= Constants.SwerveConstants.kmaxSpeed,
         -(strafeVal *= Constants.SwerveConstants.kmaxSpeed),

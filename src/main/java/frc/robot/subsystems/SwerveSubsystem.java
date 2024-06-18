@@ -225,7 +225,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
     // setModuleDriveFF();now  uses Constants instead
     // setModuleDriveKp();
-    // setModuleAngleKp();
+     setModuleAngleKp();
 
   }
 

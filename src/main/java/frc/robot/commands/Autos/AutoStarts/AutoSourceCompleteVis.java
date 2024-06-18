@@ -20,6 +20,7 @@ import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.RotateToAngle;
+import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
@@ -135,11 +136,55 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),
-                                                                                new AutoAlignSpeaker(swerve,1, true)),
+                                                                                new AutoAlignSpeaker(swerve, 1, true)),
                                                                 cf.transferNoteToShooterCommand(),
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),
                                                 () -> transfer.noteAtIntake()));
+
+        }
+
+        public Command pickupCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
+                        TransferSubsystem transfer, IntakeSubsystem intake, double switchoverdistance,
+                        boolean innerNoteFirst) {
+                return Commands.parallel(
+                                new PickupUsingVision(cf,
+                                                pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
+                                                pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
+                                                transfer, intake, swerve,
+                                                switchoverdistance,
+                                                innerNoteFirst,
+                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                Commands.sequence(
+                                                cf.transferNoteToShooterCommand(),
+                                                cf.stopShooter(),
+                                                Commands.waitSeconds(2),
+                                                cf.doIntake(10)));
+        }
+
+        public Command moveShootCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
+                        boolean innerNoteFirst) {
+                return Commands.either(
+                                new CenterToShoot(cf, pf.pathMaps.get(
+                                                sourcepaths.Center4ToSourceShoot
+                                                                .name()),
+                                                swerve, false),
+                                new CenterToShoot(cf, pf.pathMaps.get(
+                                                sourcepaths.Center5ToSourceShoot
+                                                                .name()),
+                                                swerve, false),
+                                () -> innerNoteFirst);
+        }
+
+        public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve, boolean innerNoteFirst) {
+                return (Commands.parallel(
+                                Commands.either(
+                                                new RunPPath(swerve,
+                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5.name())),
+                                                new RunPPath(swerve,
+                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4.name())),
+                                                () -> innerNoteFirst),
+                                cf.doIntake(2)));
 
         }
 }

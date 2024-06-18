@@ -24,13 +24,13 @@ public class CenterToShoot extends SequentialCommandGroup {
 
                 addCommands(
                                 Commands.sequence(
-                                                Commands.parallel(
+                                                Commands.deadline(
                                                                 new RunPPath(swerve,
                                                                                 path),
-                                                                cf.positionArmRunShooterSpecialCase(33, 3100, 25)),
+                                                                cf.positionArmRunShooterSpecialCase(25, 3100, 15)),
                                                 Commands.parallel(
                                                                 cf.positionArmRunShooterByDistance(false, true),
-                                                                new AutoAlignSpeaker(swerve, 1, true)),
+                                                                new AutoAlignSpeaker(swerve, .2, true)),
                                                 cf.transferNoteToShooterCommand()));
         }
 }

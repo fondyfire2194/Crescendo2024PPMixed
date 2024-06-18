@@ -60,7 +60,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     private boolean useSoftwareLimit;
     public boolean inIZone;
     public double armVolts;
-     @Log.NT(key = "armfeedforward")
+    @Log.NT(key = "armfeedforward")
     private double feedforward;
     private double acceleration;
     private double lastTime;
@@ -70,7 +70,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     public double armAngleRads;
     @Log.NT(key = "armpidout")
     private double pidout;
-    private PIDController pid = new PIDController(.1, 0.0, 0);
+    private PIDController pid = new PIDController(ArmConstants.armKp, 0.0, 0);
     public double angleToleranceRads = ArmConstants.angleTolerance;
 
     // public boolean enableArm;
@@ -158,7 +158,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         }
         resetController();
         pid.reset();
-        // setKp();
+        setKp();
 
         SmartDashboard.putData("Arm//Arm Sim", m_mech2d);
         m_armTower.setColor(new Color8Bit(Color.kBlue));
@@ -483,7 +483,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     }
 
     public void setKp() {
-        pid.setP(30);// (Pref.getPref("armKp"));
+        pid.setP(ArmConstants.armKp);// (Pref.getPref("armKp"));
     }
 
     public void setKd() {

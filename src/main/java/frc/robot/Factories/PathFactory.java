@@ -47,6 +47,8 @@ public class PathFactory {
         AmpShootToNearCenter1,
         AmpShootToNearCenter2,
         AmpToWing1,
+        Center1ToCenter2,
+        Center2toCenter1,
         Center1ToAmpShoot,
         Center2ToAmpShoot,
         Center3ToWing2,
@@ -79,6 +81,8 @@ public class PathFactory {
         SourceShootToCenter5,
         SourceShootToNearCenter4,
         SourceShootToNearCenter5,
+        Center4ToCenter5,
+        Center5ToCenter4,
         Center4ToSourceShoot,
         Center5ToSourceShoot;
     }

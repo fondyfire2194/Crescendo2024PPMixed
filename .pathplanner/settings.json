@@ -15,7 +15,7 @@
     "Source Start",
     "SubWfrStart"
   ],
-  "defaultMaxVel": 3.5,
+  "defaultMaxVel": 2.5,
   "defaultMaxAccel": 2.5,
   "defaultMaxAngVel": 360.0,
   "defaultMaxAngAccel": 180.0,
