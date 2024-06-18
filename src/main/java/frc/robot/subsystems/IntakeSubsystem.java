@@ -96,7 +96,7 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     // This method will be called once per scheduler run
 
     if (runIntake) {
-      commandrpm = 4500;// Pref.getPref("IntakeSpeed");
+      commandrpm = IntakeConstants.intakeSpeed;// Pref.getPref("IntakeSpeed");
       runAtVelocity(commandrpm);
     }
     if (!runIntake && !jogging) {
@@ -132,7 +132,7 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   }
 
   public void setPID() {
-    intakeController.setP(0.00035);// Pref.getPref("IntakeKp"));
+    intakeController.setP(IntakeConstants.intakeKp);// Pref.getPref("IntakeKp"));
     intakeController.setFF(IntakeConstants.intakeKFF);
   }
 

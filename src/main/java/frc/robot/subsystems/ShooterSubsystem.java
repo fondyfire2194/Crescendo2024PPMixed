@@ -115,12 +115,12 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
 
   }
 
-  public Command startShooterCommand(double rpm,double pct) {
+  public Command startShooterCommand(double rpm, double pct) {
     return Commands.run(() -> startShooter(rpm))
         .until(() -> bothAtSpeed(pct));
   }
 
-  public Command startShooterCommand(double toprpm, double bottomrpm,double pct) {
+  public Command startShooterCommand(double toprpm, double bottomrpm, double pct) {
     return Commands.run(() -> startShooter(toprpm, bottomrpm))
         .until(() -> bothAtSpeed(pct));
   }
@@ -317,16 +317,16 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   public void setTopKpKdKi() {
 
     topController.setFF(Constants.ShooterConstants.topShooterKFF, 0);
-    topController.setP(.0004, 0);// (Pref.getPref("ShooterTopKp"), 0);
-    topController.setD(.01, 0);// (Pref.getPref("ShooterTopKd"), 0);
-    topController.setI(0., 0);// (Pref.getPref("ShooterTopKi"), 0);
+    topController.setP(ShooterConstants.topShooterKP, 0);// (Pref.getPref("ShooterTopKp"), 0);
+    topController.setD(ShooterConstants.topShooterKD, 0);// (Pref.getPref("ShooterTopKd"), 0);
+    topController.setI(ShooterConstants.topShooterKI, 0);// (Pref.getPref("ShooterTopKi"), 0);
   }
 
   public void setBottomKpKdKi() {
     bottomController.setFF(Constants.ShooterConstants.bottomShooterKFF);
-    bottomController.setP(.0004, 0);// (Pref.getPref("ShooterBottomKp"), 0);
-    bottomController.setD(.0001, 0);// (Pref.getPref("ShooterBottomKd"), 0);
-    bottomController.setI(.001, 0);// (Pref.getPref("ShooterBottomKi"), 0);
+    bottomController.setP(ShooterConstants.bottomShooterKP, 0);// (Pref.getPref("ShooterBottomKp"), 0);
+    bottomController.setD(ShooterConstants.bottomShooterKD, 0);// (Pref.getPref("ShooterBottomKd"), 0);
+    bottomController.setI(ShooterConstants.bottomShooterKI, 0);// (Pref.getPref("ShooterBottomKi"), 0);
   }
 
   private final SysIdRoutine sysIdRoutine = new SysIdRoutine(

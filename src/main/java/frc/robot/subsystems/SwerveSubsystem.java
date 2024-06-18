@@ -74,7 +74,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
       new PIDController(Constants.KeepAngle.kp, Constants.KeepAngle.ki, Constants.KeepAngle.kd);
 
-  public PIDController m_alignPID = new PIDController(SwerveConstants.alignKp, 0, SwerveConstants.alighKd);
   public PIDController m_alignNotePID = new PIDController(SwerveConstants.alignNoteKp, 0, SwerveConstants.alignNoteKd);
 
   private final Timer m_keepAngleTimer = new Timer();
@@ -225,9 +224,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
     resetPoseEstimator(new Pose2d());
 
-    setModuleDriveFF();
-    setModuleDriveKp();
-    setModuleAngleKp();
+    // setModuleDriveFF();now  uses Constants instead
+    // setModuleDriveKp();
+    // setModuleAngleKp();
 
   }
 
@@ -736,21 +735,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return Commands.runOnce(() -> resetAll());
   }
 
-  public double getAlignKp() {
-    return m_alignPID.getP();
-  }
-
-  public void setAlignKp() {
-    m_alignPID.setP(Pref.getPref("AlignkP"));
-  }
-
-  public Command setAlignKpCommand() {
-    return Commands.runOnce(() -> setAlignKp());
-  }
-
-  public PIDController getAlignPID() {
-    return m_alignPID;
-  }
 
   @Override
   public void simulationPeriodic() {

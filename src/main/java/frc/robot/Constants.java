@@ -68,7 +68,8 @@ import monologue.Annotations.Log;
  * 
  * Stage center pillar plate begins 120.5" from speaker face and is on field
  * widthcenter line
- * Stage right and laft pillar plates field edge centers are 61-3/8 inches either
+ * Stage right and laft pillar plates field edge centers are 61-3/8 inches
+ * either
  * side of field width center line and are 231.2 inches from speaker face.
  * 
  * 
@@ -158,16 +159,16 @@ public final class Constants {
                 public static final double maxTranslationalSpeed = Units.feetToMeters(11.5);
 
                 /* Angle Motor PID Values */
-                public static final double angleKP = 0.01;
+                public static final double angleKP = 0.28;
                 public static final double angleKI = 0.0;
                 public static final double angleKD = 0.0;
                 public static final double angleKFF = 0.0;
 
                 /* Drive Motor PID Values */
-                public static final double driveKP = 0.0;
+                public static final double driveKP = 0.1;
                 public static final double driveKI = 0.0;
                 public static final double driveKD = 0.0;
-                public static final double driveKFF = .5 / kmaxTheoreticalSpeed;
+                public static final double driveKFF = .95 / kmaxTheoreticalSpeed;
 
                 /* Drive Motor Characterization Values */
                 public static final double[] driveKS = { 0.60, .6, .6, .6 }; // 0.25 55
@@ -475,13 +476,13 @@ public final class Constants {
 
                 public static final double shooterConversionVelocityFactor = 1;
                 public static final double shooterConversionPositionFactor = 1;
-                public static final double topShooterKP = .0;
+                public static final double topShooterKP = 4e-4;
                 public static final double topShooterKI = 0;
-                public static final double topShooterKD = 0;
+                public static final double topShooterKD = 0.01;
                 public static final double topShooterKFF = 1.0 / maxShooterMotorRPM;
-                public static final double bottomShooterKP = .0;
+                public static final double bottomShooterKP = 4e-4;
                 public static final double bottomShooterKI = 0;
-                public static final double bottomShooterKD = 0;
+                public static final double bottomShooterKD = 1e-4;
                 public static final double bottomShooterKFF = 1.0 / maxShooterMotorRPM;
                 public static final double voltageComp = 12;
                 public static final IdleMode shooterIdleMode = IdleMode.kBrake;
@@ -615,6 +616,8 @@ public final class Constants {
                 public static double clearShooterTime = .25;
                 public static double noNoteStopTime = 20;
                 public static double jogSpeed = 1;
+                public static double intakingSpeed = 5500;
+                public static double transferToShootSpeed = 4000;
 
                 public static final double transferKp = .00002; // P gains caused oscilliation
 
@@ -636,8 +639,8 @@ public final class Constants {
                 public static double reverseRPM = -500;
                 public static double reverseTime = 2;
                 public static double noNoteTime = 60;
-
-                public static final double intakeKp = .0001;
+                public static final double intakeSpeed = 4500;
+                public static final double intakeKp = 3.5e-4;
                 public static final double intakeKi = 0.0;
                 public static final double intakeKd = 0.0;
                 public static final double intakeKFF = .95 / maxIntakeMotorRPM;

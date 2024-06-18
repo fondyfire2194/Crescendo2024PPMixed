@@ -46,22 +46,18 @@ public class Pref {
     prefDict.put("rotki", 0.005);
     prefDict.put("rotkd", 0.00001);
 
-    prefDict.put("AlignKp", .01);
 
     // shooter
 
-    prefDict.put("ShooterSpeedRatio", 1.);
     prefDict.put("ShooterTopKp", .0004);
     prefDict.put("ShooterTopKd", .01);
     prefDict.put("ShooterTopKi", .00);
-
-    prefDict.put("ShooterTopKpFF", .0007);
+  
 
     prefDict.put("ShooterBottomKp", .0004);
     prefDict.put("ShooterBottomKd", .0001);
     prefDict.put("ShooterBottomKi", .001);
-
-    prefDict.put("ShooterBottomKpFF", .0007);
+    
 
     prefDict.put("IntakeSpeed", 4500.);
     prefDict.put("IntakeKp", 0.00035);

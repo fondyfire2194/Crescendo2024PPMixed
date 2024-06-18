@@ -119,7 +119,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
     enableLimitSwitch(false);
     logShot = true;
     SmartDashboard.putBoolean("LOGSHOT", logShot);
-    commandrpm = 4000;// Pref.getPref("TransferToShootSpeed");
+    commandrpm = TransferConstants.transferToShootSpeed;// Pref.getPref("TransferToShootSpeed");
     simnoteatintake = false;
     runAtVelocity(commandrpm);
   }
@@ -128,7 +128,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
     enableLimitSwitch(true);
     isIntaking = true;
     // commandrpm=Pref.getPref("TransferIntakingSpeed");
-    commandrpm = 5500;
+    commandrpm = TransferConstants.intakingSpeed;
     runAtVelocity(commandrpm);
   }
 

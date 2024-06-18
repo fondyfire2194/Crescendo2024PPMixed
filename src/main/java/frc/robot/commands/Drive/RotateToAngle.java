@@ -15,7 +15,6 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class RotateToAngle extends PIDCommand {
   /** Creates a new RotateToAngle. */
 
-
   private static PIDController rotatePID = new PIDController(0.06, 0, 0);
 
   public RotateToAngle(SwerveSubsystem drive, double angle) {
@@ -38,12 +37,16 @@ public class RotateToAngle extends PIDCommand {
     addRequirements(drive);
     // Use addRequirements() here to declare subsystem dependencies.
     // Configure additional PID options by calling `getController` here.
-   
-    getController().setP(Pref.getPref("rotkp"));
-    m_controller.setI(Pref.getPref("rotki"));
-    m_controller.setD(Pref.getPref("rotkd"));
+
+    // getController().setP(Pref.getPref("rotkp"));
+    // m_controller.setI(Pref.getPref("rotki"));
+    // m_controller.setD(Pref.getPref("rotkd"));
+
+    getController().setP(.003);
+    m_controller.setI(.005);
+    m_controller.setD(1e-5);
+
     m_controller.setTolerance(1);
-  
 
   }
 
