@@ -223,10 +223,10 @@ public class AutoFactory {
                                                 m_sac.move(sbwfrpaths.Wing2ToCenter3, m_swerve, m_pf));
                         case 11:
                                 return new AutoSourceCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, true);
+                                                m_swerve, m_intake, m_transfer,1.75. true);
                         case 12:
                                 return new AutoSourceCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, false);
+                                                m_swerve, m_intake, m_transfer,1.75. false);
 
                         case 13:
                                 return new AutoSourceCompletePF(m_cf, m_pf, this,
@@ -237,19 +237,16 @@ public class AutoFactory {
 
                         case 21:
                                 return new AutoAmpCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, true);
-
-                        case 22:
+                                                m_swerve, m_intake, m_transfer, 1.75,true);
+                       case 22:
                                 return new AutoAmpCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, false);
+                                                m_swerve, m_intake, m_transfer,1.75, false);
                         case 23:
                                 return new AutoAmpCompletePF(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, true);
-
                         case 24:
                                 return new AutoAmpCompletePF(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, false);
-
                         default:
                                 return Commands.none();
 

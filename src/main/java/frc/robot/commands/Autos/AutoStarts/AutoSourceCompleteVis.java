@@ -36,6 +36,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                         SwerveSubsystem swerve,
                         IntakeSubsystem intake,
                         TransferSubsystem transfer,
+                        double switchoverdistance,
                         boolean innerNoteFirst) {
 
                 addCommands(
@@ -57,7 +58,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                 pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                                 pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
                                                                 transfer, intake, swerve,
-                                                                1.75,
+                                                                switchoverdistance,
                                                                 innerNoteFirst,
                                                                 LLPipelines.pipelines.NOTEDET1.ordinal()),
                                                 Commands.sequence(
@@ -89,7 +90,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4
                                                                                 .name()),
                                                                 transfer, intake, swerve,
-                                                                1.75,
+                                                                switchoverdistance,
                                                                 innerNoteFirst,
                                                                 LLPipelines.pipelines.NOTEDET1.ordinal()),
 

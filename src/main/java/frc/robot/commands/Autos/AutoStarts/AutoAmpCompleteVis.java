@@ -36,6 +36,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                         SwerveSubsystem swerve,
                         IntakeSubsystem intake,
                         TransferSubsystem transfer,
+                        double switchoverdistance,
                         boolean innerNoteFirst) {
 
                 addCommands(
@@ -59,7 +60,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 pf.pathMaps.get(amppaths.AmpToCenter2.name()),
                                                                 pf.pathMaps.get(amppaths.AmpToCenter1.name()),
                                                                 transfer, intake, swerve,
-                                                                2,
+                                                                switchoverdistance,
                                                                 innerNoteFirst,
                                                                 LLPipelines.pipelines.NOTEDET1.ordinal()),
                                                 Commands.sequence(
@@ -89,7 +90,7 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
                                                                 pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
                                                                 transfer, intake, swerve,
-                                                                2,
+                                                                switchoverdistance,
                                                                 innerNoteFirst,
                                                                 LLPipelines.pipelines.NOTEDET1.ordinal()),
 
