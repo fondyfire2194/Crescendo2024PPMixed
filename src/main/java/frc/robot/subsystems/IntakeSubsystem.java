@@ -19,7 +19,6 @@ import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.Pref;
 import monologue.Annotations.Log;
 import monologue.Logged;
 

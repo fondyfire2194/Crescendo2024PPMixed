@@ -20,7 +20,6 @@ import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
 import frc.robot.Constants.CANIDConstants;
-import frc.robot.Pref;
 import monologue.Annotations.Log;
 import monologue.Logged;
 
@@ -32,8 +31,7 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
 
   RelativeEncoder climberEncoderLeft;
   RelativeEncoder climberEncoderRight;
-  public boolean showClimber = true;
-  private int loopctr;
+
 
   public boolean leftMotorConnected;
   public boolean rightMotorConnected;

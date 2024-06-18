@@ -6,11 +6,8 @@ package frc.robot;
 
 import java.util.function.BooleanSupplier;
 
-import javax.sound.midi.Sequence;
-
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
-
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;

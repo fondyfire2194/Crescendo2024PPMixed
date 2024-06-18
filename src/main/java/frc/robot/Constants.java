@@ -13,6 +13,7 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -294,8 +295,15 @@ public final class Constants {
                 public static final double stageHeight = Units.inchesToMeters(96);
                 public static final double speakerSlotHeight = Units.inchesToMeters(80.4375);
 
-                public static final Pose2d speakerBlueAlliance = new Pose2d(0.0, 5.5, Rotation2d.fromDegrees(0.0));
-                public static final Pose2d speakerRedAlliance = new Pose2d(16.54, 5.5, Rotation2d.fromDegrees(180.0));
+                private static double speakerAimXOffset = Units.inchesToMeters(6);
+                private static Transform2d speakerAimAdjustBlue = new Transform2d(speakerAimXOffset, 0.,
+                                new Rotation2d());
+                public static final Pose2d speakerBlueAlliance = new Pose2d(0., 5.5, Rotation2d.fromDegrees(0.0))
+                                .transformBy(speakerAimAdjustBlue);
+                private static Transform2d speakerAimAdjustRed = new Transform2d(speakerAimXOffset, 0.,
+                                new Rotation2d());
+                public static final Pose2d speakerRedAlliance = new Pose2d(16.24, 5.5, Rotation2d.fromDegrees(180.0))
+                                .transformBy(speakerAimAdjustRed);
 
                 public static final Pose2d stageBlueAlliance = new Pose2d(Units.inchesToMeters(190), FIELD_WIDTH / 2,
                                 Rotation2d.fromDegrees(0.0));// 8 ft high

@@ -40,8 +40,6 @@ public class Robot extends TimedRobot implements Logged {
 
   private boolean autoHasRun;
 
-  private boolean firstScan = true;
-
   int tstctr;
 
   private int canivorectr;
