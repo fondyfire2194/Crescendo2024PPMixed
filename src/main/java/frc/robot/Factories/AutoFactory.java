@@ -223,10 +223,10 @@ public class AutoFactory {
                                                 m_sac.move(sbwfrpaths.Wing2ToCenter3, m_swerve, m_pf));
                         case 11:
                                 return new AutoSourceCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer,1.75. true);
+                                                m_swerve, m_intake, m_transfer,1.75, true);
                         case 12:
                                 return new AutoSourceCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer,1.75. false);
+                                                m_swerve, m_intake, m_transfer,1.75, false);
 
                         case 13:
                                 return new AutoSourceCompletePF(m_cf, m_pf, this,

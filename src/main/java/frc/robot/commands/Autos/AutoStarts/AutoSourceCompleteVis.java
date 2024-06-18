@@ -51,7 +51,7 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                 Commands.race(
                                                 Commands.waitSeconds(.75),
                                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                                Constants.subwfrShooterSpeed, 10)),
+                                                                Constants.subwfrShooterSpeed, 20)),
 
                                 Commands.parallel(
                                                 new PickupUsingVision(cf,
@@ -67,7 +67,6 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                 Commands.waitSeconds(2),
                                                                 cf.doIntake(10))),
                                 Commands.either(
-
                                                 Commands.either(
                                                                 new CenterToShoot(cf, pf.pathMaps.get(
                                                                                 sourcepaths.Center4ToSourceShoot

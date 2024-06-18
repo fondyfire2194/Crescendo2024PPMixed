@@ -48,7 +48,7 @@ public class AutoSourceCompletePF extends SequentialCommandGroup {
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
 
                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
-                                                Constants.subwfrShooterSpeed,10),
+                                                Constants.subwfrShooterSpeed, 10),
                                 cf.transferNoteToShooterCommand(),
                                 cf.armToIntake(),
                                 // move to center note , pick up if there and move to shoot position then shoot
@@ -108,7 +108,7 @@ public class AutoSourceCompletePF extends SequentialCommandGroup {
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
-                                                new TransferIntakeToSensor(transfer, intake, 6)),
+                                                new TransferIntakeToSensor(transfer, intake, swerve, 2)),
 
                                 Commands.either(
                                                 Commands.sequence(

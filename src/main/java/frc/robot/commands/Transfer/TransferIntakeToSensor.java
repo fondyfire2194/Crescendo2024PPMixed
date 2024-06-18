@@ -9,18 +9,22 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 
 public class TransferIntakeToSensor extends Command {
   private final TransferSubsystem m_transfer;
   private final IntakeSubsystem m_intake;
+  private final SwerveSubsystem m_swerve;
   private final double m_noNoteTime;
   private Timer endTimer = new Timer();
 
   /** Creates a new TransferIntakeToSensor. */
-  public TransferIntakeToSensor(TransferSubsystem transfer, IntakeSubsystem intake, double noNotetime) {
+  public TransferIntakeToSensor(TransferSubsystem transfer, IntakeSubsystem intake, SwerveSubsystem swerve,
+      double noNotetime) {
     // Use addRequirements() here to declare subsystem dependencies.
     m_transfer = transfer;
+    m_swerve = swerve;
     m_intake = intake;
     m_noNoteTime = noNotetime;
   };
@@ -39,7 +43,7 @@ public class TransferIntakeToSensor extends Command {
   public void execute() {
     m_transfer.runToSensor();
     m_intake.noteMissed = RobotBase.isSimulation() && (m_transfer.skipFirstNoteInSim || m_transfer.skipSecondNoteInSim)
-        || endTimer.hasElapsed(m_noNoteTime);
+        || m_swerve.isStopped() && endTimer.hasElapsed(m_noNoteTime);
 
   }
 

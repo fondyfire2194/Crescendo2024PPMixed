@@ -254,7 +254,7 @@ public class RobotContainer implements Logged {
                 driver.rightBumper().and(driver.a().negate()).onTrue(
                                 Commands.parallel(
                                                 m_intake.startIntakeCommand(),
-                                                new TransferIntakeToSensor(m_transfer, m_intake, 120),
+                                                new TransferIntakeToSensor(m_transfer, m_intake, m_swerve, 120),
                                                 m_cf.rumbleCommand(driver),
                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians))
                                                 .withTimeout(10));
@@ -267,7 +267,7 @@ public class RobotContainer implements Logged {
                                                 m_intake.startIntakeCommand(),
                                                 Commands.deadline(
                                                                 new TransferIntakeToSensor(m_transfer,
-                                                                                m_intake, 120),
+                                                                                m_intake, m_swerve, 120),
                                                                 new AlignToNote(
                                                                                 m_swerve,
                                                                                 CameraConstants.rearCamera.camname,
@@ -319,7 +319,7 @@ public class RobotContainer implements Logged {
                 driver.back().onTrue(
                                 Commands.sequence(
                                                 m_cf.positionArmRunShooterSpecialCase(45,
-                                                                4750,10),
+                                                                4750, 10),
                                                 Commands.waitSeconds(2),
                                                 m_cf.transferNoteToShooterCommand(),
                                                 new WaitCommand(1))
