@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
+import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -57,6 +58,7 @@ public class SwerveModule extends SubsystemBase {
   private SwerveModuleState previousState = new SwerveModuleState();
   public boolean wheelAligning;
   private double feedForward;
+  private boolean showHalf;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -89,9 +91,9 @@ public class SwerveModule extends SubsystemBase {
     lastAngle = getState().angle;
 
     driveFeedforward = new SimpleMotorFeedforward(
-        SwerveConstants.driveKS[moduleNumber], SwerveConstants.driveKV[moduleNumber],
+        SwerveConstants.driveKS[moduleNumber],
+        SwerveConstants.driveKV[moduleNumber],
         SwerveConstants.driveKA[moduleNumber]);
-
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
@@ -205,14 +207,13 @@ public class SwerveModule extends SubsystemBase {
       SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " driveKv",
           percentOutput * RobotController.getBatteryVoltage() / getDriveVelocity());
 
-         
     }
     boolean feedforward = true;
     if (!isOpenLoop) {
       if (!feedforward) {
         driveController.setReference(desiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       } else {
-         feedForward = driveFeedforward.calculate(
+        feedForward = driveFeedforward.calculate(
             desiredState.speedMetersPerSecond,
             (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond));
 
@@ -284,25 +285,36 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
 
-    SmartDashboard.putBoolean("Modules//" +
-        String.valueOf(+moduleNumber) + "brake", driveMotor.getIdleMode() == IdleMode.kBrake);
+    if (!showHalf) {
 
-    // SmartDashboard.putNumber("Modules//" +
-    // String.valueOf(+moduleNumber) + " cancoder", getCancoderDeg());
-    SmartDashboard.putNumber("Modules//" +
-        String.valueOf(+moduleNumber) + " amps", driveMotor.getOutputCurrent());
-    SmartDashboard.putNumber("Modules//" +
-        String.valueOf(+moduleNumber) + " anglekp", getAngleKp());
-    // SmartDashboard.putBoolean(String.valueOf(moduleNumber) + " Characterizing",
-    // characterizing);
-    // SmartDashboard.putNumber(String.valueOf(moduleNumber) + " Characterization
-    // Volts", characterizationVolts);
-    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosition", getDrivePosition());
- SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " feedforward",
+      SmartDashboard.putBoolean("Modules//" +
+          String.valueOf(+moduleNumber) + "brake", driveMotor.getIdleMode() == IdleMode.kBrake);
+
+      SmartDashboard.putNumber("Modules//" +
+          String.valueOf(+moduleNumber) + " cancoder", getCancoderDeg());
+      SmartDashboard.putNumber("Modules//" +
+          String.valueOf(+moduleNumber) + " amps", driveMotor.getOutputCurrent());
+
+      showHalf = true;
+    }
+
+    else {
+
+      SmartDashboard.putNumber("Modules//" +
+          String.valueOf(+moduleNumber) + " anglekp", getAngleKp());
+      SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosition", getDrivePosition());
+      SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " feedforward",
           feedForward);
+      showHalf = false;
+    }
     if (characterizing) {
       driveMotor.setVoltage(characterizationVolts);
       angleController.setReference(0, ControlType.kPosition);
+      // SmartDashboard.putBoolean(String.valueOf(moduleNumber) + " Characterizing",
+      // characterizing);
+      // SmartDashboard.putNumber(String.valueOf(moduleNumber) + " Characterization
+      // Volts", characterizationVolts);
+
     }
 
   }
