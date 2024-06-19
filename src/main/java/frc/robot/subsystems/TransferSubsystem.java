@@ -48,7 +48,9 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "okshootmoving")
   public boolean OKShootMoving;
   public boolean logShot;
+  @Log.NT(key = "intakin2")
   public boolean isIntaking1;
+  @Log.NT(key = "intaking2")
   public boolean isIntaking2;
 
   /** Creates a new transfer. */

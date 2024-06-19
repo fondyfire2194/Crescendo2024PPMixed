@@ -223,9 +223,9 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
     resetPoseEstimator(new Pose2d());
 
-    // setModuleDriveFF();now  uses Constants instead
+    // setModuleDriveFF();now uses Constants instead
     // setModuleDriveKp();
-     setModuleAngleKp();
+    setModuleAngleKp();
 
   }
 
@@ -646,7 +646,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         .getDistance(getPose().getTranslation()), 2);
   }
 
-  
   public double getDistanceFromTarget(boolean lob, boolean virtual) {
     if (!virtual) {
       if (lob)
@@ -733,7 +732,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public Command setPoseToX0Y0() {
     return Commands.runOnce(() -> resetAll());
   }
-
 
   @Override
   public void simulationPeriodic() {
@@ -855,8 +853,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public Pose2d stagePose = new Pose2d();
   @Log.NT(key = "shootingpose")
   public Pose2d poseWhenShooting = new Pose2d();
-
-  public double remainingdistance;
+  @Log.NT(key = "remainingdistance")
+  public double remainingdistance=0;
 
   public boolean sourceActive;
 
