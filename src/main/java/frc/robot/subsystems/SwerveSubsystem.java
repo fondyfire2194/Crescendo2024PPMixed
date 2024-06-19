@@ -815,7 +815,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
           (volts) -> {
             mSwerveMods[0].setCharacterizationVolts(volts.in(Volts));
             mSwerveMods[1].setCharacterizationVolts(volts.in(Volts));
-
             mSwerveMods[2].setCharacterizationVolts(volts.in(Volts));
             mSwerveMods[3].setCharacterizationVolts(volts.in(Volts));
           },

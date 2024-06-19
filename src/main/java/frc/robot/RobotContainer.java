@@ -394,9 +394,9 @@ public class RobotContainer implements Logged {
 
                 setup.leftBumper().whileTrue(m_swerve.quasistaticForward());
 
-                setup.leftTrigger().whileTrue(m_swerve.quasistaticBackward());
+                setup.leftTrigger().whileTrue(m_swerve.dynamicForward());
 
-                setup.rightBumper().whileTrue(m_swerve.dynamicForward());
+                setup.rightBumper().whileTrue(m_swerve.quasistaticBackward());
 
                 setup.rightTrigger().whileTrue(m_swerve.dynamicBackward());
 
