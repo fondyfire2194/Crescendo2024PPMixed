@@ -9,10 +9,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
-import frc.robot.commands.Autos.AutoStarts.AutoAmpCompletePF;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVis;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceCompletePF;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVis;
+import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVisV2;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVisV2;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
@@ -91,8 +89,7 @@ public class AutoFactory {
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5 Vis", 11);
                 m_sourceStartChooser.addOption("C5 Then C4 Vis", 12);
-                // m_sourceStartChooser.addOption("C4 Then C5 PF", 13);
-                // m_sourceStartChooser.addOption("C5 Then C4 PF", 14);
+               
 
                 maxsourceauto = 12;
 
@@ -100,8 +97,7 @@ public class AutoFactory {
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("C2 then C1 Vis", 21);
                 m_ampStartChooser.addOption("C1 then C2 Vis", 22);
-                // m_ampStartChooser.addOption("C2 then C1 PF", 23);
-                // m_ampStartChooser.addOption("C1 then C2 PF", 24);
+               
 
                 maxampauto = 22;
 
@@ -229,25 +225,13 @@ public class AutoFactory {
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, 1.75, false);
 
-                        case 13:
-                                return new AutoSourceCompletePF(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, true);
-                        case 14:
-                                return new AutoSourceCompletePF(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, false);
-
                         case 21:
-                                return new AutoAmpCompleteVis(m_cf, m_pf, this,
+                                return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, 1.75, true);
                         case 22:
-                                return new AutoAmpCompleteVis(m_cf, m_pf, this,
+                                return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, 1.75, false);
-                        case 23:
-                                return new AutoAmpCompletePF(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, true);
-                        case 24:
-                                return new AutoAmpCompletePF(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, false);
+                        
                         default:
                                 return Commands.none();
 

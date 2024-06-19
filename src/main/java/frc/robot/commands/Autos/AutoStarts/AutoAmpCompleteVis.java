@@ -74,11 +74,11 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 new CenterToShoot(cf, pf.pathMaps.get(
                                                                                 amppaths.Center2ToAmpShoot
                                                                                                 .name()),
-                                                                                swerve, false),
+                                                                                swerve),
                                                                 new CenterToShoot(cf, pf.pathMaps.get(
                                                                                 amppaths.Center1ToAmpShoot
                                                                                                 .name()),
-                                                                                swerve, false),
+                                                                                swerve),
                                                                 () -> innerNoteFirst),
 
                                                 getAnotherNote(swerve, transfer, intake, cf),
@@ -102,11 +102,11 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 new CenterToShoot(cf, pf.pathMaps.get(
                                                                                 amppaths.Center1ToAmpShoot
                                                                                                 .name()),
-                                                                                swerve, false),
+                                                                                swerve),
                                                                 new CenterToShoot(cf, pf.pathMaps.get(
                                                                                 amppaths.Center2ToAmpShoot
                                                                                                 .name()),
-                                                                                swerve, false),
+                                                                                swerve),
                                                                 () -> innerNoteFirst),
 
                                                 getAnotherNote(swerve, transfer, intake, cf),

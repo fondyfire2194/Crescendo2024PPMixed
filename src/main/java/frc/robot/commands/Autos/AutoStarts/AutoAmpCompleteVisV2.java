@@ -3,8 +3,6 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.Autos.AutoStarts;
-
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -15,7 +13,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
-import frc.robot.Factories.PathFactory.sourcepaths;
+import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
 import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
@@ -29,9 +27,9 @@ import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LLPipelines;
 
 /** Add your docs here. */
-public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
+public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
 
-        public AutoSourceCompleteVisV2(
+        public AutoAmpCompleteVisV2(
                         CommandFactory cf,
                         PathFactory pf,
                         AutoFactory af,
@@ -44,11 +42,11 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                 addCommands(
                                 // shoot first note
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
-                                Commands.runOnce(() -> swerve.ampActive = false),
-                                Commands.runOnce(() -> swerve.sourceActive = true),
+                                Commands.runOnce(() -> swerve.ampActive = true),
+                                Commands.runOnce(() -> swerve.sourceActive = false),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
 
-                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
 
                                 Commands.race(
                                                 Commands.waitSeconds(.75),
@@ -56,11 +54,11 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                                 Constants.subwfrShooterSpeed, 20)),
                                 cf.transferNoteToShooterCommand(),
 
-                                pickupCenter4_5(cf, pf, swerve, transfer, intake, switchoverdistance,
+                                pickupCenter1_2(cf, pf, swerve, transfer, intake, switchoverdistance,
                                                 innerNoteFirst),
 
                                 Commands.either(
-                                                moveShootCenter4_5(cf, pf, swerve, innerNoteFirst),
+                                                moveShootCenter1_2(cf, pf, swerve, innerNoteFirst),
                                                 tryOtherNote(pf, cf, swerve, transfer, innerNoteFirst),
                                                 () -> transfer.noteAtIntake() && !transfer.skipFirstNoteInSim),
 
@@ -78,12 +76,12 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                                                                                 + 2))),
 
                                 Commands.either(
-                                                moveShootCenter4_5(cf, pf, swerve, !innerNoteFirst),
+                                                moveShootCenter1_2(cf, pf, swerve, !innerNoteFirst),
                                                 getAnotherNote(swerve, transfer, intake, cf, pf),
                                                 () -> transfer.noteAtIntake() && !transfer.skipSecondNoteInSim),
 
                                 Commands.either(
-                                                new RunPPath(swerve, pf.pathMaps.get(sourcepaths.SourceShootToCenter4
+                                                new RunPPath(swerve, pf.pathMaps.get(amppaths.AmpShootToCenter2
                                                                 .name())),
                                                 Commands.none(),
                                                 () -> (!AllianceUtil.isRedAlliance()
@@ -103,7 +101,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                 return Commands.sequence(
                                 Commands.runOnce(() -> transfer.simnoteatintake = false),
-                                new RotateToAngle(swerve, -90),
+                                new RotateToAngle(swerve, 90),
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
@@ -112,17 +110,17 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.either(
                                                 Commands.sequence(
                                                                 cf.autopathfind(AllianceUtil
-                                                                                .getSourceClearStagePose()),
+                                                                                .getAmpClearStagePose()),
                                                                 Commands.waitSeconds(.25),
                                                                 cf.autopathfind(AllianceUtil
-                                                                                .getSourceShootPose()),
+                                                                                .getAmpShootPose()),
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),
                                                                                 new AutoAlignSpeaker(swerve, 1, true)),
                                                                 cf.transferNoteToShooterCommand(),
                                                                 new RunPPath(swerve, pf.pathMaps
-                                                                                .get(sourcepaths.SourceShootToCenter4
+                                                                                .get(amppaths.AmpShootToCenter2
                                                                                                 .name())),
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),
@@ -130,13 +128,13 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
         }
 
-        public Command pickupCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
+        public Command pickupCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
                         TransferSubsystem transfer, IntakeSubsystem intake, double switchoverdistance,
                         boolean innerNoteFirst) {
                 return Commands.parallel(
                                 new PickupUsingVision(cf,
-                                                pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
-                                                pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
+                                                pf.pathMaps.get(amppaths.AmpToCenter1.name()),
+                                                pf.pathMaps.get(amppaths.AmpToCenter2.name()),
                                                 transfer, intake, swerve,
                                                 switchoverdistance,
                                                 innerNoteFirst,
@@ -147,16 +145,15 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 cf.doIntake(300)));
         }
 
-        public Command moveShootCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
+        public Command moveShootCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
                         boolean innerNoteFirst) {
                 return Commands.either(
                                 new CenterToShoot(cf, pf.pathMaps.get(
-                                                sourcepaths.Center4ToSourceShoot
+                                                amppaths.Center1ToAmpShoot
                                                                 .name()),
                                                 swerve),
-                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                sourcepaths.Center5ToSourceShoot
-                                                                .name()),
+                                new CenterToShoot(cf, pf.pathMaps.get(amppaths.Center2ToAmpShoot
+                                                .name()),
                                                 swerve),
                                 () -> innerNoteFirst);
         }
@@ -167,10 +164,10 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.parallel(
                                                 Commands.either(
                                                                 new RunPPath(swerve,
-                                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5
+                                                                                pf.pathMaps.get(amppaths.Center1ToCenter2
                                                                                                 .name())),
                                                                 new RunPPath(swerve,
-                                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4
+                                                                                pf.pathMaps.get(amppaths.Center2toCenter1
                                                                                                 .name())),
                                                                 () -> innerNoteFirst),
                                                 cf.doIntake(2))));
@@ -184,9 +181,9 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                 return Commands.parallel(
                                 new PickupUsingVision(
                                                 cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5
+                                                pf.pathMaps.get(amppaths.AmpShootToCenter2
                                                                 .name()),
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4
+                                                pf.pathMaps.get(amppaths.AmpShootToCenter1
                                                                 .name()),
                                                 transfer, intake, swerve,
                                                 switchoverdistance,

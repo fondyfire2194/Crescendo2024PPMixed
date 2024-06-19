@@ -19,8 +19,7 @@ public class CenterToShoot extends SequentialCommandGroup {
         public CenterToShoot(
                         CommandFactory cf,
                         PathPlannerPath path,
-                        SwerveSubsystem swerve,
-                        boolean source) {
+                        SwerveSubsystem swerve) {
 
                 addCommands(
                                 Commands.sequence(
