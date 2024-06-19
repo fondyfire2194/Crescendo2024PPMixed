@@ -7,6 +7,7 @@ package frc.robot.commands.Transfer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -35,7 +36,6 @@ public class TransferIntakeToSensor extends Command {
     endTimer.reset();
     endTimer.start();
     m_intake.noteMissed = false;
-    m_transfer.simnoteatintake = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -43,9 +43,9 @@ public class TransferIntakeToSensor extends Command {
   public void execute() {
     if (!m_swerve.isStopped())
       endTimer.restart();
+    SmartDashboard.putNumber("Transfer/NoNotTime", endTimer.get());
     m_transfer.runToSensor();
-    m_intake.noteMissed = RobotBase.isSimulation() && (m_transfer.skipFirstNoteInSim || m_transfer.skipSecondNoteInSim)
-        || m_swerve.isStopped() && endTimer.hasElapsed(m_noNoteTime);
+    m_intake.noteMissed = m_swerve.isStopped() && endTimer.hasElapsed(m_noNoteTime);
 
   }
 
@@ -56,8 +56,7 @@ public class TransferIntakeToSensor extends Command {
     if (DriverStation.isTeleopEnabled())
       m_intake.stopMotor();
     m_transfer.enableLimitSwitch(false);
-    m_transfer.skipFirstNoteInSim = false;
-    m_transfer.skipSecondNoteInSim = false;
+
   }
 
   // Returns true when the command should end.

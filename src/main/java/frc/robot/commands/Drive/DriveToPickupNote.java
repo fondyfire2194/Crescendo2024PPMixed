@@ -29,7 +29,7 @@ public class DriveToPickupNote extends Command {
   private Timer elapsedTime = new Timer();
   double startPosition;
   private double distError;
-  private double distBeyondMidField = .05;
+  private double pickupDistance = .15;
 
   public DriveToPickupNote(
       SwerveSubsystem swerve,
@@ -72,18 +72,22 @@ public class DriveToPickupNote extends Command {
 
     SmartDashboard.putNumber("DtoPuN/DistErr", distError);
 
-    m_swerve.drive(
-        -SwerveConstants.notePickupSpeed,
-        0,
-        rotationVal,
-        false,
-        true,
-        false);
-
     if (AllianceUtil.isRedAlliance())
       m_swerve.remainingdistance = m_swerve.getX() - FieldConstants.FIELD_LENGTH / 2;
     else
       m_swerve.remainingdistance = FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX();
+
+    if (m_swerve.remainingdistance > pickupDistance)
+      m_swerve.drive(
+          -SwerveConstants.notePickupSpeed,
+          0,
+          rotationVal,
+          false,
+          true,
+          false);
+
+    else
+      m_swerve.drive(0, 0, 0, false, true, false);
 
     SmartDashboard.putNumber("DtoPuN/RmngDist", distError);
 
@@ -101,7 +105,6 @@ public class DriveToPickupNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transfer.noteAtIntake() ||
-        m_swerve.remainingdistance < -distBeyondMidField;
+    return m_transfer.noteAtIntake() || m_intake.noteMissed || RobotBase.isSimulation() && m_transfer.simnoteatintake;
   }
 }

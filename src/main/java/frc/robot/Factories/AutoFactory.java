@@ -13,6 +13,7 @@ import frc.robot.commands.Autos.AutoStarts.AutoAmpCompletePF;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVis;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompletePF;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVis;
+import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVisV2;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Pathplanner.RunPPath;
@@ -222,11 +223,11 @@ public class AutoFactory {
                                                 m_sac.shootbydistance(m_cf),
                                                 m_sac.move(sbwfrpaths.Wing2ToCenter3, m_swerve, m_pf));
                         case 11:
-                                return new AutoSourceCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer,1.75, true);
+                                return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, 1.75, true);
                         case 12:
-                                return new AutoSourceCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer,1.75, false);
+                                return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, 1.75, false);
 
                         case 13:
                                 return new AutoSourceCompletePF(m_cf, m_pf, this,
@@ -237,10 +238,10 @@ public class AutoFactory {
 
                         case 21:
                                 return new AutoAmpCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75,true);
-                       case 22:
+                                                m_swerve, m_intake, m_transfer, 1.75, true);
+                        case 22:
                                 return new AutoAmpCompleteVis(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer,1.75, false);
+                                                m_swerve, m_intake, m_transfer, 1.75, false);
                         case 23:
                                 return new AutoAmpCompletePF(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, true);

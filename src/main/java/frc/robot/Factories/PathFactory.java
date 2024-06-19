@@ -65,11 +65,12 @@ public class PathFactory {
         return valid == amppaths.values().length;
     }
 
-    public void linkAmpPaths() {
+    public boolean linkAmpPaths() {
         pathMaps.clear();
         for (amppaths a : amppaths.values()) {
             pathMaps.put(a.name(), getPath(a.name()));
         }
+        return true;
     }
 
     public enum sourcepaths {
@@ -139,7 +140,6 @@ public class PathFactory {
     public PathPlannerPath getPath(String pathname) {
         return PathPlannerPath.fromPathFile(pathname);
     }
-
 
     public Command setStartPosebyAlliance(PathPlannerPath path) {
         Pose2d temp = path.getPreviewStartingHolonomicPose();

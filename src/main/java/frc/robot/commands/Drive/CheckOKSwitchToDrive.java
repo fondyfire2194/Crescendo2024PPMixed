@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Drive;
 
-
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -62,7 +61,7 @@ public class CheckOKSwitchToDrive extends Command {
 
     m_swerve.noteSeen = RobotBase.isReal() && LimelightHelpers.getTV(CameraConstants.rearCamera.camname)
         && m_swerve.remainingdistance <= m_switchoverDistance
-        || RobotBase.isSimulation() && m_swerve.remainingdistance < m_switchoverDistance;
+        || RobotBase.isSimulation() && m_swerve.remainingdistance < m_switchoverDistance / 3;
 
     SmartDashboard.putBoolean("RMGns", m_swerve.noteSeen);
   }

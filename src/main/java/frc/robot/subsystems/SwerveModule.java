@@ -56,6 +56,7 @@ public class SwerveModule extends SubsystemBase {
   private boolean characterizing;
   private SwerveModuleState previousState = new SwerveModuleState();
   public boolean wheelAligning;
+  private double feedForward;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -203,15 +204,17 @@ public class SwerveModule extends SubsystemBase {
           percentOutput * RobotController.getBatteryVoltage());
       SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " driveKv",
           percentOutput * RobotController.getBatteryVoltage() / getDriveVelocity());
+
+         
     }
     boolean feedforward = true;
     if (!isOpenLoop) {
       if (!feedforward) {
         driveController.setReference(desiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       } else {
-        double feedForward = driveFeedforward.calculate(
+         feedForward = driveFeedforward.calculate(
             desiredState.speedMetersPerSecond,
-            (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond) / 0.020);
+            (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond));
 
         if (Math.abs(desiredState.speedMetersPerSecond) < .01) {
           feedForward = 0;
@@ -295,7 +298,8 @@ public class SwerveModule extends SubsystemBase {
     // SmartDashboard.putNumber(String.valueOf(moduleNumber) + " Characterization
     // Volts", characterizationVolts);
     SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosition", getDrivePosition());
-
+ SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " feedforward",
+          feedForward);
     if (characterizing) {
       driveMotor.setVoltage(characterizationVolts);
       angleController.setReference(0, ControlType.kPosition);

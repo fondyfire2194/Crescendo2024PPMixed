@@ -182,10 +182,10 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             setGoal(armAngleRads);
         }
 
-        if (getCurrentGoalRads() > ArmConstants.armMaxRadians)
-            setGoalCommand(ArmConstants.armMaxRadians);
-        if (getCurrentGoalRads() < ArmConstants.armMinRadians)
-            setGoalCommand(ArmConstants.armMinRadians);
+        // if (getCurrentGoalRads() > ArmConstants.armMaxRadians)
+        //     setGoalCommand(ArmConstants.armMaxRadians);
+        // if (getCurrentGoalRads() < ArmConstants.armMinRadians)
+        //     setGoalCommand(ArmConstants.armMinRadians);
 
         checkCancoderCounter++;
         if (checkCancoderCounter == 10) {
@@ -290,7 +290,12 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     }
 
     public Command setGoalCommand(double anglerads) {
-        return Commands.runOnce(() -> setTarget(anglerads));
+        return Commands.sequence(
+                Commands.runOnce(() -> setTarget(anglerads)),
+                Commands.either(
+                        Commands.runOnce(() -> enable()),
+                        Commands.none(),
+                        () -> isEnabled()));
     }
 
     public void incrementArmAngle(double valdeg) {

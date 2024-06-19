@@ -48,7 +48,8 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "okshootmoving")
   public boolean OKShootMoving;
   public boolean logShot;
-  public boolean isIntaking;
+  public boolean isIntaking1;
+  public boolean isIntaking2;
 
   /** Creates a new transfer. */
   public TransferSubsystem() {
@@ -126,7 +127,8 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   public void runToSensor() {
     enableLimitSwitch(true);
-    isIntaking = true;
+    isIntaking2 = isIntaking1;
+    isIntaking1 = true;
     // commandrpm=Pref.getPref("TransferIntakingSpeed");
     commandrpm = TransferConstants.intakingSpeed;
     runAtVelocity(commandrpm);

@@ -5,6 +5,7 @@
 package frc.robot.commands.Drive;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -65,6 +66,6 @@ public class AutoAlignSpeaker extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_endAtTargets && (m_swerve.alignedToTarget || elapsedTime.hasElapsed(2));
+    return m_endAtTargets && (m_swerve.alignedToTarget || elapsedTime.hasElapsed(2)||RobotBase.isSimulation());
   }
 }
