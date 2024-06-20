@@ -90,8 +90,8 @@ public class AutoFactory {
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5 Vis", 11);
                 m_sourceStartChooser.addOption("C5 Then C4 Vis", 12);
-                m_sourceStartChooser.addOption("Steal C4 Then C5 Vis", 13);
-                m_sourceStartChooser.addOption("Steal C5 Then C4 Vis", 14);
+                m_sourceStartChooser.addOption("C4 Then C5 Near", 13);
+                m_sourceStartChooser.addOption("C5 Then C4 Near", 14);
 
                 maxsourceauto = 12;
 
@@ -221,17 +221,17 @@ public class AutoFactory {
                                                 m_sac.move(sbwfrpaths.Wing2ToCenter3, m_swerve, m_pf));
                         case 11:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, true);
+                                                m_swerve, m_intake, m_transfer, 1.75, true, false);
                         case 12:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, false);
+                                                m_swerve, m_intake, m_transfer, 1.75, false, false);
 
                         case 13:
-                                return new AutoSourceStealShoot(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, true);
+                                return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, 1.75, true, true);
                         case 14:
-                                return new AutoSourceStealShoot(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, false);
+                                return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, 1.75, true, true);
 
                         case 21:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,

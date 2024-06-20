@@ -11,6 +11,8 @@
       "/SmartDashboard/DelayChooser": "String Chooser",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Find Note": "Command",
+      "/SmartDashboard/RotateToNote": "Command",
+      "/SmartDashboard/RotatetoNote": "Command",
       "/SmartDashboard/RunTestPickupandShoot": "Command",
       "/SmartDashboard/Source Start": "String Chooser",
       "/SmartDashboard/SubwfrStart": "String Chooser",
@@ -49,6 +51,11 @@
           "visible": true
         }
       },
+      "/SmartDashboard/RotatetoNote": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Source Start": {
         "window": {
           "visible": true
@@ -63,9 +70,6 @@
   },
   "NetworkTables": {
     "Persistent Values": {
-      "open": false
-    },
-    "Retained Values": {
       "open": false
     },
     "transitory": {

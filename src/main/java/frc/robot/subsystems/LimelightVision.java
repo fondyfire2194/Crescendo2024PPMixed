@@ -122,11 +122,9 @@ public class LimelightVision extends SubsystemBase implements Logged {
     SmartDashboard.putBoolean("LL//CamsOK", allcamsok);
   }
 
- 
   public void setCamToRobotOffset(CameraConstants.CameraValues cam) {
     LimelightHelpers.setCameraPose_RobotSpace(cam.camname, cam.forward, cam.side, cam.up, cam.roll, cam.pitch, cam.yaw);
   }
-
 
   public static double round2dp(double number, int dp) {
     double temp = Math.pow(10, dp);

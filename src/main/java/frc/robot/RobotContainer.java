@@ -34,6 +34,7 @@ import frc.robot.commands.JogClimber;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.RotateToAngle;
+import frc.robot.commands.Drive.RotateToFindNote;
 import frc.robot.commands.Drive.TeleopSwerve;
 import frc.robot.commands.Drive.WheelRadiusCharacterization;
 import frc.robot.commands.Intake.JogIntake;
@@ -143,6 +144,8 @@ public class RobotContainer implements Logged {
 
                 SmartDashboard.putData("ViewArmShooterData",
                                 new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
+                SmartDashboard.putData("RotateToNote",
+                                new RotateToFindNote(m_swerve, 45));
 
                 SmartDashboard.putData("RunTestPickupandShoot",
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
@@ -261,7 +264,7 @@ public class RobotContainer implements Logged {
                 driver.rightBumper().and(driver.a().negate()).onTrue(
                                 Commands.parallel(
                                                 m_intake.startIntakeCommand(),
-                                                new TransferIntakeToSensor(m_transfer, m_intake, m_swerve, 120),
+                                                new TransferIntakeToSensor(m_transfer, m_intake, m_swerve,  120),
                                                 m_cf.rumbleCommand(driver),
                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians))
                                                 .withTimeout(10));
@@ -274,7 +277,7 @@ public class RobotContainer implements Logged {
                                                 m_intake.startIntakeCommand(),
                                                 Commands.deadline(
                                                                 new TransferIntakeToSensor(m_transfer,
-                                                                                m_intake, m_swerve, 120),
+                                                                                m_intake, m_swerve,120),
                                                                 new AlignToNote(
                                                                                 m_swerve,
                                                                                 CameraConstants.rearCamera.camname,

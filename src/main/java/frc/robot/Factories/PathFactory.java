@@ -4,10 +4,10 @@
 
 package frc.robot.Factories;
 
+import java.io.File;
+import java.util.HashMap;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.GeometryUtil;
-import java.util.HashMap;
-import java.io.File;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
@@ -40,7 +40,7 @@ public class PathFactory {
     public enum amppaths {
         AmpShootToCenter1,
         AmpShootToCenter2,
-        AmpShootToCenter3,        
+        AmpShootToCenter3,
         AmpToCenter1,
         AmpToCenter2,
         AmpToWing1,
@@ -73,9 +73,13 @@ public class PathFactory {
     public enum sourcepaths {
         SourceToCenter4,
         SourceToCenter5,
+        SourceToNearCenter4,
+        SourceToNearCenter5,
         SourceShootToCenter3,
         SourceShootToCenter4,
         SourceShootToCenter5,
+        SourceShootToNearCenter4,
+        SourceShootToNearCenter5,
         Center4ToCenter5,
         Center5ToCenter4,
         Center4ToSourceShoot,

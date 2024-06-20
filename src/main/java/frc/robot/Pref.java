@@ -38,7 +38,7 @@ public class Pref {
 
     // angle tune
 
-    prefDict.put("AngleKp", .28);
+    prefDict.put("AngleKp", .01);
 
     // align to tag
 

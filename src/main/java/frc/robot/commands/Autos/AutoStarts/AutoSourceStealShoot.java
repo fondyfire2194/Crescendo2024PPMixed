@@ -131,10 +131,11 @@ public class AutoSourceStealShoot extends SequentialCommandGroup {
                                 new PickupUsingVision(cf,
                                                 pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                 pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
+                                                4,
+                                                5,
                                                 transfer, intake, swerve,
                                                 switchoverdistance,
-                                                innerNoteFirst,
-                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                innerNoteFirst),
                                 Commands.sequence(
                                                 cf.stopShooter(),
                                                 Commands.waitSeconds(2),
@@ -190,10 +191,11 @@ public class AutoSourceStealShoot extends SequentialCommandGroup {
                                                                 .name()),
                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4
                                                                 .name()),
+                                                                5,
+                                                                4,
                                                 transfer, intake, swerve,
                                                 switchoverdistance,
-                                                innerNoteFirst,
-                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                innerNoteFirst),
 
                                 cf.doIntake(2));
 

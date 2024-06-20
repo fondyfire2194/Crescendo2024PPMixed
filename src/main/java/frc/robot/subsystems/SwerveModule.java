@@ -218,7 +218,7 @@ public class SwerveModule extends SubsystemBase {
         feedForward = driveFeedforward.calculate(
             desiredState.speedMetersPerSecond,
             (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond) / 0.020);
-
+        feedForward = MathUtil.clamp(feedForward, -12.0, 12.0);
         if (Math.abs(desiredState.speedMetersPerSecond) < .01) {
           feedForward = 0;
         }

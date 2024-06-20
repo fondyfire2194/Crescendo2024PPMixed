@@ -6,14 +6,12 @@ package frc.robot.commands.Autos.Autos;
 
 import com.pathplanner.lib.path.PathPlannerPath;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Factories.CommandFactory;
-import frc.robot.commands.Drive.CheckOKSwitchToDrive;
 import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -22,9 +20,9 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.LLPipelines.pipelines;
 
 /** Add your docs here. */
-public class PickupUsingVision extends SequentialCommandGroup {
+public class PickupUsingVisionNear extends SequentialCommandGroup {
 
-        public PickupUsingVision(
+        public PickupUsingVisionNear(
                         CommandFactory cf,
                         PathPlannerPath path,
                         PathPlannerPath path1,
@@ -33,7 +31,6 @@ public class PickupUsingVision extends SequentialCommandGroup {
                         TransferSubsystem transfer,
                         IntakeSubsystem intake,
                         SwerveSubsystem swerve,
-                        double switchoverdistance,
                         boolean innerNoteFirst) {
 
                 addCommands(
@@ -45,25 +42,17 @@ public class PickupUsingVision extends SequentialCommandGroup {
                                                 Commands.runOnce(() -> swerve
                                                                 .setTargetPose(FieldConstants.centerNotes[note2])),
                                                 () -> innerNoteFirst),
-
-                                Commands.race(
-                                                new CheckOKSwitchToDrive(swerve, cf, switchoverdistance),
-                                                Commands.either(
-                                                                new RunPPath(swerve, path),
-                                                                new RunPPath(swerve, path1),
-                                                                () -> innerNoteFirst)),
                                 Commands.either(
-                                                Commands.either(
-                                                                new DriveToPickupNote(swerve, transfer,
-                                                                                intake, note1,
-                                                                                CameraConstants.rearCamera.camname),
-                                                                new DriveToPickupNote(swerve, transfer,
-                                                                                intake, note2,
-                                                                                CameraConstants.rearCamera.camname),
-                                                                () -> innerNoteFirst),
-                                                Commands.none(),
-                                                () -> swerve.noteSeen));
-
+                                                new RunPPath(swerve, path),
+                                                new RunPPath(swerve, path1),
+                                                () -> innerNoteFirst),
+                                Commands.either(
+                                                new DriveToPickupNote(swerve, transfer,
+                                                                intake, note1,
+                                                                CameraConstants.rearCamera.camname),
+                                                new DriveToPickupNote(swerve, transfer,
+                                                                intake, note2,
+                                                                CameraConstants.rearCamera.camname),
+                                                () -> innerNoteFirst));
         }
-
 }

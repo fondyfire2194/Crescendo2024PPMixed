@@ -176,6 +176,9 @@ public final class Constants {
                 public static final double[] driveKV = { 2.70, 2.70, 2.70, 2.70 };// 2.5636; //2.59 //2.55 2.8
                 public static final double[] driveKA = { 0.59, .59, .59, .59 }; /// 0.4 0.59
 
+                // team 5907 driveKs = 0.22542;driveKv = 2.4829; driveKa = 0.120; driveP =
+                // 0.08;
+
                 /* Drive Motor Conversion Factors */
                 public static final double driveConversionPositionFactor = (wheelDiameter.magnitude() * Math.PI)
                                 / driveGearRatio;
@@ -325,16 +328,20 @@ public final class Constants {
                 // public static final Pose2d blueNote3 = new Pose2d(2.89, 4.09, new
                 // Rotation2d());
 
-                // public static final Pose2d centerNote1Blue = new Pose2d(8.28, 7.45, new
-                // Rotation2d());
-                // public static final Pose2d centerNote2Blue = new Pose2d(8.28, 5.77, new
-                // Rotation2d());
-                // public static final Pose2d centerNote3Blue = new Pose2d(8.28, 4.10, new
-                // Rotation2d());
-                // public static final Pose2d centerNote4Blue = new Pose2d(8.28, 2.44, new
-                // Rotation2d());
-                // public static final Pose2d centerNote5Blue = new Pose2d(8.28, 0.75, new
-                // Rotation2d());
+                public static Pose2d[] centerNotes = {
+                                new Pose2d(),
+                                new Pose2d(8.28, 7.45, new Rotation2d()),
+                                new Pose2d(8.28, 5.77, new Rotation2d()),
+                                new Pose2d(8.28, 4.10, new Rotation2d()),
+                                new Pose2d(8.28, 2.44, new Rotation2d()),
+                                new Pose2d(8.28, 0.75, new Rotation2d()),
+                };
+
+                // public static final Pose2d centerNote1Blue =
+                // public static final Pose2d centerNote2Blue =
+                // public static final Pose2d centerNote3Blue =
+                // public static final Pose2d centerNote4Blue = ;
+                // public static final Pose2d centerNote5Blue =);
 
                 public static final Pose2d centerNote1PickupBlue = new Pose2d(8.26, 7.44,
                                 new Rotation2d(Units.degreesToRadians(193)));// 23.2
@@ -647,6 +654,7 @@ public final class Constants {
                 public static double reverseRPM = -500;
                 public static double reverseTime = 2;
                 public static double noNoteTime = 60;
+                public static double noteInIntakeAmps = 30;
                 public static final double intakeSpeed = 4500;
                 public static final double intakeKp = 3.5e-4;
                 public static final double intakeKi = 0.0;

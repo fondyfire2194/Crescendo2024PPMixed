@@ -3,7 +3,9 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot.commands.Autos.AutoStarts;
+
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -24,7 +26,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
-import frc.robot.utils.LLPipelines;
 
 /** Add your docs here. */
 public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
@@ -39,8 +40,7 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                         double switchoverdistance,
                         boolean innerNoteFirst) {
 
-                addCommands(
-                                // shoot first note
+                addCommands( // note
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
                                 Commands.runOnce(() -> swerve.ampActive = true),
                                 Commands.runOnce(() -> swerve.sourceActive = false),
@@ -132,13 +132,15 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                         TransferSubsystem transfer, IntakeSubsystem intake, double switchoverdistance,
                         boolean innerNoteFirst) {
                 return Commands.parallel(
-                                new PickupUsingVision(cf,
+                                new PickupUsingVision(
+                                                cf,
                                                 pf.pathMaps.get(amppaths.AmpToCenter1.name()),
                                                 pf.pathMaps.get(amppaths.AmpToCenter2.name()),
+                                                1,
+                                                2,
                                                 transfer, intake, swerve,
                                                 switchoverdistance,
-                                                innerNoteFirst,
-                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                innerNoteFirst),
                                 Commands.sequence(
                                                 cf.stopShooter(),
                                                 Commands.waitSeconds(2),
@@ -185,10 +187,11 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                                 .name()),
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1
                                                                 .name()),
+                                                2,
+                                                1,
                                                 transfer, intake, swerve,
                                                 switchoverdistance,
-                                                innerNoteFirst,
-                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                innerNoteFirst),
 
                                 cf.doIntake(2));
 

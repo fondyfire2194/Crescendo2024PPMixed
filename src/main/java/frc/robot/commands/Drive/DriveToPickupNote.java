@@ -28,17 +28,20 @@ public class DriveToPickupNote extends Command {
   double angleError = 0;
   private Timer elapsedTime = new Timer();
   double startPosition;
-  private double distError;
+  private int m_centerNoteNumber;
+  private double llyangle;
   private double pickupDistance = .15;
 
   public DriveToPickupNote(
       SwerveSubsystem swerve,
       TransferSubsystem transfer,
       IntakeSubsystem intake,
+      int centerNoteNumber,
       String camname) {
     m_swerve = swerve;
     m_transfer = transfer;
     m_intake = intake;
+    m_centerNoteNumber = centerNoteNumber;
     m_camname = camname;
     addRequirements(m_swerve);
   }
@@ -54,7 +57,7 @@ public class DriveToPickupNote extends Command {
 
     SmartDashboard.putNumber("DtoPuN/swposnX", m_swerve.getX());
     SmartDashboard.putNumber("DtoPuN/swposnY", m_swerve.getY());
-
+    m_swerve.targetPose = FieldConstants.centerNotes[m_centerNoteNumber];
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -63,33 +66,26 @@ public class DriveToPickupNote extends Command {
 
     if (RobotBase.isReal() && LimelightHelpers.getTV(m_camname)) {
       angleError = LimelightHelpers.getTX(m_camname);
-      distError = LimelightHelpers.getTY(m_camname);
+      llyangle = LimelightHelpers.getTY(m_camname);
       SmartDashboard.putNumber("DtoPuN/AngErr", angleError);
     } else
       angleError = 0;
 
     double rotationVal = m_swerve.m_alignNotePID.calculate(angleError, 0);
 
-    SmartDashboard.putNumber("DtoPuN/DistErr", distError);
+    SmartDashboard.putNumber("DtoPuN/LLYangle", llyangle);
 
-    if (AllianceUtil.isRedAlliance())
-      m_swerve.remainingdistance = m_swerve.getX() - FieldConstants.FIELD_LENGTH / 2;
-    else
-      m_swerve.remainingdistance = FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX();
+    m_swerve.remainingdistance = m_swerve.getDistanceFromNote(m_centerNoteNumber);
 
-    if (m_swerve.remainingdistance > pickupDistance)
-      m_swerve.drive(
-          -SwerveConstants.notePickupSpeed,
-          0,
-          rotationVal,
-          false,
-          true,
-          false);
+    m_swerve.drive(
+        -SwerveConstants.notePickupSpeed,
+        0,
+        rotationVal,
+        false,
+        true,
+        false);
 
-    else
-      m_swerve.drive(0, 0, 0, false, true, false);
-
-    SmartDashboard.putNumber("DtoPuN/RmngDist", distError);
+    SmartDashboard.putNumber("DtoPuN/RmngDist", llyangle);
 
   }
 

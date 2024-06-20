@@ -7,7 +7,6 @@ package frc.robot.Factories;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.GeometryUtil;
-
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
@@ -63,8 +62,8 @@ public class CommandFactory {
                 return AutoBuilder.pathfindToPose(
                                 targetPose,
                                 new PathConstraints(
-                                                3.25, 4.0,
-                                                Units.degreesToRadians(360), Units.degreesToRadians(540)),
+                                                2, 2.0,
+                                                Units.degreesToRadians(160), Units.degreesToRadians(240)),
                                 0,
                                 0);
         }

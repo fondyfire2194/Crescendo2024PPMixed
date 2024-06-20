@@ -36,6 +36,10 @@ public class AutoAlignSpeaker extends Command {
   public void initialize() {
     m_alignTargetPID.enableContinuousInput(-180, 180);
     m_alignTargetPID.setTolerance(m_toleranceDegrees);
+    m_alignTargetPID.setIZone(1);
+    m_alignTargetPID.setIntegratorRange(-.01, .01);
+    m_alignTargetPID.setI(.0001);
+    m_alignTargetPID.reset();
     m_swerve.targetPose = AllianceUtil.getSpeakerPose();
     elapsedTime = new Timer();
     elapsedTime.reset();
@@ -61,11 +65,13 @@ public class AutoAlignSpeaker extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_alignTargetPID.reset();
+    m_swerve.drive(0, 0, 0, false, true, false);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_endAtTargets && (m_swerve.alignedToTarget || elapsedTime.hasElapsed(2)||RobotBase.isSimulation());
+    return m_endAtTargets && (m_swerve.alignedToTarget || elapsedTime.hasElapsed(2) || RobotBase.isSimulation());
   }
 }

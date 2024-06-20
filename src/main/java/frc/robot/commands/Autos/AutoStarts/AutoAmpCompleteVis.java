@@ -59,10 +59,11 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                 new PickupUsingVision(cf,
                                                                 pf.pathMaps.get(amppaths.AmpToCenter2.name()),
                                                                 pf.pathMaps.get(amppaths.AmpToCenter1.name()),
+                                                                2,
+                                                                1,
                                                                 transfer, intake, swerve,
                                                                 switchoverdistance,
-                                                                innerNoteFirst,
-                                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                                innerNoteFirst),
                                                 Commands.sequence(
                                                                 cf.transferNoteToShooterCommand(),
                                                                 cf.stopShooter(),
@@ -89,10 +90,11 @@ public class AutoAmpCompleteVis extends SequentialCommandGroup {
                                                                 cf,
                                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1.name()),
                                                                 pf.pathMaps.get(amppaths.AmpShootToCenter2.name()),
+                                                                1,
+                                                                2,
                                                                 transfer, intake, swerve,
                                                                 switchoverdistance,
-                                                                innerNoteFirst,
-                                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                                innerNoteFirst),
 
                                                 cf.doIntake(5)),
 

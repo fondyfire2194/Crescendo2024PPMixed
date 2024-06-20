@@ -25,7 +25,6 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
-import frc.robot.utils.LLPipelines;
 
 /** Add your docs here. */
 public class AutoSourceCompleteVis extends SequentialCommandGroup {
@@ -58,10 +57,11 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                 new PickupUsingVision(cf,
                                                                 pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                                 pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
+                                                                4,
+                                                                5,
                                                                 transfer, intake, swerve,
                                                                 switchoverdistance,
-                                                                innerNoteFirst,
-                                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                                innerNoteFirst),
                                                 Commands.sequence(
                                                                 cf.transferNoteToShooterCommand(),
                                                                 cf.stopShooter(),
@@ -89,10 +89,11 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                                                                 .name()),
                                                                 pf.pathMaps.get(sourcepaths.SourceShootToCenter4
                                                                                 .name()),
+                                                                5,
+                                                                4,
                                                                 transfer, intake, swerve,
                                                                 switchoverdistance,
-                                                                innerNoteFirst,
-                                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                                innerNoteFirst),
 
                                                 cf.doIntake(10)),
 
@@ -151,10 +152,11 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                 new PickupUsingVision(cf,
                                                 pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
                                                 pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
+                                                4,
+                                                5,
                                                 transfer, intake, swerve,
                                                 switchoverdistance,
-                                                innerNoteFirst,
-                                                LLPipelines.pipelines.NOTEDET1.ordinal()),
+                                                innerNoteFirst),
                                 Commands.sequence(
                                                 cf.transferNoteToShooterCommand(),
                                                 cf.stopShooter(),

@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
@@ -660,6 +661,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
           .getDistance(getPose().getTranslation()), 2);
   }
 
+  public double getDistanceFromNote(int number) {
+    return round2dp(distanceFilter.calculate(FieldConstants.centerNotes[number].getTranslation()
+        .getDistance(getPose().getTranslation())), 2);
+  }
+
   public double getAngleRadsToTarget() {
     double XDiff = targetPose.getX() - getX();
     double YDiff = targetPose.getY() - getY();
@@ -854,7 +860,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "shootingpose")
   public Pose2d poseWhenShooting = new Pose2d();
   @Log.NT(key = "remainingdistance")
-  public double remainingdistance=0;
+  public double remainingdistance = 0;
 
   public boolean sourceActive;
 
@@ -865,7 +871,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "tgtmtrs")
   public double targetdistance;
 
-public boolean inhibitVision;
+  public boolean inhibitVision;
 
   public void setPathRunning() {
     pathRunning = true;
