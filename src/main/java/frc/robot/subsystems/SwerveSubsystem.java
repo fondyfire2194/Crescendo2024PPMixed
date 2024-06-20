@@ -364,19 +364,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         mSwerveMods[3].clearFaultsCommand());
   }
 
-  public void setModuleDriveKp() {
-    mSwerveMods[0].setDriveKp();
-    mSwerveMods[1].setDriveKp();
-    mSwerveMods[2].setDriveKp();
-    mSwerveMods[3].setDriveKp();
-  }
-
-  public void setModuleDriveFF() {
-    mSwerveMods[0].setDriveFF();
-    mSwerveMods[1].setDriveFF();
-    mSwerveMods[2].setDriveFF();
-    mSwerveMods[3].setDriveFF();
-  }
+  
 
   public void setModuleAngleKp() {
     mSwerveMods[0].setAngleKp();
@@ -393,20 +381,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return mSwerveMods[0].getDriveFF();
   }
 
-  public Command setDriveKp() {
-    return Commands.runOnce(() -> setModuleDriveKp());
-  }
-
-  public Command setDriveFF() {
-    return Commands.runOnce(() -> setModuleDriveFF());
-  }
+  
 
   public Command setAngleKp() {
     return Commands.runOnce(() -> setModuleAngleKp());
-  }
-
-  public double getAngleKp() {
-    return mSwerveMods[0].getAngleKp();
   }
 
   public boolean driveIsBraked() {

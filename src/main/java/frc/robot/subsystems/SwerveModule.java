@@ -28,7 +28,6 @@ import frc.lib.config.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
-import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.GlobalConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Pref;
@@ -47,7 +46,6 @@ public class SwerveModule extends SubsystemBase {
 
   private final SparkPIDController driveController;
   private final SparkPIDController angleController;
-
   private SimpleMotorFeedforward driveFeedforward;
 
   private SwerveModuleState currentDesiredState = new SwerveModuleState();
@@ -59,7 +57,7 @@ public class SwerveModule extends SubsystemBase {
   private SwerveModuleState previousState = new SwerveModuleState();
   public boolean wheelAligning;
   private double feedForward;
-  private boolean showHalf;
+  private double acceleration;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -191,10 +189,6 @@ public class SwerveModule extends SubsystemBase {
     angleController.setP(SwerveConstants.angleKP);
   }
 
-  public double getAngleKp() {
-    return angleController.getP();
-  }
-
   public boolean driveIsBraked() {
     return driveMotor.getIdleMode() == IdleMode.kBrake;
   }
@@ -215,9 +209,9 @@ public class SwerveModule extends SubsystemBase {
       if (!feedforward) {
         driveController.setReference(desiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       } else {
+        acceleration = (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond) / 0.020;
         feedForward = driveFeedforward.calculate(
-            desiredState.speedMetersPerSecond,
-            (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond) / 0.020);
+            desiredState.speedMetersPerSecond, acceleration);
         feedForward = MathUtil.clamp(feedForward, -12.0, 12.0);
         if (Math.abs(desiredState.speedMetersPerSecond) < .01) {
           feedForward = 0;
@@ -287,36 +281,18 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
 
-    if (!showHalf) {
+    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosition", getDrivePosition());
+    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " feedforward",
+        feedForward);
+    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " acceleration",
+        acceleration);
 
-      SmartDashboard.putBoolean("Modules//" +
-          String.valueOf(+moduleNumber) + "brake", driveMotor.getIdleMode() == IdleMode.kBrake);
-
-      SmartDashboard.putNumber("Modules//" +
-          String.valueOf(+moduleNumber) + " cancoder", getCancoderDeg());
-      SmartDashboard.putNumber("Modules//" +
-          String.valueOf(+moduleNumber) + " amps", driveMotor.getOutputCurrent());
-
-      showHalf = true;
-    }
-
-    else {
-
-      SmartDashboard.putNumber("Modules//" +
-          String.valueOf(+moduleNumber) + " anglekp", getAngleKp());
-      SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosition", getDrivePosition());
-      SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " feedforward",
-          feedForward);
-      showHalf = false;
-    }
     if (characterizing) {
       driveMotor.setVoltage(characterizationVolts);
       angleController.setReference(0, ControlType.kPosition);
-      // SmartDashboard.putBoolean(String.valueOf(moduleNumber) + " Characterizing",
-      // characterizing);
-      // SmartDashboard.putNumber(String.valueOf(moduleNumber) + " Characterization
-      // Volts", characterizationVolts);
-
+      SmartDashboard.putBoolean(String.valueOf(moduleNumber) + " Characterizing",
+          characterizing);
+      SmartDashboard.putNumber(String.valueOf(moduleNumber) + " Characterization Volts", characterizationVolts);
     }
 
   }
