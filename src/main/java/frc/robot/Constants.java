@@ -160,7 +160,7 @@ public final class Constants {
                 public static final double maxTranslationalSpeed = Units.feetToMeters(11.5);
 
                 /* Angle Motor PID Values */
-                public static final double angleKP = 0.08;
+                public static final double angleKP = 0.01;
                 public static final double angleKI = 0.0;
                 public static final double angleKD = 0.0;
                 public static final double angleKFF = 0.0;
@@ -263,7 +263,7 @@ public final class Constants {
 
                 public static double debounceTime;
 
-                public static double alignNoteKp = .01;
+                public static double alignNoteKp = .02;
 
                 public static double alignNoteKd = 0;
 
@@ -514,7 +514,7 @@ public final class Constants {
                 shooterLobRPMMap.put(SwerveConstants.maxLobDistance, 2800.);
         }
 
-        public static double subwfrArmAngle = 50;// 60;// degrees
+        public static double subwfrArmAngle = 60;// 60;// degrees
         public static double subwfrShooterSpeed = 3000;// rpm
 
         public static double autoShootArmAngle = 60;// degrees
@@ -549,7 +549,7 @@ public final class Constants {
 
         public static final class ArmConstants {
 
-                public static final double cancoderOffsetRadiansAtCalibration = Units.degreesToRadians(17);
+                public static final double cancoderOffsetRadiansAtCalibration = Units.degreesToRadians(15);
 
                 public static final double maxarmMotorRPM = 5700;
 
@@ -625,9 +625,9 @@ public final class Constants {
                 public static double noNoteStopTime = 20;
                 public static double jogSpeed = 1;
                 public static double intakingSpeed = 5500;
-                public static double transferToShootSpeed = 4000;
+                public static double transferToShootSpeed = 7000;
 
-                public static final double transferKp = .00002; // P gains caused oscilliation
+                public static final double transferKp = .0002; // P gains caused oscilliation
 
                 public static final double transferPositionKp = .002; // P gains caused oscilliation
                 public static final double transferKi = 0.0;

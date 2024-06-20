@@ -865,6 +865,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "tgtmtrs")
   public double targetdistance;
 
+public boolean inhibitVision;
+
   public void setPathRunning() {
     pathRunning = true;
   }

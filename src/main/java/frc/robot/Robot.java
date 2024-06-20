@@ -189,8 +189,9 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
     m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
+  
     m_robotContainer.m_arm.enable();
-    m_robotContainer.m_arm.setGoal(m_robotContainer.m_arm.getAngleRadians());
+   // m_robotContainer.m_arm.setGoal(Constants.subwfrArmAngle);
     LimelightHelpers.setPipelineIndex(CameraConstants.frontLeftCamera.camname,
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,
@@ -268,8 +269,9 @@ public class Robot extends TimedRobot implements Logged {
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname,
         LLPipelines.pipelines.NOTEDET1.ordinal());
-
-  }
+        m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
+        m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
+        m_robotContainer.m_swerve.inhibitVision=false;  }
 
   @Override
   public void teleopPeriodic() {

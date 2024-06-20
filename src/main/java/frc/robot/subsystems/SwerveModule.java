@@ -28,6 +28,7 @@ import frc.lib.config.SwerveModuleConstants;
 import frc.lib.util.CANSparkMaxUtil;
 import frc.lib.util.CANSparkMaxUtil.Usage;
 import frc.robot.Constants;
+import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.GlobalConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Pref;
@@ -186,7 +187,8 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public void setAngleKp() {
-    angleController.setP(Pref.getPref("AngleKp"));
+    // angleController.setP(Pref.getPref("AngleKp"));
+    angleController.setP(SwerveConstants.angleKP);
   }
 
   public double getAngleKp() {
@@ -215,7 +217,7 @@ public class SwerveModule extends SubsystemBase {
       } else {
         feedForward = driveFeedforward.calculate(
             desiredState.speedMetersPerSecond,
-            (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond));
+            (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond) / 0.020);
 
         if (Math.abs(desiredState.speedMetersPerSecond) < .01) {
           feedForward = 0;

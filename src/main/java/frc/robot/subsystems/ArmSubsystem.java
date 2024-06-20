@@ -289,14 +289,23 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         setGoal(anglerads);
     }
 
-    public Command setGoalCommand(double anglerads) {
+    // public Command setGoalCommand(double anglerads) {
+    //     return Commands.sequence(
+    //             Commands.runOnce(() -> setTarget(anglerads)),
+    //             Commands.either(
+    //                     Commands.runOnce(() -> enable()),
+    //                     Commands.none(),
+    //                     () -> isEnabled()));
+    // }
+
+    public Command setGoalCommand(double angleRads) {
         return Commands.sequence(
-                Commands.runOnce(() -> setTarget(anglerads)),
-                Commands.either(
-                        Commands.runOnce(() -> enable()),
-                        Commands.none(),
-                        () -> isEnabled()));
+                Commands.runOnce(() -> setTolerance(ArmConstants.angleTolerance)),
+                Commands.runOnce(() -> resetController()),
+                Commands.runOnce(() -> setGoal(angleRads), this),
+                Commands.runOnce(() -> enable(), this));
     }
+
 
     public void incrementArmAngle(double valdeg) {
         double temp = getCurrentGoalRads();

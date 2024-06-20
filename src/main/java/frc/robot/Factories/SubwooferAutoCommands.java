@@ -24,6 +24,7 @@ public class SubwooferAutoCommands {
         public Command setsbwrstart(SwerveSubsystem swerve, CommandFactory cf) {
                 return Commands.sequence(
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
+                                Commands.runOnce(() -> swerve.inhibitVision = true),
                                 cf.setStartPosebyAlliance(FieldConstants.sbwfrStartPose));
         }
 
@@ -45,7 +46,7 @@ public class SubwooferAutoCommands {
                 return Commands.sequence(
                                 setArmShooter(cf, Constants.subwfrArmAngle,
                                                 Constants.subwfrShooterSpeed),
-                                cf.checkAtTargets(.3),
+                                cf.checkAtTargets(20),
                                 shoot(cf));
         }
 

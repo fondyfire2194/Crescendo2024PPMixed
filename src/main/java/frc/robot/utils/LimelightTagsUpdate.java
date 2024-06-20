@@ -13,7 +13,8 @@ public class LimelightTagsUpdate {
 
     private final String m_camname;
     private final SwerveSubsystem m_swerve;
-    private boolean m_useMegaTag2=false;
+
+    private boolean m_useMegaTag2 = false;
     boolean rejectUpdate;
 
     public LimelightTagsUpdate(String camname, SwerveSubsystem swerve) {
@@ -28,7 +29,7 @@ public class LimelightTagsUpdate {
     public void setLLRobotorientation() {
         LimelightHelpers.SetRobotOrientation(m_camname,
                 m_swerve.getPoseEstimator().getEstimatedPosition().getRotation().getDegrees(),
-              //m_swerve.getHeadingDegrees(),
+                // m_swerve.getHeadingDegrees(),
                 0, 0, 0, 0, 0);
     }
 
@@ -42,7 +43,7 @@ public class LimelightTagsUpdate {
 
             rejectUpdate = mt2.tagCount == 0 || Math.abs(m_swerve.getGyroRate()) > 720;
 
-            if (!rejectUpdate) {
+            if (!rejectUpdate&&!m_swerve.inhibitVision) {
                 m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(1.0, 1.0, 9999999));
                 m_swerve.getPoseEstimator().addVisionMeasurement(
                         mt2.pose,
@@ -55,7 +56,8 @@ public class LimelightTagsUpdate {
             LimelightHelpers.PoseEstimate mt1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(m_camname);
 
             rejectUpdate = mt1.tagCount == 0
-                    || mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && mt1.rawFiducials[0].ambiguity >.7 && mt1.rawFiducials[0].distToCamera > 3;
+                    || mt1.tagCount == 1 && mt1.rawFiducials.length == 1 && mt1.rawFiducials[0].ambiguity > .7
+                            && mt1.rawFiducials[0].distToCamera > 3;
 
             if (!rejectUpdate) {
                 m_swerve.getPoseEstimator().setVisionMeasurementStdDevs(VecBuilder.fill(.7, .7, 1));
