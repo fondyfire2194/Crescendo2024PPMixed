@@ -7,6 +7,7 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -850,6 +851,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "pathfindpose")
   private Pose2d pathfindpose = new Pose2d();
 
+  public boolean noteposecreated;
+
   public void setPathRunning() {
     pathRunning = true;
   }
@@ -880,6 +883,11 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public boolean getPathStarted() {
     return pathStarted;
+  }
+
+  public Command driveToPose(Pose2d pose) {
+    return AutoBuilder.pathfindToPose(pose,
+        SwerveConstants.pickUpConstraints);
   }
 
   public Command quasistaticForward() {

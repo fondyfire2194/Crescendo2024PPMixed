@@ -4,12 +4,14 @@
 
 package frc.robot.Factories;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.GeometryUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
@@ -18,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Pref;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
@@ -64,6 +67,16 @@ public class CommandFactory {
                                 pc,
                                 0,
                                 0);
+        }
+
+        public Command pathfindpickup() {
+                return Commands.parallel(
+                                AutoBuilder.pathfindToPose(
+                                                m_swerve.getPathfindPose(),
+                                                SwerveConstants.pickUpConstraints,
+                                                0,
+                                                0),
+                                doIntake(10));
         }
 
         public Command positionArmRunShooterByDistance(boolean lob, boolean endAtTargets) {

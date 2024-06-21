@@ -21,6 +21,7 @@ import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.Autos.PickupUsingVisionNear;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
+import frc.robot.commands.Drive.PathFindToPickupNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -61,11 +62,12 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                                 // pick up first note either 4 or 5 using full path or near path the rear camera
                                 Commands.either(
-                                                pickupCenter4_5Near(cf, pf, swerve, transfer, intake,
+                                                pickupCenter4_5Near(cf, pf, swerve, 
                                                                 llv, innerNoteFirst),
                                                 pickupCenter4_5(cf, pf, swerve, transfer, intake, switchoverdistance,
                                                                 innerNoteFirst),
                                                 () -> useNear),
+
                                 // if a note was picked up then go shoot it. If not do U move to try the
                                 // adjacent note
                                 Commands.either(
@@ -176,20 +178,20 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
         }
 
         public Command pickupCenter4_5Near(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, IntakeSubsystem intake, LimelightVision llv,
+                        LimelightVision llv,
                         boolean innerNoteFirst) {
-                return Commands.parallel(
-                                new PickupUsingVisionNear(cf,
-                                                pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
-                                                pf.pathMaps.get(sourcepaths.SourceToNearCenter5.name()),
-                                                4,
-                                                5,
-                                                transfer, intake, swerve,
-                                                llv, innerNoteFirst),
-                                Commands.sequence(
-                                                cf.stopShooter(),
-                                                Commands.waitSeconds(2),
-                                                cf.doIntake(300)));
+                // return Commands.parallel(
+                return new PickupUsingVisionNear(cf,
+                                pf.pathMaps.get(sourcepaths.SourceToNearCenter4.name()),
+                                pf.pathMaps.get(sourcepaths.SourceToNearCenter5.name()),
+                                4,
+                                5,
+                                swerve,
+                                llv, innerNoteFirst);
+                // Commands.sequence(
+                // cf.stopShooter(),
+                // Commands.waitSeconds(2),
+                // cf.doIntake(300)));
         }
 
         public Command moveShootCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
@@ -247,19 +249,19 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                         TransferSubsystem transfer, IntakeSubsystem intake, LimelightVision llv,
                         boolean innerNoteFirst) {
 
-                return Commands.parallel(
-                                new PickupUsingVisionNear(
-                                                cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
-                                                                .name()),
-                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
-                                                                .name()),
-                                                5,
-                                                4,
-                                                transfer, intake, swerve,
-                                                llv, innerNoteFirst),
+                // return Commands.parallel(
+                return new PickupUsingVisionNear(
+                                cf,
+                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
+                                                .name()),
+                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
+                                                .name()),
+                                5,
+                                4,
+                                swerve,
+                                llv, innerNoteFirst);
 
-                                cf.doIntake(2));
+                // cf.doIntake(2));
 
         }
 }

@@ -10,16 +10,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Factories.CommandFactory;
-
 import frc.robot.commands.Drive.PathFindToPickupNote;
 import frc.robot.commands.Pathplanner.RunPPath;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.LLPipelines.pipelines;
 
 /** Add your docs here. */
@@ -31,8 +27,6 @@ public class PickupUsingVisionNear extends SequentialCommandGroup {
                         PathPlannerPath path1,
                         int note1,
                         int note2,
-                        TransferSubsystem transfer,
-                        IntakeSubsystem intake,
                         SwerveSubsystem swerve,
                         LimelightVision llv,
                         boolean innerNoteFirst) {
@@ -50,14 +44,9 @@ public class PickupUsingVisionNear extends SequentialCommandGroup {
                                                 new RunPPath(swerve, path),
                                                 new RunPPath(swerve, path1),
                                                 () -> innerNoteFirst),
-                                Commands.either(
-                                                new PathFindToPickupNote(swerve, transfer,
-                                                                intake, llv, note1,
-                                                                CameraConstants.rearCamera.camname),
-                                                new PathFindToPickupNote(swerve, transfer,
-                                                                intake, llv, note2,
-                                                                CameraConstants.rearCamera.camname),
-                                                () -> innerNoteFirst),
-                                                new PickupUsingPathfind(cf, path, null, path1, null, intake, swerve, innerNoteFirst)
+
+                                new PathFindToPickupNote(swerve, llv,
+                                                CameraConstants.rearCamera.camname));
+
         }
 }
