@@ -73,7 +73,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     private PIDController pid = new PIDController(ArmConstants.armKp, 0.0, 0);
     public double angleToleranceRads = ArmConstants.angleTolerance;
 
-    // public boolean enableArm;
+    public boolean enableArm;
 
     private double activeKv;
     @Log.NT(key = "simanglerads")
@@ -178,14 +178,14 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     public void periodicRobot() {
         armAngleRads = getAngleRadians();
-        if (!isEnabled()) {
+        if (enableArm) {
             setGoal(armAngleRads);
         }
 
         // if (getCurrentGoalRads() > ArmConstants.armMaxRadians)
-        //     setGoalCommand(ArmConstants.armMaxRadians);
+        // setGoalCommand(ArmConstants.armMaxRadians);
         // if (getCurrentGoalRads() < ArmConstants.armMinRadians)
-        //     setGoalCommand(ArmConstants.armMinRadians);
+        // setGoalCommand(ArmConstants.armMinRadians);
 
         checkCancoderCounter++;
         if (checkCancoderCounter == 10) {
@@ -290,12 +290,12 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     }
 
     // public Command setGoalCommand(double anglerads) {
-    //     return Commands.sequence(
-    //             Commands.runOnce(() -> setTarget(anglerads)),
-    //             Commands.either(
-    //                     Commands.runOnce(() -> enable()),
-    //                     Commands.none(),
-    //                     () -> isEnabled()));
+    // return Commands.sequence(
+    // Commands.runOnce(() -> setTarget(anglerads)),
+    // Commands.either(
+    // Commands.runOnce(() -> enable()),
+    // Commands.none(),
+    // () -> isEnabled()));
     // }
 
     public Command setGoalCommand(double angleRads) {
@@ -305,7 +305,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                 Commands.runOnce(() -> setGoal(angleRads), this),
                 Commands.runOnce(() -> enable(), this));
     }
-
 
     public void incrementArmAngle(double valdeg) {
         double temp = getCurrentGoalRads();

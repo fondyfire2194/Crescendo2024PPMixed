@@ -150,6 +150,7 @@ public class Robot extends TimedRobot implements Logged {
     autoHasRun = false;
     m_robotContainer.m_swerve.drive(0, 0, 0, false, true, false);
     m_robotContainer.m_arm.disable();
+    m_robotContainer.m_arm.enableArm = false;
     if (m_robotContainer.m_arm.getCanCoderDeg() < 26)
       m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kCoast);
 
@@ -189,9 +190,10 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
     m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
-  
+
     m_robotContainer.m_arm.enable();
-   // m_robotContainer.m_arm.setGoal(Constants.subwfrArmAngle);
+    m_robotContainer.m_arm.enableArm = true;
+    
     LimelightHelpers.setPipelineIndex(CameraConstants.frontLeftCamera.camname,
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,
@@ -257,6 +259,7 @@ public class Robot extends TimedRobot implements Logged {
 
     m_robotContainer.m_swerve.setIdleMode(true);
     m_robotContainer.m_arm.enable();
+    m_robotContainer.m_arm.enableArm = true;
     m_robotContainer.m_arm.setGoal(m_robotContainer.m_arm.getAngleRadians());
 
     m_robotContainer.m_shooter.stopMotors();
@@ -269,9 +272,10 @@ public class Robot extends TimedRobot implements Logged {
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname,
         LLPipelines.pipelines.NOTEDET1.ordinal());
-        m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
-        m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
-        m_robotContainer.m_swerve.inhibitVision=false;  }
+    m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
+    m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
+    m_robotContainer.m_swerve.inhibitVision = false;
+  }
 
   @Override
   public void teleopPeriodic() {
