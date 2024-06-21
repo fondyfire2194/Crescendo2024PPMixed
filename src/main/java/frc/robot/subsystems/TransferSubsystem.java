@@ -112,7 +112,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
 
   public void transferToShooterAmp() {
     enableLimitSwitch(false);
-    commandrpm = Pref.getPref("TransferToShootSpeedAmp");
+    commandrpm = Pref.getPref("AmpTransferToShootSpeed");
     simnoteatintake = false;
 
     runAtVelocity(commandrpm);

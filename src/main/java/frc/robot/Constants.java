@@ -160,7 +160,7 @@ public final class Constants {
                 public static final double maxTranslationalSpeed = Units.feetToMeters(11.5);
 
                 /* Angle Motor PID Values */
-                public static final double angleKP = 0.01;
+                public static final double angleKP = 0.028;
                 public static final double angleKI = 0.0;
                 public static final double angleKD = 0.0;
                 public static final double angleKFF = 0.0;
@@ -589,7 +589,7 @@ public final class Constants {
                 public static final double kTrapAccelerationRadPerSecSquared = Units.degreesToRadians(240);
 
                 public static final double armKg = 0.2;
-                public static final double armKs = 0.31;// 0.11941;
+                public static final double armKs = 0.31;
                 public static final double armKv = 2;// volts per deg per sec so 12/max = 12/5=2.4
                 public static final double armKa = 0;
 

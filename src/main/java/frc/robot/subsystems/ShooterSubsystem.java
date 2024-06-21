@@ -323,7 +323,7 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   }
 
   public void setBottomKpKdKi() {
-    bottomController.setFF(Constants.ShooterConstants.bottomShooterKFF);
+    bottomController.setFF(Constants.ShooterConstants.bottomShooterKFF,0);
     bottomController.setP(ShooterConstants.bottomShooterKP, 0);// (Pref.getPref("ShooterBottomKp"), 0);
     bottomController.setD(ShooterConstants.bottomShooterKD, 0);// (Pref.getPref("ShooterBottomKd"), 0);
     bottomController.setI(ShooterConstants.bottomShooterKI, 0);// (Pref.getPref("ShooterBottomKi"), 0);

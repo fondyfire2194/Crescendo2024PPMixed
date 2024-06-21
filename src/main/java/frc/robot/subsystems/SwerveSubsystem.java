@@ -381,8 +381,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return mSwerveMods[0].getDriveFF();
   }
 
-  
-
   public Command setAngleKp() {
     return Commands.runOnce(() -> setModuleAngleKp());
   }
