@@ -225,7 +225,6 @@ public class AutoFactory {
                         case 12:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, 1.75, false, false);
-
                         case 13:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, 1.75, true, true);

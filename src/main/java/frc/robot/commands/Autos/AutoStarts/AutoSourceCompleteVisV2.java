@@ -58,9 +58,9 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                                 // pick up first note either 4 or 5 using full path or near path the rear camera
                                 Commands.either(
-                                                pickupCenter4_5(cf, pf, swerve, transfer, intake, switchoverdistance,
-                                                                innerNoteFirst),
                                                 pickupCenter4_5Near(cf, pf, swerve, transfer, intake,
+                                                                innerNoteFirst),
+                                                pickupCenter4_5(cf, pf, swerve, transfer, intake, switchoverdistance,
                                                                 innerNoteFirst),
                                                 () -> useNear),
                                 // if a note was picked up then go shoot it. If not do U move to try the
@@ -79,10 +79,11 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                                 Commands.either(
                                                 Commands.either(
-                                                                pickUpNoteAfterShoot(pf, cf, swerve, transfer, intake,
-                                                                                switchoverdistance, innerNoteFirst),
                                                                 pickUpNoteAfterShootNear(pf, cf, swerve, transfer,
                                                                                 intake,
+                                                                                innerNoteFirst),
+                                                                pickUpNoteAfterShoot(pf, cf, swerve, transfer,
+                                                                                intake, switchoverdistance,
                                                                                 innerNoteFirst),
                                                                 () -> useNear),
 
