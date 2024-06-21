@@ -17,6 +17,7 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -363,8 +364,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
         mSwerveMods[2].clearFaultsCommand(),
         mSwerveMods[3].clearFaultsCommand());
   }
-
-  
 
   public void setModuleAngleKp() {
     mSwerveMods[0].setAngleKp();
@@ -848,6 +847,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public double targetdistance;
 
   public boolean inhibitVision;
+  @Log.NT(key = "pathfindpose")
+  private Pose2d pathfindpose = new Pose2d();
 
   public void setPathRunning() {
     pathRunning = true;
@@ -867,6 +868,14 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public void resetPathStarted() {
     pathStarted = false;
+  }
+
+  public Pose2d getPathfindPose() {
+    return pathfindpose;
+  }
+
+  public void setPathfindPose(Pose2d pose) {
+    pathfindpose = pose;
   }
 
   public boolean getPathStarted() {

@@ -9,15 +9,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
-import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVis;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVisV2;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVisV2;
-import frc.robot.commands.Autos.AutoStarts.AutoSourceStealShoot;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
@@ -26,6 +25,8 @@ import frc.robot.subsystems.TransferSubsystem;
 public class AutoFactory {
 
         private final PathFactory m_pf;
+
+        private final LimelightVision m_llv;
 
         private final SubwooferAutoCommands m_sac;
 
@@ -66,13 +67,14 @@ public class AutoFactory {
         public AutoFactory(PathFactory pf, CommandFactory cf, SubwooferAutoCommands sac, SwerveSubsystem swerve,
                         ShooterSubsystem shooter,
                         ArmSubsystem arm,
-                        IntakeSubsystem intake, TransferSubsystem transfer) {
+                        IntakeSubsystem intake, TransferSubsystem transfer, LimelightVision llv) {
                 m_pf = pf;
                 m_cf = cf;
                 m_sac = sac;
                 m_swerve = swerve;
                 m_transfer = transfer;
                 m_intake = intake;
+                m_llv=llv;
 
                 minsbwfrauto = 1;
                 m_subwfrStartChooser.setDefaultOption("Not Used", 0);
@@ -221,16 +223,16 @@ public class AutoFactory {
                                                 m_sac.move(sbwfrpaths.Wing2ToCenter3, m_swerve, m_pf));
                         case 11:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, true, false);
+                                                m_swerve, m_intake, m_transfer, null, 1.75, true, false);
                         case 12:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, false, false);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false, false);
                         case 13:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, true, true);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, true);
                         case 14:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, true, true);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, true);
 
                         case 21:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,

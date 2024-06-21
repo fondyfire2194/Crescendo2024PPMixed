@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -130,10 +131,10 @@ public class AutoSourceCompleteVis extends SequentialCommandGroup {
                                 Commands.either(
                                                 Commands.sequence(
                                                                 cf.autopathfind(AllianceUtil
-                                                                                .getSourceClearStagePose()),
+                                                                                .getSourceClearStagePose(), SwerveConstants.pfConstraints),
                                                                 Commands.waitSeconds(.25),
                                                                 cf.autopathfind(AllianceUtil
-                                                                                .getSourceShootPose()),
+                                                                                .getSourceShootPose(), SwerveConstants.pfConstraints),
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),

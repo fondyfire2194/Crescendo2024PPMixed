@@ -28,6 +28,7 @@ public class JogArm extends Command {
   public void initialize() {
     m_arm.disable();
     m_arm.enableArm = false;
+    m_arm.enableArm = false;
   }
 
   // Called every time the scheduler runs while the command is scheduled.

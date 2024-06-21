@@ -113,9 +113,9 @@ public class AutoAmpCompletePF extends SequentialCommandGroup {
                                 Commands.either(
                                                 Commands.sequence(
                                                                 cf.autopathfind(AllianceUtil
-                                                                                .getSourceClearStagePose()),
+                                                                                .getSourceClearStagePose(), SwerveConstants.pfConstraints),
                                                                 cf.autopathfind(AllianceUtil
-                                                                                .getSourceShootPose()),
+                                                                                .getSourceShootPose(), SwerveConstants.pfConstraints),
                                                                 Commands.runOnce(() -> this.cancel())),
                                                 Commands.runOnce(() -> this.cancel()),
                                                 () -> transfer.noteAtIntake()));

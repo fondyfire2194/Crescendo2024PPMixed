@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
+import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -23,6 +24,7 @@ import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
@@ -37,6 +39,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                         SwerveSubsystem swerve,
                         IntakeSubsystem intake,
                         TransferSubsystem transfer,
+                        LimelightVision llv,
                         double switchoverdistance,
                         boolean innerNoteFirst,
                         boolean useNear) {
@@ -59,7 +62,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 // pick up first note either 4 or 5 using full path or near path the rear camera
                                 Commands.either(
                                                 pickupCenter4_5Near(cf, pf, swerve, transfer, intake,
-                                                                innerNoteFirst),
+                                                                llv, innerNoteFirst),
                                                 pickupCenter4_5(cf, pf, swerve, transfer, intake, switchoverdistance,
                                                                 innerNoteFirst),
                                                 () -> useNear),
@@ -72,7 +75,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                                 // This command selector has 2 conditions where it doesn't have a note and one
                                 // where it does
-                                // The having shot condition means the note is away from center so
+                                // The having shot condition means the robot is away from center field so
                                 // pickupaftershoot will happen
                                 // any other condition means Commands.none will happen. Either way the next
                                 // command has to take care of it
@@ -81,7 +84,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 Commands.either(
                                                                 pickUpNoteAfterShootNear(pf, cf, swerve, transfer,
                                                                                 intake,
-                                                                                innerNoteFirst),
+                                                                                llv, innerNoteFirst),
                                                                 pickUpNoteAfterShoot(pf, cf, swerve, transfer,
                                                                                 intake, switchoverdistance,
                                                                                 innerNoteFirst),
@@ -134,10 +137,12 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.either(
                                                 Commands.sequence(
                                                                 cf.autopathfind(AllianceUtil
-                                                                                .getSourceClearStagePose()),
+                                                                                .getSourceClearStagePose(),
+                                                                                SwerveConstants.pfConstraints),
                                                                 Commands.waitSeconds(.25),
                                                                 cf.autopathfind(AllianceUtil
-                                                                                .getSourceShootPose()),
+                                                                                .getSourceShootPose(),
+                                                                                SwerveConstants.pfConstraints),
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),
@@ -171,7 +176,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
         }
 
         public Command pickupCenter4_5Near(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, IntakeSubsystem intake,
+                        TransferSubsystem transfer, IntakeSubsystem intake, LimelightVision llv,
                         boolean innerNoteFirst) {
                 return Commands.parallel(
                                 new PickupUsingVisionNear(cf,
@@ -180,7 +185,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 4,
                                                 5,
                                                 transfer, intake, swerve,
-                                                innerNoteFirst),
+                                                llv, innerNoteFirst),
                                 Commands.sequence(
                                                 cf.stopShooter(),
                                                 Commands.waitSeconds(2),
@@ -239,7 +244,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
         }
 
         public Command pickUpNoteAfterShootNear(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, IntakeSubsystem intake,
+                        TransferSubsystem transfer, IntakeSubsystem intake, LimelightVision llv,
                         boolean innerNoteFirst) {
 
                 return Commands.parallel(
@@ -252,7 +257,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 5,
                                                 4,
                                                 transfer, intake, swerve,
-                                                innerNoteFirst),
+                                                llv, innerNoteFirst),
 
                                 cf.doIntake(2));
 

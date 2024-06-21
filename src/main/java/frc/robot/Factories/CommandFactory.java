@@ -58,12 +58,10 @@ public class CommandFactory {
                 m_sd = sd;
         }
 
-        public Command autopathfind(Pose2d targetPose) {
+        public Command autopathfind(Pose2d targetPose, PathConstraints pc) {
                 return AutoBuilder.pathfindToPose(
                                 targetPose,
-                                new PathConstraints(
-                                                2, 2.0,
-                                                Units.degreesToRadians(160), Units.degreesToRadians(240)),
+                                pc,
                                 0,
                                 0);
         }

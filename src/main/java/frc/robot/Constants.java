@@ -4,6 +4,7 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
+import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
@@ -283,6 +284,15 @@ public final class Constants {
                 public static double rangeLobDistance = maxLobDistance - minLobDistance;
 
                 public static double maxMovingShotDistance = Units.feetToMeters(30);
+
+                public static PathConstraints pfConstraints = new PathConstraints(
+                                2, 4.0,
+                                Units.degreesToRadians(360), Units.degreesToRadians(540));
+
+                public static PathConstraints pickUpConstraints = new PathConstraints(
+                                1, 2.0,
+                                Units.degreesToRadians(360), Units.degreesToRadians(540));
+
         }
 
         public static final class KeepAngle {
@@ -294,6 +304,8 @@ public final class Constants {
         public static final class FieldConstants {
                 public static final double FIELD_WIDTH = 8.21;
                 public static final double FIELD_LENGTH = 16.54;
+
+                public static final double noteDiameter = Units.inchesToMeters(14);
 
                 public static final double stageHeight = Units.inchesToMeters(96);
                 public static final double speakerSlotHeight = Units.inchesToMeters(80.4375);
@@ -426,6 +438,8 @@ public final class Constants {
                         public double roll;
                         public double pitch;
                         public double yaw;
+                        public double hfov;
+                        public double vfov;
                         public boolean isUsed = false;
                         public boolean isActive = false;
 
@@ -433,7 +447,7 @@ public final class Constants {
                                         final String camname,
                                         final String ipaddress,
                                         final double forward, final double side, final double up, final double roll,
-                                        final double pitch, final double yaw,
+                                        final double pitch, final double yaw, final double hfov, double vfov,
                                         final boolean isUsed,
                                         final boolean isActive) {
                                 this.camname = camname;
@@ -444,6 +458,8 @@ public final class Constants {
                                 this.roll = roll;
                                 this.pitch = pitch;
                                 this.yaw = yaw;
+                                this.hfov = hfov;
+                                this.vfov = vfov;
                                 this.isUsed = isUsed;
                                 this.isActive = isActive;
                         }
@@ -456,6 +472,8 @@ public final class Constants {
                                 0,
                                 29, // deg
                                 7.5,
+                                63.3,
+                                49.7,
                                 true,
                                 false);
 
@@ -466,6 +484,8 @@ public final class Constants {
                                 0,
                                 29, // deg
                                 -7.5,
+                                63.3,
+                                49.7,
                                 true,
                                 false);
 
@@ -476,6 +496,8 @@ public final class Constants {
                                 0,
                                 5,
                                 0,
+                                63.3,
+                                49.7,
                                 true,
                                 false);
 

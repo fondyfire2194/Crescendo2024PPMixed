@@ -125,7 +125,7 @@ public class RobotContainer implements Logged {
 
                 m_sac = new SubwooferAutoCommands(m_swerve, m_cf);
 
-                m_af = new AutoFactory(m_pf, m_cf, m_sac, m_swerve, m_shooter, m_arm, m_intake, m_transfer);
+                m_af = new AutoFactory(m_pf, m_cf, m_sac, m_swerve, m_shooter, m_arm, m_intake, m_transfer, m_llv);
 
                 if (RobotBase.isReal()) {
                         // Pref.deleteUnused();
