@@ -77,6 +77,8 @@ public class AllianceUtil {
         .flipFieldPose(pose) : pose;
   }
 
+  
+
   public static double getWingNoteX() {
     if (isRedAlliance())
       return FieldConstants.FIELD_LENGTH - 2.88;

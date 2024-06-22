@@ -63,12 +63,29 @@ public class CommandFactory {
                 m_sd = sd;
         }
 
-        public Command autopathfind(Pose2d targetPose, PathConstraints pc) {
+        public Command autopathfind(Pose2d targetPose, PathConstraints pc, double goalendvelocity,
+                        double rotationdelaydistsance) {
                 return AutoBuilder.pathfindToPose(
                                 targetPose,
                                 pc,
-                                0,
+                                goalendvelocity,
                                 0);
+        }
+
+        public Command autopathfind(Pose2d targetPose, double goalendvelocity, double rotationdelaydistance) {
+                return AutoBuilder.pathfindToPose(
+                                targetPose,
+                                SwerveConstants.pfConstraints,
+                                goalendvelocity,
+                                rotationdelaydistance);
+        }
+
+        public Command autopathfind(Pose2d targetPose, double rotationdelaydistance) {
+                return AutoBuilder.pathfindToPose(
+                                targetPose,
+                                SwerveConstants.pfConstraints,
+                                0,
+                                rotationdelaydistance);
         }
 
         public Command test(SwerveSubsystem swerve) {
@@ -146,6 +163,12 @@ public class CommandFactory {
                                 armToIntake(),
                                 m_intake.startIntakeCommand(),
                                 new TransferIntakeToSensor(m_transfer, m_intake, m_swerve, noNotetime));
+        }
+
+        public Command doIntakeDelayed(double delaysecs, double noNoteTime) {
+                return Commands.sequence(
+                                Commands.waitSeconds(delaysecs),
+                                doIntake(noNoteTime));
         }
 
         public Command armToIntake() {

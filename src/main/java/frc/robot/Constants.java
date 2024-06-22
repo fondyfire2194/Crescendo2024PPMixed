@@ -173,9 +173,9 @@ public final class Constants {
                 public static final double driveKFF = .95 / kmaxTheoreticalSpeed;
 
                 /* Drive Motor Characterization Values */
-                public static final double[] driveKS = { 0.60, .6, .6, .6 }; // 0.25 55
-                public static final double[] driveKV = { 2.70, 2.70, 2.70, 2.70 };// 2.5636; //2.59 //2.55 2.8
-                public static final double[] driveKA = { 0.59, .59, .59, .59 }; /// 0.4 0.59
+                public static final double[] driveKS = { 0.56, .56, .53, .52 }; // 0.25 55
+                public static final double[] driveKV = { 2.6, 2.6, 2.6, 2.70 };// 2.5636; //2.59 //2.55 2.8
+                public static final double[] driveKA = { 0.3, .3, .3, .3 }; /// 0.4 0.59
 
                 // team 5907 driveKs = 0.22542;driveKv = 2.4829; driveKa = 0.120; driveP =
                 // 0.08;
@@ -286,7 +286,7 @@ public final class Constants {
                 public static double maxMovingShotDistance = Units.feetToMeters(30);
 
                 public static PathConstraints pfConstraints = new PathConstraints(
-                                2, 4.0,
+                                3.25, 4.0,
                                 Units.degreesToRadians(360), Units.degreesToRadians(540));
 
                 public static PathConstraints pickUpConstraints = new PathConstraints(
@@ -333,12 +333,7 @@ public final class Constants {
                 public static Pose2d driverStationBlueAlliance = new Pose2d();
                 public static Pose2d driverStationRedAlliance = new Pose2d();
 
-                // public static final Pose2d blueNote1 = new Pose2d(2.89, 6.99, new
-                // Rotation2d());
-                // public static final Pose2d blueNote2 = new Pose2d(2.89, 5.54, new
-                // Rotation2d());
-                // public static final Pose2d blueNote3 = new Pose2d(2.89, 4.09, new
-                // Rotation2d());
+                public static Pose2d ampNoteGappose = new Pose2d(2., 6.2, new Rotation2d(Units.degreesToRadians(180)));
 
                 public static Pose2d[] centerNotes = {
                                 new Pose2d(),
@@ -349,26 +344,29 @@ public final class Constants {
                                 new Pose2d(8.28, 0.75, new Rotation2d()),
                 };
 
-                // public static final Pose2d centerNote1Blue =
-                // public static final Pose2d centerNote2Blue =
-                // public static final Pose2d centerNote3Blue =
-                // public static final Pose2d centerNote4Blue = ;
-                // public static final Pose2d centerNote5Blue =);
+                public static Pose2d[] centerNotesPickup = {
+                                new Pose2d(),
+                                new Pose2d(8.26, 7.44, new Rotation2d(Units.degreesToRadians(193))),
+                                new Pose2d(8.28, 5.79, new Rotation2d(Units.degreesToRadians(165))),
+                                new Pose2d(8.28, 4.10, new Rotation2d(Units.degreesToRadians(156))),
+                                new Pose2d(8.28, 2.44, new Rotation2d(Units.degreesToRadians(176.09))),
+                                new Pose2d(8.5, 0.78, new Rotation2d(Units.degreesToRadians(176.09))),
+                };
 
-                public static final Pose2d centerNote1PickupBlue = new Pose2d(8.26, 7.44,
-                                new Rotation2d(Units.degreesToRadians(193)));// 23.2
+                // public static final Pose2d centerNote1PickupBlue = new Pose2d(8.26, 7.44,
+                // new Rotation2d(Units.degreesToRadians(193)));// 23.2
 
-                public static final Pose2d centerNote2PickupBlue = new Pose2d(8.28, 5.79,
-                                new Rotation2d(Units.degreesToRadians(165)));// 23.2
+                // public static final Pose2d centerNote2PickupBlue = new Pose2d(8.28, 5.79,
+                // new Rotation2d(Units.degreesToRadians(165)));// 23.2
 
-                public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
-                                new Rotation2d(Units.degreesToRadians(-156)));// 23.2
+                // public static final Pose2d centerNote3PickupBlue = new Pose2d(8.48, 4.11,
+                // new Rotation2d(Units.degreesToRadians(-156)));// 23.2
 
-                public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
-                                new Rotation2d(Units.degreesToRadians(-170)));// 23.2
+                // public static final Pose2d centerNote4PickupBlue = new Pose2d(8.48, 2.43,
+                // new Rotation2d(Units.degreesToRadians(-170)));// 23.2
 
-                public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
-                                new Rotation2d(Units.degreesToRadians(-176.09)));
+                // public static final Pose2d centerNote5PickupBlue = new Pose2d(8.5, 0.78,
+                // new Rotation2d(Units.degreesToRadians(-176.09)));
 
                 public static final Pose2d sourceShootBlue = new Pose2d(3.4, 2.7,
                                 new Rotation2d(Units.degreesToRadians(150)));
@@ -493,9 +491,9 @@ public final class Constants {
                                 29, // deg
                                 -7.5,
                                 63.3,
-                                49.7, 
+                                49.7,
                                 1,
-                                 1,
+                                1,
                                 true,
                                 false);
 
@@ -508,8 +506,8 @@ public final class Constants {
                                 0,
                                 63.3,
                                 49.7,
-                                1,
-                                1,
+                                1280,
+                                960,
                                 true,
                                 false);
 

@@ -9,6 +9,7 @@
       "/SmartDashboard/ClearStickyFaults": "Command",
       "/SmartDashboard/CommSchd": "Scheduler",
       "/SmartDashboard/DelayChooser": "String Chooser",
+      "/SmartDashboard/DistanceToNote": "Command",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Find Note": "Command",
       "/SmartDashboard/RotateToNote": "Command",

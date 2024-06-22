@@ -258,7 +258,7 @@ public class Robot extends TimedRobot implements Logged {
       m_autonomousCommand.cancel();
     }
     if (RobotBase.isSimulation() || !autoHasRun) {
-      m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(0, 0, new Rotation2d(Math.PI)));
+      m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(8 , 1, new Rotation2d(0)));
       m_robotContainer.m_transfer.simnoteatintake = false;
     }
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);

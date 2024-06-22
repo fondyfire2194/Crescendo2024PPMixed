@@ -4,6 +4,8 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
+import com.pathplanner.lib.commands.PathfindLTV;
+
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -42,7 +44,7 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                         LimelightVision llv,
                         double switchoverdistance,
                         boolean innerNoteFirst,
-                        boolean useNear) {
+                        boolean pathfind) {
 
                 addCommands( // note
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
@@ -63,26 +65,23 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                 // pick up first note either 4 or 5 using full path or near path the
                                                 // rear camera
                                                 Commands.either(
-                                                                pickupCenter1_2Near(cf, pf, swerve,
-                                                                                llv, innerNoteFirst),
+                                                                pickupCenter1_2PF(cf, innerNoteFirst),
                                                                 pickupCenter1_2(cf, pf, swerve, transfer, intake,
                                                                                 switchoverdistance,
                                                                                 innerNoteFirst),
-                                                                () -> useNear)),
+                                                                () -> pathfind)),
                                 Commands.either(
-                                                moveShootCenter1_2(cf, pf, swerve, innerNoteFirst),
+                                                moveShootCenter1_2(cf, pf, swerve, innerNoteFirst, pathfind),
                                                 tryOtherNote(pf, cf, swerve, transfer, innerNoteFirst),
                                                 () -> transfer.noteAtIntake() && !transfer.skipFirstNoteInSim),
 
                                 Commands.either(
                                                 Commands.either(
-                                                                pickUpNoteAfterShootNear(pf, cf, swerve, transfer,
-                                                                                intake,
-                                                                                llv, innerNoteFirst),
+                                                                pickupNoteAfterShootPF(cf, innerNoteFirst),
                                                                 pickUpNoteAfterShoot(pf, cf, swerve, transfer,
                                                                                 intake, switchoverdistance,
                                                                                 innerNoteFirst),
-                                                                () -> useNear),
+                                                                () -> pathfind),
                                                 Commands.none(),
                                                 () -> !transfer.noteAtIntake()
                                                                 && (!AllianceUtil.isRedAlliance()
@@ -94,7 +93,7 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                                                                                 + 2))),
 
                                 Commands.either(
-                                                moveShootCenter1_2(cf, pf, swerve, !innerNoteFirst),
+                                                moveShootCenter1_2(cf, pf, swerve, !innerNoteFirst, pathfind),
                                                 getAnotherNote(swerve, transfer, intake, cf, pf),
                                                 () -> transfer.noteAtIntake() && !transfer.skipSecondNoteInSim),
 
@@ -129,11 +128,11 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                 Commands.sequence(
                                                                 cf.autopathfind(AllianceUtil
                                                                                 .getAmpClearStagePose(),
-                                                                                SwerveConstants.pfConstraints),
+                                                                                SwerveConstants.pfConstraints, 0, 0),
                                                                 Commands.waitSeconds(.25),
                                                                 cf.autopathfind(AllianceUtil
                                                                                 .getAmpShootPose(),
-                                                                                SwerveConstants.pfConstraints),
+                                                                                SwerveConstants.pfConstraints, 0, 0),
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),
@@ -167,29 +166,28 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                 cf.doIntake(300)));
         }
 
-        public Command pickupCenter1_2Near(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
-                        LimelightVision llv,
-                        boolean innerNoteFirst) {
-
-                return new PickupUsingVisionNear(cf,
-                                pf.pathMaps.get(amppaths.AmpToNearCenter1.name()),
-                                pf.pathMaps.get(amppaths.AmpToNearCenter2.name()),
-                                1,
-                                2,
-                                swerve,
-                                llv, innerNoteFirst);
+        public Command pickupCenter1_2PF(CommandFactory cf, boolean innerNoteFirst) {
+                return Commands.sequence(
+                                cf.autopathfind(AllianceUtil.getAlliancePose(FieldConstants.ampNoteGappose), 0),
+                                Commands.either(
+                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
+                                                                FieldConstants.centerNotesPickup[1]), 2),
+                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
+                                                                FieldConstants.centerNotesPickup[2]), 2),
+                                                () -> innerNoteFirst),
+                                cf.doIntakeDelayed(2, 3));
         }
 
         public Command moveShootCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
-                        boolean innerNoteFirst) {
+                        boolean innerNoteFirst, boolean pathfind) {
                 return Commands.either(
                                 new CenterToShoot(cf, pf.pathMaps.get(
                                                 amppaths.Center1ToAmpShoot
                                                                 .name()),
-                                                swerve),
+                                                swerve, pathfind, true),
                                 new CenterToShoot(cf, pf.pathMaps.get(amppaths.Center2ToAmpShoot
                                                 .name()),
-                                                swerve),
+                                                swerve, pathfind, true),
                                 () -> innerNoteFirst);
         }
 
@@ -230,21 +228,15 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
 
         }
 
-        public Command pickUpNoteAfterShootNear(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, IntakeSubsystem intake, LimelightVision llv,
-                        boolean innerNoteFirst) {
-
-                // return Commands.parallel(
-                return new PickupUsingVisionNear(
-                                cf,
-                                pf.pathMaps.get(amppaths.AmpShootToNearCenter2
-                                                .name()),
-                                pf.pathMaps.get(amppaths.AmpShootToNearCenter1
-                                                .name()),
-                                2,
-                                1,
-                                swerve,
-                                llv,
-                                innerNoteFirst);
+        public Command pickupNoteAfterShootPF(CommandFactory cf, boolean innerNoteFirst) {
+                return Commands.sequence(
+                                Commands.either(
+                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
+                                                                FieldConstants.centerNotesPickup[2]), 2),
+                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
+                                                                FieldConstants.centerNotesPickup[1]), 2),
+                                                () -> innerNoteFirst),
+                                cf.doIntakeDelayed(1, 3));
         }
+
 }

@@ -8,6 +8,7 @@ import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.subsystems.LimelightVision;
@@ -29,6 +30,10 @@ public class GetNotePoseToRobot extends Command {
   double startPosition;
 
   private boolean onepass;
+
+  private double rawDistanceToNote;
+
+  private double distanceToNote;
 
   public GetNotePoseToRobot(
       SwerveSubsystem swerve,
@@ -63,9 +68,10 @@ public class GetNotePoseToRobot extends Command {
 
       double boundingHorizontalPixels = m_llv.getBoundingHorizontalPixels();// get width of note seen
       // estimated distance in meters from camera geometry
-      double rawDistanceToNote = m_llv.distanceFromCameraPercentage(boundingHorizontalPixels);
+       rawDistanceToNote = m_llv.distanceFromCameraPercentage(boundingHorizontalPixels);
       // average distance reading over 20 reads
-      double distanceToNote = distanceFilter.calculate(rawDistanceToNote);
+      distanceToNote = distanceFilter.calculate(rawDistanceToNote);
+
       Transform2d noteToCamera = m_llv.getNoteTransform2dFromCamera(distanceToNote);
 
       m_swerve.targetPose = m_swerve.getPose().transformBy(noteToCamera);
@@ -78,6 +84,9 @@ public class GetNotePoseToRobot extends Command {
       onepass = true;
       m_swerve.notePoseCalculated = true;
     }
+
+    SmartDashboard.putNumber("NoteDist", distanceToNote);
+    SmartDashboard.putNumber("NoteDistRaw", rawDistanceToNote);
 
   }
 

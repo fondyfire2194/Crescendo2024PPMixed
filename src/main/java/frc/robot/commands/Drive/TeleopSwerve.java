@@ -52,7 +52,7 @@ public class TeleopSwerve extends Command {
         strafeVal *= Constants.SwerveConstants.kmaxSpeed,
         rotationVal *= Constants.SwerveConstants.kmaxAngularVelocity,
         fieldRelative.getAsBoolean(),
-        true,
+        false,
         keepAngle.getAsBoolean());   
 
   }

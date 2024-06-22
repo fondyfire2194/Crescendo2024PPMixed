@@ -8,6 +8,11 @@ import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.path.PathPlannerPath;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -33,6 +38,7 @@ import frc.robot.Factories.SubwooferAutoCommands;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
+import frc.robot.commands.Drive.GetNotePoseToRobot;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.RotateToFindNote;
 import frc.robot.commands.Drive.TeleopSwerve;
@@ -47,6 +53,7 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.ShootingData;
 import frc.robot.utils.ViewArmShooterByDistance;
 import monologue.Annotations.Log;
@@ -117,6 +124,15 @@ public class RobotContainer implements Logged {
         @Log.NT(key = "canivoreutil")
         public float busUtil;
 
+        Command testCommand() {
+                // Load the path you want to follow using its name in the GUI
+                PathPlannerPath path = PathPlannerPath.fromPathFile("SourceToCenter4");
+
+                // Create a path following command using AutoBuilder. This will also trigger
+                // event markers.
+                return AutoBuilder.followPath(path);
+        }
+
         public RobotContainer() {
 
                 m_pf = new PathFactory(m_swerve);
@@ -148,6 +164,8 @@ public class RobotContainer implements Logged {
                                 new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
                 SmartDashboard.putData("RotateToNote",
                                 new RotateToFindNote(m_swerve, 45));
+                SmartDashboard.putData("DistanceToNote",
+                                new GetNotePoseToRobot(m_swerve, m_llv, true).ignoringDisable(true));
 
                 SmartDashboard.putData("RunTestPickupandShoot",
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
@@ -378,14 +396,48 @@ public class RobotContainer implements Logged {
                 codriver.y().whileTrue(
                                 Commands.run(() -> m_swerve.wheelsAlign(), m_swerve));
 
-                codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
+                // codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
 
-                codriver.povDown().onTrue(m_climber.lowerClimberArmsCommand(.3));
+                // codriver.povDown().onTrue(m_climber.lowerClimberArmsCommand(.3));
 
-                codriver.povLeft().whileTrue(Commands.runOnce(() -> m_transfer.transferMotor.setVoltage(-.5)))
-                                .onFalse(Commands.runOnce(() -> m_transfer.transferMotor.setVoltage(0)));
+                // codriver.povLeft().whileTrue(Commands.runOnce(() ->
+                // m_transfer.transferMotor.setVoltage(-.5)))
+                // .onFalse(Commands.runOnce(() -> m_transfer.transferMotor.setVoltage(0)));
+                Pose2d W1_2gappose = new Pose2d(2., 6.2, new Rotation2d(Units.degreesToRadians(180)));
+                codriver.povRight().onTrue(Commands.sequence(
+                                m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
+                                // testCommand()));
 
-                // codriver.povRight().onTrue(
+                                m_cf.autopathfind(W1_2gappose,
+                                                SwerveConstants.pfConstraints,
+                                                0, 0),
+
+                                Commands.parallel(
+                                                m_cf.autopathfind(
+                                                                AllianceUtil.flipFieldAngle(
+                                                                                FieldConstants.centerNotesPickup[1]),
+                                                                SwerveConstants.pfConstraints,
+                                                                0, 0),
+                                                m_cf.doIntake(10))));
+
+                // n4
+                codriver.povUp().onTrue(
+                                m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose));
+                // // testCommand()));
+                // Commands.parallel(
+                // m_cf.autopathfind(test4,
+                // SwerveConstants.pfConstraints,
+                // 0, 2),
+                // m_cf.doIntake(10))));
+
+                // codriver.povDown().onTrue(Commands.sequence(
+                // m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                // // testCommand()));
+                // Commands.parallel(
+                // m_cf.autopathfind(test3,
+                // SwerveConstants.pfConstraints,
+                // 0, 2),
+                // m_cf.doIntake(10))));
 
                 codriver.start().onTrue(Commands.runOnce(() -> m_swerve.resetModuleEncoders()));
 
