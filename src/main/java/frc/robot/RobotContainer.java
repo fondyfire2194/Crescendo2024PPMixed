@@ -203,13 +203,13 @@ public class RobotContainer implements Logged {
                 // Commands.runOnce(() -> m_transfer.logShot = false)));
 
                 simNoteIntakenTrigger1 = new Trigger(
-                                () -> RobotBase.isSimulation() && m_transfer.isIntaking1
+                                () -> RobotBase.isSimulation() && m_intake.isIntaking1
                                                 && Math.abs(m_swerve.remainingdistance) < .18);
 
                 simNoteIntakenTrigger1.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
 
                 simNoteIntakenTrigger2 = new Trigger(
-                                () -> RobotBase.isSimulation() && m_transfer.isIntaking2
+                                () -> RobotBase.isSimulation() && m_intake.isIntaking2
                                                 && Math.abs(m_swerve.remainingdistance) < .18);
 
                 simNoteIntakenTrigger2.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
@@ -264,7 +264,7 @@ public class RobotContainer implements Logged {
                 driver.rightBumper().and(driver.a().negate()).onTrue(
                                 Commands.parallel(
                                                 m_intake.startIntakeCommand(),
-                                                new TransferIntakeToSensor(m_transfer, m_intake, m_swerve,  120),
+                                                new TransferIntakeToSensor(m_transfer, m_intake, m_swerve, 120),
                                                 m_cf.rumbleCommand(driver),
                                                 m_arm.setGoalCommand(ArmConstants.pickupAngleRadians))
                                                 .withTimeout(10));
@@ -277,7 +277,7 @@ public class RobotContainer implements Logged {
                                                 m_intake.startIntakeCommand(),
                                                 Commands.deadline(
                                                                 new TransferIntakeToSensor(m_transfer,
-                                                                                m_intake, m_swerve,120),
+                                                                                m_intake, m_swerve, 120),
                                                                 new AlignToNote(
                                                                                 m_swerve,
                                                                                 CameraConstants.rearCamera.camname,

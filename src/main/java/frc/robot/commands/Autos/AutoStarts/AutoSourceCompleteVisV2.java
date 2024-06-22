@@ -21,7 +21,6 @@ import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.Autos.PickupUsingVisionNear;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
-import frc.robot.commands.Drive.PathFindToPickupNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -54,19 +53,24 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                 // shoot first note
+
                                 Commands.race(
                                                 Commands.waitSeconds(.75),
                                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                                 Constants.subwfrShooterSpeed, 20)),
-                                cf.transferNoteToShooterCommand(),
 
-                                // pick up first note either 4 or 5 using full path or near path the rear camera
-                                Commands.either(
-                                                pickupCenter4_5Near(cf, pf, swerve, 
-                                                                llv, innerNoteFirst),
-                                                pickupCenter4_5(cf, pf, swerve, transfer, intake, switchoverdistance,
-                                                                innerNoteFirst),
-                                                () -> useNear),
+                                Commands.parallel(
+                                                cf.transferNoteToShooterCommand(),
+
+                                                // pick up first note either 4 or 5 using full path or near path the
+                                                // rear camera
+                                                Commands.either(
+                                                                pickupCenter4_5Near(cf, pf, swerve,
+                                                                                llv, innerNoteFirst),
+                                                                pickupCenter4_5(cf, pf, swerve, transfer, intake,
+                                                                                switchoverdistance,
+                                                                                innerNoteFirst),
+                                                                () -> useNear)),
 
                                 // if a note was picked up then go shoot it. If not do U move to try the
                                 // adjacent note
@@ -259,9 +263,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 5,
                                 4,
                                 swerve,
-                                llv, innerNoteFirst);
-
-                // cf.doIntake(2));
-
+                                llv,
+                                 innerNoteFirst);
         }
 }

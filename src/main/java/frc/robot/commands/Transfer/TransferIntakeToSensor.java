@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
@@ -36,6 +37,10 @@ public class TransferIntakeToSensor extends Command {
     endTimer.reset();
     endTimer.start();
     m_intake.noteMissed = false;
+    if (RobotBase.isSimulation())
+      m_swerve.remainingdistance = 10;// sim
+    m_intake.isIntaking2 = m_intake.isIntaking1;
+    m_intake.isIntaking1 = true;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -46,6 +51,9 @@ public class TransferIntakeToSensor extends Command {
     SmartDashboard.putNumber("Transfer/NoNotTime", endTimer.get());
     m_transfer.runToSensor();
     m_intake.noteMissed = m_swerve.isStopped() && endTimer.hasElapsed(m_noNoteTime);
+
+    if (RobotBase.isSimulation())
+      m_swerve.remainingdistance = Math.abs(FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX());// for note at intake sim
 
   }
 

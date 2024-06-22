@@ -15,7 +15,7 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.LLPipelines.pipelines;
 
-public class PathFindToPickupNote extends Command {
+public class GetNotePoseToRobot extends Command {
 
   private final SwerveSubsystem m_swerve;
 
@@ -29,7 +29,7 @@ public class PathFindToPickupNote extends Command {
 
   private boolean onepass;
 
-  public PathFindToPickupNote(
+  public GetNotePoseToRobot(
       SwerveSubsystem swerve,
       LimelightVision llv,
       String camname) {
@@ -50,6 +50,8 @@ public class PathFindToPickupNote extends Command {
     elapsedTime.reset();
     elapsedTime.start();
     onepass = false;
+    m_swerve.notePoseCalculated = false;
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -73,6 +75,7 @@ public class PathFindToPickupNote extends Command {
 
       m_swerve.setPathfindPose(m_swerve.targetPose);
       onepass = true;
+      m_swerve.notePoseCalculated = true;
     }
 
   }

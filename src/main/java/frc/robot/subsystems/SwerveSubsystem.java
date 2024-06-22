@@ -853,6 +853,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public boolean noteposecreated;
 
+public boolean notePoseCalculated;
+
   public void setPathRunning() {
     pathRunning = true;
   }

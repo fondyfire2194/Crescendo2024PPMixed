@@ -74,7 +74,7 @@ public class AutoFactory {
                 m_swerve = swerve;
                 m_transfer = transfer;
                 m_intake = intake;
-                m_llv=llv;
+                m_llv = llv;
 
                 minsbwfrauto = 1;
                 m_subwfrStartChooser.setDefaultOption("Not Used", 0);
@@ -101,8 +101,10 @@ public class AutoFactory {
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("C2 then C1 Vis", 21);
                 m_ampStartChooser.addOption("C1 then C2 Vis", 22);
+                m_ampStartChooser.addOption("C2 then C1 Near", 23);
+                m_ampStartChooser.addOption("C1 then C2 Near", 24);
 
-                maxampauto = 22;
+                maxampauto = 24;
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
                 SmartDashboard.putData("Amp Start", m_ampStartChooser);
@@ -236,10 +238,16 @@ public class AutoFactory {
 
                         case 21:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, true);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, false);
                         case 22:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, 1.75, false);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false, false);
+                        case 23:
+                                return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, true);
+                        case 24:
+                                return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false, true);
 
                         default:
                                 return Commands.none();

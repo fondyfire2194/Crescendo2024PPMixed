@@ -12,7 +12,7 @@ import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Factories.CommandFactory;
-import frc.robot.commands.Drive.PathFindToPickupNote;
+import frc.robot.commands.Drive.GetNotePoseToRobot;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -45,8 +45,11 @@ public class PickupUsingVisionNear extends SequentialCommandGroup {
                                                 new RunPPath(swerve, path1),
                                                 () -> innerNoteFirst),
 
-                                new PathFindToPickupNote(swerve, llv,
-                                                CameraConstants.rearCamera.camname));
+                                new GetNotePoseToRobot(swerve, llv,                                
+                                                CameraConstants.rearCamera.camname),
+
+                                cf.test(swerve));
 
         }
+
 }

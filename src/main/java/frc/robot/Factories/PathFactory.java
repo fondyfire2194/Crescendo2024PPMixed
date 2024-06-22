@@ -40,9 +40,13 @@ public class PathFactory {
     public enum amppaths {
         AmpShootToCenter1,
         AmpShootToCenter2,
+        AmpShootToNearCenter1,
+        AmpShootToNearCenter2,
         AmpShootToCenter3,
         AmpToCenter1,
         AmpToCenter2,
+        AmpToNearCenter1,
+        AmpToNearCenter2,
         AmpToWing1,
         Center1ToCenter2,
         Center2toCenter1,

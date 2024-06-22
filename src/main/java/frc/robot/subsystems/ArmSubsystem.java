@@ -72,7 +72,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     private double pidout;
     private PIDController pid = new PIDController(ArmConstants.armKp, 0.0, 0);
     public double angleToleranceRads = ArmConstants.angleTolerance;
-
+    @Log.NT(key = "enablearm")
     public boolean enableArm;
 
     private double activeKv;
@@ -178,7 +178,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     public void periodicRobot() {
         armAngleRads = getAngleRadians();
-        if (enableArm) {
+        if (!enableArm) {
             setGoal(armAngleRads);
         }
 
@@ -300,6 +300,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     public Command setGoalCommand(double angleRads) {
         return Commands.sequence(
+                Commands.runOnce(() -> SmartDashboard.putNumber("ArmGoal", angleRads)),
                 Commands.runOnce(() -> setTolerance(ArmConstants.angleTolerance)),
                 Commands.runOnce(() -> resetController()),
                 Commands.runOnce(() -> setGoal(angleRads), this),
