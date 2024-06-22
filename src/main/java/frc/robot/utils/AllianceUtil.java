@@ -9,6 +9,8 @@ import frc.robot.Constants.FieldConstants;
 
 import java.util.Optional;
 
+import javax.imageio.stream.FileCacheImageInputStream;
+
 public class AllianceUtil {
   public static boolean isRedAlliance() {
     Optional<Alliance> alliance = DriverStation.getAlliance();
@@ -73,6 +75,13 @@ public class AllianceUtil {
   public static Pose2d getAlliancePose(Pose2d pose) {
     return isRedAlliance() ? GeometryUtil
         .flipFieldPose(pose) : pose;
+  }
+
+  public static double getWingNoteX() {
+    if (isRedAlliance())
+      return FieldConstants.FIELD_LENGTH - 2.88;
+    else
+      return 2.88;
   }
 
 }

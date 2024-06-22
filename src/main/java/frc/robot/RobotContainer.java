@@ -104,6 +104,8 @@ public class RobotContainer implements Logged {
         private Trigger simNoteIntakenTrigger1;
         @Log.NT(key = "sinmotetrigger2")
         private Trigger simNoteIntakenTrigger2;
+        @Log.NT(key = "sinmotetrigger3")
+        private Trigger simNoteIntakenTrigger3;
 
         EventLoop checkAutoSelectLoop;
 
@@ -213,6 +215,12 @@ public class RobotContainer implements Logged {
                                                 && Math.abs(m_swerve.remainingdistance) < .18);
 
                 simNoteIntakenTrigger2.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
+
+                simNoteIntakenTrigger3 = new Trigger(
+                                () -> RobotBase.isSimulation() && m_intake.isIntaking3
+                                                && Math.abs(m_swerve.remainingdistance) < .18);
+
+                simNoteIntakenTrigger3.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
 
                 checkAutoSelectLoop = new EventLoop();
 

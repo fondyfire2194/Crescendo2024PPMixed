@@ -26,6 +26,7 @@ import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.utils.LLPipelines;
+import frc.robot.utils.LimelightHelpers;
 import monologue.Annotations.Log;
 import monologue.Logged;
 import monologue.Monologue;
@@ -190,10 +191,15 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
     m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
+    if (RobotBase.isSimulation()) {
+      m_robotContainer.m_intake.isIntaking1 = false;
+      m_robotContainer.m_intake.isIntaking2 = false;
+      m_robotContainer.m_intake.isIntaking3 = false;
 
+    }
     m_robotContainer.m_arm.enable();
     m_robotContainer.m_arm.enableArm = true;
-    
+
     LimelightHelpers.setPipelineIndex(CameraConstants.frontLeftCamera.camname,
         LLPipelines.pipelines.APRILTAGALL0.ordinal());
     LimelightHelpers.setPipelineIndex(CameraConstants.frontRightCamera.camname,

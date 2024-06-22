@@ -7,7 +7,6 @@ import static edu.wpi.first.units.Units.Volts;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 import com.pathplanner.lib.util.PathPlannerLogging;
 
@@ -18,7 +17,6 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.filter.LinearFilter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -62,7 +60,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   private Pose2d simOdometryPose = new Pose2d();
 
   private boolean lookForNote;
-
+public double pickupTargetX;
   private double keepAngle = 0.0;
   private double timeSinceRot = 0.0;
   private double lastRotTime = 0.0;

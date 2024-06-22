@@ -10,12 +10,12 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.LimelightHelpers;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.commands.Drive.GetNotePoseToRobot;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LLPipelines.pipelines;
 
 /** Add your docs here. */
@@ -45,8 +45,7 @@ public class PickupUsingVisionNear extends SequentialCommandGroup {
                                                 new RunPPath(swerve, path1),
                                                 () -> innerNoteFirst),
 
-                                new GetNotePoseToRobot(swerve, llv,                                
-                                                CameraConstants.rearCamera.camname),
+                                new GetNotePoseToRobot(swerve, llv, true),
 
                                 cf.test(swerve));
 

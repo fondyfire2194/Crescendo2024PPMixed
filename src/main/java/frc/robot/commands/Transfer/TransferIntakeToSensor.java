@@ -13,6 +13,7 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
+import frc.robot.utils.AllianceUtil;
 
 public class TransferIntakeToSensor extends Command {
   private final TransferSubsystem m_transfer;
@@ -39,6 +40,7 @@ public class TransferIntakeToSensor extends Command {
     m_intake.noteMissed = false;
     if (RobotBase.isSimulation())
       m_swerve.remainingdistance = 10;// sim
+    m_intake.isIntaking3 = m_intake.isIntaking2;
     m_intake.isIntaking2 = m_intake.isIntaking1;
     m_intake.isIntaking1 = true;
   }
@@ -53,7 +55,7 @@ public class TransferIntakeToSensor extends Command {
     m_intake.noteMissed = m_swerve.isStopped() && endTimer.hasElapsed(m_noNoteTime);
 
     if (RobotBase.isSimulation())
-      m_swerve.remainingdistance = Math.abs(FieldConstants.FIELD_LENGTH / 2 - m_swerve.getX());// for note at intake sim
+      m_swerve.remainingdistance = Math.abs(m_swerve.pickupTargetX - m_swerve.getX());// for note at intake sim
 
   }
 

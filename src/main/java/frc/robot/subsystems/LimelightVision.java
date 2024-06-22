@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.LimelightHelpers;
+import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LLPipelines.pipelines;
 import monologue.Annotations.Log;
 import monologue.Logged;
@@ -47,8 +47,6 @@ public class LimelightVision extends SubsystemBase implements Logged {
   public String rname = CameraConstants.rearCamera.camname;
 
   Optional<Pose3d> temp;
-
-  public final int horPixels = 1;
 
   public LimelightVision() {
 
@@ -139,7 +137,7 @@ public class LimelightVision extends SubsystemBase implements Logged {
   }
 
   public double pixelsToPercent(double pixels) {
-    return pixels / horPixels;
+    return pixels / CameraConstants.rearCamera.horpixels;
   }
 
   /**

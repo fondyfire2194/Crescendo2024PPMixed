@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.CameraConstants;
-import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LLPipelines.pipelines;
 
 public class GetNotePoseToRobot extends Command {
@@ -20,7 +20,8 @@ public class GetNotePoseToRobot extends Command {
   private final SwerveSubsystem m_swerve;
 
   private final LimelightVision m_llv;
-  private final String m_camname;
+
+  private final boolean m_noend;
   double angleError = 0;
   private Timer elapsedTime = new Timer();
   public int movingAverageNumTaps = 20;;
@@ -32,10 +33,10 @@ public class GetNotePoseToRobot extends Command {
   public GetNotePoseToRobot(
       SwerveSubsystem swerve,
       LimelightVision llv,
-      String camname) {
+      boolean noend) {
     m_swerve = swerve;
     m_llv = llv;
-    m_camname = camname;
+    m_noend = noend;
 
   }
 
@@ -58,7 +59,7 @@ public class GetNotePoseToRobot extends Command {
   @Override
   public void execute() {
 
-    if (RobotBase.isReal() && LimelightHelpers.getTV(m_camname)) {
+    if (RobotBase.isReal() && LimelightHelpers.getTV(m_llv.rname)) {
 
       double boundingHorizontalPixels = m_llv.getBoundingHorizontalPixels();// get width of note seen
       // estimated distance in meters from camera geometry
@@ -89,6 +90,6 @@ public class GetNotePoseToRobot extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return RobotBase.isSimulation() && onepass || elapsedTime.hasElapsed(1);
+    return RobotBase.isSimulation() && onepass || !m_noend && elapsedTime.hasElapsed(3);
   }
 }

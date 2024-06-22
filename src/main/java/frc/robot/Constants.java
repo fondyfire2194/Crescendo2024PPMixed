@@ -440,6 +440,8 @@ public final class Constants {
                         public double yaw;
                         public double hfov;
                         public double vfov;
+                        public int horpixels;
+                        public int vertpixels;
                         public boolean isUsed = false;
                         public boolean isActive = false;
 
@@ -447,7 +449,9 @@ public final class Constants {
                                         final String camname,
                                         final String ipaddress,
                                         final double forward, final double side, final double up, final double roll,
-                                        final double pitch, final double yaw, final double hfov, double vfov,
+                                        final double pitch, final double yaw,
+                                        final double hfov, double vfov,
+                                        final int horpixels, final int vertpixels,
                                         final boolean isUsed,
                                         final boolean isActive) {
                                 this.camname = camname;
@@ -460,6 +464,8 @@ public final class Constants {
                                 this.yaw = yaw;
                                 this.hfov = hfov;
                                 this.vfov = vfov;
+                                this.horpixels = horpixels;
+                                this.vertpixels = vertpixels;
                                 this.isUsed = isUsed;
                                 this.isActive = isActive;
                         }
@@ -474,6 +480,8 @@ public final class Constants {
                                 7.5,
                                 63.3,
                                 49.7,
+                                1,
+                                1,
                                 true,
                                 false);
 
@@ -485,7 +493,9 @@ public final class Constants {
                                 29, // deg
                                 -7.5,
                                 63.3,
-                                49.7,
+                                49.7, 
+                                1,
+                                 1,
                                 true,
                                 false);
 
@@ -498,6 +508,8 @@ public final class Constants {
                                 0,
                                 63.3,
                                 49.7,
+                                1,
+                                1,
                                 true,
                                 false);
 

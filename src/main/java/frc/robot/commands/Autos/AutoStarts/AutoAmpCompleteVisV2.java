@@ -49,7 +49,7 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.runOnce(() -> swerve.ampActive = true),
                                 Commands.runOnce(() -> swerve.sourceActive = false),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-
+                                Commands.runOnce(() -> swerve.pickupTargetX = FieldConstants.FIELD_LENGTH / 2),
                                 cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
 
                                 Commands.race(
@@ -244,7 +244,7 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                 2,
                                 1,
                                 swerve,
-                                llv, 
+                                llv,
                                 innerNoteFirst);
         }
 }

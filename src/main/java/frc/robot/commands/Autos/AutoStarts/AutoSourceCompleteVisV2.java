@@ -50,6 +50,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.runOnce(() -> swerve.ampActive = false),
                                 Commands.runOnce(() -> swerve.sourceActive = true),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
+                                Commands.runOnce(() -> swerve.pickupTargetX = FieldConstants.FIELD_LENGTH / 2),
 
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                 // shoot first note
@@ -264,6 +265,6 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 4,
                                 swerve,
                                 llv,
-                                 innerNoteFirst);
+                                innerNoteFirst);
         }
 }
