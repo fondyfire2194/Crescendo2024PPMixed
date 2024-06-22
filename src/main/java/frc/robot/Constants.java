@@ -344,6 +344,17 @@ public final class Constants {
                                 new Pose2d(8.28, 0.75, new Rotation2d()),
                 };
 
+                public static Pose2d sbwfrpose = new Pose2d(1.34, 5.55, new Rotation2d(Units.degreesToRadians(180)));
+
+
+                public static Pose2d[] wingNotePickups = {
+                        new Pose2d(),
+                        new Pose2d(2.8, 6.9, new Rotation2d(Units.degreesToRadians(-135))),
+                        new Pose2d(2.8, 5.55, new Rotation2d(Math.PI)),
+                        new Pose2d(2.7, 4.09, new Rotation2d(Units.degreesToRadians(150))),
+                        
+        };
+
                 public static Pose2d[] centerNotesPickup = {
                                 new Pose2d(),
                                 new Pose2d(8.26, 7.44, new Rotation2d(Units.degreesToRadians(193))),
