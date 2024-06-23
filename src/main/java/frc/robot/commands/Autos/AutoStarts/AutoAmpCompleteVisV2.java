@@ -101,8 +101,9 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                                                 amppaths.AmpToNearCenter1.name()))),
                                                 () -> innerNoteFirst),
                                 new AutoAlignNote(swerve, 5, true),
-                                new DriveToPickupNote(swerve, transfer, intake),
-                                cf.doIntakeDelayed(2, 10));
+                                Commands.parallel(
+                                                new DriveToPickupNote(swerve, transfer, intake),
+                                                cf.doIntake(5)));
         }
 
         public Command moveShootCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
@@ -136,9 +137,9 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
 
                                 new AutoAlignNote(swerve, 5, true),
 
-                                new DriveToPickupNote(swerve, transfer, intake),
-
-                                cf.doIntake(3));
+                                Commands.parallel(
+                                                new DriveToPickupNote(swerve, transfer, intake),
+                                                cf.doIntake(5)));
 
         }
 

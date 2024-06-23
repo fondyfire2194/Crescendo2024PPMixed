@@ -38,6 +38,7 @@ import frc.robot.commands.JogClimber;
 import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommands;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
+import frc.robot.commands.Drive.AutoAlignNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.RotateToFindNote;
 import frc.robot.commands.Drive.TeleopSwerve;
@@ -165,6 +166,8 @@ public class RobotContainer implements Logged {
                                 new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
                 SmartDashboard.putData("RotateToNote",
                                 new RotateToFindNote(m_swerve, 45));
+                 SmartDashboard.putData("AlignToNote",
+                                new AutoAlignNote(m_swerve, 1,false));
                
                 SmartDashboard.putData("RunTestPickupandShoot",
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,

@@ -86,7 +86,7 @@ public class DriveToPickupNote extends Command {
     SmartDashboard.putNumber("DtoPuN/RmngDist", llyangle);
 
     toofar = AllianceUtil.isRedAlliance() && FieldConstants.FIELD_LENGTH / 2 > m_swerve.getX()
-        || !AllianceUtil.isRedAlliance() && m_swerve.getX() < FieldConstants.FIELD_LENGTH / 2;
+        || !AllianceUtil.isRedAlliance() && m_swerve.getX() > FieldConstants.FIELD_LENGTH / 2;
 
   }
 

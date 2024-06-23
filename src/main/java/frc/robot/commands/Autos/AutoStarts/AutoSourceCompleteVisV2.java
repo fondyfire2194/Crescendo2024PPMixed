@@ -102,8 +102,9 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                                                                 .name()))),
                                                 () -> innerNoteFirst),
                                 new AutoAlignNote(swerve, 5, true),
-                                new DriveToPickupNote(swerve, transfer, intake),
-                                cf.doIntakeDelayed(2, 3));
+                                Commands.parallel(
+                                                new DriveToPickupNote(swerve, transfer, intake),
+                                                cf.doIntake(5)));
         }
 
         public Command moveShootCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
@@ -136,8 +137,9 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                                                                 .name()))),
                                                 () -> innerNoteFirst),
                                 new AutoAlignNote(swerve, 5, true),
-                                new DriveToPickupNote(swerve, transfer, intake),
-                                cf.doIntake(3));
+                                Commands.parallel(
+                                        new DriveToPickupNote(swerve, transfer, intake),
+                                        cf.doIntake(5)));
         }
 
         public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,

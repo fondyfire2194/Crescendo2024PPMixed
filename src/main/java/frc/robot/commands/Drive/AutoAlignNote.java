@@ -7,6 +7,7 @@ package frc.robot.commands.Drive;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
@@ -30,7 +31,7 @@ public class AutoAlignNote extends Command {
     m_swerve = swerve;
     m_endAtTargets = endAtTargets;
     m_toleranceDegrees = toleranceDegrees;
-  
+
     addRequirements(m_swerve);
   }
 
@@ -43,7 +44,7 @@ public class AutoAlignNote extends Command {
     m_alignTargetPID.setIntegratorRange(-.01, .01);
     m_alignTargetPID.setI(.0001);
     m_alignTargetPID.reset();
-    m_swerve.targetPose = FieldConstants.centerNotes[m_swerve.targetNote];
+    m_swerve.targetPose = AllianceUtil.flipFieldAngle(FieldConstants.centerNotesPickup[m_swerve.targetNote]);
     elapsedTime = new Timer();
     elapsedTime.reset();
     elapsedTime.start();
@@ -70,6 +71,7 @@ public class AutoAlignNote extends Command {
   public void end(boolean interrupted) {
     m_alignTargetPID.reset();
     m_swerve.drive(0, 0, 0, false, true, false);
+    SmartDashboard.putString("Aligned", "to Note");
   }
 
   // Returns true when the command should end.
