@@ -90,12 +90,16 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                 return Commands.sequence(
                                 Commands.either(
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
-                                                                                .name())),
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
-                                                                                .name())),
+                                                Commands.sequence(
+                                                                Commands.runOnce(() -> swerve.targetNote = 4),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
+                                                                                                .name()))),
+                                                Commands.sequence(
+                                                                Commands.runOnce(() -> swerve.targetNote = 5),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
+                                                                                                .name()))),
                                                 () -> innerNoteFirst),
                                 new AutoAlignNote(swerve, 5, true),
                                 new DriveToPickupNote(swerve, transfer, intake),
@@ -120,12 +124,16 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                 return Commands.sequence(
                                 Commands.either(
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
-                                                                                .name())),
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
-                                                                                .name())),
+                                                Commands.sequence(
+                                                                Commands.runOnce(() -> swerve.targetNote = 5),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
+                                                                                                .name()))),
+                                                Commands.sequence(
+                                                                Commands.runOnce(() -> swerve.targetNote = 4),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
+                                                                                                .name()))),
                                                 () -> innerNoteFirst),
                                 new AutoAlignNote(swerve, 5, true),
                                 new DriveToPickupNote(swerve, transfer, intake),
