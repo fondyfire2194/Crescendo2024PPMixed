@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
-
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -45,6 +44,9 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                         boolean pathfind) {
 
                 addCommands( // note
+                                Commands.runOnce(() -> transfer.simnoteatintake = false),
+                                Commands.runOnce(() -> intake.resetIsIntakingSim()),
+
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
                                 Commands.runOnce(() -> swerve.ampActive = true),
                                 Commands.runOnce(() -> swerve.sourceActive = false),
@@ -151,8 +153,8 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                 return Commands.parallel(
                                 new PickupUsingVision(
                                                 cf,
-                                                pf.pathMaps.get(amppaths.AmpToCenter1.name()),
                                                 pf.pathMaps.get(amppaths.AmpToCenter2.name()),
+                                                pf.pathMaps.get(amppaths.AmpToCenter1.name()),
                                                 1,
                                                 2,
                                                 transfer, intake, swerve,
@@ -161,7 +163,7 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.sequence(
                                                 cf.stopShooter(),
                                                 Commands.waitSeconds(2),
-                                                cf.doIntake(300)));
+                                                cf.doIntake(3)));
         }
 
         public Command pickupCenter1_2PF(CommandFactory cf, boolean innerNoteFirst) {
@@ -169,9 +171,9 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                 cf.autopathfind(AllianceUtil.getAlliancePose(FieldConstants.ampNoteGappose), 0),
                                 Commands.either(
                                                 cf.autopathfind(AllianceUtil.flipFieldAngle(
-                                                                FieldConstants.centerNotesPickup[1]), 2),
-                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
                                                                 FieldConstants.centerNotesPickup[2]), 2),
+                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
+                                                                FieldConstants.centerNotesPickup[1]), 2),
                                                 () -> innerNoteFirst),
                                 cf.doIntakeDelayed(2, 3));
         }
@@ -216,8 +218,8 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                                 .name()),
                                                 pf.pathMaps.get(amppaths.AmpShootToCenter1
                                                                 .name()),
-                                                2,
                                                 1,
+                                                2,
                                                 transfer, intake, swerve,
                                                 switchoverdistance,
                                                 innerNoteFirst),
@@ -230,9 +232,9 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                 return Commands.sequence(
                                 Commands.either(
                                                 cf.autopathfind(AllianceUtil.flipFieldAngle(
-                                                                FieldConstants.centerNotesPickup[2]), 2),
-                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
                                                                 FieldConstants.centerNotesPickup[1]), 2),
+                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
+                                                                FieldConstants.centerNotesPickup[2]), 2),
                                                 () -> innerNoteFirst),
                                 cf.doIntakeDelayed(1, 3));
         }

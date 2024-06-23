@@ -24,7 +24,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.CameraConstants;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LLPipelines;
 import frc.robot.utils.LimelightHelpers;
 import monologue.Annotations.Log;
@@ -258,7 +260,7 @@ public class Robot extends TimedRobot implements Logged {
       m_autonomousCommand.cancel();
     }
     if (RobotBase.isSimulation() || !autoHasRun) {
-      m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(8 , 1, new Rotation2d(0)));
+      m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(8, 1, new Rotation2d(0)));
       m_robotContainer.m_transfer.simnoteatintake = false;
     }
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
@@ -309,5 +311,10 @@ public class Robot extends TimedRobot implements Logged {
   @Override
   public void simulationPeriodic() {
     REVPhysicsSim.getInstance().run();
+    double a1 = AllianceUtil.flipFieldAngle(FieldConstants.centerNotesPickup[1]).getRotation().getDegrees();
+ double a2 = AllianceUtil.flipFieldAngle(FieldConstants.centerNotesPickup[2]).getRotation().getDegrees();
+
+ SmartDashboard.putNumber("A1", a1);
+ SmartDashboard.putNumber("A2", a2);
   }
 }

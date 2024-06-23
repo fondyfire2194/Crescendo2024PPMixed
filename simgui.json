@@ -21,6 +21,11 @@
       "/SmartDashboard/ViewArmShooterData": "Command"
     },
     "windows": {
+      "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Amp Start": {
         "window": {
           "visible": true
@@ -65,9 +70,6 @@
     }
   },
   "NetworkTables": {
-    "Persistent Values": {
-      "open": false
-    },
     "transitory": {
       "Monologue": {
         "m_swerve": {

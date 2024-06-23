@@ -92,6 +92,12 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
     return runIntake;
   }
 
+  public void resetIsIntakingSim() {
+    isIntaking1 = false;
+    isIntaking2 = false;
+    isIntaking3 = false;
+  }
+
   @Log.NT(key = "intakerpm")
   public double getRPM() {
     return intakeEncoder.getVelocity();

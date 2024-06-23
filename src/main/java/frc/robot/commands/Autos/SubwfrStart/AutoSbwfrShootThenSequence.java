@@ -4,6 +4,7 @@
 
 package frc.robot.commands.Autos.SubwfrStart;
 
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -54,7 +55,6 @@ public class AutoSbwfrShootThenSequence extends SequentialCommandGroup {
                         sbwfrpaths path6) {
 
                 addCommands(
-
                                 sac.setsbwrstart(swerve, cf),
 
                                 sac.sbwfrShoot(cf),

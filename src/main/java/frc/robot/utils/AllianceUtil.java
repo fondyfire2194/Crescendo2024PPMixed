@@ -35,7 +35,10 @@ public class AllianceUtil {
     if (isRedAlliance()) {
       t2d = pose.getTranslation();
       double rads = pose.getRotation().getRadians();
-      return new Pose2d(t2d, new Rotation2d(rads + Math.PI));
+      rads += Math.PI;
+      if (rads > Math.PI)
+        rads = 2 * Math.PI - rads;
+      return new Pose2d(t2d, new Rotation2d(rads));
     } else
       return pose;
   }
@@ -76,8 +79,6 @@ public class AllianceUtil {
     return isRedAlliance() ? GeometryUtil
         .flipFieldPose(pose) : pose;
   }
-
-  
 
   public static double getWingNoteX() {
     if (isRedAlliance())

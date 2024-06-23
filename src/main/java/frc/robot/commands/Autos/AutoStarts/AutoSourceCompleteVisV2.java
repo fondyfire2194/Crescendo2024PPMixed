@@ -105,7 +105,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 // This command is decided by whether a note is present. If it is shot it if not
                                 // turn and move up center line to find note
                                 Commands.either(
-                                                moveShootCenter4_5(cf, pf, swerve, !innerNoteFirst, pathfind),
+                                                moveShootCenter4_5(cf, pf, swerve, innerNoteFirst, pathfind),
                                                 getAnotherNote(swerve, transfer, intake, cf, pf),
                                                 () -> transfer.noteAtIntake() && !transfer.skipSecondNoteInSim),
                                 // Same go shoot decision as earlier except turn 90 and search on center line
@@ -131,6 +131,8 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                 return Commands.sequence(
                                 Commands.runOnce(() -> transfer.simnoteatintake = false),
+                                Commands.runOnce(() -> intake.resetIsIntakingSim()),
+
                                 new RotateToAngle(swerve, -90),
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,

@@ -4,6 +4,8 @@
 
 package frc.robot.Factories;
 
+import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -261,7 +263,7 @@ public class AutoFactory {
                                                 m_swerve, m_intake, m_transfer, m_llv, 1.75, true, true);
                         case 14:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, true);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false, true);
 
                         case 21:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
