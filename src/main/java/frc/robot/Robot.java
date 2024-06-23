@@ -105,7 +105,7 @@ public class Robot extends TimedRobot implements Logged {
     DriverStation.startDataLog(DataLogManager.getLog());
     // Monologue.setupMonologue(this, "/Monologue", false, true);
 
-    FollowPathCommand.warmupCommand().schedule();
+    // FollowPathCommand.warmupCommand().schedule();
 
     // System.gc();
 
@@ -190,6 +190,9 @@ public class Robot extends TimedRobot implements Logged {
 
   @Override
   public void autonomousInit() {
+    m_robotContainer.m_swerve.inhibitVision = false;
+    // m_robotContainer.m_swerve.actualstartPose = m_robotContainer.m_swerve.getPose();
+
     m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
     m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
@@ -199,6 +202,7 @@ public class Robot extends TimedRobot implements Logged {
       m_robotContainer.m_intake.isIntaking3 = false;
 
     }
+
     m_robotContainer.m_arm.enable();
     m_robotContainer.m_arm.enableArm = true;
 
@@ -259,10 +263,14 @@ public class Robot extends TimedRobot implements Logged {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    if (RobotBase.isSimulation() || !autoHasRun) {
-      m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(8, 1, new Rotation2d(0)));
-      m_robotContainer.m_transfer.simnoteatintake = false;
-    }
+
+    m_robotContainer.m_swerve.actualstartPose = m_robotContainer.m_swerve.getPose();
+
+    // if (RobotBase.isSimulation() || !autoHasRun) {
+    // m_robotContainer.m_swerve.resetPoseEstimator(new Pose2d(8, 1, new
+    // Rotation2d(0)));
+    // m_robotContainer.m_transfer.simnoteatintake = false;
+    // }
     m_robotContainer.m_arm.armMotor.setIdleMode(IdleMode.kBrake);
 
     m_robotContainer.m_swerve.setIdleMode(true);
@@ -312,9 +320,9 @@ public class Robot extends TimedRobot implements Logged {
   public void simulationPeriodic() {
     REVPhysicsSim.getInstance().run();
     double a1 = AllianceUtil.flipFieldAngle(FieldConstants.centerNotesPickup[1]).getRotation().getDegrees();
- double a2 = AllianceUtil.flipFieldAngle(FieldConstants.centerNotesPickup[2]).getRotation().getDegrees();
+    double a2 = AllianceUtil.flipFieldAngle(FieldConstants.centerNotesPickup[2]).getRotation().getDegrees();
 
- SmartDashboard.putNumber("A1", a1);
- SmartDashboard.putNumber("A2", a2);
+    SmartDashboard.putNumber("A1", a1);
+    SmartDashboard.putNumber("A2", a2);
   }
 }

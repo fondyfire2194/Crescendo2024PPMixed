@@ -17,9 +17,10 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
-import frc.robot.commands.Autos.Autos.PickupUsingVision;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
+import frc.robot.commands.Drive.AutoAlignNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
+import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -40,90 +41,109 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                         TransferSubsystem transfer,
                         LimelightVision llv,
                         double switchoverdistance,
-                        boolean innerNoteFirst,
-                        boolean pathfind) {
+                        boolean innerNoteFirst) {
 
-                addCommands(
-                                // setup
+                addCommands( // note
+                                Commands.runOnce(() -> transfer.simnoteatintake = false),
+                                Commands.runOnce(() -> intake.resetIsIntakingSim()),
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
                                 Commands.runOnce(() -> swerve.ampActive = false),
                                 Commands.runOnce(() -> swerve.sourceActive = true),
                                 Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
                                 Commands.runOnce(() -> swerve.pickupTargetX = FieldConstants.FIELD_LENGTH / 2),
-
                                 cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                                // shoot first note
 
                                 Commands.race(
                                                 Commands.waitSeconds(.75),
                                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                                 Constants.subwfrShooterSpeed, 20)),
-
                                 Commands.parallel(
                                                 cf.transferNoteToShooterCommand(),
-
-                                                // pick up first note either 4 or 5 using full path or near path the
-                                                // rear camera
-                                                Commands.either(
-                                                                pickupCenter4_5PF(cf, innerNoteFirst),
-                                                                pickupCenter4_5(cf, pf, swerve, transfer, intake,
-                                                                                switchoverdistance,
-                                                                                innerNoteFirst),
-                                                                () -> pathfind)),
-
-                                // if a note was picked up then go shoot it. If not do U move to try the
-                                // adjacent note
+                                                pickupCenter4_5(cf, pf, swerve, transfer, intake, innerNoteFirst)),
+                                // if note in intake go shoot it or try the adjacent one if not
                                 Commands.either(
-                                                moveShootCenter4_5(cf, pf, swerve, innerNoteFirst, pathfind),
+                                                moveShootCenter1_2(cf, pf, swerve, innerNoteFirst),
                                                 tryOtherNote(pf, cf, swerve, transfer, innerNoteFirst),
                                                 () -> transfer.noteAtIntake() && !transfer.skipFirstNoteInSim),
 
-                                // This command selector has 2 conditions where it doesn't have a note and one
-                                // where it does
-                                // The having shot condition means the robot is away from center field so
-                                // pickupaftershoot will happen
-                                // any other condition means Commands.none will happen. Either way the next
-                                // command has to take care of it
-
+                                // there may be a note in the intake or if not the robot can be at the shoot
+                                // position or at the center line. If there is a note then go shoot it
                                 Commands.either(
-                                                Commands.either(
-                                                                pickupNoteAfterShootPF(cf, innerNoteFirst),
-                                                                pickUpNoteAfterShoot(pf, cf, swerve, transfer,
-                                                                                intake, switchoverdistance,
-                                                                                innerNoteFirst),
-                                                                () -> pathfind),
-
+                                                pickUpNoteAfterShoot(pf, cf, swerve, transfer, intake,
+                                                                innerNoteFirst),
                                                 Commands.none(),
                                                 () -> !transfer.noteAtIntake()
-                                                                && (!AllianceUtil.isRedAlliance()
-                                                                                && swerve.getX() < (FieldConstants.FIELD_LENGTH
-                                                                                                / 2 - 2)
-                                                                                || AllianceUtil.isRedAlliance()
-                                                                                                && swerve.getX() > (FieldConstants.FIELD_LENGTH
-                                                                                                                / 2
-                                                                                                                + 2))),
-                                // This command is decided by whether a note is present. If it is shot it if not
-                                // turn and move up center line to find note
-                                Commands.either(
-                                                moveShootCenter4_5(cf, pf, swerve, innerNoteFirst, pathfind),
-                                                getAnotherNote(swerve, transfer, intake, cf, pf),
-                                                () -> transfer.noteAtIntake() && !transfer.skipSecondNoteInSim),
-                                // Same go shoot decision as earlier except turn 90 and search on center line
-                                // for notes
-                                Commands.either(
-                                                new RunPPath(swerve, pf.pathMaps.get(sourcepaths.SourceShootToCenter4
-                                                                .name())),
-                                                Commands.none(),
-                                                () -> (!AllianceUtil.isRedAlliance()
-                                                                && swerve.getX() < (FieldConstants.FIELD_LENGTH
-                                                                                / 2 - 2)
+                                                                && !AllianceUtil.isRedAlliance()
+                                                                && swerve.getX() < (FieldConstants.FIELD_LENGTH / 2 - 2)
                                                                 || AllianceUtil.isRedAlliance()
                                                                                 && swerve.getX() > (FieldConstants.FIELD_LENGTH
-                                                                                                / 2
-                                                                                                + 2))),
+                                                                                                / 2 + 2)),                               
+                                                moveShootCenter1_2(cf, pf, swerve, !innerNoteFirst),
+                                                getAnotherNote(swerve, transfer, intake, cf, pf),
+                                                () -> transfer.noteAtIntake()));
+        }
 
-                                getAnotherNote(swerve, transfer, intake, cf, pf));
+        public Command pickupCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
+                        TransferSubsystem transfer, IntakeSubsystem intake,
+                        boolean innerNoteFirst) {
 
+                return Commands.sequence(
+                                Commands.either(
+                                                new RunPPath(swerve,
+                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
+                                                                                .name())),
+                                                new RunPPath(swerve,
+                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
+                                                                                .name())),
+                                                () -> innerNoteFirst),
+                                new AutoAlignNote(swerve, 5, true),
+                                new DriveToPickupNote(swerve, transfer, intake),
+                                cf.doIntakeDelayed(2, 3));
+        }
+
+        public Command moveShootCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
+                        boolean innerNoteFirst) {
+                return Commands.either(
+                                new CenterToShoot(cf, pf.pathMaps.get(
+                                                sourcepaths.Center4ToSourceShoot
+                                                                .name()),
+                                                swerve),
+                                new CenterToShoot(cf, pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
+                                                .name()),
+                                                swerve),
+                                () -> innerNoteFirst);
+        }
+
+        public Command pickUpNoteAfterShoot(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
+                        TransferSubsystem transfer, IntakeSubsystem intake, boolean innerNoteFirst) {
+
+                return Commands.sequence(
+                                Commands.either(
+                                                new RunPPath(swerve,
+                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
+                                                                                .name())),
+                                                new RunPPath(swerve,
+                                                                pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
+                                                                                .name())),
+                                                () -> innerNoteFirst),
+                                new AutoAlignNote(swerve, 5, true),
+                                new DriveToPickupNote(swerve, transfer, intake),
+                                cf.doIntake(3));
+        }
+
+        public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
+                        TransferSubsystem transfer, boolean innerNoteFirst) {
+                return Commands.sequence(
+                                Commands.parallel(
+                                                Commands.either(
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4
+                                                                                                .name())),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5
+                                                                                                .name())),
+                                                                () -> innerNoteFirst),
+                                                cf.doIntake(2)));
         }
 
         Command getAnotherNote(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,
@@ -131,9 +151,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
 
                 return Commands.sequence(
                                 Commands.runOnce(() -> transfer.simnoteatintake = false),
-                                Commands.runOnce(() -> intake.resetIsIntakingSim()),
-
-                                new RotateToAngle(swerve, -90),
+                                new RotateToAngle(swerve, 90),
                                 Commands.deadline(
                                                 new TryForAnotherNote(swerve, transfer, intake,
                                                                 CameraConstants.rearCamera.camname),
@@ -161,93 +179,4 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 () -> transfer.noteAtIntake()));
 
         }
-
-        public Command pickupCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, IntakeSubsystem intake, double switchoverdistance,
-                        boolean innerNoteFirst) {
-                return Commands.parallel(
-                                new PickupUsingVision(cf,
-                                                pf.pathMaps.get(sourcepaths.SourceToCenter4.name()),
-                                                pf.pathMaps.get(sourcepaths.SourceToCenter5.name()),
-                                                4,
-                                                5,
-                                                transfer, intake, swerve,
-                                                switchoverdistance,
-                                                innerNoteFirst),
-                                cf.doIntakeDelayed(2, 3));
-        }
-
-        public Command pickupCenter4_5PF(CommandFactory cf, boolean innerNoteFirst) {
-                return Commands.sequence(
-                                Commands.either(
-                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
-                                                                FieldConstants.centerNotesPickup[4]), 2),
-                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
-                                                                FieldConstants.centerNotesPickup[5]), 2),
-                                                () -> innerNoteFirst),
-                                cf.doIntakeDelayed(3, 3));
-        }
-
-        public Command moveShootCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
-                        boolean innerNoteFirst, boolean pathfind) {
-                return Commands.either(
-                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                sourcepaths.Center4ToSourceShoot
-                                                                .name()),
-                                                swerve, pathfind, false),
-                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                sourcepaths.Center5ToSourceShoot
-                                                                .name()),
-                                                swerve, pathfind, false),
-                                () -> innerNoteFirst);
-        }
-
-        public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, boolean innerNoteFirst) {
-                return (Commands.sequence(
-                                Commands.parallel(
-                                                Commands.either(
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5
-                                                                                                .name())),
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4
-                                                                                                .name())),
-                                                                () -> innerNoteFirst),
-                                                cf.doIntake(2))));
-
-        }
-
-        public Command pickUpNoteAfterShoot(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, IntakeSubsystem intake, double switchoverdistance,
-                        boolean innerNoteFirst) {
-
-                return Commands.parallel(
-                                new PickupUsingVision(
-                                                cf,
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5
-                                                                .name()),
-                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4
-                                                                .name()),
-                                                5,
-                                                4,
-                                                transfer, intake, swerve,
-                                                switchoverdistance,
-                                                innerNoteFirst),
-
-                                cf.doIntake(2));
-
-        }
-
-        public Command pickupNoteAfterShootPF(CommandFactory cf, boolean innerNoteFirst) {
-                return Commands.sequence(
-                                Commands.either(
-                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
-                                                                FieldConstants.centerNotesPickup[5]), 2),
-                                                cf.autopathfind(AllianceUtil.flipFieldAngle(
-                                                                FieldConstants.centerNotesPickup[4]), 2),
-                                                () -> innerNoteFirst),
-                                cf.doIntakeDelayed(1, 3));
-        }
-
 }

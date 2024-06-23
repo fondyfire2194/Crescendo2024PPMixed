@@ -60,12 +60,15 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   private Pose2d simOdometryPose = new Pose2d();
 
   private boolean lookForNote;
-public double pickupTargetX;
+  @Log.NT(key = "pickuptargetX")
+  public double pickupTargetX;
   private double keepAngle = 0.0;
   private double timeSinceRot = 0.0;
   private double lastRotTime = 0.0;
   private double timeSinceDrive = 0.0;
   private double lastDriveTime = 0.0;
+  @Log.NT(key="actualstartpose")
+  public Pose2d actualstartPose = new Pose2d();
 
   private static final Matrix<N3, N1> ODOMETRY_STDDEV = VecBuilder.fill(0.03, 0.03, Math.toRadians(1));
   private static final Matrix<N3, N1> VISION_STDDEV = VecBuilder.fill(0.5, 0.5, Math.toRadians(40));
@@ -851,7 +854,9 @@ public double pickupTargetX;
 
   public boolean noteposecreated;
 
-public boolean notePoseCalculated;
+  public boolean notePoseCalculated;
+
+public int targetNote;
 
   public void setPathRunning() {
     pathRunning = true;

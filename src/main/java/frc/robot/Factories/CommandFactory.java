@@ -64,12 +64,12 @@ public class CommandFactory {
         }
 
         public Command autopathfind(Pose2d targetPose, PathConstraints pc, double goalendvelocity,
-                        double rotationdelaydistsance) {
+                        double rotationdelaydistance) {
                 return AutoBuilder.pathfindToPose(
                                 targetPose,
                                 pc,
                                 goalendvelocity,
-                                0);
+                                rotationdelaydistance);
         }
 
         public Command autopathfind(Pose2d targetPose, double goalendvelocity, double rotationdelaydistance) {

@@ -15,7 +15,6 @@ import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVisV2;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVisV2;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommands;
-import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommandsPF;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.ArmSubsystem;
@@ -33,8 +32,6 @@ public class AutoFactory {
         private final LimelightVision m_llv;
 
         private final SubwooferAutoCommands m_sac;
-        private final SubwooferAutoCommandsPF m_sacPF;
-
         public SendableChooser<Integer> m_subwfrStartChooser = new SendableChooser<Integer>();
 
         public final SendableChooser<Integer> m_ampStartChooser = new SendableChooser<Integer>();
@@ -69,7 +66,7 @@ public class AutoFactory {
 
         public boolean validChoice;
 
-        public AutoFactory(PathFactory pf, CommandFactory cf, SubwooferAutoCommands sac, SubwooferAutoCommandsPF sacpf,
+        public AutoFactory(PathFactory pf, CommandFactory cf, SubwooferAutoCommands sac,
                         SwerveSubsystem swerve,
                         ShooterSubsystem shooter,
                         ArmSubsystem arm,
@@ -77,7 +74,6 @@ public class AutoFactory {
                 m_pf = pf;
                 m_cf = cf;
                 m_sac = sac;
-                m_sacPF = sacpf;
                 m_swerve = swerve;
                 m_transfer = transfer;
                 m_intake = intake;
@@ -92,16 +88,13 @@ public class AutoFactory {
                 m_subwfrStartChooser.addOption("W2-C3-SBWFR-W3", 5);
                 m_subwfrStartChooser.addOption("W2-C3-SBWFR-W1", 6);
                 m_subwfrStartChooser.addOption("W2-C3-W2-C3", 7);
-                m_subwfrStartChooser.addOption("W2-W1-W3 PF", 8);
-                m_subwfrStartChooser.addOption("W2-C3-SBWFR-W3 PF", 9);
-                maxsbwfrauto = 9;
+
+                maxsbwfrauto = 7;
 
                 minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
                 m_sourceStartChooser.addOption("C4 Then C5 Vis", 11);
                 m_sourceStartChooser.addOption("C5 Then C4 Vis", 12);
-                m_sourceStartChooser.addOption("C4 Then C5 PF", 13);
-                m_sourceStartChooser.addOption("C5 Then C4 PF", 14);
 
                 maxsourceauto = 12;
 
@@ -109,10 +102,8 @@ public class AutoFactory {
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("C2 then C1 Vis", 21);
                 m_ampStartChooser.addOption("C1 then C2 Vis", 22);
-                m_ampStartChooser.addOption("C2 then C1 PF", 23);
-                m_ampStartChooser.addOption("C1 then C2 PF", 24);
 
-                maxampauto = 24;
+                maxampauto = 22;
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
                 SmartDashboard.putData("Amp Start", m_ampStartChooser);
@@ -232,51 +223,19 @@ public class AutoFactory {
                                                 m_sac.shootbydistance(m_cf),
                                                 m_sac.move(sbwfrpaths.Wing2ToCenter3, m_swerve, m_pf));
 
-                        case 8:
-                                return Commands.sequence(
-                                                m_sac.setsbwrstart(m_swerve, m_cf),
-                                                m_sacPF.moveAndPickupWing(m_cf, 2),
-                                                m_sacPF.sbwfrmoveandshoot(m_cf),
-                                                m_sacPF.moveAndPickupWing(m_cf, 1),
-                                                m_sacPF.sbwfrmoveandshoot(m_cf),
-                                                m_sacPF.sbwfrmoveandshoot(m_cf),
-                                                m_sacPF.moveAndPickupWing(m_cf, 3),
-                                                m_sacPF.sbwfrmoveandshoot(m_cf));
-                        case 9:
-                                return Commands.sequence(
-                                                m_sac.setsbwrstart(m_swerve, m_cf),
-                                                m_sacPF.moveAndPickupWing(m_cf, 2),
-                                                m_sacPF.shootbydistance(m_cf),
-                                                m_sacPF.moveAndPickupCenter(m_cf, 3),
-                                                m_sacPF.sbwfrmoveandshoot(m_cf),
-                                                m_sacPF.sbwfrmoveandshoot(m_cf),
-                                                m_sacPF.moveAndPickupWing(m_cf, 3),
-                                                m_sacPF.sbwfrmoveandshoot(m_cf));
                         case 11:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, false);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true);
                         case 12:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false, false);
-                        case 13:
-                                return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, true);
-                        case 14:
-                                return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false, true);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false);
 
                         case 21:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, false);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true);
                         case 22:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false, false);
-                        case 23:
-                                return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, true);
-                        case 24:
-                                return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false, true);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false);
 
                         default:
                                 return Commands.none();

@@ -286,7 +286,7 @@ public final class Constants {
                 public static double maxMovingShotDistance = Units.feetToMeters(30);
 
                 public static PathConstraints pfConstraints = new PathConstraints(
-                                3.25, 4.0,
+                                3., 4.0,
                                 Units.degreesToRadians(360), Units.degreesToRadians(540));
 
                 public static PathConstraints pickUpConstraints = new PathConstraints(
@@ -337,11 +337,11 @@ public final class Constants {
 
                 public static Pose2d[] centerNotes = {
                                 new Pose2d(),
-                                new Pose2d(8.28, 7.45, new Rotation2d()),
-                                new Pose2d(8.28, 5.77, new Rotation2d()),
-                                new Pose2d(8.28, 4.10, new Rotation2d()),
-                                new Pose2d(8.28, 2.44, new Rotation2d()),
-                                new Pose2d(8.28, 0.75, new Rotation2d()),
+                                new Pose2d(8., 7.45, new Rotation2d()),
+                                new Pose2d(8., 5.77, new Rotation2d()),
+                                new Pose2d(8., 4.10, new Rotation2d()),
+                                new Pose2d(8., 2.22, new Rotation2d(Units.degreesToRadians(-150))),
+                                new Pose2d(8., 0.77, new Rotation2d(Math.PI)),
                 };
 
                 public static Pose2d sbwfrpose = new Pose2d(1.34, 5.55, new Rotation2d(Units.degreesToRadians(180)));

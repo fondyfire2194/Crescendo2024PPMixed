@@ -20,29 +20,24 @@ import frc.robot.utils.LLPipelines.pipelines;
 
 public class DriveToPickupNote extends Command {
   /** Creates a new AlignToTagSetShootSpeed. */
-
   private final SwerveSubsystem m_swerve;
   private final TransferSubsystem m_transfer;
   private final IntakeSubsystem m_intake;
-  private final String m_camname;
+
   double angleError = 0;
   private Timer elapsedTime = new Timer();
-  double startPosition;
-  private int m_centerNoteNumber;
+  private boolean toofar;
   private double llyangle;
-  private double pickupDistance = .15;
+  private String m_camname = CameraConstants.rearCamera.camname;
 
   public DriveToPickupNote(
       SwerveSubsystem swerve,
       TransferSubsystem transfer,
-      IntakeSubsystem intake,
-      int centerNoteNumber,
-      String camname) {
+      IntakeSubsystem intake) {
+
     m_swerve = swerve;
     m_transfer = transfer;
     m_intake = intake;
-    m_centerNoteNumber = centerNoteNumber;
-    m_camname = camname;
     addRequirements(m_swerve);
   }
 
@@ -57,7 +52,12 @@ public class DriveToPickupNote extends Command {
 
     SmartDashboard.putNumber("DtoPuN/swposnX", m_swerve.getX());
     SmartDashboard.putNumber("DtoPuN/swposnY", m_swerve.getY());
-    m_swerve.targetPose = FieldConstants.centerNotes[m_centerNoteNumber];
+    int nn = m_swerve.targetNote;
+    if (nn < 0)
+      nn = 0;
+    if (nn > 5)
+      nn = 5;
+    m_swerve.targetPose = FieldConstants.centerNotes[nn];
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -75,8 +75,6 @@ public class DriveToPickupNote extends Command {
 
     SmartDashboard.putNumber("DtoPuN/LLYangle", llyangle);
 
-    m_swerve.remainingdistance = m_swerve.getDistanceFromNote(m_centerNoteNumber);
-
     m_swerve.drive(
         -SwerveConstants.notePickupSpeed,
         0,
@@ -86,6 +84,9 @@ public class DriveToPickupNote extends Command {
         false);
 
     SmartDashboard.putNumber("DtoPuN/RmngDist", llyangle);
+
+    toofar = AllianceUtil.isRedAlliance() && FieldConstants.FIELD_LENGTH / 2 > m_swerve.getX()
+        || !AllianceUtil.isRedAlliance() && m_swerve.getX() < FieldConstants.FIELD_LENGTH / 2;
 
   }
 
@@ -101,6 +102,7 @@ public class DriveToPickupNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transfer.noteAtIntake() || m_intake.noteMissed || RobotBase.isSimulation() && m_transfer.simnoteatintake;
+    return m_transfer.noteAtIntake() || m_intake.noteMissed || toofar
+        || RobotBase.isSimulation() && m_transfer.simnoteatintake;
   }
 }

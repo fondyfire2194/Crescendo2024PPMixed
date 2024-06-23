@@ -36,10 +36,8 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommands;
-import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommandsPF;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
-import frc.robot.commands.Drive.GetNotePoseToRobot;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.RotateToFindNote;
 import frc.robot.commands.Drive.TeleopSwerve;
@@ -97,7 +95,7 @@ public class RobotContainer implements Logged {
         public final AutoFactory m_af;
 
         private SubwooferAutoCommands m_sac;
-        private SubwooferAutoCommandsPF m_sacpf;
+
 
         BooleanSupplier keepAngle;
 
@@ -144,8 +142,8 @@ public class RobotContainer implements Logged {
                 registerNamedCommands();
 
                 m_sac = new SubwooferAutoCommands(m_swerve, m_cf);
-                m_sacpf = new SubwooferAutoCommandsPF(m_swerve, m_cf);
-                m_af = new AutoFactory(m_pf, m_cf, m_sac, m_sacpf, m_swerve, m_shooter, m_arm, m_intake, m_transfer,
+          
+                m_af = new AutoFactory(m_pf, m_cf, m_sac, m_swerve, m_shooter, m_arm, m_intake, m_transfer,
                                 m_llv);
 
                 if (RobotBase.isReal()) {
@@ -167,9 +165,7 @@ public class RobotContainer implements Logged {
                                 new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
                 SmartDashboard.putData("RotateToNote",
                                 new RotateToFindNote(m_swerve, 45));
-                SmartDashboard.putData("DistanceToNote",
-                                new GetNotePoseToRobot(m_swerve, m_llv, true).ignoringDisable(true));
-
+               
                 SmartDashboard.putData("RunTestPickupandShoot",
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
                                                 CameraConstants.rearCamera.camname,
@@ -425,13 +421,15 @@ public class RobotContainer implements Logged {
 
                 // n4
                 codriver.povUp().onTrue(
-                                m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose));
-                // // testCommand()));
-                // Commands.parallel(
-                // m_cf.autopathfind(test4,
-                // SwerveConstants.pfConstraints,
-                // 0, 2),
-                // m_cf.doIntake(10))));
+
+                                Commands.sequence(
+                                               //  m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                                Commands.runOnce(() -> m_swerve
+                                                                .resetPoseEstimator(m_swerve.actualstartPose)),
+                                                Commands.parallel(
+                                                                m_cf.autopathfind(FieldConstants.centerNotes[4],
+                                                                                0, 2),
+                                                                m_cf.doIntake(10))));
 
                 // codriver.povDown().onTrue(Commands.sequence(
                 // m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
