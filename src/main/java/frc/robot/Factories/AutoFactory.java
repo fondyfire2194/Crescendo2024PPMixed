@@ -29,6 +29,7 @@ public class AutoFactory {
         private final LimelightVision m_llv;
 
         private final SubwooferAutoCommands m_sac;
+        private final SubwooferAutoCommandsPF m_sacPF;
 
         public SendableChooser<Integer> m_subwfrStartChooser = new SendableChooser<Integer>();
 
@@ -64,13 +65,15 @@ public class AutoFactory {
 
         public boolean validChoice;
 
-        public AutoFactory(PathFactory pf, CommandFactory cf, SubwooferAutoCommands sac, SwerveSubsystem swerve,
+        public AutoFactory(PathFactory pf, CommandFactory cf, SubwooferAutoCommands sac, SubwooferAutoCommandsPF sacpf,
+                        SwerveSubsystem swerve,
                         ShooterSubsystem shooter,
                         ArmSubsystem arm,
                         IntakeSubsystem intake, TransferSubsystem transfer, LimelightVision llv) {
                 m_pf = pf;
                 m_cf = cf;
                 m_sac = sac;
+                m_sacPF = sacpf;
                 m_swerve = swerve;
                 m_transfer = transfer;
                 m_intake = intake;
@@ -85,8 +88,9 @@ public class AutoFactory {
                 m_subwfrStartChooser.addOption("W2-C3-SBWFR-W3", 5);
                 m_subwfrStartChooser.addOption("W2-C3-SBWFR-W1", 6);
                 m_subwfrStartChooser.addOption("W2-C3-W2-C3", 7);
-
-                maxsbwfrauto = 7;
+                m_subwfrStartChooser.addOption("W2-W1-W3 PF", 8);
+                m_subwfrStartChooser.addOption("W2-C3-SBWFR-W3 PF", 9);
+                maxsbwfrauto = 9;
 
                 minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
@@ -223,6 +227,27 @@ public class AutoFactory {
                                                 new AutoAlignSpeaker(m_swerve, 1, true),
                                                 m_sac.shootbydistance(m_cf),
                                                 m_sac.move(sbwfrpaths.Wing2ToCenter3, m_swerve, m_pf));
+
+                        case 8:
+                                return Commands.sequence(
+                                                m_sac.setsbwrstart(m_swerve, m_cf),
+                                                m_sacPF.moveAndPickupWing(m_cf, 2),
+                                                m_sacPF.sbwfrmoveandshoot(m_cf),
+                                                m_sacPF.moveAndPickupWing(m_cf, 1),
+                                                m_sacPF.sbwfrmoveandshoot(m_cf),
+                                                m_sacPF.sbwfrmoveandshoot(m_cf),
+                                                m_sacPF.moveAndPickupWing(m_cf, 3),
+                                                m_sacPF.sbwfrmoveandshoot(m_cf));
+                        case 9:
+                                return Commands.sequence(
+                                                m_sac.setsbwrstart(m_swerve, m_cf),
+                                                m_sacPF.moveAndPickupWing(m_cf, 2),
+                                                m_sacPF.shootbydistance(m_cf),
+                                                m_sacPF.moveAndPickupCenter(m_cf, 3),
+                                                m_sacPF.sbwfrmoveandshoot(m_cf),
+                                                m_sacPF.sbwfrmoveandshoot(m_cf),
+                                                m_sacPF.moveAndPickupWing(m_cf, 3),
+                                                m_sacPF.sbwfrmoveandshoot(m_cf));
                         case 11:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, null, 1.75, true, false);

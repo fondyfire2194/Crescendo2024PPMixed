@@ -35,6 +35,7 @@ import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.SubwooferAutoCommands;
+import frc.robot.Factories.SubwooferAutoCommandsPF;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
@@ -96,6 +97,7 @@ public class RobotContainer implements Logged {
         public final AutoFactory m_af;
 
         private SubwooferAutoCommands m_sac;
+        private SubwooferAutoCommandsPF m_sacpf;
 
         BooleanSupplier keepAngle;
 
@@ -142,8 +144,9 @@ public class RobotContainer implements Logged {
                 registerNamedCommands();
 
                 m_sac = new SubwooferAutoCommands(m_swerve, m_cf);
-
-                m_af = new AutoFactory(m_pf, m_cf, m_sac, m_swerve, m_shooter, m_arm, m_intake, m_transfer, m_llv);
+                m_sacpf = new SubwooferAutoCommandsPF(m_swerve, m_cf);
+                m_af = new AutoFactory(m_pf, m_cf, m_sac, m_sacpf, m_swerve, m_shooter, m_arm, m_intake, m_transfer,
+                                m_llv);
 
                 if (RobotBase.isReal()) {
                         // Pref.deleteUnused();

@@ -351,7 +351,7 @@ public final class Constants {
                         new Pose2d(),
                         new Pose2d(2.8, 6.9, new Rotation2d(Units.degreesToRadians(-135))),
                         new Pose2d(2.8, 5.55, new Rotation2d(Math.PI)),
-                        new Pose2d(2.7, 4.09, new Rotation2d(Units.degreesToRadians(150))),
+                        new Pose2d(2.6, 4.09, new Rotation2d(Units.degreesToRadians(170))),
                         
         };
 
