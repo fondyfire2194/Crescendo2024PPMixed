@@ -18,7 +18,6 @@ import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
 import frc.robot.commands.Autos.Autos.PickupUsingVision;
-import frc.robot.commands.Autos.Autos.PickupUsingVisionNear;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.RotateToAngle;

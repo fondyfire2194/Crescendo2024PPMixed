@@ -34,9 +34,9 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
-import frc.robot.Factories.SubwooferAutoCommands;
-import frc.robot.Factories.SubwooferAutoCommandsPF;
 import frc.robot.commands.JogClimber;
+import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommands;
+import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommandsPF;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.GetNotePoseToRobot;
@@ -227,19 +227,19 @@ public class RobotContainer implements Logged {
 
                 simNoteIntakenTrigger1 = new Trigger(
                                 () -> RobotBase.isSimulation() && m_intake.isIntaking1
-                                                && Math.abs(m_swerve.remainingdistance) < .18);
+                                                && Math.abs(m_swerve.remainingdistance) < .3);
 
                 simNoteIntakenTrigger1.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
 
                 simNoteIntakenTrigger2 = new Trigger(
                                 () -> RobotBase.isSimulation() && m_intake.isIntaking2
-                                                && Math.abs(m_swerve.remainingdistance) < .18);
+                                                && Math.abs(m_swerve.remainingdistance) < .3);
 
                 simNoteIntakenTrigger2.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
 
                 simNoteIntakenTrigger3 = new Trigger(
                                 () -> RobotBase.isSimulation() && m_intake.isIntaking3
-                                                && Math.abs(m_swerve.remainingdistance) < .18);
+                                                && Math.abs(m_swerve.remainingdistance) < .3);
 
                 simNoteIntakenTrigger3.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
 

@@ -8,7 +8,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
-import frc.robot.Factories.SubwooferAutoCommands;
 import frc.robot.subsystems.SwerveSubsystem;
 
 /** Add your docs here. */

@@ -12,6 +12,8 @@ import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVisV2;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVisV2;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
+import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommands;
+import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommandsPF;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.ArmSubsystem;
@@ -250,7 +252,7 @@ public class AutoFactory {
                                                 m_sacPF.sbwfrmoveandshoot(m_cf));
                         case 11:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, null, 1.75, true, false);
+                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true, false);
                         case 12:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
                                                 m_swerve, m_intake, m_transfer, m_llv, 1.75, false, false);

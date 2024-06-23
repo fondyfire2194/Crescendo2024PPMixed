@@ -4,7 +4,6 @@
 
 package frc.robot.commands.Autos.AutoStarts;
 
-import com.pathplanner.lib.commands.PathfindLTV;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -20,7 +19,6 @@ import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
 import frc.robot.commands.Autos.Autos.PickupUsingVision;
-import frc.robot.commands.Autos.Autos.PickupUsingVisionNear;
 import frc.robot.commands.Autos.Autos.TryForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.RotateToAngle;
