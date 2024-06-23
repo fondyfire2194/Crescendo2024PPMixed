@@ -62,7 +62,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 pickupCenter4_5(cf, pf, swerve, transfer, intake, innerNoteFirst)),
                                 // if note in intake go shoot it or try the adjacent one if not
                                 Commands.either(
-                                                moveShootCenter1_2(cf, pf, swerve, innerNoteFirst),
+                                                moveShootCenter4_5(cf, pf, swerve, innerNoteFirst),
                                                 tryOtherNote(pf, cf, swerve, transfer, innerNoteFirst),
                                                 () -> transfer.noteAtIntake() && !transfer.skipFirstNoteInSim),
 
@@ -77,8 +77,9 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                                 && swerve.getX() < (FieldConstants.FIELD_LENGTH / 2 - 2)
                                                                 || AllianceUtil.isRedAlliance()
                                                                                 && swerve.getX() > (FieldConstants.FIELD_LENGTH
-                                                                                                / 2 + 2)),                               
-                                                moveShootCenter1_2(cf, pf, swerve, !innerNoteFirst),
+                                                                                                / 2 + 2)),
+                                Commands.either(
+                                                moveShootCenter4_5(cf, pf, swerve, !innerNoteFirst),
                                                 getAnotherNote(swerve, transfer, intake, cf, pf),
                                                 () -> transfer.noteAtIntake()));
         }
@@ -101,7 +102,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 cf.doIntakeDelayed(2, 3));
         }
 
-        public Command moveShootCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
+        public Command moveShootCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
                         boolean innerNoteFirst) {
                 return Commands.either(
                                 new CenterToShoot(cf, pf.pathMaps.get(

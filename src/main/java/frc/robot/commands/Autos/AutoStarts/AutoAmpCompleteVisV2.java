@@ -60,6 +60,7 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.parallel(
                                                 cf.transferNoteToShooterCommand(),
                                                 pickupCenter1_2(cf, pf, swerve, transfer, intake, innerNoteFirst)),
+
                                 // if note in intake go shoot it or try the adjacent one if not
                                 Commands.either(
                                                 moveShootCenter1_2(cf, pf, swerve, innerNoteFirst),
@@ -74,16 +75,14 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                 Commands.none(),
                                                 () -> !transfer.noteAtIntake()
                                                                 && !AllianceUtil.isRedAlliance()
-                                                                && swerve.getX() < (FieldConstants.FIELD_LENGTH
-                                                                                / 2 - 2)
+                                                                && swerve.getX() < (FieldConstants.FIELD_LENGTH / 2 - 2)
                                                                 || AllianceUtil.isRedAlliance()
                                                                                 && swerve.getX() > (FieldConstants.FIELD_LENGTH
                                                                                                 / 2 + 2)),
-
-
-
-                                                                                                
-                                getAnotherNote(swerve, transfer, intake, cf, pf));
+                                Commands.either(
+                                                moveShootCenter1_2(cf, pf, swerve, !innerNoteFirst),
+                                                getAnotherNote(swerve, transfer, intake, cf, pf),
+                                                () -> transfer.noteAtIntake()));
 
         }
 
@@ -93,8 +92,8 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
 
                 return Commands.sequence(
                                 Commands.either(
-                                                new RunPPath(swerve, pf.pathMaps.get(amppaths.AmpToNearCenter1.name())),
                                                 new RunPPath(swerve, pf.pathMaps.get(amppaths.AmpToNearCenter2.name())),
+                                                new RunPPath(swerve, pf.pathMaps.get(amppaths.AmpToNearCenter1.name())),
                                                 () -> innerNoteFirst),
                                 new AutoAlignNote(swerve, 5, true),
                                 new DriveToPickupNote(swerve, transfer, intake),
@@ -104,11 +103,10 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
         public Command moveShootCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
                         boolean innerNoteFirst) {
                 return Commands.either(
-                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                amppaths.Center1ToAmpShoot
-                                                                .name()),
-                                                swerve),
                                 new CenterToShoot(cf, pf.pathMaps.get(amppaths.Center2ToAmpShoot
+                                                .name()),
+                                                swerve),
+                                new CenterToShoot(cf, pf.pathMaps.get(amppaths.Center1ToAmpShoot
                                                 .name()),
                                                 swerve),
                                 () -> innerNoteFirst);
@@ -141,10 +139,10 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.parallel(
                                                 Commands.either(
                                                                 new RunPPath(swerve,
-                                                                                pf.pathMaps.get(amppaths.Center1ToCenter2
+                                                                                pf.pathMaps.get(amppaths.Center2ToCenter1
                                                                                                 .name())),
                                                                 new RunPPath(swerve,
-                                                                                pf.pathMaps.get(amppaths.Center2toCenter1
+                                                                                pf.pathMaps.get(amppaths.Center1ToCenter2
                                                                                                 .name())),
                                                                 () -> innerNoteFirst),
                                                 cf.doIntake(2)));

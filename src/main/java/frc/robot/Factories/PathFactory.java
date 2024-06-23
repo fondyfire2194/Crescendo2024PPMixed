@@ -49,7 +49,7 @@ public class PathFactory {
         AmpToNearCenter2,
         AmpToWing1,
         Center1ToCenter2,
-        Center2toCenter1,
+        Center2ToCenter1,
         Center1ToAmpShoot,
         Center2ToAmpShoot,
         Center3ToWing2,
