@@ -91,9 +91,14 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                         boolean innerNoteFirst) {
 
                 return Commands.sequence(
-                                Commands.either(
-                                                new RunPPath(swerve, pf.pathMaps.get(amppaths.AmpToNearCenter2.name())),
-                                                new RunPPath(swerve, pf.pathMaps.get(amppaths.AmpToNearCenter1.name())),
+                                Commands.either(Commands.sequence(
+                                                Commands.runOnce(() -> swerve.targetNote = 2),
+                                                new RunPPath(swerve,
+                                                                pf.pathMaps.get(amppaths.AmpToNearCenter2.name()))),
+                                                Commands.sequence(
+                                                                Commands.runOnce(() -> swerve.targetNote = 1),
+                                                                new RunPPath(swerve, pf.pathMaps.get(
+                                                                                amppaths.AmpToNearCenter1.name()))),
                                                 () -> innerNoteFirst),
                                 new AutoAlignNote(swerve, 5, true),
                                 new DriveToPickupNote(swerve, transfer, intake),
@@ -116,12 +121,16 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                         TransferSubsystem transfer, IntakeSubsystem intake, boolean innerNoteFirst) {
 
                 return Commands.sequence(
-                                Commands.either(
-
+                                Commands.either(Commands.sequence(
+                                                Commands.runOnce(() -> swerve.targetNote = 1),
                                                 new RunPPath(swerve,
-                                                                pf.pathMaps.get(amppaths.AmpShootToNearCenter1.name())),
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(amppaths.AmpShootToNearCenter2.name())),
+                                                                pf.pathMaps.get(amppaths.AmpShootToNearCenter1
+                                                                                .name()))),
+                                                Commands.sequence(
+                                                                Commands.runOnce(() -> swerve.targetNote = 2),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(amppaths.AmpShootToNearCenter2
+                                                                                                .name()))),
 
                                                 () -> innerNoteFirst),
 
