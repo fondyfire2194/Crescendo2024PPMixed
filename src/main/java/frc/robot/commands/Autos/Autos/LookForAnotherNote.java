@@ -17,26 +17,26 @@ import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.LimelightHelpers;
 import frc.robot.utils.LLPipelines.pipelines;
 
-public class TryForAnotherNote extends Command {
+public class LookForAnotherNote extends Command {
   private final SwerveSubsystem m_swerve;
   private final TransferSubsystem m_transfer;
   private final IntakeSubsystem m_intake;
-  private final String m_camname;
+
   double angleError = 0;
   private Timer elapsedTime = new Timer();
   double startPosition;
-  private double distError;
   private double distBeyondMidField = .01;
+  private boolean trylimit;
+  private String camname = CameraConstants.rearCamera.camname;
 
-  public TryForAnotherNote(
+  public LookForAnotherNote(
       SwerveSubsystem swerve,
       TransferSubsystem transfer,
-      IntakeSubsystem intake,
-      String camname) {
+      IntakeSubsystem intake) {
     m_swerve = swerve;
     m_transfer = transfer;
     m_intake = intake;
-    m_camname = camname;
+
     addRequirements(m_swerve);
   }
 
@@ -44,7 +44,7 @@ public class TryForAnotherNote extends Command {
   @Override
   public void initialize() {
 
-    LimelightHelpers.setPipelineIndex(CameraConstants.rearCamera.camname, pipelines.NOTEDET1.ordinal());
+    LimelightHelpers.setPipelineIndex(camname, pipelines.NOTEDET1.ordinal());
 
     elapsedTime.reset();
     elapsedTime.start();
@@ -58,19 +58,16 @@ public class TryForAnotherNote extends Command {
   @Override
   public void execute() {
 
-    if (RobotBase.isReal() && LimelightHelpers.getTV(m_camname)) {
-      angleError = LimelightHelpers.getTX(m_camname);
-      distError = LimelightHelpers.getTY(m_camname);
+    if (RobotBase.isReal() && LimelightHelpers.getTV(camname)) {
+      angleError = LimelightHelpers.getTX(camname);
       SmartDashboard.putNumber("DtoPuN/AngErr", angleError);
     } else
       angleError = 0;
 
     double rotationVal = m_swerve.m_alignNotePID.calculate(angleError, 0);
 
-    SmartDashboard.putNumber("DtoPuN/DistErr", distError);
-
     double pickupspeed = -SwerveConstants.notePickupSpeed;
-    
+
     m_swerve.drive(
         pickupspeed,
         0,
@@ -79,13 +76,9 @@ public class TryForAnotherNote extends Command {
         true,
         false);
 
-    if (m_swerve.ampActive)
-      m_swerve.remainingdistance = m_swerve.getY() - FieldConstants.FIELD_WIDTH / 2 - distBeyondMidField;
+    trylimit = m_swerve.ampActive && m_swerve.getY() < (FieldConstants.FIELD_WIDTH / 2 - distBeyondMidField)
 
-    if (m_swerve.sourceActive)
-      m_swerve.remainingdistance = FieldConstants.FIELD_WIDTH / 2 - m_swerve.getY() + distBeyondMidField;
-
-    SmartDashboard.putNumber("DtoPuN/RmngDist", distError);
+        || m_swerve.sourceActive && m_swerve.getY() > (FieldConstants.FIELD_WIDTH / 2 + distBeyondMidField);
 
   }
 
@@ -101,7 +94,7 @@ public class TryForAnotherNote extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_transfer.noteAtIntake() ||
-        m_swerve.remainingdistance < 0;
+    return m_transfer.noteAtIntake() || trylimit;
+
   }
 }

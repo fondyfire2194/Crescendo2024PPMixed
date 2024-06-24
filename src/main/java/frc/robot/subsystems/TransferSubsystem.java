@@ -40,6 +40,7 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   public boolean simnoteatintake;
   public boolean skipFirstNoteInSim;
   public boolean skipSecondNoteInSim;
+  public boolean skipThirdNoteInSim;  
   @Log.NT(key = "lobbing")
   public boolean lobbing;
   @Log.NT(key = "shootmoving")

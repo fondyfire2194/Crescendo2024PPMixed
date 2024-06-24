@@ -4,16 +4,9 @@
 
 package frc.robot;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.littletonrobotics.urcl.URCL;
-
-import com.pathplanner.lib.commands.FollowPathCommand;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.REVPhysicsSim;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -22,10 +15,8 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.Constants.CANIDConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LLPipelines;
 import frc.robot.utils.LimelightHelpers;
@@ -63,33 +54,33 @@ public class Robot extends TimedRobot implements Logged {
     if (RobotBase.isReal()) {
       DriverStation.startDataLog(DataLogManager.getLog());
 
-      Map<Integer, String> motorNameMap = new HashMap<>();
+      // Map<Integer, String> motorNameMap = new HashMap<>();
 
-      motorNameMap.put(SwerveConstants.Mod0.driveMotorID, "Front Left Drive");
-      motorNameMap.put(SwerveConstants.Mod0.angleMotorID, "Front Left Turn");
+      // motorNameMap.put(SwerveConstants.Mod0.driveMotorID, "Front Left Drive");
+      // motorNameMap.put(SwerveConstants.Mod0.angleMotorID, "Front Left Turn");
 
-      motorNameMap.put(SwerveConstants.Mod1.driveMotorID, "Front Right Drive");
-      motorNameMap.put(SwerveConstants.Mod1.angleMotorID, "Front Right Turn");
+      // motorNameMap.put(SwerveConstants.Mod1.driveMotorID, "Front Right Drive");
+      // motorNameMap.put(SwerveConstants.Mod1.angleMotorID, "Front Right Turn");
 
-      motorNameMap.put(SwerveConstants.Mod2.driveMotorID, "Back Left Drive");
-      motorNameMap.put(SwerveConstants.Mod2.angleMotorID, "Back Left Turn");
+      // motorNameMap.put(SwerveConstants.Mod2.driveMotorID, "Back Left Drive");
+      // motorNameMap.put(SwerveConstants.Mod2.angleMotorID, "Back Left Turn");
 
-      motorNameMap.put(SwerveConstants.Mod3.driveMotorID, "Back Right Drive");
-      motorNameMap.put(SwerveConstants.Mod3.angleMotorID, "Back Right Turn");
+      // motorNameMap.put(SwerveConstants.Mod3.driveMotorID, "Back Right Drive");
+      // motorNameMap.put(SwerveConstants.Mod3.angleMotorID, "Back Right Turn");
 
-      motorNameMap.put(CANIDConstants.armID, "Arm");
+      // motorNameMap.put(CANIDConstants.armID, "Arm");
 
-      motorNameMap.put(CANIDConstants.transferID, "Transfer");
+      // motorNameMap.put(CANIDConstants.transferID, "Transfer");
 
-      motorNameMap.put(CANIDConstants.topShooterID, "Shooter Top");
-      motorNameMap.put(CANIDConstants.bottomShooterID, "Shooter Bottom");
+      // motorNameMap.put(CANIDConstants.topShooterID, "Shooter Top");
+      // motorNameMap.put(CANIDConstants.bottomShooterID, "Shooter Bottom");
 
-      motorNameMap.put(CANIDConstants.intakeID, "Intake");
+      // motorNameMap.put(CANIDConstants.intakeID, "Intake");
 
-      motorNameMap.put(CANIDConstants.climberIDLeft, "Climber Left");
-      motorNameMap.put(CANIDConstants.climberIDRight, "Climber Right");
+      // motorNameMap.put(CANIDConstants.climberIDLeft, "Climber Left");
+      // motorNameMap.put(CANIDConstants.climberIDRight, "Climber Right");
 
-      URCL.start(motorNameMap);
+      // URCL.start(motorNameMap);
     } else {
       DriverStation.silenceJoystickConnectionWarning(true);
 
@@ -99,6 +90,8 @@ public class Robot extends TimedRobot implements Logged {
     if (RobotBase.isSimulation()) {
       SmartDashboard.putBoolean("Skip1", m_robotContainer.m_transfer.skipFirstNoteInSim);
       SmartDashboard.putBoolean("Skip2", m_robotContainer.m_transfer.skipSecondNoteInSim);
+      SmartDashboard.putBoolean("Skip3", m_robotContainer.m_transfer.skipThirdNoteInSim);
+
     }
     Monologue.setupMonologue(m_robotContainer, "/Monologue", false, true);
 
@@ -191,7 +184,8 @@ public class Robot extends TimedRobot implements Logged {
   @Override
   public void autonomousInit() {
     m_robotContainer.m_swerve.inhibitVision = false;
-    // m_robotContainer.m_swerve.actualstartPose = m_robotContainer.m_swerve.getPose();
+    // m_robotContainer.m_swerve.actualstartPose =
+    // m_robotContainer.m_swerve.getPose();
 
     m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
     m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);

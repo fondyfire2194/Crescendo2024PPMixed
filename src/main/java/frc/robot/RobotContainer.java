@@ -97,7 +97,6 @@ public class RobotContainer implements Logged {
 
         private SubwooferAutoCommands m_sac;
 
-
         BooleanSupplier keepAngle;
 
         public BooleanSupplier fieldRelative;
@@ -143,7 +142,7 @@ public class RobotContainer implements Logged {
                 registerNamedCommands();
 
                 m_sac = new SubwooferAutoCommands(m_swerve, m_cf);
-          
+
                 m_af = new AutoFactory(m_pf, m_cf, m_sac, m_swerve, m_shooter, m_arm, m_intake, m_transfer,
                                 m_llv);
 
@@ -166,9 +165,9 @@ public class RobotContainer implements Logged {
                                 new ViewArmShooterByDistance(m_cf, m_sd, m_arm).ignoringDisable(true));
                 SmartDashboard.putData("RotateToNote",
                                 new RotateToFindNote(m_swerve, 45));
-                 SmartDashboard.putData("AlignToNote",
-                                new AutoAlignNote(m_swerve, 1,false));
-               
+                SmartDashboard.putData("AlignToNote",
+                                new AutoAlignNote(m_swerve, 1, false));
+
                 SmartDashboard.putData("RunTestPickupandShoot",
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
                                                 CameraConstants.rearCamera.camname,
@@ -225,19 +224,20 @@ public class RobotContainer implements Logged {
                 // Commands.runOnce(() -> m_transfer.logShot = false)));
 
                 simNoteIntakenTrigger1 = new Trigger(
-                                () -> RobotBase.isSimulation() && m_intake.isIntaking1
+                                () -> RobotBase.isSimulation() && m_intake.isIntaking1 && !m_transfer.skipFirstNoteInSim
                                                 && Math.abs(m_swerve.remainingdistance) < .3);
 
                 simNoteIntakenTrigger1.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
 
                 simNoteIntakenTrigger2 = new Trigger(
                                 () -> RobotBase.isSimulation() && m_intake.isIntaking2
+                                                && !m_transfer.skipSecondNoteInSim
                                                 && Math.abs(m_swerve.remainingdistance) < .3);
 
                 simNoteIntakenTrigger2.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
 
                 simNoteIntakenTrigger3 = new Trigger(
-                                () -> RobotBase.isSimulation() && m_intake.isIntaking3
+                                () -> RobotBase.isSimulation() && m_intake.isIntaking3 && !m_transfer.skipThirdNoteInSim
                                                 && Math.abs(m_swerve.remainingdistance) < .3);
 
                 simNoteIntakenTrigger3.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
@@ -426,7 +426,7 @@ public class RobotContainer implements Logged {
                 codriver.povUp().onTrue(
 
                                 Commands.sequence(
-                                               //  m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                                // m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
                                                 Commands.runOnce(() -> m_swerve
                                                                 .resetPoseEstimator(m_swerve.actualstartPose)),
                                                 Commands.parallel(

@@ -10,9 +10,11 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.utils.AllianceUtil;
+import frc.robot.utils.LimelightHelpers;
 
 public class AutoAlignNote extends Command {
 
@@ -24,6 +26,10 @@ public class AutoAlignNote extends Command {
 
   private double rotationVal;
   private Timer elapsedTime;
+  String rearCamName = CameraConstants.rearCamera.camname;
+  private boolean visionTargetSet;
+  private double lastAngleError;
+  private int loopctr;
 
   public AutoAlignNote(
       SwerveSubsystem swerve, double toleranceDegrees, boolean endAtTargets) {
@@ -48,16 +54,28 @@ public class AutoAlignNote extends Command {
     elapsedTime = new Timer();
     elapsedTime.reset();
     elapsedTime.start();
+    visionTargetSet = false;
+    loopctr = 0;
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    loopctr++;
+    if (LimelightHelpers.getTV(rearCamName)) {
+      double angleError = LimelightHelpers.getTX(rearCamName);
+      if (loopctr > 10 && Math.abs(angleError - lastAngleError) < 1) {
+        visionTargetSet = true;
 
-    rotationVal = m_alignTargetPID.calculate(m_swerve.getAngleDegrees(), m_swerve.getAngleDegreesToTarget());
+        rotationVal = m_alignTargetPID.calculate(angleError, 0);
+      }
+      lastAngleError = angleError;
+    }
 
-    m_swerve.alignedToTarget = m_alignTargetPID.atSetpoint();
-
+    if (!visionTargetSet && loopctr > 10) {
+      rotationVal = m_alignTargetPID.calculate(m_swerve.getAngleDegrees(), m_swerve.getAngleDegreesToTarget());
+      m_swerve.alignedToTarget = m_alignTargetPID.atSetpoint();
+    }
     m_swerve.drive(
         0, 0,
         rotationVal *= Constants.SwerveConstants.kmaxAngularVelocity,

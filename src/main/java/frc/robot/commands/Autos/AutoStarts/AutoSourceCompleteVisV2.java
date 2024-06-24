@@ -17,7 +17,7 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
-import frc.robot.commands.Autos.Autos.TryForAnotherNote;
+import frc.robot.commands.Autos.Autos.LookForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.DriveToPickupNote;
@@ -60,24 +60,16 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.parallel(
                                                 cf.transferNoteToShooterCommand(),
                                                 pickupCenter4_5(cf, pf, swerve, transfer, intake, innerNoteFirst)),
-                                // if note in intake go shoot it or try the adjacent one if not
+                                // if note in intake go shoot it or try to find one
                                 Commands.either(
                                                 moveShootCenter4_5(cf, pf, swerve, innerNoteFirst),
-                                                tryOtherNote(pf, cf, swerve, transfer, innerNoteFirst),
-                                                () -> transfer.noteAtIntake() && !transfer.skipFirstNoteInSim),
+                                                getAnotherNote(swerve, transfer, intake, cf, pf),
+                                                // tryOtherNote(pf, cf, swerve, transfer, innerNoteFirst),
+                                                () -> transfer.noteAtIntake()),
 
-                                // there may be a note in the intake or if not the robot can be at the shoot
-                                // position or at the center line. If there is a note then go shoot it
-                                Commands.either(
-                                                pickUpNoteAfterShoot(pf, cf, swerve, transfer, intake,
-                                                                innerNoteFirst),
-                                                Commands.none(),
-                                                () -> !transfer.noteAtIntake()
-                                                                && !AllianceUtil.isRedAlliance()
-                                                                && swerve.getX() < (FieldConstants.FIELD_LENGTH / 2 - 2)
-                                                                || AllianceUtil.isRedAlliance()
-                                                                                && swerve.getX() > (FieldConstants.FIELD_LENGTH
-                                                                                                / 2 + 2)),
+                                pickUpNoteAfterShoot(pf, cf, swerve, transfer, intake,
+                                                innerNoteFirst),
+
                                 Commands.either(
                                                 moveShootCenter4_5(cf, pf, swerve, !innerNoteFirst),
                                                 getAnotherNote(swerve, transfer, intake, cf, pf),
@@ -101,7 +93,9 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                                                 pf.pathMaps.get(sourcepaths.SourceShootToNearCenter5
                                                                                                 .name()))),
                                                 () -> innerNoteFirst),
+
                                 new AutoAlignNote(swerve, 5, true),
+
                                 Commands.parallel(
                                                 new DriveToPickupNote(swerve, transfer, intake),
                                                 cf.doIntake(5)));
@@ -138,34 +132,20 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 () -> innerNoteFirst),
                                 new AutoAlignNote(swerve, 5, true),
                                 Commands.parallel(
-                                        new DriveToPickupNote(swerve, transfer, intake),
-                                        cf.doIntake(5)));
+                                                new DriveToPickupNote(swerve, transfer, intake),
+                                                cf.doIntake(5)));
         }
 
-        public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, boolean innerNoteFirst) {
-                return Commands.sequence(
-                                Commands.parallel(
-                                                Commands.either(
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4
-                                                                                                .name())),
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5
-                                                                                                .name())),
-                                                                () -> innerNoteFirst),
-                                                cf.doIntake(2)));
-        }
+       
 
         Command getAnotherNote(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,
                         CommandFactory cf, PathFactory pf) {
 
                 return Commands.sequence(
                                 Commands.runOnce(() -> transfer.simnoteatintake = false),
-                                new RotateToAngle(swerve, 90),
+                                new RotateToAngle(swerve, -90),
                                 Commands.deadline(
-                                                new TryForAnotherNote(swerve, transfer, intake,
-                                                                CameraConstants.rearCamera.camname),
+                                                new LookForAnotherNote(swerve, transfer, intake),
                                                 cf.doIntake(10)),
                                 Commands.waitSeconds(.25),
                                 Commands.either(
@@ -189,5 +169,20 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 Commands.runOnce(() -> this.cancel()),
                                                 () -> transfer.noteAtIntake()));
 
+        }
+
+         public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
+                        TransferSubsystem transfer, boolean innerNoteFirst) {
+                return Commands.sequence(
+                                Commands.parallel(
+                                                Commands.either(
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4
+                                                                                                .name())),
+                                                                new RunPPath(swerve,
+                                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5
+                                                                                                .name())),
+                                                                () -> innerNoteFirst),
+                                                cf.doIntake(2)));
         }
 }

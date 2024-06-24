@@ -17,7 +17,7 @@ import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
-import frc.robot.commands.Autos.Autos.TryForAnotherNote;
+import frc.robot.commands.Autos.Autos.LookForAnotherNote;
 import frc.robot.commands.Drive.AutoAlignNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.DriveToPickupNote;
@@ -64,21 +64,12 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                 // if note in intake go shoot it or try the adjacent one if not
                                 Commands.either(
                                                 moveShootCenter1_2(cf, pf, swerve, innerNoteFirst),
-                                                tryOtherNote(pf, cf, swerve, transfer, innerNoteFirst),
-                                                () -> transfer.noteAtIntake() && !transfer.skipFirstNoteInSim),
+                                                getAnotherNote(swerve, transfer, intake, cf, pf),
+                                                () -> transfer.noteAtIntake()),
 
-                                // there may be a note in the intake or if not the robot can be at the shoot
-                                // position or at the center line. If there is a note then go shoot it
-                                Commands.either(
-                                                pickUpNoteAfterShoot(pf, cf, swerve, transfer, intake,
-                                                                innerNoteFirst),
-                                                Commands.none(),
-                                                () -> !transfer.noteAtIntake()
-                                                                && !AllianceUtil.isRedAlliance()
-                                                                && swerve.getX() < (FieldConstants.FIELD_LENGTH / 2 - 2)
-                                                                || AllianceUtil.isRedAlliance()
-                                                                                && swerve.getX() > (FieldConstants.FIELD_LENGTH
-                                                                                                / 2 + 2)),
+                                pickUpNoteAfterShoot(pf, cf, swerve, transfer, intake,
+                                                innerNoteFirst),
+
                                 Commands.either(
                                                 moveShootCenter1_2(cf, pf, swerve, !innerNoteFirst),
                                                 getAnotherNote(swerve, transfer, intake, cf, pf),
@@ -166,8 +157,7 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                 Commands.runOnce(() -> transfer.simnoteatintake = false),
                                 new RotateToAngle(swerve, 90),
                                 Commands.deadline(
-                                                new TryForAnotherNote(swerve, transfer, intake,
-                                                                CameraConstants.rearCamera.camname),
+                                                new LookForAnotherNote(swerve, transfer, intake),
                                                 cf.doIntake(10)),
                                 Commands.waitSeconds(.25),
                                 Commands.either(
