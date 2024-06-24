@@ -34,16 +34,21 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
+import frc.robot.Factories.PathFactory.amppaths;
+import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommands;
 import frc.robot.commands.Drive.AlignTargetOdometry;
 import frc.robot.commands.Drive.AlignToNote;
 import frc.robot.commands.Drive.AutoAlignNote;
+import frc.robot.commands.Drive.AutoAlignSpeaker;
+import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Drive.RotateToFindNote;
 import frc.robot.commands.Drive.TeleopSwerve;
 import frc.robot.commands.Drive.WheelRadiusCharacterization;
 import frc.robot.commands.Intake.JogIntake;
+import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Test.MovePickupShootTest;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
@@ -405,43 +410,28 @@ public class RobotContainer implements Logged {
                 // codriver.povLeft().whileTrue(Commands.runOnce(() ->
                 // m_transfer.transferMotor.setVoltage(-.5)))
                 // .onFalse(Commands.runOnce(() -> m_transfer.transferMotor.setVoltage(0)));
-                Pose2d W1_2gappose = new Pose2d(2., 6.2, new Rotation2d(Units.degreesToRadians(180)));
-                codriver.povRight().onTrue(Commands.sequence(
-                                m_cf.setStartPosebyAlliance(FieldConstants.ampStartPose),
-                                // testCommand()));
 
-                                m_cf.autopathfind(W1_2gappose,
-                                                SwerveConstants.pfConstraints,
-                                                0, 0),
-
-                                Commands.parallel(
-                                                m_cf.autopathfind(
-                                                                AllianceUtil.flipFieldAngle(
-                                                                                FieldConstants.centerNotesPickup[1]),
-                                                                SwerveConstants.pfConstraints,
-                                                                0, 0),
-                                                m_cf.doIntake(10))));
-
-                // n4
                 codriver.povUp().onTrue(
-
                                 Commands.sequence(
-                                                // m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                                                Commands.runOnce(() -> m_swerve
-                                                                .resetPoseEstimator(m_swerve.actualstartPose)),
-                                                Commands.parallel(
-                                                                m_cf.autopathfind(FieldConstants.centerNotes[4],
-                                                                                0, 2),
-                                                                m_cf.doIntake(10))));
+                                                Commands.runOnce(() -> m_swerve.targetNote = 4),
+                                                m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                                Commands.waitSeconds(.5),
+                                                new RunPPath(m_swerve, m_pf.getPath(
+                                                                sourcepaths.SourceToNearCenter4.name()))));
 
-                // codriver.povDown().onTrue(Commands.sequence(
-                // m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                // // testCommand()));
-                // Commands.parallel(
-                // m_cf.autopathfind(test3,
-                // SwerveConstants.pfConstraints,
-                // 0, 2),
-                // m_cf.doIntake(10))));
+                codriver.povDown().onTrue(
+                                new AutoAlignNote(m_swerve, 2, true));
+
+                codriver.povLeft().onTrue(
+                                Commands.parallel(
+                                                new DriveToPickupNote(m_swerve, m_transfer, m_intake),
+                                                m_cf.doIntake(5)));
+
+                codriver.povRight().onTrue(
+                                Commands.sequence(
+                                                new RunPPath(m_swerve, m_pf.getPath(
+                                                                sourcepaths.Center4ToSourceShoot.name())),
+                                                new AutoAlignSpeaker(m_swerve, .5, true)));
 
                 codriver.start().onTrue(Commands.runOnce(() -> m_swerve.resetModuleEncoders()));
 

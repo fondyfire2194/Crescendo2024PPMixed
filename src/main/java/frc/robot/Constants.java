@@ -357,11 +357,11 @@ public final class Constants {
 
                 public static Pose2d[] centerNotesPickup = {
                                 new Pose2d(),
-                                new Pose2d(8.26, 7.44, new Rotation2d(Units.degreesToRadians(193))),
-                                new Pose2d(8.28, 5.79, new Rotation2d(Units.degreesToRadians(165))),
-                                new Pose2d(8.28, 4.10, new Rotation2d(Units.degreesToRadians(156))),
-                                new Pose2d(8.28, 2.44, new Rotation2d(Units.degreesToRadians(176.09))),
-                                new Pose2d(8.5, 0.78, new Rotation2d(Units.degreesToRadians(176.09))),
+                                new Pose2d(8., 7.44, new Rotation2d(Units.degreesToRadians(193))),
+                                new Pose2d(8., 5.79, new Rotation2d(Units.degreesToRadians(165))),
+                                new Pose2d(8., 4.10, new Rotation2d(Units.degreesToRadians(156))),
+                                new Pose2d(8., 2.44, new Rotation2d(Units.degreesToRadians(176.09))),
+                                new Pose2d(8., 0.78, new Rotation2d(Units.degreesToRadians(176.09))),
                 };
 
                 // public static final Pose2d centerNote1PickupBlue = new Pose2d(8.26, 7.44,
