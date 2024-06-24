@@ -40,6 +40,10 @@ public class Pref {
     prefDict.put("AmpTopRPM", 1000.);
     prefDict.put("AmpTransferToShootSpeed", 4000.);
 
+
+    prefDict.put("autoalignoffset", 0.0);
+
+    
     // align to tag
     prefDict.put("AlignKp", 0.01);
 

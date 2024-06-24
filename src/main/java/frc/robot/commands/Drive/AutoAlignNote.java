@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.Pref;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -30,6 +31,7 @@ public class AutoAlignNote extends Command {
   private boolean visionTargetSet;
   private double lastAngleError;
   private int loopctr;
+  private double setpoint;
 
   public AutoAlignNote(
       SwerveSubsystem swerve, double toleranceDegrees, boolean endAtTargets) {
@@ -56,6 +58,7 @@ public class AutoAlignNote extends Command {
     elapsedTime.start();
     visionTargetSet = false;
     loopctr = 0;
+    setpoint = Pref.getPref("autoalignoffset");
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -67,7 +70,7 @@ public class AutoAlignNote extends Command {
       if (loopctr > 10 && Math.abs(angleError - lastAngleError) < 1) {
         visionTargetSet = true;
 
-        rotationVal = m_alignTargetPID.calculate(angleError, 0);
+        rotationVal = m_alignTargetPID.calculate(angleError, setpoint);
       }
       lastAngleError = angleError;
     }
