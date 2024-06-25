@@ -178,7 +178,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     public void periodicRobot() {
         armAngleRads = getAngleRadians();
-        if (!enableArm) {
+        if (!enableArm || !isEnabled()) {
             setGoal(armAngleRads);
         }
 
