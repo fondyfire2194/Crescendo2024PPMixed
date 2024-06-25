@@ -60,6 +60,7 @@ public class SwerveModule extends SubsystemBase {
   private double ffks;
   private double ffka;
   private double ffkv;
+  private double velocityError;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -236,6 +237,9 @@ public class SwerveModule extends SubsystemBase {
         }
         driveController.setReference(
             desiredState.speedMetersPerSecond, ControlType.kVelocity, 1, feedForward, ArbFFUnits.kVoltage);
+
+        velocityError = desiredState.speedMetersPerSecond - getDriveVelocity();
+
         previousState.speedMetersPerSecond = desiredState.speedMetersPerSecond;
       }
     }
@@ -299,7 +303,7 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
     String a = "Modules//" + String.valueOf(moduleNumber);
-    SmartDashboard.putNumber(a + " DrivePosition", getDrivePosition());
+    SmartDashboard.putNumber(a + " VelocityError", velocityError);
     SmartDashboard.putNumber(a + " feedforward", feedForward);
     SmartDashboard.putNumber(a + " acceleration", acceleration);
     SmartDashboard.putNumber(a + " ffks", ffks);
