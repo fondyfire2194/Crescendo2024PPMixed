@@ -237,9 +237,14 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
 
     @Override
     protected void useOutput(double output, State goalState) {
-        pidout = pid.calculate(armAngleRads, getController().getSetpoint().position);
-        acceleration = (getController().getSetpoint().velocity - lastSpeed)
-                / (Timer.getFPGATimestamp() - lastTime);
+        if (isEnabled() && enableArm) {
+            pidout = pid.calculate(armAngleRads, getController().getSetpoint().position);
+            acceleration = (getController().getSetpoint().velocity - lastSpeed)
+                    / (Timer.getFPGATimestamp() - lastTime);
+        } else {
+            pid.reset();
+            pidout = 0;
+        }
         boolean tuning = false;
         if (!tuning) {
 
