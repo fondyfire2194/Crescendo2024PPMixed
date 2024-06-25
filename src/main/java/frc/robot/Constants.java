@@ -4,6 +4,8 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
+import org.opencv.video.TrackerGOTURN;
+
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
@@ -173,9 +175,10 @@ public final class Constants {
                 public static final double driveKFF = .95 / kmaxTheoreticalSpeed;
 
                 /* Drive Motor Characterization Values */
-                public static final double[] driveKS = { 0.56, .56, .53, .52 }; // 0.25 55
-                public static final double[] driveKV = { 2.6, 2.6, 2.6, 2.70 };// 2.5636; //2.59 //2.55 2.8
-                public static final double[] driveKA = { 0.3, .3, .3, .3 }; /// 0.4 0.59
+                public static final double driveKS = .6;
+                public static final double driveKV = 2.7;// 2.5636; //2.59 //2.55 2.8
+                public static final double driveKA = 0;// 0.12; /// 0.4 0.59
+                public static final double driveKP1 = 0;// 0.12; /// 0.4 0.59
 
                 // team 5907 driveKs = 0.22542;driveKv = 2.4829; driveKa = 0.120; driveP =
                 // 0.08;
@@ -346,14 +349,13 @@ public final class Constants {
 
                 public static Pose2d sbwfrpose = new Pose2d(1.34, 5.55, new Rotation2d(Units.degreesToRadians(180)));
 
-
                 public static Pose2d[] wingNotePickups = {
-                        new Pose2d(),
-                        new Pose2d(2.8, 6.9, new Rotation2d(Units.degreesToRadians(-135))),
-                        new Pose2d(2.8, 5.55, new Rotation2d(Math.PI)),
-                        new Pose2d(2.6, 4.09, new Rotation2d(Units.degreesToRadians(170))),
-                        
-        };
+                                new Pose2d(),
+                                new Pose2d(2.8, 6.9, new Rotation2d(Units.degreesToRadians(-135))),
+                                new Pose2d(2.8, 5.55, new Rotation2d(Math.PI)),
+                                new Pose2d(2.6, 4.09, new Rotation2d(Units.degreesToRadians(170))),
+
+                };
 
                 public static Pose2d[] centerNotesPickup = {
                                 new Pose2d(),
@@ -564,7 +566,7 @@ public final class Constants {
                 shooterLobRPMMap.put(SwerveConstants.maxLobDistance, 2800.);
         }
 
-        public static double subwfrArmAngle = 60;// 60;// degrees
+        public static double subwfrArmAngle = 58;// 60;// degrees
         public static double subwfrShooterSpeed = 3000;// rpm
 
         public static double autoShootArmAngle = 60;// degrees

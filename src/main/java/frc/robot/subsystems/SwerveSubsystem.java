@@ -546,7 +546,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     SmartDashboard.putNumber("Drive/GyroAngle", getAngle());
     SmartDashboard.putNumber("Drive/GyroYawRads", getR2dRads());
     SmartDashboard.putNumber("Drive/XMPS", getChassisSpeeds().vxMetersPerSecond);
-
+    
     m_field.setRobotPose(getPose());
 
     if (!mod0connected) {

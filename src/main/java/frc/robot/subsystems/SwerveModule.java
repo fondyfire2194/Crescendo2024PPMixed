@@ -1,7 +1,6 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.CANcoder;
-import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
 import com.revrobotics.CANSparkBase.ControlType;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -90,9 +89,12 @@ public class SwerveModule extends SubsystemBase {
     lastAngle = getState().angle;
 
     driveFeedforward = new SimpleMotorFeedforward(
-        SwerveConstants.driveKS[moduleNumber],
-        SwerveConstants.driveKV[moduleNumber],
-        SwerveConstants.driveKA[moduleNumber]);
+        SwerveConstants.driveKS,
+        SwerveConstants.driveKV,
+        SwerveConstants.driveKA);
+
+    if (moduleNumber == 0)
+      SmartDashboard.putData("SetDriveKP1", changeTuneDriveKp());
   }
 
   public void setDesiredState(SwerveModuleState desiredState, boolean isOpenLoop) {
@@ -155,11 +157,12 @@ public class SwerveModule extends SubsystemBase {
     driveEncoder.setPositionConversionFactor(Constants.SwerveConstants.driveConversionPositionFactor);
     driveEncoder.setAverageDepth(4);
     driveEncoder.setMeasurementPeriod(32);
-    driveController.setP(Constants.SwerveConstants.driveKP);
-    driveController.setI(Constants.SwerveConstants.driveKI);
-    driveController.setD(Constants.SwerveConstants.driveKD);
-    driveController.setFF(Constants.SwerveConstants.driveKFF);// 3.24=max speed
-    driveController.setP(0.35, 1);
+    driveController.setP(Constants.SwerveConstants.driveKP, 0);
+    driveController.setI(Constants.SwerveConstants.driveKI, 0);
+    driveController.setD(Constants.SwerveConstants.driveKD, 0);
+    driveController.setFF(Constants.SwerveConstants.driveKFF, 0);// 3.24=max speed
+
+    driveController.setP(Constants.SwerveConstants.driveKP1, 1);
     driveController.setI(0, 1);
     driveController.setD(0, 1);
     driveController.setFF(0, 1);
@@ -168,8 +171,12 @@ public class SwerveModule extends SubsystemBase {
     driveEncoder.setPosition(0.0);
   }
 
-  public void setDriveKp() {
-    driveController.setP(Pref.getPref("DriveKp"));
+  public Command changeTuneDriveKp() {
+    return Commands.runOnce(() -> setDriveKp1());
+  }
+
+  public void setDriveKp1() {
+    driveController.setP(Pref.getPref("driveKp1"), 1);
   }
 
   public void setDriveFF() {
@@ -210,9 +217,17 @@ public class SwerveModule extends SubsystemBase {
         driveController.setReference(desiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       } else {
         acceleration = (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond) / 0.020;
-        feedForward = driveFeedforward.calculate(
-            desiredState.speedMetersPerSecond, acceleration);
+
+        boolean tuning = Pref.getPref("drivetune") != 0;
+
+        if (tuning)
+          feedForward = driveFeedforward.calculate(
+              desiredState.speedMetersPerSecond, acceleration);
+        else
+          feedForward = calculate(desiredState.speedMetersPerSecond, acceleration);
+
         feedForward = MathUtil.clamp(feedForward, -12.0, 12.0);
+
         if (Math.abs(desiredState.speedMetersPerSecond) < .01) {
           feedForward = 0;
         }
@@ -350,6 +365,11 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
 
+  }
+
+  public double calculate(double velocity, double acceleration) {
+    return Pref.getPref("DriveKs") * Math.signum(velocity) + Pref.getPref("DriveKv")
+        * velocity + Pref.getPref("DriveKa") * acceleration;
   }
 
 }

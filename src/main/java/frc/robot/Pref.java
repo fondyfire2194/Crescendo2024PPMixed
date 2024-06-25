@@ -40,10 +40,17 @@ public class Pref {
     prefDict.put("AmpTopRPM", 1000.);
     prefDict.put("AmpTransferToShootSpeed", 4000.);
 
-
     prefDict.put("autoalignoffset", 0.0);
 
-    
+    prefDict.put("driveKa", 0.1);
+    prefDict.put("driveKs", .6);
+    prefDict.put("driveKv", 2.5);
+    prefDict.put("driveKp1", .1);
+    prefDict.put("drivemeters", 3.);
+    prefDict.put("drivemps", 3.);
+    prefDict.put("drivempsps", 2.5);
+    prefDict.put("drivetune", 0.);
+
     // align to tag
     prefDict.put("AlignKp", 0.01);
 
@@ -79,7 +86,7 @@ public class Pref {
     prefDict.put("ShooterBottomKi", .0);
     prefDict.put("ShooterBottomKp", .0004);
     prefDict.put("ShooterBottomKpFF", .0007);
-    
+
     prefDict.put("ShooterSpeedRatio", 1.);
 
     prefDict.put("ShooterTopKd", .01);

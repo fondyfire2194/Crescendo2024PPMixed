@@ -50,6 +50,7 @@ import frc.robot.commands.Drive.WheelRadiusCharacterization;
 import frc.robot.commands.Intake.JogIntake;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Test.MovePickupShootTest;
+import frc.robot.commands.Test.TrapTune;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -177,6 +178,11 @@ public class RobotContainer implements Logged {
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
                                                 CameraConstants.rearCamera.camname,
                                                 4));
+        
+                SmartDashboard.putData("TrapTuneTo Pref",
+                                new TrapTune(m_swerve));
+
+          
 
                 configureDriverBindings();
 
@@ -397,11 +403,13 @@ public class RobotContainer implements Logged {
                 codriver.b().onTrue(new JogIntake(m_intake, codriver));
                 // Constants.safeStageShooterSpeed));
 
-                codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,
-                                Constants.tapeLineShooterSpeed, 10));
+                // codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,
+                // Constants.tapeLineShooterSpeed, 10));
 
-                codriver.y().whileTrue(
-                                Commands.run(() -> m_swerve.wheelsAlign(), m_swerve));
+                // codriver.y().whileTrue(
+                // Commands.run(() -> m_swerve.wheelsAlign(), m_swerve));
+                codriver.y().onTrue(Commands.runOnce(() -> m_swerve.targetNote = 4));
+                codriver.x().onTrue(Commands.runOnce(() -> m_swerve.targetNote = 5));
 
                 // codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
 

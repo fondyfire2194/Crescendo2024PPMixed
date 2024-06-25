@@ -23,7 +23,7 @@ public class AutoAlignNote extends Command {
   private final boolean m_endAtTargets;
   private final double m_toleranceDegrees;
 
-  public PIDController m_alignTargetPID = new PIDController(0.03, 0, 0);
+  public PIDController m_alignTargetPID = new PIDController(0.008, 0, 0);
 
   private double rotationVal;
   private Timer elapsedTime;
@@ -50,15 +50,16 @@ public class AutoAlignNote extends Command {
     m_alignTargetPID.setTolerance(m_toleranceDegrees);
     m_alignTargetPID.setIZone(1);
     m_alignTargetPID.setIntegratorRange(-.01, .01);
-    m_alignTargetPID.setI(.0001);
+    m_alignTargetPID.setI(.000);
     m_alignTargetPID.reset();
-    m_swerve.targetPose = AllianceUtil.flipFieldAngle(FieldConstants.centerNotesPickup[m_swerve.targetNote]);
+    m_swerve.targetPose = AllianceUtil.flipFieldAngle(FieldConstants.centerNotes[m_swerve.targetNote]);
     elapsedTime = new Timer();
     elapsedTime.reset();
     elapsedTime.start();
     visionTargetSet = false;
     loopctr = 0;
     setpoint = Pref.getPref("autoalignoffset");
+    
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -75,16 +76,7 @@ public class AutoAlignNote extends Command {
       lastAngleError = angleError;
     }
 
-    if (!visionTargetSet && loopctr > 10) {
-      rotationVal = m_alignTargetPID.calculate(m_swerve.getAngleDegrees(), m_swerve.getAngleDegreesToTarget());
-      m_swerve.alignedToTarget = m_alignTargetPID.atSetpoint();
-    }
-    m_swerve.drive(
-        0, 0,
-        rotationVal *= Constants.SwerveConstants.kmaxAngularVelocity,
-        true,
-        true,
-        false);
+    m_swerve.alignedToTarget=m_alignTargetPID.atSetpoint();
   }
 
   // Called once the command ends or is interrupted.
@@ -93,11 +85,13 @@ public class AutoAlignNote extends Command {
     m_alignTargetPID.reset();
     m_swerve.drive(0, 0, 0, false, true, false);
     SmartDashboard.putString("Aligned", "to Note");
+    SmartDashboard.putBoolean("AlignedVTS", visionTargetSet);
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_endAtTargets && (m_swerve.alignedToTarget || elapsedTime.hasElapsed(2) || RobotBase.isSimulation());
+    return m_endAtTargets && (elapsedTime.hasElapsed(.25) && m_swerve.alignedToTarget || elapsedTime.hasElapsed(5)
+        || RobotBase.isSimulation());
   }
 }

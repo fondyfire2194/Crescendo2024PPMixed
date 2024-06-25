@@ -130,7 +130,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                                                 pf.pathMaps.get(sourcepaths.SourceShootToNearCenter4
                                                                                                 .name()))),
                                                 () -> innerNoteFirst),
-                                new AutoAlignNote(swerve, 5, true),
+                                new AutoAlignNote(swerve, 1, true),
                                 Commands.parallel(
                                                 new DriveToPickupNote(swerve, transfer, intake),
                                                 cf.doIntake(5)));

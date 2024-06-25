@@ -16,18 +16,21 @@
       "/SmartDashboard/RotateToNote": "Command",
       "/SmartDashboard/RotatetoNote": "Command",
       "/SmartDashboard/RunTestPickupandShoot": "Command",
+      "/SmartDashboard/SetDriveKP1": "Command",
       "/SmartDashboard/Source Start": "String Chooser",
       "/SmartDashboard/SubwfrStart": "String Chooser",
       "/SmartDashboard/TestCan": "Command",
+      "/SmartDashboard/TrapTune": "Command",
+      "/SmartDashboard/TrapTuneTo -3": "Command",
+      "/SmartDashboard/TrapTuneTo -8": "Command",
+      "/SmartDashboard/TrapTuneTo 0": "Command",
+      "/SmartDashboard/TrapTuneTo 3": "Command",
+      "/SmartDashboard/TrapTuneTo 8": "Command",
+      "/SmartDashboard/TrapTuneTo Pref": "Command",
       "/SmartDashboard/ViewArmShooterData": "Command"
     },
     "windows": {
       "/FMSInfo": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/AlignToNote": {
         "window": {
           "visible": true
         }
@@ -72,6 +75,16 @@
         "window": {
           "visible": true
         }
+      },
+      "/SmartDashboard/TrapTuneTo -8": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/TrapTuneTo Pref": {
+        "window": {
+          "visible": true
+        }
       }
     }
   },
@@ -84,9 +97,10 @@
     },
     "transitory": {
       "Monologue": {
-        "m_swerve": {
-          "open": true
-        }
+        "open": true
+      },
+      "Preferences": {
+        "open": true
       },
       "SmartDashboard": {
         "DtoPuN": {
@@ -94,8 +108,7 @@
         },
         "Shooter": {
           "open": true
-        },
-        "open": true
+        }
       }
     }
   },
@@ -109,6 +122,11 @@
   },
   "Plot": {
     "Plot <0>": {
+      "window": {
+        "visible": false
+      }
+    },
+    "Plot <1>": {
       "plots": [
         {
           "axis": [
@@ -122,7 +140,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 0,
+          "height": 151,
           "series": [
             {
               "color": [
@@ -131,30 +149,36 @@
                 0.6901960968971252,
                 1.0
               ],
-              "id": "NT:/Monologue/m_shooter/shtrtoprpm"
+              "id": "NT:/SmartDashboard/vel"
             }
           ]
-        }
-      ],
-      "window": {
-        "visible": false
-      }
-    },
-    "Plot <1>": {
-      "plots": [
+        },
         {
+          "axis": [
+            {
+              "autoFit": true
+            }
+          ],
           "backgroundColor": [
             0.0,
             0.0,
             0.0,
             0.8500000238418579
           ],
-          "height": 332
+          "height": 151,
+          "series": [
+            {
+              "color": [
+                0.2980392277240753,
+                0.44705885648727417,
+                0.6901960968971252,
+                1.0
+              ],
+              "id": "NT:/SmartDashboard/dist"
+            }
+          ]
         }
-      ],
-      "window": {
-        "visible": false
-      }
+      ]
     }
   }
 }
