@@ -57,6 +57,8 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
   public boolean topMotorConnected;
   public boolean bottomMotorConnected;
 
+  
+
   /** Creates a new Shooter. */
   public ShooterSubsystem() {
 

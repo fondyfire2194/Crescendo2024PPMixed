@@ -57,6 +57,9 @@ public class SwerveModule extends SubsystemBase {
   public boolean wheelAligning;
   private double feedForward;
   private double acceleration;
+  private double ffks;
+  private double ffka;
+  private double ffkv;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -218,9 +221,9 @@ public class SwerveModule extends SubsystemBase {
       } else {
         acceleration = (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond) / 0.020;
 
-        boolean tuning = Pref.getPref("drivetune") != 0;
+        boolean tuning = true;// Pref.getPref("drivetune") != 0;
 
-        if (tuning)
+        if (!tuning)
           feedForward = driveFeedforward.calculate(
               desiredState.speedMetersPerSecond, acceleration);
         else
@@ -295,12 +298,13 @@ public class SwerveModule extends SubsystemBase {
 
   @Override
   public void periodic() {
-
-    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " DrivePosition", getDrivePosition());
-    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " feedforward",
-        feedForward);
-    SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " acceleration",
-        acceleration);
+    String a = "Modules//" + String.valueOf(moduleNumber);
+    SmartDashboard.putNumber(a + " DrivePosition", getDrivePosition());
+    SmartDashboard.putNumber(a + " feedforward", feedForward);
+    SmartDashboard.putNumber(a + " acceleration", acceleration);
+    SmartDashboard.putNumber(a + " ffks", ffks);
+    SmartDashboard.putNumber(a + " ffka", ffka);
+    SmartDashboard.putNumber(a + " ffkv", ffkv);
 
     if (characterizing) {
       driveMotor.setVoltage(characterizationVolts);
@@ -368,8 +372,10 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double calculate(double velocity, double acceleration) {
-    return Pref.getPref("DriveKs") * Math.signum(velocity) + Pref.getPref("DriveKv")
-        * velocity + Pref.getPref("DriveKa") * acceleration;
+    ffks = Math.signum(velocity) * Pref.getPref("DriveKs");
+    ffkv = velocity * Pref.getPref("DriveKv");
+    ffka = acceleration * Pref.getPref("DriveKa");
+    return ffks + ffka + ffkv;
   }
 
 }

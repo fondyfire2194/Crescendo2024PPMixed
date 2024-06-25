@@ -76,11 +76,6 @@
           "visible": true
         }
       },
-      "/SmartDashboard/TrapTuneTo -8": {
-        "window": {
-          "visible": true
-        }
-      },
       "/SmartDashboard/TrapTuneTo Pref": {
         "window": {
           "visible": true
@@ -140,7 +135,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 151,
+          "height": 2,
           "series": [
             {
               "color": [
@@ -165,7 +160,7 @@
             0.0,
             0.8500000238418579
           ],
-          "height": 151,
+          "height": 2,
           "series": [
             {
               "color": [
@@ -178,7 +173,10 @@
             }
           ]
         }
-      ]
+      ],
+      "window": {
+        "visible": false
+      }
     }
   }
 }
