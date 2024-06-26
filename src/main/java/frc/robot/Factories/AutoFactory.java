@@ -39,7 +39,6 @@ public class AutoFactory {
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
 
-
         public int finalChoice = 0;
 
         int ampChoice;
@@ -105,7 +104,6 @@ public class AutoFactory {
                 m_ampStartChooser.addOption("C2 then C1 Vis", 21);
                 m_ampStartChooser.addOption("C1 then C2 Vis", 22);
 
-
                 maxampauto = 22;
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
@@ -167,13 +165,13 @@ public class AutoFactory {
                         case 1:
                                 return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_sac, m_swerve,
                                                 sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
-                                                sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot,
+                                                sbwfrpaths.SubwfrShootToWing1Shoot, sbwfrpaths.Wing1ShootToSubwfr,
                                                 sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot);
                         case 2:
                                 return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_sac, m_swerve,
                                                 sbwfrpaths.SubwfrShootToWing2, sbwfrpaths.Wing2ToSubwfrShoot,
                                                 sbwfrpaths.SubwfrShootToWing3, sbwfrpaths.Wing3ToSubwfrShoot,
-                                                sbwfrpaths.SubwfrShootToWing1, sbwfrpaths.Wing1ToSubwfrShoot);
+                                                sbwfrpaths.SubwfrShootToWing1Shoot, sbwfrpaths.Wing1ShootToSubwfr);
 
                         case 3:
                                 return new AutoSbwfrShootThenSequence(m_cf, m_pf, m_sac, m_swerve,

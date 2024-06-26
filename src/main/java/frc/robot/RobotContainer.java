@@ -254,7 +254,7 @@ public class RobotContainer implements Logged {
                 simNoteIntakenTrigger2 = new Trigger(
                                 () -> RobotBase.isSimulation() && m_intake.isIntaking2
                                                 && !m_transfer.skipSecondNoteInSim
-                                                && Math.abs(m_swerve.remainingdistance) < .3);
+                                                && Math.abs(m_swerve.remainingdistance) < .4);
 
                 simNoteIntakenTrigger2.onTrue(Commands.runOnce(() -> m_transfer.simnoteatintake = true));
 

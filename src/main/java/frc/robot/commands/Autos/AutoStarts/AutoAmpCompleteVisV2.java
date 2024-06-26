@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
-import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
@@ -18,9 +17,7 @@ import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.commands.Autos.Autos.CenterToShoot;
 import frc.robot.commands.Autos.Autos.LookForAnotherNote;
-import frc.robot.commands.Drive.AutoAlignNote;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
-import frc.robot.commands.Drive.DriveToPickupNote;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.subsystems.IntakeSubsystem;
@@ -57,9 +54,10 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                 Commands.waitSeconds(.75),
                                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                                 Constants.subwfrShooterSpeed, 20)),
-                                Commands.parallel(
-                                                cf.transferNoteToShooterCommand(),
-                                                pickupCenter1_2(cf, pf, swerve, transfer, intake, innerNoteFirst)),
+
+                                cf.transferNoteToShooterCommand(),
+
+                                pickupCenter1_2(cf, pf, swerve, transfer, intake, innerNoteFirst),
 
                                 // if note in intake go shoot it or try the adjacent one if not
                                 Commands.either(
@@ -81,20 +79,16 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                         TransferSubsystem transfer, IntakeSubsystem intake,
                         boolean innerNoteFirst) {
 
-                return Commands.sequence(
-                                Commands.either(Commands.sequence(
-                                                Commands.runOnce(() -> swerve.targetNote = 2),
+                return Commands.parallel(
+                                Commands.either(
                                                 new RunPPath(swerve,
-                                                                pf.pathMaps.get(amppaths.AmpToNearCenter2.name()))),
-                                                Commands.sequence(
-                                                                Commands.runOnce(() -> swerve.targetNote = 1),
-                                                                new RunPPath(swerve, pf.pathMaps.get(
-                                                                                amppaths.AmpToNearCenter1.name()))),
+                                                                pf.pathMaps.get(amppaths.AmpToCenter2.name())),
+
+                                                new RunPPath(swerve, pf.pathMaps.get(
+                                                                amppaths.AmpToCenter1.name())),
                                                 () -> innerNoteFirst),
-                                new AutoAlignNote(swerve, 5, true),
-                                Commands.parallel(
-                                                new DriveToPickupNote(swerve, transfer, intake),
-                                                cf.doIntake(5)));
+
+                                cf.doIntake(8));
         }
 
         public Command moveShootCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
@@ -112,42 +106,16 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
         public Command pickUpNoteAfterShoot(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
                         TransferSubsystem transfer, IntakeSubsystem intake, boolean innerNoteFirst) {
 
-                return Commands.sequence(
-                                Commands.either(Commands.sequence(
-                                                Commands.runOnce(() -> swerve.targetNote = 1),
+                return Commands.parallel(
+                                Commands.either(
                                                 new RunPPath(swerve,
-                                                                pf.pathMaps.get(amppaths.AmpShootToNearCenter1
-                                                                                .name()))),
-                                                Commands.sequence(
-                                                                Commands.runOnce(() -> swerve.targetNote = 2),
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(amppaths.AmpShootToNearCenter2
-                                                                                                .name()))),
-
+                                                                pf.pathMaps.get(amppaths.AmpShootToCenter1
+                                                                                .name())),
+                                                new RunPPath(swerve,
+                                                                pf.pathMaps.get(amppaths.AmpShootToCenter2
+                                                                                .name())),
                                                 () -> innerNoteFirst),
-
-                                new AutoAlignNote(swerve, 5, true),
-
-                                Commands.parallel(
-                                                new DriveToPickupNote(swerve, transfer, intake),
-                                                cf.doIntake(5)));
-
-        }
-
-        public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, boolean innerNoteFirst) {
-                return Commands.sequence(
-                                Commands.parallel(
-                                                Commands.either(
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(amppaths.Center2ToCenter1
-                                                                                                .name())),
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(amppaths.Center1ToCenter2
-                                                                                                .name())),
-                                                                () -> innerNoteFirst),
-                                                cf.doIntake(2)));
-
+                                cf.doIntake(5));
         }
 
         Command getAnotherNote(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,

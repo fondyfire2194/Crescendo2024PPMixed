@@ -19,8 +19,11 @@
       "/SmartDashboard/Return To 0": "Command",
       "/SmartDashboard/RotateToNote": "Command",
       "/SmartDashboard/RotatetoNote": "Command",
+      "/SmartDashboard/RunTestPickupAndShoot": "Command",
       "/SmartDashboard/RunTestPickupandShoot": "Command",
       "/SmartDashboard/S2NX4": "Command",
+      "/SmartDashboard/Set Robot At 0": "Command",
+      "/SmartDashboard/SetAngleKp": "Command",
       "/SmartDashboard/SetDriveKP1": "Command",
       "/SmartDashboard/Source Start": "String Chooser",
       "/SmartDashboard/SubwfrStart": "String Chooser",
@@ -129,7 +132,8 @@
     "Server": {
       "Publishers": {
         "open": true
-      }
+      },
+      "open": true
     },
     "visible": true
   },
