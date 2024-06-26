@@ -125,6 +125,12 @@
         "Shooter": {
           "open": true
         }
+      },
+      "limelight-frright": {
+        "open": true
+      },
+      "limelight-rear": {
+        "open": true
       }
     }
   },

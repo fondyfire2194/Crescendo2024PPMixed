@@ -15,8 +15,8 @@ import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.sourcepaths;
-import frc.robot.commands.Autos.Autos.CenterToShoot;
 import frc.robot.commands.Autos.Autos.LookForAnotherNote;
+import frc.robot.commands.Autos.Autos.SourceAutoCommands;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
 import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Pathplanner.RunPPath;
@@ -33,6 +33,7 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                         CommandFactory cf,
                         PathFactory pf,
                         AutoFactory af,
+                        SourceAutoCommands srcac,
                         SwerveSubsystem swerve,
                         IntakeSubsystem intake,
                         TransferSubsystem transfer,
@@ -41,86 +42,27 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                         boolean innerNoteFirst) {
 
                 addCommands( // note
-                                Commands.runOnce(() -> transfer.simnoteatintake = false),
-                                Commands.runOnce(() -> intake.resetIsIntakingSim()),
-                                Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
-                                Commands.runOnce(() -> swerve.ampActive = false),
-                                Commands.runOnce(() -> swerve.sourceActive = true),
-                                Commands.runOnce(() -> swerve.currentpathstartTime = Timer.getFPGATimestamp()),
-                                Commands.runOnce(() -> swerve.pickupTargetX = FieldConstants.FIELD_LENGTH / 2),
-                                cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-
+                                srcac.setSourceStart(swerve, transfer, intake, cf),
                                 Commands.race(
                                                 Commands.waitSeconds(.75),
                                                 cf.positionArmRunShooterSpecialCase(Constants.subwfrArmAngle,
                                                                 Constants.subwfrShooterSpeed, 20)),
                                 cf.transferNoteToShooterCommand(),
 
-                                pickupCenter4_5(cf, pf, swerve, transfer, intake, innerNoteFirst),
+                                srcac.pickupCenter4_5(cf, pf, swerve, transfer, intake, innerNoteFirst),
                                 // if note in intake go shoot it or try to find one
                                 Commands.either(
-                                                moveShootCenter4_5(cf, pf, swerve, innerNoteFirst),
+                                                srcac.moveShootCenter4_5(cf, pf, swerve, innerNoteFirst),
                                                 getAnotherNote(swerve, transfer, intake, cf, pf),
-                                                // tryOtherNote(pf, cf, swerve, transfer, innerNoteFirst),
                                                 () -> transfer.noteAtIntake()),
 
-                                pickUpNoteAfterShoot(pf, cf, swerve, transfer, intake,
+                                srcac.pickUpNoteAfterShoot(pf, cf, swerve, transfer, intake,
                                                 innerNoteFirst),
 
                                 Commands.either(
-                                                moveShootCenter4_5(cf, pf, swerve, !innerNoteFirst),
+                                                srcac.moveShootCenter4_5(cf, pf, swerve, !innerNoteFirst),
                                                 getAnotherNote(swerve, transfer, intake, cf, pf),
                                                 () -> transfer.noteAtIntake()));
-        }
-
-        public Command pickupCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, IntakeSubsystem intake,
-                        boolean innerNoteFirst) {
-
-                return Commands.parallel(
-                                Commands.either(
-
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceToCenter4
-                                                                                .name())),
-
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceToCenter5
-                                                                                .name())),
-                                                () -> innerNoteFirst),
-
-                                cf.doIntakeDelayed(2, 5));
-        }
-
-        public Command moveShootCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
-                        boolean innerNoteFirst) {
-                return Commands.either(
-                                new CenterToShoot(cf, pf.pathMaps.get(
-                                                sourcepaths.Center4ToSourceShoot
-                                                                .name()),
-                                                swerve),
-                                new CenterToShoot(cf, pf.pathMaps.get(sourcepaths.Center5ToSourceShoot
-                                                .name()),
-                                                swerve),
-                                () -> innerNoteFirst);
-        }
-
-        public Command pickUpNoteAfterShoot(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, IntakeSubsystem intake, boolean innerNoteFirst) {
-
-                return
-
-                Commands.parallel(
-                                Commands.either(
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter5
-                                                                                .name())),
-                                                new RunPPath(swerve,
-                                                                pf.pathMaps.get(sourcepaths.SourceShootToCenter4
-                                                                                .name())),
-                                                () -> innerNoteFirst),
-
-                                cf.doIntake(7));
         }
 
         Command getAnotherNote(SwerveSubsystem swerve, TransferSubsystem transfer, IntakeSubsystem intake,
@@ -155,18 +97,19 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                 () -> transfer.noteAtIntake()));
         }
 
-        public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,
-                        TransferSubsystem transfer, boolean innerNoteFirst) {
-                return Commands.sequence(
-                                Commands.parallel(
-                                                Commands.either(
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(sourcepaths.Center5ToCenter4
-                                                                                                .name())),
-                                                                new RunPPath(swerve,
-                                                                                pf.pathMaps.get(sourcepaths.Center4ToCenter5
-                                                                                                .name())),
-                                                                () -> innerNoteFirst),
-                                                cf.doIntake(2)));
-        }
+        // public Command tryOtherNote(PathFactory pf, CommandFactory cf,
+        // SwerveSubsystem swerve,
+        // TransferSubsystem transfer, boolean innerNoteFirst) {
+        // return Commands.sequence(
+        // Commands.parallel(
+        // Commands.either(
+        // new RunPPath(swerve,
+        // pf.pathMaps.get(sourcepaths.Center5ToCenter4
+        // .name())),
+        // new RunPPath(swerve,
+        // pf.pathMaps.get(sourcepaths.Center4ToCenter5
+        // .name())),
+        // () -> innerNoteFirst),
+        // cf.doIntake(2)));
+        // }
 }

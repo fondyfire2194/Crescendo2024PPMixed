@@ -53,7 +53,8 @@ public class PathFactory {
         Center1ToAmpShoot,
         Center2ToAmpShoot,
         Center3ToWing2,
-        Center3ToAmpShoot;
+        Center3ToAmpShoot,
+        Wing1ToCenter1;
     }
 
     public boolean checkAmpFilesExist() {

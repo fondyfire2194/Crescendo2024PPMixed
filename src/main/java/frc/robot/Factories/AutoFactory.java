@@ -4,16 +4,18 @@
 
 package frc.robot.Factories;
 
-import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
-import com.pathplanner.lib.path.PathPlannerPath;
-
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants;
+import frc.robot.Factories.PathFactory.amppaths;
 import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.commands.Autos.AutoStarts.AutoAmpCompleteVisV2;
 import frc.robot.commands.Autos.AutoStarts.AutoSourceCompleteVisV2;
+import frc.robot.commands.Autos.Autos.AmpAutoCommands;
+import frc.robot.commands.Autos.Autos.CenterToShoot;
+import frc.robot.commands.Autos.Autos.SourceAutoCommands;
 import frc.robot.commands.Autos.SubwfrStart.AutoSbwfrShootThenSequence;
 import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommands;
 import frc.robot.commands.Drive.AutoAlignSpeaker;
@@ -65,9 +67,14 @@ public class AutoFactory {
 
         private CommandFactory m_cf;
 
+        private SourceAutoCommands m_srcac;
+
+        private AmpAutoCommands m_ampac;
+
         public boolean validChoice;
 
-        public AutoFactory(PathFactory pf, CommandFactory cf, SubwooferAutoCommands sac,
+        public AutoFactory(PathFactory pf, CommandFactory cf,
+                        SubwooferAutoCommands sac, SourceAutoCommands srcac, AmpAutoCommands ampac,
                         SwerveSubsystem swerve,
                         ShooterSubsystem shooter,
                         ArmSubsystem arm,
@@ -75,6 +82,8 @@ public class AutoFactory {
                 m_pf = pf;
                 m_cf = cf;
                 m_sac = sac;
+                m_srcac = srcac;
+                m_ampac = ampac;
                 m_swerve = swerve;
                 m_transfer = transfer;
                 m_intake = intake;
@@ -94,15 +103,16 @@ public class AutoFactory {
 
                 minsourceauto = 11;
                 m_sourceStartChooser.setDefaultOption("Not Used", 10);
-                m_sourceStartChooser.addOption("C4 Then C5 Vis", 11);
-                m_sourceStartChooser.addOption("C5 Then C4 Vis", 12);
+                m_sourceStartChooser.addOption("C4 Then C5", 11);
+                m_sourceStartChooser.addOption("C5 Then C4", 12);
 
                 maxsourceauto = 12;
 
                 minampauto = 21;
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
-                m_ampStartChooser.addOption("C2 then C1 Vis", 21);
-                m_ampStartChooser.addOption("C1 then C2 Vis", 22);
+                m_ampStartChooser.addOption("C2 then C1", 21);
+                m_ampStartChooser.addOption("C1 then C2", 22);
+               // m_ampStartChooser.addOption("W1 then C1", 23);
 
                 maxampauto = 22;
 
@@ -226,17 +236,31 @@ public class AutoFactory {
 
                         case 11:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true);
+                                                m_srcac, m_swerve, m_intake, m_transfer, m_llv, 1.75, true);
                         case 12:
                                 return new AutoSourceCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false);
+                                                m_srcac, m_swerve, m_intake, m_transfer, m_llv, 1.75, false);
 
                         case 21:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, true);
+                                                m_ampac, m_swerve, m_intake, m_transfer, m_llv, 1.75, true);
                         case 22:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_swerve, m_intake, m_transfer, m_llv, 1.75, false);
+                                                m_ampac, m_swerve, m_intake, m_transfer, m_llv, 1.75, false);
+                        case 23:
+
+                                return Commands.sequence(
+                                                m_ampac.setAmpStart(m_swerve, m_transfer, m_intake, m_cf),
+                                                m_ampac.pickupNote(m_cf, m_pf.pathMaps.get(
+                                                                amppaths.AmpToWing1.name()), m_swerve, 3),
+                                                m_ampac.prepandshoot(m_cf, Constants.wing1ArmAngle,
+                                                                Constants.wing1ShooterSpeed, 10),
+
+                                                m_ampac.pickupNote(m_cf, m_pf.pathMaps.get(
+                                                                amppaths.Wing1ToCenter1.name()), m_swerve, 3),
+
+                                                new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
+                                                                .name()), m_swerve));
 
                         default:
                                 return Commands.none();
