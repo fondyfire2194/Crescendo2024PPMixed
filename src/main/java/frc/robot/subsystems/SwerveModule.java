@@ -61,6 +61,7 @@ public class SwerveModule extends SubsystemBase {
   private double ffka;
   private double ffkv;
   private double velocityError;
+  private boolean tuning;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -200,6 +201,10 @@ public class SwerveModule extends SubsystemBase {
     angleController.setP(SwerveConstants.angleKP);
   }
 
+  public void tuneAngleKp() {
+    angleController.setP(Pref.getPref("AngleKp"));
+  }
+
   public boolean driveIsBraked() {
     return driveMotor.getIdleMode() == IdleMode.kBrake;
   }
@@ -213,16 +218,16 @@ public class SwerveModule extends SubsystemBase {
           percentOutput * RobotController.getBatteryVoltage());
       SmartDashboard.putNumber("Modules//" + String.valueOf(moduleNumber) + " driveKv",
           percentOutput * RobotController.getBatteryVoltage() / getDriveVelocity());
-
     }
     boolean feedforward = true;
+
     if (!isOpenLoop) {
       if (!feedforward) {
         driveController.setReference(desiredState.speedMetersPerSecond, CANSparkMax.ControlType.kVelocity);
       } else {
         acceleration = (desiredState.speedMetersPerSecond - previousState.speedMetersPerSecond) / 0.020;
 
-        boolean tuning = true;// Pref.getPref("drivetune") != 0;
+        tuning = Pref.getPref("drivetune") != 0;
 
         if (!tuning)
           feedForward = driveFeedforward.calculate(
@@ -303,19 +308,23 @@ public class SwerveModule extends SubsystemBase {
   @Override
   public void periodic() {
     String a = "Modules//" + String.valueOf(moduleNumber);
-    SmartDashboard.putNumber(a + " VelocityError", velocityError);
-    SmartDashboard.putNumber(a + " feedforward", feedForward);
-    SmartDashboard.putNumber(a + " acceleration", acceleration);
-    SmartDashboard.putNumber(a + " ffks", ffks);
-    SmartDashboard.putNumber(a + " ffka", ffka);
-    SmartDashboard.putNumber(a + " ffkv", ffkv);
 
+    if (tuning) {
+      SmartDashboard.putNumber(a + " VelocityError", velocityError);
+      SmartDashboard.putNumber(a + " feedforward", feedForward);
+      SmartDashboard.putNumber(a + " acceleration", acceleration);
+      SmartDashboard.putNumber(a + " ffks", ffks);
+      SmartDashboard.putNumber(a + " ffka", ffka);
+      SmartDashboard.putNumber(a + " ffkv", ffkv);
+
+    }
+    SmartDashboard.putNumber(a + " IAP", integratedAngleEncoder.getPosition());
     if (characterizing) {
       driveMotor.setVoltage(characterizationVolts);
       angleController.setReference(0, ControlType.kPosition);
-      SmartDashboard.putBoolean(String.valueOf(moduleNumber) + " Characterizing",
+      SmartDashboard.putBoolean(a + " Characterizing",
           characterizing);
-      SmartDashboard.putNumber(String.valueOf(moduleNumber) + " Characterization Volts", characterizationVolts);
+      SmartDashboard.putNumber(a + " Characterization Volts", characterizationVolts);
     }
 
   }
@@ -376,9 +385,12 @@ public class SwerveModule extends SubsystemBase {
   }
 
   public double calculate(double velocity, double acceleration) {
-    ffks = Math.signum(velocity) * Pref.getPref("DriveKs");
-    ffkv = velocity * Pref.getPref("DriveKv");
-    ffka = acceleration * Pref.getPref("DriveKa");
+    ffks = Math.signum(velocity) * Pref.getPref("driveKs");
+    ffkv = velocity * Pref.getPref("driveKv");
+    if (acceleration > 0)
+      ffka = acceleration * Pref.getPref("driveKa");
+    else
+      ffka = acceleration * Pref.getPref("driveKa");
     return ffks + ffka + ffkv;
   }
 

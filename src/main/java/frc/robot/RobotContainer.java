@@ -155,8 +155,8 @@ public class RobotContainer implements Logged {
                                 m_llv);
 
                 if (RobotBase.isReal()) {
-                        // Pref.deleteUnused();
-                        // Pref.addMissing();
+                        Pref.deleteUnused();
+                        Pref.addMissing();
                 }
 
                 autoChooser = AutoBuilder.buildAutoChooser();
@@ -181,7 +181,7 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putData("PP 5metersX",
                                 m_cf.autopathfind(new Pose2d(), 0, 0));
 
-                SmartDashboard.putData("RunTestPickupandShoot",
+                SmartDashboard.putData("RunTestPickupAndShoot",
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
                                                 CameraConstants.rearCamera.camname,
                                                 4));
@@ -189,8 +189,11 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putData("TrapTuneTo Pref",
                                 new TrapTune(m_swerve));
 
-                                   SmartDashboard.putData("Return To 0",
-                                new TrapTuneGo0(m_swerve));
+                SmartDashboard.putData("Set Robot At 0",
+                                Commands.runOnce(() -> m_swerve.resetPoseEstimator(new Pose2d())));
+
+                SmartDashboard.putData("SetAngleKp",
+                                Commands.runOnce(() -> m_swerve.setTurnKp()));
 
                 configureDriverBindings();
 
@@ -414,9 +417,9 @@ public class RobotContainer implements Logged {
                 // codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,
                 // Constants.tapeLineShooterSpeed, 10));
 
-                // codriver.y().whileTrue(
-                // Commands.run(() -> m_swerve.wheelsAlign(), m_swerve));
-                codriver.y().onTrue(Commands.runOnce(() -> m_swerve.targetNote = 4));
+                codriver.y().whileTrue(
+                                Commands.run(() -> m_swerve.wheelsAlign(), m_swerve));
+                // codriver.y().onTrue(Commands.runOnce(() -> m_swerve.targetNote = 4));
                 codriver.x().onTrue(Commands.runOnce(() -> m_swerve.targetNote = 5));
 
                 // codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
@@ -448,8 +451,6 @@ public class RobotContainer implements Logged {
                                                 new RunPPath(m_swerve, m_pf.getPath(
                                                                 sourcepaths.Center4ToSourceShoot.name())),
                                                 new AutoAlignSpeaker(m_swerve, .5, true)));
-
-                codriver.start().onTrue(Commands.runOnce(() -> m_swerve.resetModuleEncoders()));
 
                 codriver.back().whileTrue(Commands.runOnce(() -> m_intake.intakeMotor.setVoltage(-8)))
                                 .onFalse(Commands.runOnce(() -> m_intake.intakeMotor.setVoltage(0)));

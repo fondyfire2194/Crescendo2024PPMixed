@@ -41,6 +41,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
+import frc.robot.Pref;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
 import monologue.Annotations.Log;
@@ -67,7 +68,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   private double lastRotTime = 0.0;
   private double timeSinceDrive = 0.0;
   private double lastDriveTime = 0.0;
-  @Log.NT(key="actualstartpose")
+  @Log.NT(key = "actualstartpose")
   public Pose2d actualstartPose = new Pose2d();
 
   private static final Matrix<N3, N1> ODOMETRY_STDDEV = VecBuilder.fill(0.03, 0.03, Math.toRadians(1));
@@ -197,7 +198,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
     SmartDashboard.putData("Field", m_field);
 
-    resetModuleEncoders();
+    absoluteResetFrontModuleEncoders();
+    absoluteResetBackModuleEncoders();
 
     // Configure AutoBuilder
     AutoBuilder.configureHolonomic(
@@ -309,11 +311,21 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return Commands.runOnce(() -> xLock());
   }
 
-  public void resetModuleEncoders() {
+  public void absoluteResetFrontModuleEncoders() {
     mSwerveMods[0].resetAngleToAbsolute();
     mSwerveMods[1].resetAngleToAbsolute();
+  }
+
+  public void absoluteResetBackModuleEncoders() {
     mSwerveMods[2].resetAngleToAbsolute();
     mSwerveMods[3].resetAngleToAbsolute();
+  }
+
+  public void resetAngleEncoders() {
+    mSwerveMods[0].resetAngleEncoder(0);
+    mSwerveMods[1].resetAngleEncoder(0);
+    mSwerveMods[2].resetAngleEncoder(0);
+    mSwerveMods[3].resetAngleEncoder(0);
   }
 
   public double getHeadingDegrees() {
@@ -546,7 +558,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     SmartDashboard.putNumber("Drive/GyroAngle", getAngle());
     SmartDashboard.putNumber("Drive/GyroYawRads", getR2dRads());
     SmartDashboard.putNumber("Drive/XMPS", getChassisSpeeds().vxMetersPerSecond);
-    
+
     m_field.setRobotPose(getPose());
 
     if (!mod0connected) {
@@ -701,12 +713,20 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     return output;
   }
 
+  public Command setTurnKp() {
+    return Commands.parallel(
+        Commands.runOnce(() -> mSwerveMods[0].tuneAngleKp()),
+        Commands.runOnce(() -> mSwerveMods[1].tuneAngleKp()),
+        Commands.runOnce(() -> mSwerveMods[2].tuneAngleKp()),
+        Commands.runOnce(() -> mSwerveMods[3].tuneAngleKp()));
+  }
+
   public void updateKeepAngle() {
     keepAngle = getYaw().getRadians();
   }
 
   private void resetAll() {
-    resetModuleEncoders();
+    resetAngleEncoders();
     swervePoseEstimator.resetPosition(new Rotation2d(Math.PI), getPositions(), new Pose2d());
     simOdometryPose = new Pose2d();
     updateKeepAngle();
@@ -856,7 +876,7 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public boolean notePoseCalculated;
 
-public int targetNote;
+  public int targetNote;
 
   public void setPathRunning() {
     pathRunning = true;

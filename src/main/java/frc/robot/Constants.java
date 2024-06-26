@@ -176,9 +176,9 @@ public final class Constants {
 
                 /* Drive Motor Characterization Values */
                 public static final double driveKS = .6;
-                public static final double driveKV = 2.7;// 2.5636; //2.59 //2.55 2.8
-                public static final double driveKA = 0;// 0.12; /// 0.4 0.59
-                public static final double driveKP1 = 0;// 0.12; /// 0.4 0.59
+                public static final double driveKV = 2.5;// 2.5636; //2.59 //2.55 2.8
+                public static final double driveKA = 0.25;// 0.12; /// 0.4 0.59
+                public static final double driveKP1 = 0.01;// 0.12; /// 0.4 0.59
 
                 // team 5907 driveKs = 0.22542;driveKv = 2.4829; driveKa = 0.120; driveP =
                 // 0.08;
@@ -252,8 +252,8 @@ public final class Constants {
                                         cancoderID, angleOffset, true);
                 }
 
-                public static PIDConstants PPTransConstants = new PIDConstants(2, 0, 0); // 2.0 Translation constants 3
-                public static PIDConstants PPRotConstants = new PIDConstants(1.5, 0, 0); // 2.0 Translation constants 3
+                public static PIDConstants PPTransConstants = new PIDConstants(4, 0, 0); // 2.0 Translation constants 3
+                public static PIDConstants PPRotConstants = new PIDConstants(5, 0, 0); // 2.0 Translation constants 3
 
 
 

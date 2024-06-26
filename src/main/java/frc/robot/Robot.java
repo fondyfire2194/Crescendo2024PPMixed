@@ -211,8 +211,6 @@ public class Robot extends TimedRobot implements Logged {
 
     m_startDelay = m_robotContainer.m_startDelayChooser.getSelected();
 
-    m_robotContainer.m_swerve.resetModuleEncoders();
-
     startTime = Timer.getFPGATimestamp();
 
     if (RobotBase.isSimulation()) {
