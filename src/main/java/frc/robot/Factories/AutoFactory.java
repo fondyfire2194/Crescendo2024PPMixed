@@ -5,6 +5,7 @@
 package frc.robot.Factories;
 
 import com.fasterxml.jackson.databind.ser.impl.FailingSerializer;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,6 +38,7 @@ public class AutoFactory {
         public final SendableChooser<Integer> m_ampStartChooser = new SendableChooser<Integer>();
 
         public final SendableChooser<Integer> m_sourceStartChooser = new SendableChooser<Integer>();
+
 
         public int finalChoice = 0;
 
@@ -102,6 +104,7 @@ public class AutoFactory {
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("C2 then C1 Vis", 21);
                 m_ampStartChooser.addOption("C1 then C2 Vis", 22);
+
 
                 maxampauto = 22;
 

@@ -252,9 +252,15 @@ public final class Constants {
                                         cancoderID, angleOffset, true);
                 }
 
+                public static PIDConstants PPTransConstants = new PIDConstants(2, 0, 0); // 2.0 Translation constants 3
+                public static PIDConstants PPRotConstants = new PIDConstants(1.5, 0, 0); // 2.0 Translation constants 3
+
+
+
+
                 public static final HolonomicPathFollowerConfig pathFollowerConfig = new HolonomicPathFollowerConfig(
-                                new PIDConstants(2, 0, 0), // 2.0 Translation constants 3
-                                new PIDConstants(1.5, 0, 0), // 1.3 Rotation constants 3
+                                PPTransConstants,
+                                PPRotConstants,
                                 kmaxSpeed,
                                 flModuleOffset.getNorm(), // Drive base radius (distance from center to furthest module)
                                 // new ReplanningConfig(true,true,.1,5));//replan if error > .1 meter or error

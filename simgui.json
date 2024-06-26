@@ -2,6 +2,7 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/AP": "Command",
       "/SmartDashboard/AlignToNote": "Command",
       "/SmartDashboard/Amp Start": "String Chooser",
       "/SmartDashboard/Arm//Arm Sim": "Mechanism2d",
@@ -13,13 +14,18 @@
       "/SmartDashboard/DistanceToNote": "Command",
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Find Note": "Command",
+      "/SmartDashboard/PP 5metersX": "Command",
+      "/SmartDashboard/PPAutoChooser": "String Chooser",
+      "/SmartDashboard/Return To 0": "Command",
       "/SmartDashboard/RotateToNote": "Command",
       "/SmartDashboard/RotatetoNote": "Command",
       "/SmartDashboard/RunTestPickupandShoot": "Command",
+      "/SmartDashboard/S2NX4": "Command",
       "/SmartDashboard/SetDriveKP1": "Command",
       "/SmartDashboard/Source Start": "String Chooser",
       "/SmartDashboard/SubwfrStart": "String Chooser",
       "/SmartDashboard/TestCan": "Command",
+      "/SmartDashboard/TestPaths": "String Chooser",
       "/SmartDashboard/TrapTune": "Command",
       "/SmartDashboard/TrapTuneTo -3": "Command",
       "/SmartDashboard/TrapTuneTo -8": "Command",
@@ -31,6 +37,11 @@
     },
     "windows": {
       "/FMSInfo": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/AP": {
         "window": {
           "visible": true
         }
@@ -66,6 +77,16 @@
           "visible": true
         }
       },
+      "/SmartDashboard/PPAutoChooser": {
+        "window": {
+          "visible": true
+        }
+      },
+      "/SmartDashboard/Return To 0": {
+        "window": {
+          "visible": true
+        }
+      },
       "/SmartDashboard/Source Start": {
         "window": {
           "visible": true
@@ -91,9 +112,6 @@
       "open": false
     },
     "transitory": {
-      "Monologue": {
-        "open": true
-      },
       "Preferences": {
         "open": true
       },

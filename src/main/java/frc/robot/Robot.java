@@ -299,6 +299,7 @@ public class Robot extends TimedRobot implements Logged {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    m_robotContainer.getPPAutCommand().schedule();
   }
 
   @Override

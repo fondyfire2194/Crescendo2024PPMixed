@@ -12,7 +12,6 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
@@ -34,7 +33,7 @@ import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
-import frc.robot.Factories.PathFactory.amppaths;
+import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
 import frc.robot.commands.JogClimber;
 import frc.robot.commands.Autos.SubwfrStart.SubwooferAutoCommands;
@@ -51,6 +50,7 @@ import frc.robot.commands.Intake.JogIntake;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Test.MovePickupShootTest;
 import frc.robot.commands.Test.TrapTune;
+import frc.robot.commands.Test.TrapTuneGo0;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -92,6 +92,8 @@ public class RobotContainer implements Logged {
         private final CommandXboxController setup = new CommandXboxController(2);
 
         final ShooterSubsystem m_shooter = new ShooterSubsystem();
+
+        SendableChooser<Command> autoChooser;
 
         ShootingData m_sd = new ShootingData();
 
@@ -157,6 +159,8 @@ public class RobotContainer implements Logged {
                         // Pref.addMissing();
                 }
 
+                autoChooser = AutoBuilder.buildAutoChooser();
+
                 // m_arm.setKPKIKD();
 
                 m_pd.resetTotalEnergy();
@@ -174,15 +178,19 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putData("AlignToNote",
                                 new AutoAlignNote(m_swerve, 1, false));
 
+                SmartDashboard.putData("PP 5metersX",
+                                m_cf.autopathfind(new Pose2d(), 0, 0));
+
                 SmartDashboard.putData("RunTestPickupandShoot",
                                 new MovePickupShootTest(m_cf, m_swerve, m_arm, m_transfer, m_intake, m_shooter, m_sd,
                                                 CameraConstants.rearCamera.camname,
                                                 4));
-        
+
                 SmartDashboard.putData("TrapTuneTo Pref",
                                 new TrapTune(m_swerve));
 
-          
+                                   SmartDashboard.putData("Return To 0",
+                                new TrapTuneGo0(m_swerve));
 
                 configureDriverBindings();
 
@@ -419,13 +427,13 @@ public class RobotContainer implements Logged {
                 // m_transfer.transferMotor.setVoltage(-.5)))
                 // .onFalse(Commands.runOnce(() -> m_transfer.transferMotor.setVoltage(0)));
 
-                codriver.povUp().onTrue(
-                                Commands.sequence(
-                                                Commands.runOnce(() -> m_swerve.targetNote = 4),
-                                                m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                                                Commands.waitSeconds(.5),
-                                                new RunPPath(m_swerve, m_pf.getPath(
-                                                                sourcepaths.SourceToNearCenter4.name()))));
+                // codriver.povUp().onTrue(
+                SmartDashboard.putData("S2NX4", Commands.sequence(
+                                Commands.runOnce(() -> m_swerve.targetNote = 4),
+                                m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                Commands.waitSeconds(.5),
+                                new RunPPath(m_swerve, m_pf.getPath(
+                                                sbwfrpaths.TEST3.name()))));
 
                 codriver.povDown().onTrue(
                                 new AutoAlignNote(m_swerve, 2, true));
@@ -455,8 +463,6 @@ public class RobotContainer implements Logged {
 
                 setup.a().onTrue(m_climber.lockClimberCommand());
 
-                setup.b().onTrue(m_climber.unlockClimberCommand());
-
                 setup.leftBumper().whileTrue(m_swerve.quasistaticForward());
 
                 setup.leftTrigger().whileTrue(m_swerve.dynamicForward());
@@ -467,13 +473,9 @@ public class RobotContainer implements Logged {
 
                 setup.a().whileTrue(new WheelRadiusCharacterization(m_swerve));
 
-                // setup.b().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(40)));
-
                 setup.x().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(50)));
 
                 setup.y().onTrue(m_arm.setGoalCommand(Units.degreesToRadians(70)));
-
-                // setup.povUp().onTrue(
 
                 setup.povDown().onTrue(new RotateToAngle(m_swerve, 0));
 
@@ -524,8 +526,14 @@ public class RobotContainer implements Logged {
 
                 SmartDashboard.putData("DelayChooser", m_startDelayChooser);
 
+                SmartDashboard.putData("PPAutoChooser", autoChooser);
+
                 SmartDashboard.putData("BatteryChooser", m_batteryChooser);
 
+        }
+
+        public Command getPPAutCommand() {
+                return autoChooser.getSelected();
         }
 
         void setAutoData() {

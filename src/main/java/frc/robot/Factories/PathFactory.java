@@ -114,13 +114,17 @@ public class PathFactory {
         SubwfrShootToWing3Shoot,
         SubwfrShootToCenter2,
         Wing1ToSubwfrShoot,
+        Wing1ShootToSubwfr,
         Wing2ToSubwfrShoot,
         Wing3ToSubwfrShoot,
         Wing2ToCenter3,
         Center3ToSubwfrShoot,
         QuickToNote3,
         Quick3ToNote1,
-        Center3ToWing2
+        Center3ToWing2,
+        TEST3,
+        Test3Curve,
+        TEST0
     }
 
     public boolean checkSbwfrFilesExist() {
