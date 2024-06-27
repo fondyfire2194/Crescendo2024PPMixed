@@ -81,9 +81,9 @@ public class AutoSourceCompleteVisV2 extends SequentialCommandGroup {
                                                                                 .getSourceClearStagePose(),
                                                                                 SwerveConstants.pfConstraints, 0, 0),
                                                                 Commands.waitSeconds(.25),
-                                                                cf.autopathfind(AllianceUtil
-                                                                                .getSourceShootPose(),
-                                                                                SwerveConstants.pfConstraints, 0, 0),
+                                                                new RunPPath(swerve, pf.pathMaps
+                                                                                .get(sourcepaths.StageClearToSourceShoot
+                                                                                                .name())),                                                              
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),

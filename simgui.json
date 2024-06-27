@@ -124,7 +124,8 @@
         },
         "Shooter": {
           "open": true
-        }
+        },
+        "open": true
       },
       "limelight-frright": {
         "open": true

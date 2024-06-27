@@ -3,13 +3,15 @@ package frc.robot.utils;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import frc.robot.Constants.FieldConstants;
 
 /** Utility class for various geometry functions used during generation */
 public class GeometryUtil {
   private static final double FIELD_LENGTH = 16.54;
 
   /**
-   * Flip a field position to the other side of the field, maintaining a blue alliance origin
+   * Flip a field position to the other side of the field, maintaining a blue
+   * alliance origin
    *
    * @param pos The position to flip
    * @return The flipped position
@@ -19,7 +21,8 @@ public class GeometryUtil {
   }
 
   /**
-   * Flip a field rotation to the other side of the field, maintaining a blue alliance origin
+   * Flip a field rotation to the other side of the field, maintaining a blue
+   * alliance origin
    *
    * @param rotation The rotation to flip
    * @return The flipped rotation
@@ -29,7 +32,8 @@ public class GeometryUtil {
   }
 
   /**
-   * Flip a field pose to the other side of the field, maintaining a blue alliance origin
+   * Flip a field pose to the other side of the field, maintaining a blue alliance
+   * origin
    *
    * @param pose The pose to flip
    * @return The flipped pose
@@ -43,8 +47,8 @@ public class GeometryUtil {
    * Interpolate between two doubles
    *
    * @param startVal Start value
-   * @param endVal End value
-   * @param t Interpolation factor (0.0-1.0)
+   * @param endVal   End value
+   * @param t        Interpolation factor (0.0-1.0)
    * @return Interpolated value
    */
   public static double doubleLerp(double startVal, double endVal, double t) {
@@ -55,8 +59,8 @@ public class GeometryUtil {
    * Interpolate between two Rotation2ds
    *
    * @param startVal Start value
-   * @param endVal End value
-   * @param t Interpolation factor (0.0-1.0)
+   * @param endVal   End value
+   * @param t        Interpolation factor (0.0-1.0)
    * @return Interpolated value
    */
   public static Rotation2d rotationLerp(Rotation2d startVal, Rotation2d endVal, double t) {
@@ -130,4 +134,21 @@ public class GeometryUtil {
     double area = Math.sqrt(Math.abs(p * (p - ab) * (p - bc) * (p - ac)));
     return sign * (ab * bc * ac) / (4 * area);
   }
+
+  public boolean checkPoseInField(Pose2d pose) {
+    return pose.getX() < FieldConstants.FIELD_LENGTH
+        && pose.getY() < FieldConstants.FIELD_LENGTH;
+  }
+
+  public boolean checkPoseInRect(Pose2d pose1, Pose2d pose2, double limit) {
+    return Math.abs(pose1.getX() - pose2.getX()) < limit
+        && Math.abs(pose1.getY() - pose2.getY()) < limit;
+  }
+
+   public boolean checkPoseInRect(Pose2d pose1, Pose2d pose2, double limit, double rotlimit) {
+    return Math.abs(pose1.getX() - pose2.getX()) < limit
+        && Math.abs(pose1.getY() - pose2.getY()) < limit
+        && Math.abs(pose1.getRotation().getDegrees() - pose1.getRotation().getDegrees()) < rotlimit;
+  }
+
 }

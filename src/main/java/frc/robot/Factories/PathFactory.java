@@ -54,7 +54,8 @@ public class PathFactory {
         Center2ToAmpShoot,
         Center3ToWing2,
         Center3ToAmpShoot,
-        Wing1ToCenter1;
+        Wing1ToCenter1,
+        StageClearToAmpShoot;
     }
 
     public boolean checkAmpFilesExist() {
@@ -88,7 +89,8 @@ public class PathFactory {
         Center4ToCenter5,
         Center5ToCenter4,
         Center4ToSourceShoot,
-        Center5ToSourceShoot;
+        Center5ToSourceShoot,
+        StageClearToSourceShoot;
     }
 
     public boolean checkSourceFilesExist() {

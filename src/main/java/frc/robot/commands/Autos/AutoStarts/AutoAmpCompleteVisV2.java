@@ -85,9 +85,9 @@ public class AutoAmpCompleteVisV2 extends SequentialCommandGroup {
                                                                                 .getAmpClearStagePose(),
                                                                                 SwerveConstants.pfConstraints, 0, 0),
                                                                 Commands.waitSeconds(.25),
-                                                                cf.autopathfind(AllianceUtil
-                                                                                .getAmpShootPose(),
-                                                                                SwerveConstants.pfConstraints, 0, 0),
+                                                                new RunPPath(swerve, pf.pathMaps
+                                                                .get(amppaths.StageClearToAmpShoot
+                                                                                .name())),  
                                                                 Commands.parallel(
                                                                                 cf.positionArmRunShooterByDistance(
                                                                                                 false, true),
