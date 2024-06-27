@@ -68,7 +68,7 @@ public class SourceAutoCommands {
                                                                 pf.pathMaps.get(sourcepaths.SourceToCenter5
                                                                                 .name())),
                                                 () -> innerNoteFirst),
-                                cf.doIntakeDelayed(2, 5));
+                                cf.doIntakeDelayed(2, 2));
         }
 
         public Command moveShootCenter4_5(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
@@ -99,7 +99,7 @@ public class SourceAutoCommands {
                                                                                 .name())),
                                                 () -> innerNoteFirst),
 
-                                cf.doIntake(7));
+                                cf.doIntake(2));
         }
 
         public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,

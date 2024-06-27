@@ -69,7 +69,6 @@ import monologue.Logged;
 
 public class RobotContainer implements Logged {
         /* Subsystems */
-        final SwerveSubsystem m_swerve = new SwerveSubsystem();
 
         final IntakeSubsystem m_intake = new IntakeSubsystem();
 
@@ -135,6 +134,7 @@ public class RobotContainer implements Logged {
         public CANBusStatus canInfo;
         @Log.NT(key = "canivoreutil")
         public float busUtil;
+        final SwerveSubsystem m_swerve = new SwerveSubsystem();
 
         Command testCommand() {
                 // Load the path you want to follow using its name in the GUI
@@ -459,8 +459,13 @@ public class RobotContainer implements Logged {
                                                                 sourcepaths.Center4ToSourceShoot.name())),
                                                 new AutoAlignSpeaker(m_swerve, .5, true)));
 
-                codriver.back().whileTrue(Commands.runOnce(() -> m_intake.intakeMotor.setVoltage(-8)))
-                                .onFalse(Commands.runOnce(() -> m_intake.intakeMotor.setVoltage(0)));
+                codriver.back().whileTrue(
+                                Commands.sequence(
+                                                m_intake.startIntakeCommand(),
+                                                Commands.runOnce(() -> m_intake.intakeMotor.setVoltage(-8))))
+                                .onFalse(Commands.sequence(m_intake.stopIntakeCommand(),
+
+                                                Commands.runOnce(() -> m_intake.intakeMotor.setVoltage(0))));
 
         }
 

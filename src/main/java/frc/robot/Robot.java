@@ -186,6 +186,8 @@ public class Robot extends TimedRobot implements Logged {
     m_robotContainer.m_swerve.inhibitVision = false;
     // m_robotContainer.m_swerve.actualstartPose =
     // m_robotContainer.m_swerve.getPose();
+    m_robotContainer.m_swerve.absoluteResetFrontModuleEncoders();
+    m_robotContainer.m_swerve.absoluteResetBackModuleEncoders();
 
     m_robotContainer.m_swerve.flUpdate.setUseMegatag2(true);
     m_robotContainer.m_swerve.frUpdate.setUseMegatag2(true);
@@ -255,6 +257,8 @@ public class Robot extends TimedRobot implements Logged {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    m_robotContainer.m_swerve.absoluteResetFrontModuleEncoders();
+    m_robotContainer.m_swerve.absoluteResetBackModuleEncoders();
 
     m_robotContainer.m_swerve.actualstartPose = m_robotContainer.m_swerve.getPose();
 
@@ -298,6 +302,9 @@ public class Robot extends TimedRobot implements Logged {
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
     m_robotContainer.getPPAutCommand().schedule();
+    m_robotContainer.m_swerve.absoluteResetFrontModuleEncoders();
+    m_robotContainer.m_swerve.absoluteResetBackModuleEncoders();
+
   }
 
   @Override

@@ -117,8 +117,9 @@ public class SwerveModule extends SubsystemBase {
 
   public void resetAngleToAbsolute() {
     double angle = 0;
-    if (RobotBase.isReal())
+    if (RobotBase.isReal()) {
       angle = (m_turnCancoder.getAbsolutePosition().getValueAsDouble() * 360);
+    }
     integratedAngleEncoder.setPosition(angle);
   }
 
@@ -390,7 +391,7 @@ public class SwerveModule extends SubsystemBase {
     if (acceleration > 0)
       ffka = acceleration * Pref.getPref("driveKa");
     else
-      ffka = acceleration * Pref.getPref("driveKa");
+      ffka = acceleration * Pref.getPref("driveKadown");
     return ffks + ffka + ffkv;
   }
 

@@ -42,11 +42,11 @@ public class Pref {
 
     prefDict.put("autoalignoffset", 0.0);
 
-    prefDict.put("driveKa", 0.1);
+    prefDict.put("driveKa", 0.2);
     prefDict.put("driveKadown", 0.15);
-    prefDict.put("driveKs", .6);
-    prefDict.put("driveKv", 2.5);
-    prefDict.put("driveKp1", .1);
+    prefDict.put("driveKs", .4);
+    prefDict.put("driveKv", 2.4);
+    prefDict.put("driveKp1", .01);
     prefDict.put("drivemeters", 3.);
     prefDict.put("drivemps", 3.);
     prefDict.put("drivempsps", 2.5);

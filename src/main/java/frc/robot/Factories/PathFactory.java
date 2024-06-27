@@ -124,7 +124,7 @@ public class PathFactory {
         Quick3ToNote1,
         Center3ToWing2,
         TEST3,
-        Test3Curve,
+        TEST3Curve,
         TEST0
     }
 

@@ -83,7 +83,7 @@ public class AmpAutoCommands {
                                                                 amppaths.AmpToCenter1.name())),
                                                 () -> innerNoteFirst),
 
-                                cf.doIntake(8));
+                                cf.doIntake(2));
         }
 
         public Command moveShootCenter1_2(CommandFactory cf, PathFactory pf, SwerveSubsystem swerve,
@@ -110,7 +110,7 @@ public class AmpAutoCommands {
                                                                 pf.pathMaps.get(amppaths.AmpShootToCenter2
                                                                                 .name())),
                                                 () -> innerNoteFirst),
-                                cf.doIntake(5));
+                                cf.doIntake(2));
         }
 
         public Command tryOtherNote(PathFactory pf, CommandFactory cf, SwerveSubsystem swerve,

@@ -52,10 +52,10 @@ public class TransferIntakeToSensor extends Command {
       endTimer.restart();
     SmartDashboard.putNumber("Transfer/NoNotTime", endTimer.get());
     m_transfer.runToSensor();
-    m_intake.noteMissed = m_swerve.isStopped() && endTimer.hasElapsed(m_noNoteTime);
+    m_intake.noteMissed = DriverStation.isAutonomousEnabled() && m_swerve.isStopped()
+        && endTimer.hasElapsed(m_noNoteTime);
 
-    if (RobotBase.isSimulation())
-      m_swerve.remainingdistance = Math.abs(m_swerve.pickupTargetX - m_swerve.getX());// for note at intake sim
+    m_swerve.remainingdistance = Math.abs(m_swerve.pickupTargetX - m_swerve.getX());// for note at intake sim
 
   }
 

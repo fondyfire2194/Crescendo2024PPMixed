@@ -28,7 +28,7 @@ public class CenterToShoot extends SequentialCommandGroup {
                                                                 cf.positionArmRunShooterSpecialCase(25, 3100, 15)),
                                                 Commands.parallel(
                                                                 cf.positionArmRunShooterByDistance(false, true),
-                                                                new AutoAlignSpeaker(swerve, .2, true)),
+                                                                new AutoAlignSpeaker(swerve, 1, true)),
                                                 cf.transferNoteToShooterCommand()));
         }
 }

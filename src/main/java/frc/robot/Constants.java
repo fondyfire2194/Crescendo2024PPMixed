@@ -4,7 +4,6 @@ package frc.robot;
 import static edu.wpi.first.units.Units.Inches;
 import static edu.wpi.first.units.Units.Meters;
 
-import org.opencv.video.TrackerGOTURN;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -163,7 +162,7 @@ public final class Constants {
                 public static final double maxTranslationalSpeed = Units.feetToMeters(11.5);
 
                 /* Angle Motor PID Values */
-                public static final double angleKP = 0.028;
+                public static final double angleKP = 0.1;
                 public static final double angleKI = 0.0;
                 public static final double angleKD = 0.0;
                 public static final double angleKFF = 0.0;
@@ -175,9 +174,9 @@ public final class Constants {
                 public static final double driveKFF = .95 / kmaxTheoreticalSpeed;
 
                 /* Drive Motor Characterization Values */
-                public static final double driveKS = .6;
-                public static final double driveKV = 2.5;// 2.5636; //2.59 //2.55 2.8
-                public static final double driveKA = 0.25;// 0.12; /// 0.4 0.59
+                public static final double driveKS = .4;
+                public static final double driveKV = 2.4;// 2.5636; //2.59 //2.55 2.8
+                public static final double driveKA = 0.2;// 0.12; /// 0.4 0.59
                 public static final double driveKP1 = 0.01;// 0.12; /// 0.4 0.59
 
                 // team 5907 driveKs = 0.22542;driveKv = 2.4829; driveKa = 0.120; driveP =
@@ -252,9 +251,8 @@ public final class Constants {
                                         cancoderID, angleOffset, true);
                 }
 
-                public static PIDConstants PPTransConstants = new PIDConstants(4, 0, 0); // 2.0 Translation constants 3
-                public static PIDConstants PPRotConstants = new PIDConstants(5, 0, 0); // 2.0 Translation constants 3
-
+                public static PIDConstants PPTransConstants = new PIDConstants(.5, 0, 0); // 2.0 Translation constants 3
+                public static PIDConstants PPRotConstants = new PIDConstants(.5, 0, 0); // 2.0 Translation constants 3
 
 
 
@@ -572,7 +570,7 @@ public final class Constants {
                 shooterLobRPMMap.put(SwerveConstants.maxLobDistance, 2800.);
         }
 
-        public static double subwfrArmAngle = 58;// 60;// degrees
+        public static double subwfrArmAngle = 55;// 60;// degrees
         public static double subwfrShooterSpeed = 3000;// rpm
 
         public static double autoShootArmAngle = 60;// degrees
