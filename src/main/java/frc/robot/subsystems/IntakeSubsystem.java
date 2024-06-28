@@ -36,11 +36,9 @@ public class IntakeSubsystem extends SubsystemBase implements Logged {
   private double commandrpm;
   public boolean noteMissed;
   public boolean intakeMotorConnected;
-  @Log.NT(key = "intaking1")
+
   public boolean isIntaking1;
-  @Log.NT(key = "intaking2")
   public boolean isIntaking2;
-  @Log.NT(key = "intaking3")
   public boolean isIntaking3;
 
   /** Creates a new Intake. */

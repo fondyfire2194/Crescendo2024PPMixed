@@ -112,9 +112,10 @@ public class AutoFactory {
                 m_ampStartChooser.setDefaultOption("Not Used", 20);
                 m_ampStartChooser.addOption("C2 then C1", 21);
                 m_ampStartChooser.addOption("C1 then C2", 22);
-               // m_ampStartChooser.addOption("W1 then C1", 23);
+                m_ampStartChooser.addOption("W1 then C1", 23);
+                m_ampStartChooser.addOption("W1 then C1", 24);
 
-                maxampauto = 22;
+                maxampauto = 24;
 
                 SmartDashboard.putData("Source Start", m_sourceStartChooser);
                 SmartDashboard.putData("Amp Start", m_ampStartChooser);
@@ -243,22 +244,28 @@ public class AutoFactory {
 
                         case 21:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_ampac, m_swerve, m_intake, m_transfer, m_llv, 1.75, true);
+                                                m_ampac, m_swerve, m_intake, m_transfer, m_llv, true);
                         case 22:
                                 return new AutoAmpCompleteVisV2(m_cf, m_pf, this,
-                                                m_ampac, m_swerve, m_intake, m_transfer, m_llv, 1.75, false);
+                                                m_ampac, m_swerve, m_intake, m_transfer, m_llv, false);
                         case 23:
-
                                 return Commands.sequence(
                                                 m_ampac.setAmpStart(m_swerve, m_transfer, m_intake, m_cf),
                                                 m_ampac.pickupNote(m_cf, m_pf.pathMaps.get(
                                                                 amppaths.AmpToWing1.name()), m_swerve, 3),
-                                                m_ampac.prepandshoot(m_cf, Constants.wing1ArmAngle,
-                                                                Constants.wing1ShooterSpeed, 10),
-
+                                                m_ampac.shootbydistance(m_cf),
                                                 m_ampac.pickupNote(m_cf, m_pf.pathMaps.get(
                                                                 amppaths.Wing1ToCenter1.name()), m_swerve, 3),
-
+                                                new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center1ToAmpShoot
+                                                                .name()), m_swerve));
+                        case 24:
+                                return Commands.sequence(
+                                                m_ampac.setAmpStart(m_swerve, m_transfer, m_intake, m_cf),
+                                                m_ampac.pickupNote(m_cf, m_pf.pathMaps.get(
+                                                                amppaths.AmpToWing1.name()), m_swerve, 3),
+                                                m_ampac.shootbydistance(m_cf),
+                                                m_ampac.pickupNote(m_cf, m_pf.pathMaps.get(
+                                                                amppaths.Wing1ToCenter2.name()), m_swerve, 3),
                                                 new CenterToShoot(m_cf, m_pf.pathMaps.get(amppaths.Center2ToAmpShoot
                                                                 .name()), m_swerve));
 

@@ -29,7 +29,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.AutoFactory;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
@@ -52,7 +51,6 @@ import frc.robot.commands.Intake.JogIntake;
 import frc.robot.commands.Pathplanner.RunPPath;
 import frc.robot.commands.Test.MovePickupShootTest;
 import frc.robot.commands.Test.TrapTune;
-import frc.robot.commands.Test.TrapTuneGo0;
 import frc.robot.commands.Transfer.TransferIntakeToSensor;
 import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -61,7 +59,6 @@ import frc.robot.subsystems.LimelightVision;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
-import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.ShootingData;
 import frc.robot.utils.ViewArmShooterByDistance;
 import monologue.Annotations.Log;
@@ -112,17 +109,16 @@ public class RobotContainer implements Logged {
 
         public BooleanSupplier fieldRelative;
 
-        private Trigger doLobShot;
+        // private Trigger doLobShot;
 
-        private Trigger doMovingShot;
+        // private Trigger doMovingShot;
 
-        private Trigger logShotTrigger;
+        // private Trigger logShotTrigger;
 
-        @Log.NT(key = "sinmotetrigger1")
         private Trigger simNoteIntakenTrigger1;
-        @Log.NT(key = "sinmotetrigger2")
+        
         private Trigger simNoteIntakenTrigger2;
-        @Log.NT(key = "sinmotetrigger3")
+      
         private Trigger simNoteIntakenTrigger3;
 
         EventLoop checkAutoSelectLoop;
@@ -220,29 +216,29 @@ public class RobotContainer implements Logged {
 
                 m_shooter.setBottomKpKdKi();
 
-                doLobShot = new Trigger(() -> m_transfer.lobbing
-                                && m_transfer.noteAtIntake()
-                                && m_shooter.bothAtSpeed(5)
-                                && m_arm.getAtSetpoint()
-                                && m_swerve.alignedToTarget
-                                && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
-                                && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
-                                && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
+                // doLobShot = new Trigger(() -> m_transfer.lobbing
+                //                 && m_transfer.noteAtIntake()
+                //                 && m_shooter.bothAtSpeed(5)
+                //                 && m_arm.getAtSetpoint()
+                //                 && m_swerve.alignedToTarget
+                //                 && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
+                //                 && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
+                //                 && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
 
                 // doLobShot.onTrue(m_cf.transferNoteToShooterCommand());
 
-                doMovingShot = new Trigger(() -> m_transfer.shootmoving
-                                && m_transfer.OKShootMoving
-                                && m_transfer.noteAtIntake()
-                                && m_shooter.bothAtSpeed(5)
-                                && m_arm.getAtSetpoint()
-                                && m_swerve.alignedToTarget
-                                && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
-                                && m_swerve.getDistanceFromSpeaker() < SwerveConstants.maxMovingShotDistance);
+                // doMovingShot = new Trigger(() -> m_transfer.shootmoving
+                //                 && m_transfer.OKShootMoving
+                //                 && m_transfer.noteAtIntake()
+                //                 && m_shooter.bothAtSpeed(5)
+                //                 && m_arm.getAtSetpoint()
+                //                 && m_swerve.alignedToTarget
+                //                 && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
+                //                 && m_swerve.getDistanceFromSpeaker() < SwerveConstants.maxMovingShotDistance);
 
                 // doMovingShot.onTrue(m_cf.transferNoteToShooterCommand());
 
-                logShotTrigger = new Trigger(() -> m_transfer.logShot == true);
+           //     logShotTrigger = new Trigger(() -> m_transfer.logShot == true);
 
                 // logShotTrigger.onTrue(
                 // Commands.sequence(

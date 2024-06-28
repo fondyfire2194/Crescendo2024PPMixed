@@ -161,7 +161,6 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
       return topSimRPM;
   }
 
-  @Log.NT(key = "shtrbottomrpm")
   public double getRPMBottom() {
     if (RobotBase.isReal())
       return bottomEncoder.getVelocity();
@@ -204,12 +203,12 @@ public class ShooterSubsystem extends SubsystemBase implements Logged {
     return bottomCommandRPM != 0 && Math.abs(bottomCommandRPM - getRPMBottom()) < bottomCommandRPM * pct / 100;
   }
 
-  @Log.NT(key = "rpmerrortop")
+  
   public double getTopRPMError() {
     return topCommandRPM - getRPMTop();
   }
 
-  @Log.NT(key = "rpmerrorbottom")
+
   public double getBottomRPMError() {
     return bottomCommandRPM - getRPMBottom();
   }

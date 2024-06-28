@@ -138,22 +138,18 @@ public class ClimberSubsystem extends SubsystemBase implements Logged {
     return Commands.run(() -> runClimberMotor(speed));
   }
 
-  @Log.NT(key = "ClimberLeftRPM")
   public double getRPMLeft() {
     return climberEncoderLeft.getVelocity();
   }
 
-  @Log.NT(key = "ClimberRightRPM")
   public double getRPMRight() {
     return climberEncoderRight.getVelocity();
   }
 
-  @Log.NT(key = "ClimberPositionLeft")
   public double getPositionLeft() {
     return climberEncoderLeft.getPosition();
   }
 
-  @Log.NT(key = "ClimberPositionRight")
   public double getPositionRight() {
     return climberEncoderRight.getPosition();
   }

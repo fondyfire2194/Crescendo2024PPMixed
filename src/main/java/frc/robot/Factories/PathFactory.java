@@ -55,6 +55,7 @@ public class PathFactory {
         Center3ToWing2,
         Center3ToAmpShoot,
         Wing1ToCenter1,
+        Wing1ToCenter2,        
         StageClearToAmpShoot;
     }
 

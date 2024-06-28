@@ -36,7 +36,6 @@ public class TransferSubsystem extends SubsystemBase implements Logged {
   private double commandrpm;
 
   public SparkLimitSwitch m_limitSwitch;
-  @Log.NT(key = "simmoteatintake")
   public boolean simnoteatintake;
   public boolean skipFirstNoteInSim;
   public boolean skipSecondNoteInSim;

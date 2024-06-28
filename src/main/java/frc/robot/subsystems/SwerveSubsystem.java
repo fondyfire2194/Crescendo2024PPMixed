@@ -41,7 +41,6 @@ import frc.robot.Constants;
 import frc.robot.Constants.CameraConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.SwerveConstants;
-import frc.robot.Pref;
 import frc.robot.utils.AllianceUtil;
 import frc.robot.utils.LimelightTagsUpdate;
 import monologue.Annotations.Log;
@@ -94,36 +93,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   double ylim = Units.inchesToMeters(12);
   double deglim = Units.degreesToRadians(5);
 
-  @Log.NT(key = "yerror")
-  double yerror = 0;
-  @Log.NT(key = "caplatency")
-  double capLatency = 0;
-  @Log.NT(key = "pipelatency")
-  double pipelineLatency = 0;
-  @Log.NT(key = "latency")
-  double latency = 0;
-  @Log.NT(key = "cappose")
-  Pose2d robotPose = new Pose2d();
-  @Log.NT(key = "capposey")
-  double poseY;
-  @Log.NT(key = "capposex")
-  double poseX;
-  @Log.NT(key = "poseerrr2d")
-  Rotation2d poser = new Rotation2d();
-  @Log.NT(key = "corry")
-  double correctedY;
-  @Log.NT(key = "correctionpose")
-  Pose2d correctionPose = new Pose2d();
-
-  double area = 0;
-  double areafl = 0;
-  double areafr = 0;
-
-  int numberTargets = 0;
-
-  @Log.NT(key = "noteseentime")
-  private double noteSeenTime;
-
   @Log.NT(key = "autostep")
   public int autostep;
 
@@ -138,8 +107,17 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   @Log.NT(key = "desiredstates")
   double[] desbuff = new double[8];
 
-  public LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera.camname, this);
-  public LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera.camname, this);
+  @Log.NT(key = "camtagMT1poses")
+  public Pose2d[] fcamMT1TagPose = new Pose2d[2];
+  @Log.NT(key = "camtagMT2poses")
+  public Pose2d[] fcamMT2TagPose = new Pose2d[2];
+  @Log.NT(key = "rejectupdate")
+  public boolean[] rejectUpdate = { false, false };
+  @Log.NT(key = "rejectupdate")
+  public int[] tagsSeen = { 0, 0 };
+
+  public LimelightTagsUpdate flUpdate = new LimelightTagsUpdate(CameraConstants.frontLeftCamera, this);
+  public LimelightTagsUpdate frUpdate = new LimelightTagsUpdate(CameraConstants.frontRightCamera, this);
 
   public boolean mod0connected;
   public boolean mod1connected;
@@ -161,15 +139,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     wheelsAlignedStates[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
     wheelsAlignedStates[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
 
-    if (RobotBase.isSimulation()) {
-
-      // thetaPID.setP(0);
-
-      // xPID.setP(1.0);
-
-      // yPID.setP(0);
-
-    }
 
     m_keepAngleTimer.reset();
     m_keepAngleTimer.start();
@@ -877,6 +846,10 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   public boolean notePoseCalculated;
 
   public int targetNote;
+
+  public boolean logllupdates;
+  @Log.NT(key = "distancelltopose")
+  public double distanceLimelightToEstimator;
 
   public void setPathRunning() {
     pathRunning = true;

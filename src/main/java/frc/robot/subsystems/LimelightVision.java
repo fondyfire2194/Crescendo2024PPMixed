@@ -41,6 +41,7 @@ public class LimelightVision extends SubsystemBase implements Logged {
   @Log.NT(key = "rexists")
   public boolean limelightExistsr;
   private int loopctr;
+ 
 
   public String flname = CameraConstants.frontLeftCamera.camname;
   public String frname = CameraConstants.frontRightCamera.camname;

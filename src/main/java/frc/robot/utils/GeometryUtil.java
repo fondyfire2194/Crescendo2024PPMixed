@@ -135,17 +135,17 @@ public class GeometryUtil {
     return sign * (ab * bc * ac) / (4 * area);
   }
 
-  public boolean checkPoseInField(Pose2d pose) {
-    return pose.getX() < FieldConstants.FIELD_LENGTH
-        && pose.getY() < FieldConstants.FIELD_LENGTH;
+  public static boolean checkPoseInField(Pose2d pose) {
+    return pose.getX() > 0 && pose.getX() < FieldConstants.FIELD_LENGTH
+        && pose.getY() > 0 && pose.getY() < FieldConstants.FIELD_WIDTH;
   }
 
-  public boolean checkPoseInRect(Pose2d pose1, Pose2d pose2, double limit) {
+  public static boolean checkPoseInRect(Pose2d pose1, Pose2d pose2, double limit) {
     return Math.abs(pose1.getX() - pose2.getX()) < limit
         && Math.abs(pose1.getY() - pose2.getY()) < limit;
   }
 
-   public boolean checkPoseInRect(Pose2d pose1, Pose2d pose2, double limit, double rotlimit) {
+  public static boolean checkPoseInRect(Pose2d pose1, Pose2d pose2, double limit, double rotlimit) {
     return Math.abs(pose1.getX() - pose2.getX()) < limit
         && Math.abs(pose1.getY() - pose2.getY()) < limit
         && Math.abs(pose1.getRotation().getDegrees() - pose1.getRotation().getDegrees()) < rotlimit;

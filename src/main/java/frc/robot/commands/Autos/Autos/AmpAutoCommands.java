@@ -7,22 +7,14 @@ package frc.robot.commands.Autos.Autos;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants;
 import frc.robot.Constants.FieldConstants;
-import frc.robot.Constants.SwerveConstants;
 import frc.robot.Factories.CommandFactory;
 import frc.robot.Factories.PathFactory;
 import frc.robot.Factories.PathFactory.amppaths;
-import frc.robot.Factories.PathFactory.sbwfrpaths;
 import frc.robot.Factories.PathFactory.sourcepaths;
-import frc.robot.commands.Drive.AutoAlignSpeaker;
-import frc.robot.commands.Drive.RotateToAngle;
 import frc.robot.commands.Pathplanner.RunPPath;
-import frc.robot.subsystems.ArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import frc.robot.subsystems.TransferSubsystem;
 import frc.robot.utils.AllianceUtil;
@@ -42,7 +34,7 @@ public class AmpAutoCommands {
                                 Commands.runOnce(() -> swerve.targetPose = AllianceUtil.getSpeakerPose()),
                                 Commands.runOnce(() -> swerve.ampActive = true),
                                 Commands.runOnce(() -> swerve.sourceActive = false),
-                                Commands.runOnce(() -> swerve.pickupTargetX = FieldConstants.FIELD_LENGTH / 2),
+                                Commands.runOnce(() -> swerve.pickupTargetX = AllianceUtil.getWingNoteX()),
                                 cf.setStartPosebyAlliance(FieldConstants.ampStartPose));
         }
 
@@ -56,8 +48,16 @@ public class AmpAutoCommands {
         public Command prepandshoot(CommandFactory cf, double armAngle, double shooterpm, double rpmtol) {
                 return Commands.sequence(
                                 cf.positionArmRunShooterSpecialCase(armAngle, shooterpm, rpmtol),
+                                cf.checkAtTargets(20),
                                 cf.transferNoteToShooterCommand());
+        }
 
+        public Command shootbydistance(CommandFactory cf) {
+                return Commands.sequence(
+                                cf.positionArmRunShooterByDistance(
+                                                false, true),
+
+                                cf.transferNoteToShooterCommand());
         }
 
         public Command moveShoot(CommandFactory cf, PathPlannerPath path, SwerveSubsystem swerve, double armAngle,

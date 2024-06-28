@@ -76,9 +76,9 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
     public boolean enableArm;
 
     private double activeKv;
-    @Log.NT(key = "simanglerads")
+
     private double simAngleRads;
-    @Log.NT(key = "shootingangle")
+   
     public double angleDegWhenShooting;
     private boolean cancoderconnected;
     private int checkCancoderCounter;
@@ -114,7 +114,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
                     Units.radiansToDegrees(getCurrentGoalRads()),
                     6,
                     new Color8Bit(Color.kRed)));
-    @Log.NT(key = "usemotorencoder")
     public boolean useMotorEncoder;
 
     Trigger setMotorEncoderToCancoder;
@@ -328,7 +327,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         setGoal(temp);
     }
 
-    @Log.NT(key = "armgoalrads")
     public double getCurrentGoalRads() {
         return getController().getGoal().position;
     }
@@ -338,7 +336,7 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
         return round2dp(Units.radiansToDegrees(getCurrentGoalRads()), 2);
     }
 
-    @Log.NT(key = "armrads")
+
     public double getAngleRadians() {
         if (RobotBase.isReal()) {
             if (!useMotorEncoder)
@@ -349,7 +347,6 @@ public class ArmSubsystem extends ProfiledPIDSubsystem implements Logged {
             return simAngleRads;
     }
 
-    @Log.NT(key = "armerrorrads")
     public double getAngleErrorRadians() {
         return getCurrentGoalRads() - getAngleRadians();
     }
