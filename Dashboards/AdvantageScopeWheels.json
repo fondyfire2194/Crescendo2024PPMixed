@@ -1,0 +1,631 @@
+{
+  "hubs": [
+    {
+      "x": 0,
+      "y": 0,
+      "width": 1062,
+      "height": 631,
+      "state": {
+        "sidebar": {
+          "width": 319,
+          "expanded": [
+            "/Monologue/m_swerve/Poseestimate",
+            "/SmartDashboard/AutoShoot",
+            "/SmartDashboard/VisionSystemSim-main",
+            "/SmartDashboard/VisionSystemSim-main/Sim Field",
+            "/SmartDashboard/VisionSystemSim-main/Sim Field/visibleTargetPoses",
+            "/SmartDashboard/VisionSystemSim-main/Sim Field/VisionEstimation",
+            "/Monologue/m_tcf/m_cf",
+            "/SmartDashboard/Real States",
+            "/Monologue/m_tcf/m_cf/m_swerve",
+            "/Monologue/m_swerve/Poseestimate/rotation",
+            "/Monologue/m_swerve/Poseestimate/translation",
+            "/Shuffleboard/Autonomous",
+            "/Shuffleboard/Autonomous/Arm",
+            "/Shuffleboard/Autonomous/Shooter",
+            "/Monologue/m_swerve/realstates",
+            "/Monologue/m_tcf/m_cf/m_swerve/realstates",
+            "/NT",
+            "/NT/Shuffleboard",
+            "/NT/Shuffleboard/Autonomous/AutoSelection",
+            "/NT/Shuffleboard/Autonomous/SourceStart",
+            "/NT/SmartDashboard",
+            "/NT/Shuffleboard/Autonomous/RearCam",
+            "/NT/Shuffleboard/Autonomous/Shooter",
+            "/NT/Monologue/m_swerve/Poseestimate",
+            "/NT/Monologue/m_swerve/Poseestimate/translation",
+            "/NT/Monologue/m_swerve/Poseestimate/rotation",
+            "/NT/SmartDashboard/CommSchd",
+            "/NT/SmartDashboard/CommSchd/Names",
+            "/NT/Monologue/m_tcf",
+            "/NT/Monologue/m_swerve/yaw",
+            "/Monologue/m_tcf/m_cf/m_intake",
+            "/Monologue/m_swerve/poseestimate",
+            "/Monologue/m_swerve/poseestimate/rotation",
+            "/Monologue/m_tcf/m_cf/m_transfer",
+            "/NT/Monologue",
+            "/NT/Shuffleboard/Autonomous/Arm",
+            "/NT/Shuffleboard/Autonomous",
+            "/SmartDashboard/Auto",
+            "/Monologue/m_swerve/poseestimate/translation",
+            "/photonvision",
+            "/SmartDashboard/Field",
+            "/poses",
+            "/Monologue/m_af",
+            "/Monologue/m_tcf/m_cf/m_arm",
+            "/SmartDashboard",
+            "/Monologue",
+            "/Monologue/m_arm",
+            "/Monologue/m_shooter",
+            "/Monologue/m_climber",
+            "/limelight-rear",
+            "/SmartDashboard/LL",
+            "/Monologue/m_intake",
+            "/Monologue/m_transfer",
+            "/Monologue/m_llv",
+            "/SmartDashboard/Climber",
+            "/Monologue/m_swerve",
+            "/SmartDashboard/Arm",
+            "/NT/Monologue/m_swerve",
+            "/NT/Preferences",
+            "/NT/Monologue/m_swerve/desiredstates",
+            "/NT/Monologue/m_swerve/realstates"
+          ]
+        },
+        "tabs": {
+          "selected": 4,
+          "tabs": [
+            {
+              "type": 0,
+              "path": "../docs/INDEX.md"
+            },
+            {
+              "type": 5,
+              "uuid": "6j2knje3tq8q8ooopnfs5stbqa5affha",
+              "fields": [],
+              "listFields": [
+                [
+                  {
+                    "type": "Robot",
+                    "key": "NT:/Monologue/m_swerve/targetpose",
+                    "sourceTypeIndex": 1,
+                    "sourceType": "Pose2d"
+                  },
+                  {
+                    "type": "Robot",
+                    "key": "NT:/Monologue/m_swerve/poseestimate",
+                    "sourceTypeIndex": 1,
+                    "sourceType": "Pose2d"
+                  }
+                ]
+              ],
+              "options": {
+                "game": "2024 Field",
+                "unitDistance": "meters",
+                "unitRotation": "degrees",
+                "origin": "right",
+                "size": 0.75,
+                "allianceBumpers": "auto",
+                "allianceOrigin": "blue",
+                "orientation": "blue left, red right"
+              },
+              "configHidden": false,
+              "visualizer": null,
+              "title": "Odometry"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/0",
+                      "color": "#2b66a2",
+                      "show": false
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/0",
+                      "color": "#e5b31b",
+                      "show": false
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/1",
+                      "color": "#af2437",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/1",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "FL Wheel"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/2",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/2",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/3",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/3",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "FR Wheel"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/6",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/6",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/7",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/7",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "RR Wheel"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/4",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/4",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/5",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/5",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "RL Wheel"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": []
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": []
+                }
+              },
+              "title": "Line Graph"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrtopcommandrpm",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrbottomcommandrpm",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtratspeed;",
+                      "color": "#af2437",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrrunatvel",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrtopamps",
+                      "color": "#e48b32",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_shooter/shtrbottomamps",
+                      "color": "#aacaee",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Shooter"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_transfer/transferrpm",
+                      "color": "#2b66a2",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_transfer/transfernoteatintake",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_transfer/transferamps",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Transfer"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_intake/intakerpm",
+                      "color": "#2b66a2",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_intake/intakerun",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_transfer/transfernoteatintake",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_intake/intakeAmps",
+                      "color": "#80588e",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Intake"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_swerve/desiredstates/0",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_swerve/realstates/0",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": []
+                }
+              },
+              "title": "Line Graph"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberLeftRPM",
+                      "color": "#2b66a2",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberRightRPM",
+                      "color": "#e5b31b",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": []
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberPositionLeft",
+                      "color": "#af2437",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberPositionRight",
+                      "color": "#80588e",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberLeftAmps",
+                      "color": "#e48b32",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_climber/ClimberRightAmps",
+                      "color": "#aacaee",
+                      "show": true
+                    }
+                  ]
+                }
+              },
+              "title": "Climber"
+            },
+            {
+              "type": 1,
+              "legendHeight": 0.3,
+              "legends": {
+                "left": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_llv/noteseenangle",
+                      "color": "#2b66a2",
+                      "show": true
+                    }
+                  ]
+                },
+                "discrete": {
+                  "fields": [
+                    {
+                      "key": "NT:/Monologue/m_llv/noteseen",
+                      "color": "#e5b31b",
+                      "show": true
+                    },
+                    {
+                      "key": "NT:/Monologue/m_llv/rexists",
+                      "color": "#af2437",
+                      "show": true
+                    }
+                  ]
+                },
+                "right": {
+                  "lockedRange": null,
+                  "unitConversion": {
+                    "type": null,
+                    "factor": 1
+                  },
+                  "fields": []
+                }
+              },
+              "title": "RearCamera"
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "satellites": [],
+  "version": "3.2.1"
+}
