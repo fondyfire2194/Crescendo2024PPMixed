@@ -16,6 +16,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -62,6 +63,7 @@ public class SwerveModule extends SubsystemBase {
   private double ffkv;
   private double velocityError;
   private boolean tuning;
+  public double angleatabsolutereset;
 
   public SwerveModule(int moduleNumber, SwerveModuleConstants moduleConstants) {
     this.moduleNumber = moduleNumber;
@@ -115,12 +117,14 @@ public class SwerveModule extends SubsystemBase {
     return currentDesiredState;
   }
 
-  public void resetAngleToAbsolute() {
-    double angle = 0;
+  public boolean resetAngleToAbsolute() {
+    angleatabsolutereset = 0;
+    String tcn = m_turnCancoder.getNetwork();
     if (RobotBase.isReal()) {
-      angle = (m_turnCancoder.getAbsolutePosition().getValueAsDouble() * 360);
+      angleatabsolutereset = (m_turnCancoder.getAbsolutePosition().getValueAsDouble() * 360);
     }
-    integratedAngleEncoder.setPosition(angle);
+    integratedAngleEncoder.setPosition(angleatabsolutereset);
+    return tcn == "CV1";
   }
 
   public void resetAngleEncoder(double angle) {

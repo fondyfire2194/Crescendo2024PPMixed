@@ -69,6 +69,8 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
   private double lastDriveTime = 0.0;
   @Log.NT(key = "actualstartpose")
   public Pose2d actualstartPose = new Pose2d();
+  @Log.NT(key = "cancoderatabsreset")
+  private double[] cancoderAtAbsoluteReset = new double[4];
 
   private static final Matrix<N3, N1> ODOMETRY_STDDEV = VecBuilder.fill(0.03, 0.03, Math.toRadians(1));
   private static final Matrix<N3, N1> VISION_STDDEV = VecBuilder.fill(0.5, 0.5, Math.toRadians(40));
@@ -138,7 +140,6 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
     wheelsAlignedStates[1] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
     wheelsAlignedStates[2] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
     wheelsAlignedStates[3] = new SwerveModuleState(0, Rotation2d.fromDegrees(0));
-
 
     m_keepAngleTimer.reset();
     m_keepAngleTimer.start();
@@ -282,12 +283,16 @@ public class SwerveSubsystem extends SubsystemBase implements Logged {
 
   public void absoluteResetFrontModuleEncoders() {
     mSwerveMods[0].resetAngleToAbsolute();
+    cancoderAtAbsoluteReset[0] = mSwerveMods[0].angleatabsolutereset;
     mSwerveMods[1].resetAngleToAbsolute();
+    cancoderAtAbsoluteReset[1] = mSwerveMods[1].angleatabsolutereset;
   }
 
   public void absoluteResetBackModuleEncoders() {
     mSwerveMods[2].resetAngleToAbsolute();
+    cancoderAtAbsoluteReset[2] = mSwerveMods[2].angleatabsolutereset;
     mSwerveMods[3].resetAngleToAbsolute();
+    cancoderAtAbsoluteReset[3] = mSwerveMods[3].angleatabsolutereset;
   }
 
   public void resetAngleEncoders() {

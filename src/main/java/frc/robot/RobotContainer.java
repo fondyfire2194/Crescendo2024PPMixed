@@ -116,9 +116,9 @@ public class RobotContainer implements Logged {
         // private Trigger logShotTrigger;
 
         private Trigger simNoteIntakenTrigger1;
-        
+
         private Trigger simNoteIntakenTrigger2;
-      
+
         private Trigger simNoteIntakenTrigger3;
 
         EventLoop checkAutoSelectLoop;
@@ -217,28 +217,29 @@ public class RobotContainer implements Logged {
                 m_shooter.setBottomKpKdKi();
 
                 // doLobShot = new Trigger(() -> m_transfer.lobbing
-                //                 && m_transfer.noteAtIntake()
-                //                 && m_shooter.bothAtSpeed(5)
-                //                 && m_arm.getAtSetpoint()
-                //                 && m_swerve.alignedToTarget
-                //                 && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
-                //                 && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
-                //                 && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
+                // && m_transfer.noteAtIntake()
+                // && m_shooter.bothAtSpeed(5)
+                // && m_arm.getAtSetpoint()
+                // && m_swerve.alignedToTarget
+                // && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
+                // && m_swerve.getDistanceFromLobTarget() > SwerveConstants.minLobDistance
+                // && m_swerve.getDistanceFromLobTarget() < SwerveConstants.maxLobDistance);
 
                 // doLobShot.onTrue(m_cf.transferNoteToShooterCommand());
 
                 // doMovingShot = new Trigger(() -> m_transfer.shootmoving
-                //                 && m_transfer.OKShootMoving
-                //                 && m_transfer.noteAtIntake()
-                //                 && m_shooter.bothAtSpeed(5)
-                //                 && m_arm.getAtSetpoint()
-                //                 && m_swerve.alignedToTarget
-                //                 && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
-                //                 && m_swerve.getDistanceFromSpeaker() < SwerveConstants.maxMovingShotDistance);
+                // && m_transfer.OKShootMoving
+                // && m_transfer.noteAtIntake()
+                // && m_shooter.bothAtSpeed(5)
+                // && m_arm.getAtSetpoint()
+                // && m_swerve.alignedToTarget
+                // && Math.abs(m_swerve.getChassisSpeeds().vxMetersPerSecond) < 1
+                // && m_swerve.getDistanceFromSpeaker() <
+                // SwerveConstants.maxMovingShotDistance);
 
                 // doMovingShot.onTrue(m_cf.transferNoteToShooterCommand());
 
-           //     logShotTrigger = new Trigger(() -> m_transfer.logShot == true);
+                // logShotTrigger = new Trigger(() -> m_transfer.logShot == true);
 
                 // logShotTrigger.onTrue(
                 // Commands.sequence(
@@ -417,13 +418,14 @@ public class RobotContainer implements Logged {
                 codriver.b().onTrue(new JogIntake(m_intake, codriver));
                 // Constants.safeStageShooterSpeed));
 
-                // codriver.x().onTrue(m_cf.positionArmRunShooterSpecialCase(Constants.tapeLineArmAngle,
-                // Constants.tapeLineShooterSpeed, 10));
 
                 codriver.y().whileTrue(
                                 Commands.run(() -> m_swerve.wheelsAlign(), m_swerve));
-                // codriver.y().onTrue(Commands.runOnce(() -> m_swerve.targetNote = 4));
-                codriver.x().onTrue(Commands.runOnce(() -> m_swerve.targetNote = 5));
+
+                codriver.x().onTrue(
+                                Commands.parallel(
+                                                Commands.runOnce(() -> m_swerve.absoluteResetFrontModuleEncoders()),
+                                                Commands.runOnce(() -> m_swerve.absoluteResetBackModuleEncoders())));
 
                 // codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
 
