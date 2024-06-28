@@ -198,6 +198,13 @@ public class RobotContainer implements Logged {
                 SmartDashboard.putData("SetAngleKp",
                                 Commands.runOnce(() -> m_swerve.setTurnKp()));
 
+                SmartDashboard.putData("S2NX4", Commands.sequence(
+                                Commands.runOnce(() -> m_swerve.targetNote = 4),
+                                m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
+                                Commands.waitSeconds(.5),
+                                new RunPPath(m_swerve, m_pf.getPath(
+                                                sbwfrpaths.TEST3.name()))));
+
                 configureDriverBindings();
 
                 configureCodriverBindings();
@@ -367,8 +374,8 @@ public class RobotContainer implements Logged {
 
                 driver.x().onTrue(m_shooter.startShooterCommand(3500, 5));
 
-                driver.a().and(driver.leftTrigger().negate()).and(driver.rightBumper().negate())
-                                .onTrue(m_cf.doAmpShot());
+                // driver.a().and(driver.leftTrigger().negate()).and(driver.rightBumper().negate())
+                //                 .onTrue(m_cf.doAmpShot());
 
                 driver.povUp().onTrue(m_shooter.increaseRPMCommand(100));
 
@@ -416,8 +423,6 @@ public class RobotContainer implements Logged {
                                 Constants.subwfrShooterSpeed, 10));
 
                 codriver.b().onTrue(new JogIntake(m_intake, codriver));
-                // Constants.safeStageShooterSpeed));
-
 
                 codriver.y().whileTrue(
                                 Commands.run(() -> m_swerve.wheelsAlign(), m_swerve));
@@ -427,21 +432,15 @@ public class RobotContainer implements Logged {
                                                 Commands.runOnce(() -> m_swerve.absoluteResetFrontModuleEncoders()),
                                                 Commands.runOnce(() -> m_swerve.absoluteResetBackModuleEncoders())));
 
-                // codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
+                codriver.povUp().onTrue(m_climber.raiseClimberArmsCommand(.3));
 
-                // codriver.povDown().onTrue(m_climber.lowerClimberArmsCommand(.3));
+                codriver.povDown().onTrue(m_climber.lowerClimberArmsCommand(.3));
 
                 // codriver.povLeft().whileTrue(Commands.runOnce(() ->
                 // m_transfer.transferMotor.setVoltage(-.5)))
                 // .onFalse(Commands.runOnce(() -> m_transfer.transferMotor.setVoltage(0)));
 
                 // codriver.povUp().onTrue(
-                SmartDashboard.putData("S2NX4", Commands.sequence(
-                                Commands.runOnce(() -> m_swerve.targetNote = 4),
-                                m_cf.setStartPosebyAlliance(FieldConstants.sourceStartPose),
-                                Commands.waitSeconds(.5),
-                                new RunPPath(m_swerve, m_pf.getPath(
-                                                sbwfrpaths.TEST3.name()))));
 
                 codriver.povDown().onTrue(
                                 new AutoAlignNote(m_swerve, 2, true));
@@ -462,7 +461,6 @@ public class RobotContainer implements Logged {
                                                 m_intake.startIntakeCommand(),
                                                 Commands.runOnce(() -> m_intake.intakeMotor.setVoltage(-8))))
                                 .onFalse(Commands.sequence(m_intake.stopIntakeCommand(),
-
                                                 Commands.runOnce(() -> m_intake.intakeMotor.setVoltage(0))));
 
         }
