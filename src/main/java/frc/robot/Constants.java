@@ -173,11 +173,12 @@ public final class Constants {
                 public static final double driveKD = 0.0;
                 public static final double driveKFF = .95 / kmaxTheoreticalSpeed;
 
-                /* Drive Motor Characterization Values */
-                public static final double driveKS = .4;
-                public static final double driveKV = 2.4;// 2.5636; //2.59 //2.55 2.8
-                public static final double driveKA = 0.2;// 0.12; /// 0.4 0.59
-                public static final double driveKP1 = 0.01;// 0.12; /// 0.4 0.59
+             \
+               /* Drive Motor Characterization Values */
+               public static final double driveKS = 0.60;//.4;
+               public static final double driveKV = 2.70;//2.4;// 2.5636; //2.59 //2.55 2.8
+               public static final double driveKA = 0.59;//0.2;// 0.12; /// 0.4 0.59
+               public static final double driveKP1 = 0.01;// 0.12; /// 0.4 0.59
 
                 // team 5907 driveKs = 0.22542;driveKv = 2.4829; driveKa = 0.120; driveP =
                 // 0.08;
